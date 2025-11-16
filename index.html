@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Vojtech Steidl | Doučování Matematiky a Fyziky</title>
     <meta name="description" content="Profesionální doučování matematiky a fyziky v Jihlavě. Individuální přístup, příprava na přijímačky a maturitu.">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * {
             margin: 0;
@@ -18,19 +19,32 @@
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', sans-serif;
-            background-color: #f8f9fb;
+            background: linear-gradient(135deg, #f5f7fa 0%, #e8ecf1 50%, #f0f3f8 100%);
             color: #2c3e50;
             line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        /* GLASS MORPHISM MIXIN */
+        .glass {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 8px 32px rgba(31, 38, 135, 0.15);
         }
 
         /* HEADER / NAV */
         header {
-            background: white;
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
             padding: 1.5rem 0;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
             position: sticky;
             top: 0;
             z-index: 100;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.3);
         }
 
         nav {
@@ -95,7 +109,7 @@
 
         .hero p {
             font-size: 1.2rem;
-            color: #666;
+            color: #555;
             margin-bottom: 2rem;
             max-width: 600px;
             margin-left: auto;
@@ -104,22 +118,23 @@
 
         .cta-button {
             display: inline-block;
-            background: #2c3e50;
+            background: linear-gradient(135deg, #2c3e50 0%, #1a252f 100%);
             color: white;
             padding: 0.95rem 2.5rem;
-            border-radius: 6px;
+            border-radius: 50px;
             text-decoration: none;
             font-weight: 600;
             font-size: 1rem;
             transition: all 0.3s;
             border: none;
             cursor: pointer;
+            box-shadow: 0 8px 20px rgba(44, 62, 80, 0.2);
         }
 
         .cta-button:hover {
-            background: #1a252f;
-            transform: translateY(-2px);
-            box-shadow: 0 8px 16px rgba(44, 62, 80, 0.15);
+            background: linear-gradient(135deg, #1a252f 0%, #0f1620 100%);
+            transform: translateY(-3px);
+            box-shadow: 0 12px 30px rgba(44, 62, 80, 0.3);
         }
 
         @media (max-width: 768px) {
@@ -149,29 +164,37 @@
         }
 
         .feature-card {
-            background: white;
             padding: 2.5rem;
-            border-radius: 8px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+            border-radius: 16px;
             text-align: center;
             transition: all 0.3s;
         }
 
+        .feature-card {
+            background: rgba(255, 255, 255, 0.75);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 0 8px 32px rgba(31, 38, 135, 0.12);
+        }
+
         .feature-card:hover {
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
-            transform: translateY(-4px);
+            background: rgba(255, 255, 255, 0.9);
+            box-shadow: 0 16px 48px rgba(31, 38, 135, 0.2);
+            transform: translateY(-6px);
         }
 
         .feature-icon {
-            width: 60px;
-            height: 60px;
-            background: #f0f3f7;
-            border-radius: 50%;
+            width: 70px;
+            height: 70px;
+            background: linear-gradient(135deg, #e8ecf1 0%, #f0f3f8 100%);
+            border-radius: 12px;
             display: flex;
             align-items: center;
             justify-content: center;
             margin: 0 auto 1.5rem;
-            font-size: 2rem;
+            font-size: 2.2rem;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
         }
 
         .feature-card h3 {
@@ -203,13 +226,17 @@
         .about-image {
             width: 300px;
             height: 300px;
-            background: linear-gradient(135deg, #f5f7fa 0%, #eef0f5 100%);
-            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.75);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 16px;
             display: flex;
             align-items: center;
             justify-content: center;
             font-size: 6rem;
             margin: 0 auto;
+            box-shadow: 0 8px 32px rgba(31, 38, 135, 0.15);
         }
 
         .about h2 {
@@ -219,7 +246,7 @@
         }
 
         .about p {
-            color: #666;
+            color: #555;
             margin-bottom: 1.5rem;
             line-height: 1.8;
             font-size: 1rem;
@@ -255,16 +282,21 @@
         }
 
         .service-card {
-            background: white;
             padding: 2rem;
-            border-radius: 8px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+            border-radius: 16px;
+            background: rgba(255, 255, 255, 0.75);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 0 8px 32px rgba(31, 38, 135, 0.12);
             border-left: 4px solid #2c3e50;
             transition: all 0.3s;
         }
 
         .service-card:hover {
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+            background: rgba(255, 255, 255, 0.9);
+            box-shadow: 0 12px 40px rgba(31, 38, 135, 0.2);
+            transform: translateY(-3px);
         }
 
         .service-card h3 {
@@ -299,22 +331,31 @@
         }
 
         .pricing-card {
-            background: white;
             padding: 2.5rem;
-            border-radius: 8px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+            border-radius: 16px;
+            background: rgba(255, 255, 255, 0.75);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 0 8px 32px rgba(31, 38, 135, 0.12);
             text-align: center;
             transition: all 0.3s;
         }
 
         .pricing-card:hover {
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
-            transform: translateY(-4px);
+            background: rgba(255, 255, 255, 0.9);
+            box-shadow: 0 16px 48px rgba(31, 38, 135, 0.2);
+            transform: translateY(-6px);
         }
 
         .pricing-card.featured {
             border: 2px solid #2c3e50;
             transform: scale(1.05);
+            background: rgba(255, 255, 255, 0.85);
+        }
+
+        .pricing-card.featured:hover {
+            transform: scale(1.05) translateY(-6px);
         }
 
         .pricing-card h3 {
@@ -344,9 +385,9 @@
         .pricing-card button {
             width: 100%;
             padding: 0.8rem;
-            background: #f0f3f7;
-            border: none;
-            border-radius: 6px;
+            background: rgba(44, 62, 80, 0.1);
+            border: 1px solid #2c3e50;
+            border-radius: 8px;
             color: #2c3e50;
             font-weight: 600;
             cursor: pointer;
@@ -379,10 +420,13 @@
         }
 
         .material-item {
-            background: white;
             padding: 2rem;
-            border-radius: 8px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+            border-radius: 16px;
+            background: rgba(255, 255, 255, 0.75);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 0 8px 32px rgba(31, 38, 135, 0.12);
             display: flex;
             flex-direction: column;
             justify-content: space-between;
@@ -390,7 +434,8 @@
         }
 
         .material-item:hover {
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+            background: rgba(255, 255, 255, 0.9);
+            box-shadow: 0 12px 40px rgba(31, 38, 135, 0.2);
             transform: translateY(-4px);
         }
 
@@ -455,11 +500,20 @@
         }
 
         .contact-item {
-            background: white;
             padding: 2rem;
-            border-radius: 8px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+            border-radius: 16px;
+            background: rgba(255, 255, 255, 0.75);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 0 8px 32px rgba(31, 38, 135, 0.12);
             text-align: center;
+            transition: all 0.3s;
+        }
+
+        .contact-item:hover {
+            background: rgba(255, 255, 255, 0.9);
+            box-shadow: 0 12px 40px rgba(31, 38, 135, 0.2);
         }
 
         .contact-item h3 {
@@ -488,7 +542,8 @@
 
         /* FOOTER */
         footer {
-            background: #2c3e50;
+            background: rgba(44, 62, 80, 0.95);
+            backdrop-filter: blur(10px);
             color: white;
             padding: 3rem 2rem;
             text-align: center;
@@ -504,7 +559,7 @@
 
         footer .divider {
             height: 1px;
-            background: rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 0.2);
             margin: 2rem 0;
         }
 
@@ -527,21 +582,6 @@
             opacity: 1;
         }
 
-        /* UTILITIES */
-        .section-title {
-            font-size: 2.2rem;
-            text-align: center;
-            margin-bottom: 3rem;
-            color: #2c3e50;
-        }
-
-        .divider-line {
-            width: 60px;
-            height: 3px;
-            background: #2c3e50;
-            margin: 1rem auto 2rem;
-        }
-
         @media (max-width: 768px) {
             .features-grid,
             .services-grid,
@@ -553,6 +593,10 @@
 
             .pricing-card.featured {
                 transform: scale(1);
+            }
+
+            .pricing-card.featured:hover {
+                transform: scale(1) translateY(-6px);
             }
 
             .hero h1 {
@@ -591,17 +635,17 @@
     <section class="features">
         <div class="features-grid">
             <div class="feature-card">
-                <div class="feature-icon">👨‍🏫</div>
+                <div class="feature-icon"><i class="fas fa-award"></i></div>
                 <h3>Zkušenost a Kvalita</h3>
                 <p>Roky zkušeností s pedagógikou. Úspěšné přípravy na přijímačky a maturitu s vysokou úspěšností studentů.</p>
             </div>
             <div class="feature-card">
-                <div class="feature-icon">🎯</div>
+                <div class="feature-icon"><i class="fas fa-chart-line"></i></div>
                 <h3>Individuální Plán</h3>
                 <p>Každý student má svůj vlastní tempo. Vytváříme plán přesně podle vašich potřeb a cílů.</p>
             </div>
             <div class="feature-card">
-                <div class="feature-icon">💡</div>
+                <div class="feature-icon"><i class="fas fa-lightbulb"></i></div>
                 <h3>Porozumění</h3>
                 <p>Zaměřujeme se na hlubokému porozumění látce, nikoli povrchnímu memorování. Vy budete vědět <em>proč</em>.</p>
             </div>
@@ -627,27 +671,27 @@
         <h2>Co Nabízím</h2>
         <div class="services-grid">
             <div class="service-card">
-                <h3>🎓 Individuální Doučování</h3>
+                <h3><i class="fas fa-user-graduate"></i> Individuální Doučování</h3>
                 <p>1:1 lekce zaměřené přesně na vaše potřeby. Online nebo osobně v Jihlavě.</p>
             </div>
             <div class="service-card">
-                <h3>📚 Příprava na Zkoušky</h3>
+                <h3><i class="fas fa-book"></i> Příprava na Zkoušky</h3>
                 <p>Přijímačky, maturita, zkoušky na VŠ. Systematická příprava s garantovanými výsledky.</p>
             </div>
             <div class="service-card">
-                <h3>🔍 Analýza Potřeb</h3>
+                <h3><i class="fas fa-search"></i> Analýza Potřeb</h3>
                 <p>Nejdříve zjistíme, kde máte problémy. Pak vytvoříme plán na jejich řešení.</p>
             </div>
             <div class="service-card">
-                <h3>💻 Online Výuka</h3>
+                <h3><i class="fas fa-laptop"></i> Online Výuka</h3>
                 <p>Moderní přístup s online lekcemi. Bez cestování, více flexibility v čase.</p>
             </div>
             <div class="service-card">
-                <h3>📊 Pokrok a Zpětná Vazba</h3>
+                <h3><i class="fas fa-chart-bar"></i> Pokrok a Zpětná Vazba</h3>
                 <p>Pravidelné vyhodnocování pokroku a doporučení jak se dál zlepšovat.</p>
             </div>
             <div class="service-card">
-                <h3>📖 Vlastní Materiály</h3>
+                <h3><i class="fas fa-file-pdf"></i> Vlastní Materiály</h3>
                 <p>Přístup k vlastním skriptům a sbírkám příkladů zdarma pro všechny studenty.</p>
             </div>
         </div>
@@ -679,7 +723,7 @@
                 <button>Objednat</button>
             </div>
         </div>
-        <p style="text-align: center; margin-top: 3rem; color: #666;">✨ První konzultace je vždy <strong>zdarma</strong>!</p>
+        <p style="text-align: center; margin-top: 3rem; color: #555;">✨ První konzultace je vždy <strong>zdarma</strong>!</p>
     </section>
 
     <!-- MATERIALS SECTION -->
@@ -689,42 +733,42 @@
         <div class="materials-grid">
             <div class="material-item">
                 <div>
-                    <h3>📐 Kvadratické Rovnice</h3>
+                    <h3><i class="fas fa-square"></i> Kvadratické Rovnice</h3>
                     <p>Matematika | 8.-9. třída</p>
                 </div>
                 <a href="#" class="material-link">Stáhnout PDF</a>
             </div>
             <div class="material-item">
                 <div>
-                    <h3>📊 Přijímačky - Všechna Témata</h3>
+                    <h3><i class="fas fa-chart-pie"></i> Přijímačky - Všechna Témata</h3>
                     <p>Matematika | Příprava</p>
                 </div>
                 <a href="#" class="material-link">Stáhnout PDF</a>
             </div>
             <div class="material-item">
                 <div>
-                    <h3>⚙️ Kinematika</h3>
+                    <h3><i class="fas fa-cog"></i> Kinematika</h3>
                     <p>Fyzika | Střední škola</p>
                 </div>
                 <a href="#" class="material-link">Stáhnout PDF</a>
             </div>
             <div class="material-item">
                 <div>
-                    <h3>🌊 Vlnění a Zvuk</h3>
+                    <h3><i class="fas fa-wave-square"></i> Vlnění a Zvuk</h3>
                     <p>Fyzika | Střední škola</p>
                 </div>
                 <a href="#" class="material-link">Stáhnout PDF</a>
             </div>
             <div class="material-item">
                 <div>
-                    <h3>📈 Exponenciální Funkce</h3>
+                    <h3><i class="fas fa-chart-line"></i> Exponenciální Funkce</h3>
                     <p>Matematika | Střední škola</p>
                 </div>
                 <a href="#" class="material-link">Stáhnout PDF</a>
             </div>
             <div class="material-item">
                 <div>
-                    <h3>🔬 Termodynamika</h3>
+                    <h3><i class="fas fa-flask"></i> Termodynamika</h3>
                     <p>Fyzika | Příprava na maturitu</p>
                 </div>
                 <a href="#" class="material-link">Stáhnout PDF</a>
@@ -753,7 +797,7 @@
         </div>
         
         <div style="text-align: center;">
-            <button class="cta-button">Objednat Lekcу</button>
+            <button class="cta-button">Objednat Lekcи</button>
         </div>
     </section>
 
