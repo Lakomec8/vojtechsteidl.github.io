@@ -3,181 +3,770 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Doučování matematiky a fyziky Jihlava | Váš Název</title>
-    <meta name="description" content="Profesionální doučování matematiky a fyziky v Jihlavě. Příprava na přijímačky, maturitu. Online a osobní výuka.">
-    <meta name="keywords" content="doučování matematika Jihlava, doučování fyzika Jihlava, příprava přijímačky">
-    <link rel="stylesheet" href="style.css">
+    <title>Vojtech Steidl | Doučování Matematiky a Fyziky</title>
+    <meta name="description" content="Profesionální doučování matematiky a fyziky v Jihlavě. Individuální přístup, příprava na přijímačky a maturitu.">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', sans-serif;
+            background-color: #f8f9fb;
+            color: #2c3e50;
+            line-height: 1.6;
+        }
+
+        /* HEADER / NAV */
+        header {
+            background: white;
+            padding: 1.5rem 0;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        nav {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #2c3e50;
+            text-decoration: none;
+            letter-spacing: -0.5px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #666;
+            font-size: 0.95rem;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: #2c3e50;
+        }
+
+        @media (max-width: 768px) {
+            .nav-links {
+                gap: 1rem;
+            }
+            .nav-links a {
+                font-size: 0.9rem;
+            }
+        }
+
+        /* HERO SECTION */
+        .hero {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 6rem 2rem;
+            text-align: center;
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            line-height: 1.2;
+            color: #2c3e50;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            color: #666;
+            margin-bottom: 2rem;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .cta-button {
+            display: inline-block;
+            background: #2c3e50;
+            color: white;
+            padding: 0.95rem 2.5rem;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: all 0.3s;
+            border: none;
+            cursor: pointer;
+        }
+
+        .cta-button:hover {
+            background: #1a252f;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 16px rgba(44, 62, 80, 0.15);
+        }
+
+        @media (max-width: 768px) {
+            .hero {
+                padding: 4rem 2rem;
+            }
+            .hero h1 {
+                font-size: 2rem;
+            }
+            .hero p {
+                font-size: 1.05rem;
+            }
+        }
+
+        /* FEATURES SECTION */
+        .features {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 4rem 2rem;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .feature-card {
+            background: white;
+            padding: 2.5rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+            text-align: center;
+            transition: all 0.3s;
+        }
+
+        .feature-card:hover {
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+            transform: translateY(-4px);
+        }
+
+        .feature-icon {
+            width: 60px;
+            height: 60px;
+            background: #f0f3f7;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+            font-size: 2rem;
+        }
+
+        .feature-card h3 {
+            font-size: 1.3rem;
+            margin-bottom: 1rem;
+            color: #2c3e50;
+        }
+
+        .feature-card p {
+            color: #666;
+            font-size: 0.95rem;
+            line-height: 1.7;
+        }
+
+        /* ABOUT SECTION */
+        .about {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 4rem 2rem;
+        }
+
+        .about-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+        }
+
+        .about-image {
+            width: 300px;
+            height: 300px;
+            background: linear-gradient(135deg, #f5f7fa 0%, #eef0f5 100%);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 6rem;
+            margin: 0 auto;
+        }
+
+        .about h2 {
+            font-size: 2.2rem;
+            margin-bottom: 1.5rem;
+            color: #2c3e50;
+        }
+
+        .about p {
+            color: #666;
+            margin-bottom: 1.5rem;
+            line-height: 1.8;
+            font-size: 1rem;
+        }
+
+        @media (max-width: 768px) {
+            .about-content {
+                grid-template-columns: 1fr;
+            }
+            .about h2 {
+                font-size: 1.8rem;
+            }
+        }
+
+        /* SERVICES SECTION */
+        .services {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 4rem 2rem;
+        }
+
+        .services h2 {
+            font-size: 2.2rem;
+            text-align: center;
+            margin-bottom: 3rem;
+            color: #2c3e50;
+        }
+
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 2rem;
+        }
+
+        .service-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+            border-left: 4px solid #2c3e50;
+            transition: all 0.3s;
+        }
+
+        .service-card:hover {
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+        }
+
+        .service-card h3 {
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+            color: #2c3e50;
+        }
+
+        .service-card p {
+            color: #666;
+            font-size: 0.95rem;
+        }
+
+        /* PRICING SECTION */
+        .pricing {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 4rem 2rem;
+        }
+
+        .pricing h2 {
+            font-size: 2.2rem;
+            text-align: center;
+            margin-bottom: 3rem;
+            color: #2c3e50;
+        }
+
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+        }
+
+        .pricing-card {
+            background: white;
+            padding: 2.5rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+            text-align: center;
+            transition: all 0.3s;
+        }
+
+        .pricing-card:hover {
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+            transform: translateY(-4px);
+        }
+
+        .pricing-card.featured {
+            border: 2px solid #2c3e50;
+            transform: scale(1.05);
+        }
+
+        .pricing-card h3 {
+            font-size: 1.3rem;
+            margin-bottom: 1.5rem;
+            color: #2c3e50;
+        }
+
+        .price {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #2c3e50;
+            margin: 1rem 0;
+        }
+
+        .price-period {
+            color: #999;
+            font-size: 0.9rem;
+        }
+
+        .pricing-card p {
+            color: #666;
+            margin: 2rem 0;
+            font-size: 0.95rem;
+        }
+
+        .pricing-card button {
+            width: 100%;
+            padding: 0.8rem;
+            background: #f0f3f7;
+            border: none;
+            border-radius: 6px;
+            color: #2c3e50;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .pricing-card:hover button {
+            background: #2c3e50;
+            color: white;
+        }
+
+        /* MATERIALS SECTION */
+        .materials {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 4rem 2rem;
+        }
+
+        .materials h2 {
+            font-size: 2.2rem;
+            text-align: center;
+            margin-bottom: 3rem;
+            color: #2c3e50;
+        }
+
+        .materials-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 2rem;
+        }
+
+        .material-item {
+            background: white;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            transition: all 0.3s;
+        }
+
+        .material-item:hover {
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+            transform: translateY(-4px);
+        }
+
+        .material-item h3 {
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+            color: #2c3e50;
+        }
+
+        .material-item p {
+            color: #999;
+            font-size: 0.85rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .material-link {
+            display: inline-block;
+            color: #2c3e50;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.95rem;
+            transition: all 0.3s;
+        }
+
+        .material-link:hover {
+            color: #1a252f;
+        }
+
+        .material-link::after {
+            content: " →";
+            margin-left: 0.3rem;
+        }
+
+        /* CONTACT SECTION */
+        .contact {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 4rem 2rem;
+        }
+
+        .contact h2 {
+            font-size: 2.2rem;
+            text-align: center;
+            margin-bottom: 1rem;
+            color: #2c3e50;
+        }
+
+        .contact-intro {
+            text-align: center;
+            color: #666;
+            margin-bottom: 3rem;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .contact-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .contact-item {
+            background: white;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+            text-align: center;
+        }
+
+        .contact-item h3 {
+            font-size: 0.9rem;
+            color: #999;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 1rem;
+        }
+
+        .contact-item p {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+
+        .contact-item a {
+            color: #2c3e50;
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+
+        .contact-item a:hover {
+            color: #666;
+        }
+
+        /* FOOTER */
+        footer {
+            background: #2c3e50;
+            color: white;
+            padding: 3rem 2rem;
+            text-align: center;
+            margin-top: 4rem;
+        }
+
+        footer p {
+            max-width: 600px;
+            margin: 0 auto;
+            font-size: 0.95rem;
+            opacity: 0.8;
+        }
+
+        footer .divider {
+            height: 1px;
+            background: rgba(255, 255, 255, 0.1);
+            margin: 2rem 0;
+        }
+
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin: 2rem 0 0 0;
+        }
+
+        .social-links a {
+            color: white;
+            text-decoration: none;
+            font-size: 0.9rem;
+            opacity: 0.8;
+            transition: all 0.3s;
+        }
+
+        .social-links a:hover {
+            opacity: 1;
+        }
+
+        /* UTILITIES */
+        .section-title {
+            font-size: 2.2rem;
+            text-align: center;
+            margin-bottom: 3rem;
+            color: #2c3e50;
+        }
+
+        .divider-line {
+            width: 60px;
+            height: 3px;
+            background: #2c3e50;
+            margin: 1rem auto 2rem;
+        }
+
+        @media (max-width: 768px) {
+            .features-grid,
+            .services-grid,
+            .pricing-grid,
+            .materials-grid,
+            .contact-info {
+                grid-template-columns: 1fr;
+            }
+
+            .pricing-card.featured {
+                transform: scale(1);
+            }
+
+            .hero h1 {
+                font-size: 2rem;
+            }
+
+            .nav-links {
+                display: none;
+            }
+        }
+    </style>
 </head>
 <body>
+    <!-- HEADER -->
     <header>
-        <h1>🎓 Doučování Matematiky a Fyziky</h1>
-        <p>Profesionální příprava na přijímačky, maturitu i zkoušky na VŠ</p>
+        <nav>
+            <a href="#" class="logo">Vojtech Steidl</a>
+            <ul class="nav-links">
+                <li><a href="#about">O mně</a></li>
+                <li><a href="#services">Služby</a></li>
+                <li><a href="#pricing">Ceník</a></li>
+                <li><a href="#materials">Materiály</a></li>
+                <li><a href="#contact">Kontakt</a></li>
+            </ul>
+        </nav>
     </header>
-    
-    <nav>
-        <a href="#home">Domů</a>
-        <a href="#sluzby">Služby</a>
-        <a href="#skripta">Materiály</a>
-        <a href="#cenik">Ceník</a>
-        <a href="#kontakt">Kontakt</a>
-    </nav>
-    
-    <div class="container">
-        <!-- DOMOVSKÁ SEKCE -->
-        <section id="home">
-            <h2>Vítejte na mých stránkách</h2>
-            <p>Jmenuji se <strong>[Vojtěch Steidl]</strong> a jsem pedagogem s [2] lety zkušeností v doučování matematiky a fyziky v Jihlavě a okolí.</p>
-            
-            <p>Specializuji se na:</p>
-            <ul>
-                <li>Příprava na přijímací zkoušky na střední školy</li>
-                <li>Doučování matematiky pro všechny ročníky ZŠ a SŠ</li>
-                <li>Doučování fyziky od 7. třídy až po vysokou školu</li>
-                <li>Intenzivní příprava na maturitu</li>
-                <li>Online výuka přes Zoom/Google Meet i osobně</li>
-            </ul>
-            
-            <p>Mým cílem je, aby každý student porozuměl látce, a ne jen memoroval. Používám praktické příklady a zábavný přístup k výuce.</p>
-            
-            <button class="cta-button" onclick="document.getElementById('kontakt').scrollIntoView({behavior: 'smooth'})">
-                📞 Objednat konzultaci
-            </button>
-        </section>
-        
-        <!-- SLUŽBY -->
-        <section id="sluzby">
-            <h2>Co Nabízím</h2>
-            
-            <h3>📚 Doučování 1:1</h3>
-            <p>Individuální lekce přesně podle potřeb studenta. Zaměřuji se na slabá místa a pracuji k jejich překonání.</p>
-            
-            <h3>💻 Online Výuka</h3>
-            <p>Výuka přes Zoom, Google Meet nebo Teams. Ideální pro studenty, kteří nemají čas na dojíždění.</p>
-            
-            <h3>📖 Příprava na Zkoušky</h3>
-            <p>Intenzivní příprava na přijímačky, maturitu a ostatní důležité zkoušky. Vypracuji personalizovaný studijní plán.</p>
-            
-            <h3>📝 Vlastní Studijní Materiály</h3>
-            <p>Bezplatně stahujte moje vlastně vytvořené PDF skripta s řešenými příklady a cvičeními.</p>
-        </section>
-        
-        <!-- MATERIÁLY -->
-        <section id="skripta">
-            <h2>📚 Studijní Materiály ke Stažení</h2>
-            <p>Veškeré níže uvedené materiály si můžete stáhnout <strong>zcela zdarma</strong>:</p>
-            
-            <h3>Matematika - Základní Škola</h3>
-            <div class="skriptum">
-                <h4>📄 Matematika - Přijímačky (8.-9. třída)</h4>
-                <p>Kompletní přehled všech důležitých témat pro přijímací zkoušky. Obsahuje 50+ řešených příkladů.</p>
-                <a href="https://drive.google.com/file/d/VLOZTE-ID-VASHO-PDF/view" target="_blank" class="cta-button">
-                    📥 Stáhnout PDF
-                </a>
+
+    <!-- HERO SECTION -->
+    <section class="hero">
+        <h1>Doučování Matematiky a Fyziky</h1>
+        <p>Individuální přístup k výuce. Příprava na přijímačky, maturitu a zkoušky na vysoké škole. Soustředění se na porozumění, ne memorování.</p>
+        <button class="cta-button" onclick="document.getElementById('contact').scrollIntoView({behavior: 'smooth'})">Objednat konzultaci</button>
+    </section>
+
+    <!-- FEATURES SECTION -->
+    <section class="features">
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon">👨‍🏫</div>
+                <h3>Zkušenost a Kvalita</h3>
+                <p>Roky zkušeností s pedagógikou. Úspěšné přípravy na přijímačky a maturitu s vysokou úspěšností studentů.</p>
             </div>
-            
-            <h3>Matematika - Střední Škola</h3>
-            <div class="skriptum">
-                <h4>📄 Kvadratické Rovnice</h4>
-                <p>Detailní vysvětlení kvadratických rovnic s grafickými znázorněními.</p>
-                <a href="https://drive.google.com/file/d/VLOZTE-ID-VASHO-PDF/view" target="_blank" class="cta-button">
-                    📥 Stáhnout PDF
-                </a>
+            <div class="feature-card">
+                <div class="feature-icon">🎯</div>
+                <h3>Individuální Plán</h3>
+                <p>Každý student má svůj vlastní tempo. Vytváříme plán přesně podle vašich potřeb a cílů.</p>
             </div>
-            
-            <h3>Fyzika</h3>
-            <div class="skriptum">
-                <h4>📄 Kinematika a Dynamika</h4>
-                <p>Pohyb těles, síly, zrychlení. S diagramy a praktikami příklady.</p>
-                <a href="https://drive.google.com/file/d/VLOZTE-ID-VASHO-PDF/view" target="_blank" class="cta-button">
-                    📥 Stáhnout PDF
-                </a>
+            <div class="feature-card">
+                <div class="feature-icon">💡</div>
+                <h3>Porozumění</h3>
+                <p>Zaměřujeme se na hlubokému porozumění látce, nikoli povrchnímu memorování. Vy budete vědět <em>proč</em>.</p>
             </div>
-            
-            <p style="margin-top: 2rem;"><em>Tip: Nové materiály přidávám každý měsíc. Sledujte moji <a href="https://www.facebook.com/VASE-FB-STRANKY" target="_blank">Facebook stránku</a> pro novinky.</em></p>
-        </section>
-        
-        <!-- CENÍK -->
-        <section id="cenik">
-            <h2>💰 Ceník</h2>
-            <p>Ceny jsou flexibilní podle druhu výuky a počtu hodiny za měsíc.</p>
-            
-            <div class="cenika">
-                <div class="cena-karta">
-                    <h3>1:1 Lekce</h3>
-                    <p>Individuální lekceSN</p>
-                    <div class="cena">300 Kč</div>
-                    <p>za 60 minut</p>
-                    <p><small>Osobní nebo online</small></p>
+        </div>
+    </section>
+
+    <!-- ABOUT SECTION -->
+    <section class="about" id="about">
+        <div class="about-content">
+            <div class="about-image">📊</div>
+            <div>
+                <h2>Kdo jsem</h2>
+                <p>Jsem pedagogem se specialistem na matematiku a fyziku. Věřím, že správný přístup a trpělivost mohou udělat zázraky.</p>
+                <p>Moji studenti nejsou jen čísla. Každý z nich má své silné stránky a já je pomáhám je maximálně využít.</p>
+                <p>Když přicházejí studenti s obavou z matematiky, odcházejí s pochopením. To je můj cíl.</p>
+                <button class="cta-button" onclick="document.getElementById('contact').scrollIntoView({behavior: 'smooth'})">Kontaktujte mě</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- SERVICES SECTION -->
+    <section class="services" id="services">
+        <h2>Co Nabízím</h2>
+        <div class="services-grid">
+            <div class="service-card">
+                <h3>🎓 Individuální Doučování</h3>
+                <p>1:1 lekce zaměřené přesně na vaše potřeby. Online nebo osobně v Jihlavě.</p>
+            </div>
+            <div class="service-card">
+                <h3>📚 Příprava na Zkoušky</h3>
+                <p>Přijímačky, maturita, zkoušky na VŠ. Systematická příprava s garantovanými výsledky.</p>
+            </div>
+            <div class="service-card">
+                <h3>🔍 Analýza Potřeb</h3>
+                <p>Nejdříve zjistíme, kde máte problémy. Pak vytvoříme plán na jejich řešení.</p>
+            </div>
+            <div class="service-card">
+                <h3>💻 Online Výuka</h3>
+                <p>Moderní přístup s online lekcemi. Bez cestování, více flexibility v čase.</p>
+            </div>
+            <div class="service-card">
+                <h3>📊 Pokrok a Zpětná Vazba</h3>
+                <p>Pravidelné vyhodnocování pokroku a doporučení jak se dál zlepšovat.</p>
+            </div>
+            <div class="service-card">
+                <h3>📖 Vlastní Materiály</h3>
+                <p>Přístup k vlastním skriptům a sbírkám příkladů zdarma pro všechny studenty.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- PRICING SECTION -->
+    <section class="pricing" id="pricing">
+        <h2>Ceník</h2>
+        <div class="pricing-grid">
+            <div class="pricing-card">
+                <h3>Jednorázová Lekce</h3>
+                <div class="price">300 Kč</div>
+                <p class="price-period">za 60 minut</p>
+                <p>Zkuste si bez závazku. Ideální pro první setkání a zjištění způsobu práce.</p>
+                <button>Vyzkoušet</button>
+            </div>
+            <div class="pricing-card featured">
+                <h3>Balíček 5 Lekcí</h3>
+                <div class="price">1 350 Kč</div>
+                <p class="price-period">za 5 × 60 minut (-10%)</p>
+                <p>Ideální pro začátek. Získáte slevu a vytvoříme stabilní plán.</p>
+                <button>Objednat</button>
+            </div>
+            <div class="pricing-card">
+                <h3>Balíček 10 Lekcí</h3>
+                <div class="price">2 550 Kč</div>
+                <p class="price-period">za 10 × 60 minut (-15%)</p>
+                <p>Nejpopulárnější. Dlouhodobý plán s maximální slevou.</p>
+                <button>Objednat</button>
+            </div>
+        </div>
+        <p style="text-align: center; margin-top: 3rem; color: #666;">✨ První konzultace je vždy <strong>zdarma</strong>!</p>
+    </section>
+
+    <!-- MATERIALS SECTION -->
+    <section class="materials" id="materials">
+        <h2>Studijní Materiály</h2>
+        <p style="text-align: center; color: #666; margin-bottom: 3rem;">Stahujte si moje vlastní skripta a sbírky příkladů zcela zdarma</p>
+        <div class="materials-grid">
+            <div class="material-item">
+                <div>
+                    <h3>📐 Kvadratické Rovnice</h3>
+                    <p>Matematika | 8.-9. třída</p>
                 </div>
-                
-                <div class="cena-karta">
-                    <h3>Balíček 5 lekcí</h3>
-                    <p>Sleva 10%</p>
-                    <div class="cena">1 350 Kč</div>
-                    <p>za 5 × 60 minut</p>
-                    <p><small>Bez limitu platnosti</small></p>
-                </div>
-                
-                <div class="cena-karta">
-                    <h3>Balíček 10 lekcí</h3>
-                    <p>Sleva 15%</p>
-                    <div class="cena">2 550 Kč</div>
-                    <p>za 10 × 60 minut</p>
-                    <p><small>Bez limitu platnosti</small></p>
-                </div>
+                <a href="#" class="material-link">Stáhnout PDF</a>
             </div>
-            
-            <p style="margin-top: 2rem;"><strong>První konzultace je zdarma!</strong> Zjistíme si, co student potřebuje, a domluvíme si plán přípravy.</p>
-        </section>
+            <div class="material-item">
+                <div>
+                    <h3>📊 Přijímačky - Všechna Témata</h3>
+                    <p>Matematika | Příprava</p>
+                </div>
+                <a href="#" class="material-link">Stáhnout PDF</a>
+            </div>
+            <div class="material-item">
+                <div>
+                    <h3>⚙️ Kinematika</h3>
+                    <p>Fyzika | Střední škola</p>
+                </div>
+                <a href="#" class="material-link">Stáhnout PDF</a>
+            </div>
+            <div class="material-item">
+                <div>
+                    <h3>🌊 Vlnění a Zvuk</h3>
+                    <p>Fyzika | Střední škola</p>
+                </div>
+                <a href="#" class="material-link">Stáhnout PDF</a>
+            </div>
+            <div class="material-item">
+                <div>
+                    <h3>📈 Exponenciální Funkce</h3>
+                    <p>Matematika | Střední škola</p>
+                </div>
+                <a href="#" class="material-link">Stáhnout PDF</a>
+            </div>
+            <div class="material-item">
+                <div>
+                    <h3>🔬 Termodynamika</h3>
+                    <p>Fyzika | Příprava na maturitu</p>
+                </div>
+                <a href="#" class="material-link">Stáhnout PDF</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- CONTACT SECTION -->
+    <section class="contact" id="contact">
+        <h2>Pojďme se Setkat</h2>
+        <p class="contact-intro">Mám zájem seznámit se s vámi a pochopit vaše potřeby. První konzultace je vždy zdarma a bez závazku.</p>
         
-        <!-- KONTAKT -->
-        <section id="kontakt">
-            <h2>📞 Kontakt</h2>
-            
-            <h3>Jak mě dosáhnete:</h3>
-            <ul>
-                <li><strong>📱 Telefon/SMS:</strong> <a href="tel:+420728345633">+420 XXX XXX XXX</a></li>
-                <li><strong>✉️ E-mail:</strong> <a href="mailto:vojtasteidl@seznam.cz">vase.email@gmail.com</a></li>
-                <li><strong>💬 WhatsApp:</strong> <a href="https://wa.me/420728345633">Napsat zprávu</a></li>
-                <li><strong>📍 Lokace:</strong> Jihlava a okolí (přijíždím i mimo město)</li>
-            </ul>
-            
-            <h3>Sociální Sítě:</h3>
-            <ul>
-                <li><a href="https://www.facebook.com/VASE-STRANKY" target="_blank">Facebook</a></li>
-                <li><a href="https://www.instagram.com/VASE-STRANKY" target="_blank">Instagram</a></li>
-                <li><a href="https://www.superprof.cz/VASE-STRANKY" target="_blank">Superprof</a></li>
-            </ul>
-            
-            <h3>Objednat si lekcidla:</h3>
-            <p>Napište mi zprávu s následujícím:</p>
-            <ul>
-                <li>Jaký předmět a který ročník</li>
-                <li>Jaký je váš cíl (přijímačky, maturita, zlepšení známek)</li>
-                <li>Kdy vám vyhovuje (dny a časy)</li>
-                <li>Online nebo osobně?</li>
-            </ul>
-            
-            <button class="cta-button" onclick="window.location.href='tel:+420728345633'">
-                📞 Zavolat
-            </button>
-            <button class="cta-button" onclick="window.location.href='mailto:vojtasteidl@seznam.cz'" style="background: #764ba2;">
-                ✉️ Napsat e-mail
-            </button>
-        </section>
+        <div class="contact-info">
+            <div class="contact-item">
+                <h3>📱 Telefon / SMS</h3>
+                <p><a href="tel:+420XXX XXX XXX">+420 XXX XXX XXX</a></p>
+            </div>
+            <div class="contact-item">
+                <h3>✉️ Email</h3>
+                <p><a href="mailto:vojtech@example.com">vojtech@example.com</a></p>
+            </div>
+            <div class="contact-item">
+                <h3>💬 WhatsApp</h3>
+                <p><a href="https://wa.me/420XXXXXXXXX" target="_blank">Napsat zprávu</a></p>
+            </div>
+        </div>
         
-        <!-- O WEBU -->
-        <section>
-            <h2>O Tomto Webu</h2>
-            <p>Tento web je vytvořen na <strong>GitHub Pages</strong> a je <strong>zcela zdarma</strong>. Nic vás netlumočí, všechny údaje jsou bezpečné.</p>
-            <p><small>Poslední aktualizace: [16.11.2025]. © [Vojtěch Steidl] 2025</small></p>
-        </section>
-    </div>
-    
+        <div style="text-align: center;">
+            <button class="cta-button">Objednat Lekcу</button>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
     <footer>
-        <p><strong>Doučování Matematiky a Fyziky | Jihlava</strong></p>
-        <p>© 2025 [Vojtěch Steidl]. Všechna práva vyhrazena.</p>
-        <p>Vytvořeno na <a href="https://pages.github.com" target="_blank" style="color: #667eea;">GitHub Pages</a></p>
+        <p>Doučování matematiky a fyziky v Jihlavě. Příprava na přijímačky a maturitu.</p>
+        <div class="divider"></div>
+        <div class="social-links">
+            <a href="#" target="_blank">Facebook</a>
+            <a href="#" target="_blank">Instagram</a>
+            <a href="#" target="_blank">LinkedIn</a>
+        </div>
+        <p style="margin-top: 2rem; font-size: 0.85rem;">© 2025 Vojtech Steidl. Všechna práva vyhrazena.</p>
     </footer>
 </body>
 </html>
