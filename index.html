@@ -25,16 +25,6 @@
             min-height: 100vh;
         }
 
-        /* GLASS MORPHISM MIXIN */
-        .glass {
-            background: rgba(255, 255, 255, 0.7);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            box-shadow: 0 8px 32px rgba(31, 38, 135, 0.15);
-        }
-
-        /* HEADER / NAV */
         header {
             background: rgba(255, 255, 255, 0.8);
             backdrop-filter: blur(10px);
@@ -82,16 +72,6 @@
             color: #2c3e50;
         }
 
-        @media (max-width: 768px) {
-            .nav-links {
-                gap: 1rem;
-            }
-            .nav-links a {
-                font-size: 0.9rem;
-            }
-        }
-
-        /* HERO SECTION */
         .hero {
             max-width: 1200px;
             margin: 0 auto;
@@ -137,19 +117,6 @@
             box-shadow: 0 12px 30px rgba(44, 62, 80, 0.3);
         }
 
-        @media (max-width: 768px) {
-            .hero {
-                padding: 4rem 2rem;
-            }
-            .hero h1 {
-                font-size: 2rem;
-            }
-            .hero p {
-                font-size: 1.05rem;
-            }
-        }
-
-        /* FEATURES SECTION */
         .features {
             max-width: 1200px;
             margin: 0 auto;
@@ -168,9 +135,6 @@
             border-radius: 16px;
             text-align: center;
             transition: all 0.3s;
-        }
-
-        .feature-card {
             background: rgba(255, 255, 255, 0.75);
             backdrop-filter: blur(10px);
             -webkit-backdrop-filter: blur(10px);
@@ -209,7 +173,6 @@
             line-height: 1.7;
         }
 
-        /* ABOUT SECTION */
         .about {
             max-width: 1200px;
             margin: 0 auto;
@@ -252,16 +215,6 @@
             font-size: 1rem;
         }
 
-        @media (max-width: 768px) {
-            .about-content {
-                grid-template-columns: 1fr;
-            }
-            .about h2 {
-                font-size: 1.8rem;
-            }
-        }
-
-        /* SERVICES SECTION */
         .services {
             max-width: 1200px;
             margin: 0 auto;
@@ -310,7 +263,6 @@
             font-size: 0.95rem;
         }
 
-        /* PRICING SECTION */
         .pricing {
             max-width: 1200px;
             margin: 0 auto;
@@ -399,7 +351,6 @@
             color: white;
         }
 
-        /* MATERIALS SECTION */
         .materials {
             max-width: 1200px;
             margin: 0 auto;
@@ -469,7 +420,6 @@
             margin-left: 0.3rem;
         }
 
-        /* CONTACT SECTION */
         .contact {
             max-width: 1200px;
             margin: 0 auto;
@@ -540,7 +490,6 @@
             color: #666;
         }
 
-        /* FOOTER */
         footer {
             background: rgba(44, 62, 80, 0.95);
             backdrop-filter: blur(10px);
@@ -583,34 +532,28 @@
         }
 
         @media (max-width: 768px) {
-            .features-grid,
-            .services-grid,
-            .pricing-grid,
-            .materials-grid,
-            .contact-info {
+            .features-grid, .services-grid, .pricing-grid, .materials-grid, .contact-info {
                 grid-template-columns: 1fr;
             }
-
             .pricing-card.featured {
                 transform: scale(1);
             }
-
             .pricing-card.featured:hover {
                 transform: scale(1) translateY(-6px);
             }
-
             .hero h1 {
                 font-size: 2rem;
             }
-
             .nav-links {
                 display: none;
+            }
+            .about-content {
+                grid-template-columns: 1fr;
             }
         }
     </style>
 </head>
 <body>
-    <!-- HEADER -->
     <header>
         <nav>
             <a href="#" class="logo">Vojtech Steidl</a>
@@ -624,14 +567,12 @@
         </nav>
     </header>
 
-    <!-- HERO SECTION -->
     <section class="hero">
         <h1>Doučování Matematiky a Fyziky</h1>
         <p>Individuální přístup k výuce. Příprava na přijímačky, maturitu a zkoušky na vysoké škole. Zaměření se na porozumění, ne memorování.</p>
         <button class="cta-button" onclick="document.getElementById('contact').scrollIntoView({behavior: 'smooth'})">Objednat konzultaci</button>
     </section>
 
-    <!-- FEATURES SECTION -->
     <section class="features">
         <div class="features-grid">
             <div class="feature-card">
@@ -652,7 +593,6 @@
         </div>
     </section>
 
-    <!-- ABOUT SECTION -->
     <section class="about" id="about">
         <div class="about-content">
             <div class="about-image">📊</div>
@@ -666,7 +606,6 @@
         </div>
     </section>
 
-    <!-- SERVICES SECTION -->
     <section class="services" id="services">
         <h2>Co Nabízím</h2>
         <div class="services-grid">
@@ -697,7 +636,6 @@
         </div>
     </section>
 
-    <!-- PRICING SECTION -->
     <section class="pricing" id="pricing">
         <h2>Ceník</h2>
         <div class="pricing-grid">
@@ -726,7 +664,6 @@
         <p style="text-align: center; margin-top: 3rem; color: #555;">✨ První konzultace je vždy <strong>zdarma</strong>!</p>
     </section>
 
-    <!-- MATERIALS SECTION -->
     <section class="materials" id="materials">
         <h2>Studijní Materiály</h2>
         <p style="text-align: center; color: #666; margin-bottom: 3rem;">Stahujte si moje vlastní skripta a sbírky příkladů zcela zdarma</p>
@@ -776,7 +713,6 @@
         </div>
     </section>
 
-    <!-- CONTACT SECTION -->
     <section class="contact" id="contact">
         <h2>Pojďme se Setkat</h2>
         <p class="contact-intro">Chci se seznámit s vámi a pochopit vaše potřeby. První konzultace je vždy zdarma a bez závazku.</p>
@@ -801,7 +737,6 @@
         </div>
     </section>
 
-    <!-- FOOTER -->
     <footer>
         <p>Doučování matematiky a fyziky v Jihlavě. Příprava na přijímačky a maturitu.</p>
         <div class="divider"></div>
