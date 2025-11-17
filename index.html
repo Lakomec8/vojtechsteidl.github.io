@@ -200,6 +200,7 @@
             font-size: 6rem;
             margin: 0 auto;
             box-shadow: 0 8px 32px rgba(31, 38, 135, 0.15);
+            overflow: hidden;
         }
 
         .about h2 {
@@ -442,47 +443,89 @@
             margin-right: auto;
         }
 
-        .contact-info {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 2rem;
-            margin-bottom: 3rem;
-        }
-
-        .contact-item {
-            padding: 2rem;
+        .contact-form {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 2.5rem;
             border-radius: 16px;
             background: rgba(255, 255, 255, 0.75);
             backdrop-filter: blur(10px);
             -webkit-backdrop-filter: blur(10px);
             border: 1px solid rgba(255, 255, 255, 0.3);
             box-shadow: 0 8px 32px rgba(31, 38, 135, 0.12);
-            text-align: center;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: #2c3e50;
+            font-size: 0.95rem;
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 0.8rem;
+            border: 1px solid rgba(44, 62, 80, 0.2);
+            border-radius: 8px;
+            font-family: inherit;
+            font-size: 0.95rem;
+            background: rgba(255, 255, 255, 0.5);
+            color: #2c3e50;
             transition: all 0.3s;
         }
 
-        .contact-item:hover {
-            background: rgba(255, 255, 255, 0.9);
-            box-shadow: 0 12px 40px rgba(31, 38, 135, 0.2);
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #2c3e50;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(44, 62, 80, 0.1);
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 120px;
+        }
+
+        .contact-info-quick {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 1.5rem;
+            margin-top: 3rem;
+        }
+
+        .contact-item {
+            padding: 1.5rem;
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.75);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 0 4px 16px rgba(31, 38, 135, 0.08);
+            text-align: center;
         }
 
         .contact-item h3 {
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             color: #999;
             text-transform: uppercase;
             letter-spacing: 1px;
-            margin-bottom: 1rem;
-        }
-
-        .contact-item p {
-            font-size: 1.2rem;
-            font-weight: 600;
-            color: #2c3e50;
+            margin-bottom: 0.8rem;
         }
 
         .contact-item a {
             color: #2c3e50;
             text-decoration: none;
+            font-weight: 600;
+            font-size: 0.95rem;
             transition: all 0.3s;
         }
 
@@ -532,7 +575,7 @@
         }
 
         @media (max-width: 768px) {
-            .features-grid, .services-grid, .pricing-grid, .materials-grid, .contact-info {
+            .features-grid, .services-grid, .pricing-grid, .materials-grid {
                 grid-template-columns: 1fr;
             }
             .pricing-card.featured {
@@ -595,7 +638,9 @@
 
     <section class="about" id="about">
         <div class="about-content">
-            <div class="about-image">📊</div>
+            <div class="about-image">
+                <img src="foto.jpg" alt="Vojtech Steidl" style="width: 100%; height: 100%; object-fit: cover;">
+            </div>
             <div>
                 <h2>Kdo jsem</h2>
                 <p>Jsem lektor matematiky a fyziky s vášní pro vzdělání. Věřím, že správný přístup a individuální vedení mohou udělat opravdu velký rozdíl.</p>
@@ -673,67 +718,97 @@
                     <h3><i class="fas fa-square"></i> Kvadratické Rovnice</h3>
                     <p>Matematika | 8.–9. třída</p>
                 </div>
-                <a href="#" class="material-link">Stáhnout PDF</a>
+                <a href="https://drive.google.com/file/d/ID-VASEHO-PDF-1/view" target="_blank" class="material-link">Stáhnout PDF</a>
             </div>
             <div class="material-item">
                 <div>
                     <h3><i class="fas fa-chart-pie"></i> Přijímačky – Všechna Témata</h3>
                     <p>Matematika | Příprava</p>
                 </div>
-                <a href="#" class="material-link">Stáhnout PDF</a>
+                <a href="https://drive.google.com/file/d/ID-VASEHO-PDF-2/view" target="_blank" class="material-link">Stáhnout PDF</a>
             </div>
             <div class="material-item">
                 <div>
                     <h3><i class="fas fa-cog"></i> Kinematika</h3>
                     <p>Fyzika | Střední škola</p>
                 </div>
-                <a href="#" class="material-link">Stáhnout PDF</a>
+                <a href="https://drive.google.com/file/d/ID-VASEHO-PDF-3/view" target="_blank" class="material-link">Stáhnout PDF</a>
             </div>
             <div class="material-item">
                 <div>
                     <h3><i class="fas fa-wave-square"></i> Vlnění a Zvuk</h3>
                     <p>Fyzika | Střední škola</p>
                 </div>
-                <a href="#" class="material-link">Stáhnout PDF</a>
+                <a href="https://drive.google.com/file/d/ID-VASEHO-PDF-4/view" target="_blank" class="material-link">Stáhnout PDF</a>
             </div>
             <div class="material-item">
                 <div>
                     <h3><i class="fas fa-chart-line"></i> Exponenciální Funkce</h3>
                     <p>Matematika | Střední škola</p>
                 </div>
-                <a href="#" class="material-link">Stáhnout PDF</a>
+                <a href="https://drive.google.com/file/d/ID-VASEHO-PDF-5/view" target="_blank" class="material-link">Stáhnout PDF</a>
             </div>
             <div class="material-item">
                 <div>
                     <h3><i class="fas fa-flask"></i> Termodynamika</h3>
                     <p>Fyzika | Příprava na maturitu</p>
                 </div>
-                <a href="#" class="material-link">Stáhnout PDF</a>
+                <a href="https://drive.google.com/file/d/ID-VASEHO-PDF-6/view" target="_blank" class="material-link">Stáhnout PDF</a>
             </div>
         </div>
     </section>
 
     <section class="contact" id="contact">
         <h2>Pojďme se Setkat</h2>
-        <p class="contact-intro">Chci se seznámit s vámi a pochopit vaše potřeby. První konzultace je vždy zdarma a bez závazku.</p>
+        <p class="contact-intro">Chci se seznámit s vámi a pochopit vaše potřeby. Vyplňte formulář níže a já se vám ozvem do 24 hodin.</p>
         
-        <div class="contact-info">
+        <form class="contact-form" action="https://formspree.io/f/xyzqwerty" method="POST">
+            <div class="form-group">
+                <label for="name">Vaše Jméno *</label>
+                <input type="text" id="name" name="name" required placeholder="Jan Novák">
+            </div>
+
+            <div class="form-group">
+                <label for="email">Email *</label>
+                <input type="email" id="email" name="email" required placeholder="jan@example.com">
+            </div>
+
+            <div class="form-group">
+                <label for="phone">Telefon</label>
+                <input type="tel" id="phone" name="phone" placeholder="728 345 633">
+            </div>
+
+            <div class="form-group">
+                <label for="subject">Předmět *</label>
+                <select id="subject" name="subject" required>
+                    <option value="">-- Vyberte --</option>
+                    <option value="Matematika">Matematika</option>
+                    <option value="Fyzika">Fyzika</option>
+                    <option value="Obojí">Obojí</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="message">Zpráva *</label>
+                <textarea id="message" name="message" required placeholder="Napište mi, s čím vám můžu pomoci..."></textarea>
+            </div>
+
+            <button type="submit" class="cta-button" style="width: 100%;">Odeslat Zprávu</button>
+        </form>
+
+        <div class="contact-info-quick">
             <div class="contact-item">
-                <h3>📱 Telefon / SMS</h3>
-                <p><a href="tel:+420728345633">728 345 633</a></p>
+                <h3>📱 Telefon</h3>
+                <a href="tel:+420728345633">728 345 633</a>
             </div>
             <div class="contact-item">
                 <h3>✉️ Email</h3>
-                <p><a href="mailto:vojtasteidl@seznam.cz">vojtasteidl@seznam.cz</a></p>
+                <a href="mailto:vojtasteidl@seznam.cz">vojtasteidl@seznam.cz</a>
             </div>
             <div class="contact-item">
                 <h3>💼 LinkedIn</h3>
-                <p><a href="https://www.linkedin.com/in/vojt%C4%9Bch-steidl-ba64b5158/" target="_blank">Profil na LinkedIn</a></p>
+                <a href="https://www.linkedin.com/in/vojt%C4%9Bch-steidl-ba64b5158/" target="_blank">Profil</a>
             </div>
-        </div>
-        
-        <div style="text-align: center;">
-            <button class="cta-button" onclick="document.getElementById('contact').scrollIntoView({behavior: 'smooth'})">Objednat Lekci</button>
         </div>
     </section>
 
