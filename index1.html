@@ -1,0 +1,816 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vojtech Steidl | Doučování Matematiky a Fyziky</title>
+    <meta name="description" content="Profesionální doučování matematiky a fyziky v Jihlavě. Individuální přístup, příprava na přijímačky a maturitu.">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #e8ecf1 50%, #f0f3f8 100%);
+            color: #2c3e50;
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        /* GLASS MORPHISM MIXIN */
+        .glass {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 8px 32px rgba(31, 38, 135, 0.15);
+        }
+
+        /* HEADER / NAV */
+        header {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            padding: 1.5rem 0;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        nav {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #2c3e50;
+            text-decoration: none;
+            letter-spacing: -0.5px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #666;
+            font-size: 0.95rem;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: #2c3e50;
+        }
+
+        @media (max-width: 768px) {
+            .nav-links {
+                gap: 1rem;
+            }
+            .nav-links a {
+                font-size: 0.9rem;
+            }
+        }
+
+        /* HERO SECTION */
+        .hero {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 6rem 2rem;
+            text-align: center;
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            line-height: 1.2;
+            color: #2c3e50;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            color: #555;
+            margin-bottom: 2rem;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .cta-button {
+            display: inline-block;
+            background: linear-gradient(135deg, #2c3e50 0%, #1a252f 100%);
+            color: white;
+            padding: 0.95rem 2.5rem;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: all 0.3s;
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 8px 20px rgba(44, 62, 80, 0.2);
+        }
+
+        .cta-button:hover {
+            background: linear-gradient(135deg, #1a252f 0%, #0f1620 100%);
+            transform: translateY(-3px);
+            box-shadow: 0 12px 30px rgba(44, 62, 80, 0.3);
+        }
+
+        @media (max-width: 768px) {
+            .hero {
+                padding: 4rem 2rem;
+            }
+            .hero h1 {
+                font-size: 2rem;
+            }
+            .hero p {
+                font-size: 1.05rem;
+            }
+        }
+
+        /* FEATURES SECTION */
+        .features {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 4rem 2rem;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .feature-card {
+            padding: 2.5rem;
+            border-radius: 16px;
+            text-align: center;
+            transition: all 0.3s;
+        }
+
+        .feature-card {
+            background: rgba(255, 255, 255, 0.75);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 0 8px 32px rgba(31, 38, 135, 0.12);
+        }
+
+        .feature-card:hover {
+            background: rgba(255, 255, 255, 0.9);
+            box-shadow: 0 16px 48px rgba(31, 38, 135, 0.2);
+            transform: translateY(-6px);
+        }
+
+        .feature-icon {
+            width: 70px;
+            height: 70px;
+            background: linear-gradient(135deg, #e8ecf1 0%, #f0f3f8 100%);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+            font-size: 2.2rem;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+        }
+
+        .feature-card h3 {
+            font-size: 1.3rem;
+            margin-bottom: 1rem;
+            color: #2c3e50;
+        }
+
+        .feature-card p {
+            color: #666;
+            font-size: 0.95rem;
+            line-height: 1.7;
+        }
+
+        /* ABOUT SECTION */
+        .about {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 4rem 2rem;
+        }
+
+        .about-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+        }
+
+        .about-image {
+            width: 300px;
+            height: 300px;
+            background: rgba(255, 255, 255, 0.75);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 6rem;
+            margin: 0 auto;
+            box-shadow: 0 8px 32px rgba(31, 38, 135, 0.15);
+        }
+
+        .about h2 {
+            font-size: 2.2rem;
+            margin-bottom: 1.5rem;
+            color: #2c3e50;
+        }
+
+        .about p {
+            color: #555;
+            margin-bottom: 1.5rem;
+            line-height: 1.8;
+            font-size: 1rem;
+        }
+
+        @media (max-width: 768px) {
+            .about-content {
+                grid-template-columns: 1fr;
+            }
+            .about h2 {
+                font-size: 1.8rem;
+            }
+        }
+
+        /* SERVICES SECTION */
+        .services {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 4rem 2rem;
+        }
+
+        .services h2 {
+            font-size: 2.2rem;
+            text-align: center;
+            margin-bottom: 3rem;
+            color: #2c3e50;
+        }
+
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 2rem;
+        }
+
+        .service-card {
+            padding: 2rem;
+            border-radius: 16px;
+            background: rgba(255, 255, 255, 0.75);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 0 8px 32px rgba(31, 38, 135, 0.12);
+            border-left: 4px solid #2c3e50;
+            transition: all 0.3s;
+        }
+
+        .service-card:hover {
+            background: rgba(255, 255, 255, 0.9);
+            box-shadow: 0 12px 40px rgba(31, 38, 135, 0.2);
+            transform: translateY(-3px);
+        }
+
+        .service-card h3 {
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+            color: #2c3e50;
+        }
+
+        .service-card p {
+            color: #666;
+            font-size: 0.95rem;
+        }
+
+        /* PRICING SECTION */
+        .pricing {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 4rem 2rem;
+        }
+
+        .pricing h2 {
+            font-size: 2.2rem;
+            text-align: center;
+            margin-bottom: 3rem;
+            color: #2c3e50;
+        }
+
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+        }
+
+        .pricing-card {
+            padding: 2.5rem;
+            border-radius: 16px;
+            background: rgba(255, 255, 255, 0.75);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 0 8px 32px rgba(31, 38, 135, 0.12);
+            text-align: center;
+            transition: all 0.3s;
+        }
+
+        .pricing-card:hover {
+            background: rgba(255, 255, 255, 0.9);
+            box-shadow: 0 16px 48px rgba(31, 38, 135, 0.2);
+            transform: translateY(-6px);
+        }
+
+        .pricing-card.featured {
+            border: 2px solid #2c3e50;
+            transform: scale(1.05);
+            background: rgba(255, 255, 255, 0.85);
+        }
+
+        .pricing-card.featured:hover {
+            transform: scale(1.05) translateY(-6px);
+        }
+
+        .pricing-card h3 {
+            font-size: 1.3rem;
+            margin-bottom: 1.5rem;
+            color: #2c3e50;
+        }
+
+        .price {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #2c3e50;
+            margin: 1rem 0;
+        }
+
+        .price-period {
+            color: #999;
+            font-size: 0.9rem;
+        }
+
+        .pricing-card p {
+            color: #666;
+            margin: 2rem 0;
+            font-size: 0.95rem;
+        }
+
+        .pricing-card button {
+            width: 100%;
+            padding: 0.8rem;
+            background: rgba(44, 62, 80, 0.1);
+            border: 1px solid #2c3e50;
+            border-radius: 8px;
+            color: #2c3e50;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .pricing-card:hover button {
+            background: #2c3e50;
+            color: white;
+        }
+
+        /* MATERIALS SECTION */
+        .materials {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 4rem 2rem;
+        }
+
+        .materials h2 {
+            font-size: 2.2rem;
+            text-align: center;
+            margin-bottom: 3rem;
+            color: #2c3e50;
+        }
+
+        .materials-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 2rem;
+        }
+
+        .material-item {
+            padding: 2rem;
+            border-radius: 16px;
+            background: rgba(255, 255, 255, 0.75);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 0 8px 32px rgba(31, 38, 135, 0.12);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            transition: all 0.3s;
+        }
+
+        .material-item:hover {
+            background: rgba(255, 255, 255, 0.9);
+            box-shadow: 0 12px 40px rgba(31, 38, 135, 0.2);
+            transform: translateY(-4px);
+        }
+
+        .material-item h3 {
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+            color: #2c3e50;
+        }
+
+        .material-item p {
+            color: #999;
+            font-size: 0.85rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .material-link {
+            display: inline-block;
+            color: #2c3e50;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.95rem;
+            transition: all 0.3s;
+        }
+
+        .material-link:hover {
+            color: #1a252f;
+        }
+
+        .material-link::after {
+            content: " →";
+            margin-left: 0.3rem;
+        }
+
+        /* CONTACT SECTION */
+        .contact {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 4rem 2rem;
+        }
+
+        .contact h2 {
+            font-size: 2.2rem;
+            text-align: center;
+            margin-bottom: 1rem;
+            color: #2c3e50;
+        }
+
+        .contact-intro {
+            text-align: center;
+            color: #666;
+            margin-bottom: 3rem;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .contact-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .contact-item {
+            padding: 2rem;
+            border-radius: 16px;
+            background: rgba(255, 255, 255, 0.75);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 0 8px 32px rgba(31, 38, 135, 0.12);
+            text-align: center;
+            transition: all 0.3s;
+        }
+
+        .contact-item:hover {
+            background: rgba(255, 255, 255, 0.9);
+            box-shadow: 0 12px 40px rgba(31, 38, 135, 0.2);
+        }
+
+        .contact-item h3 {
+            font-size: 0.9rem;
+            color: #999;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 1rem;
+        }
+
+        .contact-item p {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+
+        .contact-item a {
+            color: #2c3e50;
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+
+        .contact-item a:hover {
+            color: #666;
+        }
+
+        /* FOOTER */
+        footer {
+            background: rgba(44, 62, 80, 0.95);
+            backdrop-filter: blur(10px);
+            color: white;
+            padding: 3rem 2rem;
+            text-align: center;
+            margin-top: 4rem;
+        }
+
+        footer p {
+            max-width: 600px;
+            margin: 0 auto;
+            font-size: 0.95rem;
+            opacity: 0.8;
+        }
+
+        footer .divider {
+            height: 1px;
+            background: rgba(255, 255, 255, 0.2);
+            margin: 2rem 0;
+        }
+
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin: 2rem 0 0 0;
+        }
+
+        .social-links a {
+            color: white;
+            text-decoration: none;
+            font-size: 0.9rem;
+            opacity: 0.8;
+            transition: all 0.3s;
+        }
+
+        .social-links a:hover {
+            opacity: 1;
+        }
+
+        @media (max-width: 768px) {
+            .features-grid,
+            .services-grid,
+            .pricing-grid,
+            .materials-grid,
+            .contact-info {
+                grid-template-columns: 1fr;
+            }
+
+            .pricing-card.featured {
+                transform: scale(1);
+            }
+
+            .pricing-card.featured:hover {
+                transform: scale(1) translateY(-6px);
+            }
+
+            .hero h1 {
+                font-size: 2rem;
+            }
+
+            .nav-links {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- HEADER -->
+    <header>
+        <nav>
+            <a href="#" class="logo">Vojtech Steidl</a>
+            <ul class="nav-links">
+                <li><a href="#about">O mně</a></li>
+                <li><a href="#services">Služby</a></li>
+                <li><a href="#pricing">Ceník</a></li>
+                <li><a href="#materials">Materiály</a></li>
+                <li><a href="#contact">Kontakt</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- HERO SECTION -->
+    <section class="hero">
+        <h1>Doučování Matematiky a Fyziky</h1>
+        <p>Individuální přístup k výuce. Příprava na přijímačky, maturitu a zkoušky na vysoké škole. Zaměření se na porozumění, ne memorování.</p>
+        <button class="cta-button" onclick="document.getElementById('contact').scrollIntoView({behavior: 'smooth'})">Objednat konzultaci</button>
+    </section>
+
+    <!-- FEATURES SECTION -->
+    <section class="features">
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon"><i class="fas fa-award"></i></div>
+                <h3>Ověřená Kvalita</h3>
+                <p>Začínající lektor s ověřenými recenzemi na Superprofu a Doučuji. Studenti se na mě hlásí kvůli výsledkům a individuálnímu přístupu.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon"><i class="fas fa-chart-line"></i></div>
+                <h3>Individuální Plán</h3>
+                <p>Každý student má svůj vlastní tempo. Vytváříme plán přesně podle vašich potřeb a cílů.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon"><i class="fas fa-lightbulb"></i></div>
+                <h3>Skutečné Porozumění</h3>
+                <p>Zaměřujeme se na hlubokému porozumění látce, ne jen na memorování. Budete vědět, proč to tak je.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- ABOUT SECTION -->
+    <section class="about" id="about">
+        <div class="about-content">
+            <div class="about-image">📊</div>
+            <div>
+                <h2>Kdo jsem</h2>
+                <p>Jsem lektor matematiky a fyziky s vášní pro vzdělání. Věřím, že správný přístup a individuální vedení mohou udělat opravdu velký rozdíl.</p>
+                <p>Každý student je jiný. Moje práce je pochopit vaše silné stránky a pracovat na jejich rozvoji.</p>
+                <p>Když se studenti hlásí se strachem z matematiky, odcházejí s pochopením a sebevědomím. To je můj cíl.</p>
+                <button class="cta-button" onclick="document.getElementById('contact').scrollIntoView({behavior: 'smooth'})">Kontaktujte mě</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- SERVICES SECTION -->
+    <section class="services" id="services">
+        <h2>Co Nabízím</h2>
+        <div class="services-grid">
+            <div class="service-card">
+                <h3><i class="fas fa-user-graduate"></i> Individuální Doučování</h3>
+                <p>1:1 lekce zaměřené přesně na vaše potřeby. Online nebo osobně v Jihlavě.</p>
+            </div>
+            <div class="service-card">
+                <h3><i class="fas fa-book"></i> Příprava na Zkoušky</h3>
+                <p>Přijímačky, maturita, zkoušky na VŠ. Systematická příprava s garantovanými výsledky.</p>
+            </div>
+            <div class="service-card">
+                <h3><i class="fas fa-search"></i> Analýza Potřeb</h3>
+                <p>Nejdříve zjistíme, kde máte problémy. Pak vytvoříme plán na jejich řešení.</p>
+            </div>
+            <div class="service-card">
+                <h3><i class="fas fa-laptop"></i> Online Výuka</h3>
+                <p>Moderní přístup s online lekcemi. Bez cestování, více flexibility v čase.</p>
+            </div>
+            <div class="service-card">
+                <h3><i class="fas fa-chart-bar"></i> Pokrok a Zpětná Vazba</h3>
+                <p>Pravidelné vyhodnocování pokroku a doporučení, jak se dál zlepšovat.</p>
+            </div>
+            <div class="service-card">
+                <h3><i class="fas fa-file-pdf"></i> Vlastní Materiály</h3>
+                <p>Přístup k vlastním skriptům a sbírkám příkladů zdarma pro všechny studenty.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- PRICING SECTION -->
+    <section class="pricing" id="pricing">
+        <h2>Ceník</h2>
+        <div class="pricing-grid">
+            <div class="pricing-card">
+                <h3>Jednorázová Lekce</h3>
+                <div class="price">300 Kč</div>
+                <p class="price-period">za 60 minut</p>
+                <p>Zkuste si bez závazku. Ideální pro první setkání a seznámení se s mým přístupem.</p>
+                <button>Vyzkoušet</button>
+            </div>
+            <div class="pricing-card featured">
+                <h3>Balíček 5 Lekcí</h3>
+                <div class="price">1 350 Kč</div>
+                <p class="price-period">za 5 × 60 minut (-10%)</p>
+                <p>Ideální pro začátek. Získáte slevu a vytvoříme stabilní plán.</p>
+                <button>Objednat</button>
+            </div>
+            <div class="pricing-card">
+                <h3>Balíček 10 Lekcí</h3>
+                <div class="price">2 550 Kč</div>
+                <p class="price-period">za 10 × 60 minut (-15%)</p>
+                <p>Nejpopulárnější. Dlouhodobý plán s maximální slevou.</p>
+                <button>Objednat</button>
+            </div>
+        </div>
+        <p style="text-align: center; margin-top: 3rem; color: #555;">✨ První konzultace je vždy <strong>zdarma</strong>!</p>
+    </section>
+
+    <!-- MATERIALS SECTION -->
+    <section class="materials" id="materials">
+        <h2>Studijní Materiály</h2>
+        <p style="text-align: center; color: #666; margin-bottom: 3rem;">Stahujte si moje vlastní skripta a sbírky příkladů zcela zdarma</p>
+        <div class="materials-grid">
+            <div class="material-item">
+                <div>
+                    <h3><i class="fas fa-square"></i> Kvadratické Rovnice</h3>
+                    <p>Matematika | 8.–9. třída</p>
+                </div>
+                <a href="#" class="material-link">Stáhnout PDF</a>
+            </div>
+            <div class="material-item">
+                <div>
+                    <h3><i class="fas fa-chart-pie"></i> Přijímačky – Všechna Témata</h3>
+                    <p>Matematika | Příprava</p>
+                </div>
+                <a href="#" class="material-link">Stáhnout PDF</a>
+            </div>
+            <div class="material-item">
+                <div>
+                    <h3><i class="fas fa-cog"></i> Kinematika</h3>
+                    <p>Fyzika | Střední škola</p>
+                </div>
+                <a href="#" class="material-link">Stáhnout PDF</a>
+            </div>
+            <div class="material-item">
+                <div>
+                    <h3><i class="fas fa-wave-square"></i> Vlnění a Zvuk</h3>
+                    <p>Fyzika | Střední škola</p>
+                </div>
+                <a href="#" class="material-link">Stáhnout PDF</a>
+            </div>
+            <div class="material-item">
+                <div>
+                    <h3><i class="fas fa-chart-line"></i> Exponenciální Funkce</h3>
+                    <p>Matematika | Střední škola</p>
+                </div>
+                <a href="#" class="material-link">Stáhnout PDF</a>
+            </div>
+            <div class="material-item">
+                <div>
+                    <h3><i class="fas fa-flask"></i> Termodynamika</h3>
+                    <p>Fyzika | Příprava na maturitu</p>
+                </div>
+                <a href="#" class="material-link">Stáhnout PDF</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- CONTACT SECTION -->
+    <section class="contact" id="contact">
+        <h2>Pojďme se Setkat</h2>
+        <p class="contact-intro">Chci se seznámit s vámi a pochopit vaše potřeby. První konzultace je vždy zdarma a bez závazku.</p>
+        
+        <div class="contact-info">
+            <div class="contact-item">
+                <h3>📱 Telefon / SMS</h3>
+                <p><a href="tel:+420728345633">728 345 633</a></p>
+            </div>
+            <div class="contact-item">
+                <h3>✉️ Email</h3>
+                <p><a href="mailto:vojtasteidl@seznam.cz">vojtasteidl@seznam.cz</a></p>
+            </div>
+            <div class="contact-item">
+                <h3>💼 LinkedIn</h3>
+                <p><a href="https://www.linkedin.com/in/vojt%C4%9Bch-steidl-ba64b5158/" target="_blank">Profil na LinkedIn</a></p>
+            </div>
+        </div>
+        
+        <div style="text-align: center;">
+            <button class="cta-button" onclick="document.getElementById('contact').scrollIntoView({behavior: 'smooth'})">Objednat Lekci</button>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer>
+        <p>Doučování matematiky a fyziky v Jihlavě. Příprava na přijímačky a maturitu.</p>
+        <div class="divider"></div>
+        <div class="social-links">
+            <a href="#" target="_blank">Facebook</a>
+            <a href="#" target="_blank">Instagram</a>
+            <a href="#" target="_blank">LinkedIn</a>
+        </div>
+        <p style="margin-top: 2rem; font-size: 0.85rem;">© 2025 Vojtech Steidl. Všechna práva vyhrazena.</p>
+    </footer>
+</body>
+</html>
