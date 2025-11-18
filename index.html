@@ -468,58 +468,6 @@
             margin-right: auto;
         }
 
-        .contact-form {
-            max-width: 600px;
-            margin: 0 auto;
-            padding: 2.5rem;
-            border-radius: 16px;
-            background: rgba(255, 255, 255, 0.75);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            box-shadow: 0 8px 32px rgba(31, 38, 135, 0.12);
-        }
-
-        .form-group {
-            margin-bottom: 1.5rem;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 0.5rem;
-            font-weight: 600;
-            color: #2c3e50;
-            font-size: 0.95rem;
-        }
-
-        .form-group input,
-        .form-group textarea,
-        .form-group select {
-            width: 100%;
-            padding: 0.8rem;
-            border: 1px solid rgba(44, 62, 80, 0.2);
-            border-radius: 8px;
-            font-family: inherit;
-            font-size: 0.95rem;
-            background: rgba(255, 255, 255, 0.5);
-            color: #2c3e50;
-            transition: all 0.3s;
-        }
-
-        .form-group input:focus,
-        .form-group textarea:focus,
-        .form-group select:focus {
-            outline: none;
-            border-color: #2c3e50;
-            background: white;
-            box-shadow: 0 0 0 3px rgba(44, 62, 80, 0.1);
-        }
-
-        .form-group textarea {
-            resize: vertical;
-            min-height: 120px;
-        }
-
         .contact-info-quick {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
@@ -726,28 +674,28 @@
                 <div class="price free">Zdarma</div>
                 <p class="price-period">30 minut</p>
                 <p>Seznámení se bez závazku. Otestujete si můj přístup, poradím vám na základě diagnostiky vašich potřeb a domluvíme si plán na míru. Ideální na to pochopit, zda si sedneme.</p>
-                <button>Objednat</button>
+                <button onclick="document.getElementById('contact').scrollIntoView({behavior: 'smooth'})">Objednat</button>
             </div>
             <div class="pricing-card">
                 <h3>Jednorázová Lekce</h3>
                 <div class="price">400 Kč</div>
                 <p class="price-period">za 60 minut</p>
                 <p>Zkuste si bez závazku. Ideální pro první setkání a seznámení se s mým přístupem.</p>
-                <button>Vyzkoušet</button>
+                <button onclick="document.getElementById('contact').scrollIntoView({behavior: 'smooth'})">Vyzkoušet</button>
             </div>
             <div class="pricing-card featured">
                 <h3>Balíček 5 Lekcí</h3>
                 <div class="price">1 800 Kč</div>
                 <p class="price-period">za 5 × 60 minut (-10%)</p>
                 <p>Ideální pro začátek. Získáte slevu a vytvoříme stabilní plán.</p>
-                <button>Objednat</button>
+                <button onclick="document.getElementById('contact').scrollIntoView({behavior: 'smooth'})">Objednat</button>
             </div>
             <div class="pricing-card">
                 <h3>Balíček 10 Lekcí</h3>
                 <div class="price">3 400 Kč</div>
                 <p class="price-period">za 10 × 60 minut (-15%)</p>
                 <p>Nejpopulárnější. Dlouhodobý plán s maximální slevou.</p>
-                <button>Objednat</button>
+                <button onclick="document.getElementById('contact').scrollIntoView({behavior: 'smooth'})">Objednat</button>
             </div>
         </div>
     </section>
@@ -803,44 +751,8 @@
 
     <section class="contact" id="contact">
         <h2>Pojďme se Setkat</h2>
-        <p class="contact-intro">Pro zaslání žádosti můžete vyplnit formulář níže a nebo prostě použijte jinou formu kontaktu viz. odkazy níže. Snažím se odpovídat rychle, takže se to dá řešit i když je písemka zítra :)</p>
+        <p class="contact-intro">Kontaktujte mě níže pomocí telefonu, emailu nebo přes LinkedIn a budeme si povídat o vašich potřebách. Snažím se odpovídat rychle, takže se to dá řešit i když je písemka zítra :)</p>
         
-        <form class="contact-form" action="https://web3forms.com/submit" method="POST">
-            <input type="hidden" name="access_key" value="36faa5ca-b116-4bbb-9543-81ecd1f78b55">
-            
-            <div class="form-group">
-                <label for="name">Vaše Jméno *</label>
-                <input type="text" id="name" name="name" required placeholder="Jan Novák">
-            </div>
-
-            <div class="form-group">
-                <label for="email">Email *</label>
-                <input type="email" id="email" name="email" required placeholder="jan@example.com">
-            </div>
-
-            <div class="form-group">
-                <label for="phone">Telefon</label>
-                <input type="tel" id="phone" name="phone" placeholder="728 345 633">
-            </div>
-
-            <div class="form-group">
-                <label for="subject">Předmět *</label>
-                <select id="subject" name="subject" required>
-                    <option value="">-- Vyberte --</option>
-                    <option value="Matematika">Matematika</option>
-                    <option value="Fyzika">Fyzika</option>
-                    <option value="Obojí">Obojí</option>
-                </select>
-            </div>
-
-            <div class="form-group">
-                <label for="message">Zpráva *</label>
-                <textarea id="message" name="message" required placeholder="Napište mi, s čím vám můžu pomoci..."></textarea>
-            </div>
-
-            <button type="submit" class="cta-button" style="width: 100%;">Odeslat Zprávu</button>
-        </form>
-
         <div class="contact-info-quick">
             <div class="contact-item">
                 <h3>📱 Telefon</h3>
