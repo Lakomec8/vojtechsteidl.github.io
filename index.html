@@ -311,6 +311,15 @@
             transform: scale(1.05) translateY(-6px);
         }
 
+        .pricing-card.free-trial {
+            border: 2px solid #27ae60;
+            background: rgba(39, 174, 96, 0.05);
+        }
+
+        .pricing-card.free-trial:hover {
+            background: rgba(39, 174, 96, 0.1);
+        }
+
         .pricing-card h3 {
             font-size: 1.3rem;
             margin-bottom: 1.5rem;
@@ -322,6 +331,11 @@
             font-weight: 700;
             color: #2c3e50;
             margin: 1rem 0;
+        }
+
+        .price.free {
+            color: #27ae60;
+            font-size: 2rem;
         }
 
         .price-period {
@@ -349,6 +363,17 @@
 
         .pricing-card:hover button {
             background: #2c3e50;
+            color: white;
+        }
+
+        .pricing-card.free-trial button {
+            background: rgba(39, 174, 96, 0.1);
+            border-color: #27ae60;
+            color: #27ae60;
+        }
+
+        .pricing-card.free-trial:hover button {
+            background: #27ae60;
             color: white;
         }
 
@@ -684,6 +709,13 @@
     <section class="pricing" id="pricing">
         <h2>Ceník</h2>
         <div class="pricing-grid">
+            <div class="pricing-card free-trial">
+                <h3>Zkušební Konzultace</h3>
+                <div class="price free">Zdarma</div>
+                <p class="price-period">30 minut</p>
+                <p>Seznámení se bez závazku. Otestujete si můj přístup, poradím vám na základě diagnostiky vašich potřeb a domluvíme si plán na míru. Ideální na to pochopit, zda si sedneme.</p>
+                <button>Objednat</button>
+            </div>
             <div class="pricing-card">
                 <h3>Jednorázová Lekce</h3>
                 <div class="price">400 Kč</div>
@@ -706,7 +738,7 @@
                 <button>Objednat</button>
             </div>
         </div>
-        <p style="text-align: center; margin-top: 3rem; color: #555;">✨ První konzultace je vždy <strong>zdarma</strong>!</p>
+        <p style="text-align: center; margin-top: 3rem; color: #555;">✨ Zkušební konzultace je vždy <strong>absolutně zdarma</strong>!</p>
     </section>
 
     <section class="materials" id="materials">
