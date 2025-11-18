@@ -194,23 +194,41 @@
             left: 0;
             right: 0;
             bottom: 0;
-            opacity: 0.08;
+            opacity: 0.06;
             z-index: 0;
             pointer-events: none;
+            background-size: 80px 80px;
+            background-repeat: repeat;
         }
 
         .mathematics::before {
             background-image: 
-                repeating-linear-gradient(45deg, transparent, transparent 35px, #2c3e50 35px, #2c3e50 70px),
-                url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200"><text x="10" y="30" font-size="20" fill="%232c3e50" opacity="0.1">∫ x² dx</text><text x="80" y="80" font-size="20" fill="%232c3e50" opacity="0.1">√2</text><text x="20" y="130" font-size="20" fill="%232c3e50" opacity="0.1">∑ n</text><text x="120" y="180" font-size="18" fill="%232c3e50" opacity="0.1">a² + b²</text><text x="60" y="50" font-size="18" fill="%232c3e50" opacity="0.1">π/2</text></svg>');
-            background-repeat: repeat;
+                repeating-linear-gradient(45deg, transparent, transparent 40px, #cccccc 40px, #cccccc 41px);
         }
 
         .physics::before {
             background-image: 
-                repeating-linear-gradient(-45deg, transparent, transparent 35px, #27ae60 35px, #27ae60 70px),
-                url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200"><text x="10" y="30" font-size="20" fill="%2327ae60" opacity="0.1">F=ma</text><text x="80" y="80" font-size="20" fill="%2327ae60" opacity="0.1">E=mc²</text><text x="20" y="130" font-size="20" fill="%2327ae60" opacity="0.1">v=λf</text><text x="120" y="180" font-size="18" fill="%2327ae60" opacity="0.1">P=UI</text><text x="60" y="50" font-size="18" fill="%2327ae60" opacity="0.1">W=Fs</text></svg>');
-            background-repeat: repeat;
+                repeating-linear-gradient(-45deg, transparent, transparent 40px, #a8d5a8 40px, #a8d5a8 41px);
+        }
+
+        .subject-column::after {
+            content: 'E=mc² · F=ma · v=λf · P=UI · W=Fs';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) rotate(-15deg);
+            font-size: 24px;
+            color: #27ae60;
+            opacity: 0.04;
+            white-space: nowrap;
+            z-index: 0;
+            font-weight: bold;
+            pointer-events: none;
+        }
+
+        .mathematics::after {
+            content: '∫x²dx · √2 · Σn · a²+b²=c² · π/2 · e^x';
+            color: #2c3e50;
         }
 
         .subject-column > * {
@@ -837,7 +855,7 @@
 
     <section class="contact" id="contact">
         <h2>Pojďme se Setkat</h2>
-        <p class="contact-intro">Kontakt na mě nalezeznete zde. Snažím se odpovídat rychle, každopádně kdyby to nějak vázlo, tak mi prostě zavolejte a operativně se domluvíme.</p>
+        <p class="contact-intro">Kontaktujte mě níže pomocí telefonu, emailu nebo přes LinkedIn a budeme si povídat o vašich potřebách. Snažím se odpovídat rychle, takže se to dá řešit i když je písemka zítra :)</p>
         
         <div class="contact-info-quick">
             <div class="contact-item">
