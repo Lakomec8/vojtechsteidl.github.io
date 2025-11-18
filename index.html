@@ -279,7 +279,7 @@
 
         .pricing-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            grid-template-columns: repeat(4, 1fr);
             gap: 2rem;
         }
 
@@ -599,8 +599,17 @@
             opacity: 1;
         }
 
+        @media (max-width: 1024px) {
+            .pricing-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
         @media (max-width: 768px) {
-            .features-grid, .services-grid, .pricing-grid, .materials-grid {
+            .features-grid, .services-grid, .materials-grid {
+                grid-template-columns: 1fr;
+            }
+            .pricing-grid {
                 grid-template-columns: 1fr;
             }
             .pricing-card.featured {
@@ -668,11 +677,12 @@
             </div>
             <div>
                 <h2>Kdo jsem</h2>
-                <p>Jako mladší jsem měl s matematikou a fyzikou velké problémy – ne proto, že bych neměl nadání, ale kvůli vyhorelým učitelům, kteří mi tyto předměty otrávilý. Naštěstí jsem si později našel svůj vlastní přístup a zjistil jsem, že matematika a fyzika mají logiku a krásu. Dnes se hluboko zajímám o oba obory a absolvoval jsem studium aplikované fyziky v Brně. Profesně se pak živím jako projektový manažer.</p>
+                <p>Jako mladší jsem měl s matematikou a fyzikou velké problémy – ne proto, že bych neměl nadání, ale kvůli vyhorelým učitelům, kteří mi tyto předměty otravili. Naštěstí jsem si později našel svůj vlastní přístup a zjistil jsem, že matematika a fyzika mají logiku a krásu. Dnes se hluboko zajímám o oba obory a absolvoval jsem studium aplikované fyziky v Brně. Profesně se pak živím jako projektový manažer.</p>
 
                 <p>Vím, že mnoho lidí má s matematikou a fyzikou přirozené potíže. Často to ale není chyba v jejich schopnostech, ale v tom, jak jsou tyto předměty vyučovány. Mnoho učitelů už tolik let učí, že předmět pro ně ztratil čarování a hloubku – a to se nám nepochybně přenáší i na studenty. Právě proto jsem se rozhodl dělat to jinak. Moje práce je brát složitou látku a vysvětlovat ji tak, aby jí každý porozuměl. Chci vám dát nový vhled, který změní váš vztah k těmto předmětům.</p>
 
                 <p>Na závěr: doučování pro mě není povinností, ale radostí. Dělám to proto, že mi to baví a věřím v sílu dobrého vysvětlení. A právě proto, že to dělám s vášní a nikoli jen pro peníze, věřím, že to má skutečný smysl.</p>
+
                 <button class="cta-button" onclick="document.getElementById('contact').scrollIntoView({behavior: 'smooth'})">Kontaktujte mě</button>
             </div>
         </div>
@@ -740,7 +750,6 @@
                 <button>Objednat</button>
             </div>
         </div>
-        <p style="text-align: center; margin-top: 3rem; color: #555;">✨ Zkušební konzultace je vždy <strong>absolutně zdarma</strong>!</p>
     </section>
 
     <section class="materials" id="materials">
