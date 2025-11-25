@@ -300,158 +300,164 @@
             line-height: 1.7;
         }
 
-        /* Split Sections - Matematika & Fyzika */
-        .subjects-split {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 0;
-            background: white;
-        }
-
-        .subject-column {
+        /* Nová sekce - Studijní Materiály */
+        .materials {
+            max-width: 1200px;
+            margin: 0 auto;
             padding: 4rem 2rem;
-            position: relative;
-            overflow: hidden;
         }
 
-        .subject-column::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            opacity: 0.06;
-            z-index: 0;
-            pointer-events: none;
-            background-size: 80px 80px;
-            background-repeat: repeat;
-        }
-
-        .mathematics::before {
-            background-image: 
-                repeating-linear-gradient(45deg, transparent, transparent 40px, #cccccc 40px, #cccccc 41px);
-        }
-
-        .physics::before {
-            background-image: 
-                repeating-linear-gradient(-45deg, transparent, transparent 40px, #a8d5a8 40px, #a8d5a8 41px);
-        }
-
-        .subject-column::after {
-            content: 'E=mc² · F=ma · v=λf · P=UI · W=Fs';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%) rotate(-15deg);
-            font-size: 24px;
-            color: #27ae60;
-            opacity: 0.04;
-            white-space: nowrap;
-            z-index: 0;
-            font-weight: bold;
-            pointer-events: none;
-        }
-
-        .mathematics::after {
-            content: '∫x²dx · √2 · Σn · a²+b²=c² · π/2 · e^x';
+        .materials h2 {
+            font-size: 2.2rem;
+            text-align: center;
+            margin-bottom: 1rem;
             color: #2c3e50;
         }
 
-        .subject-column > * {
-            position: relative;
-            z-index: 1;
-        }
-
-        .subject-header {
+        .materials-subtitle {
+            text-align: center;
+            color: #666;
             margin-bottom: 3rem;
-            border-bottom: 3px solid;
-            padding-bottom: 1rem;
+            font-size: 1rem;
         }
 
-        .mathematics .subject-header {
-            border-bottom-color: #2c3e50;
-        }
-
-        .physics .subject-header {
-            border-bottom-color: #27ae60;
-        }
-
-        .subject-header h2 {
-            font-size: 2rem;
+        .materials-filters {
             display: flex;
-            align-items: center;
+            justify-content: center;
             gap: 1rem;
+            margin-bottom: 3rem;
+            flex-wrap: wrap;
         }
 
-        .mathematics .subject-header h2 {
+        .filter-btn {
+            padding: 0.6rem 1.5rem;
+            border: 2px solid #2c3e50;
+            background: transparent;
             color: #2c3e50;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: all 0.3s;
         }
 
-        .physics .subject-header h2 {
-            color: #27ae60;
+        .filter-btn:hover,
+        .filter-btn.active {
+            background: #2c3e50;
+            color: white;
         }
 
-        .subject-materials {
-            margin-top: 2rem;
+        .materials-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
         }
 
-        .subject-materials h3 {
-            font-size: 1.3rem;
-            margin-bottom: 1.5rem;
-            color: #2c3e50;
-        }
-
-        .materials-list {
+        .material-card {
+            padding: 2rem;
+            border-radius: 16px;
+            background: rgba(255, 255, 255, 0.75);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 0 8px 32px rgba(31, 38, 135, 0.12);
+            transition: all 0.3s;
             display: flex;
             flex-direction: column;
-            gap: 1.2rem;
         }
 
-        .material-item-split {
-            padding: 1.5rem;
-            background: rgba(255, 255, 255, 0.5);
-            border-radius: 8px;
-            border-left: 4px solid;
+        .material-card:hover {
+            background: rgba(255, 255, 255, 0.9);
+            box-shadow: 0 16px 48px rgba(31, 38, 135, 0.2);
+            transform: translateY(-6px);
+        }
+
+        .material-card-icon {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #2c3e50 0%, #1a252f 100%);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.8rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .material-card-icon.physics {
+            background: linear-gradient(135deg, #27ae60 0%, #1e8449 100%);
+        }
+
+        .material-card-icon.preparation {
+            background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+        }
+
+        .material-card h3 {
+            font-size: 1.2rem;
+            color: #2c3e50;
+            margin-bottom: 0.8rem;
+        }
+
+        .material-card p {
+            color: #666;
+            font-size: 0.95rem;
+            margin-bottom: 1.5rem;
+            flex-grow: 1;
+        }
+
+        .material-card-meta {
             display: flex;
             justify-content: space-between;
             align-items: center;
-        }
-
-        .mathematics .material-item-split {
-            border-left-color: #2c3e50;
-        }
-
-        .physics .material-item-split {
-            border-left-color: #27ae60;
-        }
-
-        .material-item-split h4 {
-            font-size: 1rem;
-            margin-bottom: 0.3rem;
-            color: #2c3e50;
-        }
-
-        .material-item-split p {
+            margin-bottom: 1rem;
             font-size: 0.85rem;
             color: #999;
         }
 
-        .material-link-split {
+        .material-card-badge {
+            display: inline-block;
+            padding: 0.4rem 0.8rem;
+            background: rgba(44, 62, 80, 0.1);
+            border-radius: 6px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+
+        .material-card-badge.physics {
+            background: rgba(39, 174, 96, 0.1);
+            color: #27ae60;
+        }
+
+        .material-card-badge.preparation {
+            background: rgba(231, 76, 60, 0.1);
+            color: #e74c3c;
+        }
+
+        .material-card-download {
+            display: flex;
+            gap: 0.8rem;
+        }
+
+        .download-btn {
+            flex: 1;
+            padding: 0.8rem;
+            background: rgba(44, 62, 80, 0.1);
+            border: 1px solid #2c3e50;
+            border-radius: 8px;
             color: #2c3e50;
             text-decoration: none;
             font-weight: 600;
             font-size: 0.9rem;
-            white-space: nowrap;
+            text-align: center;
             transition: all 0.3s;
+            cursor: pointer;
         }
 
-        .physics .material-link-split {
-            color: #27ae60;
-        }
-
-        .material-link-split:hover {
-            transform: translateX(3px);
+        .download-btn:hover {
+            background: #2c3e50;
+            color: white;
         }
 
         .about {
@@ -818,9 +824,6 @@
             .features-grid, .services-grid, .materials-grid {
                 grid-template-columns: 1fr;
             }
-            .subjects-split {
-                grid-template-columns: 1fr;
-            }
             .pricing-grid {
                 grid-template-columns: 1fr;
             }
@@ -839,6 +842,13 @@
             .about-content {
                 grid-template-columns: 1fr;
             }
+            .materials-filters {
+                gap: 0.5rem;
+            }
+            .filter-btn {
+                padding: 0.5rem 1rem;
+                font-size: 0.85rem;
+            }
         }
     </style>
 </head>
@@ -848,6 +858,7 @@
             <a href="#" class="logo">Vojtech Steidl</a>
             <ul class="nav-links">
                 <li><a href="#about">O mně</a></li>
+                <li><a href="#materials">Materiály</a></li>
                 <li><a href="#services">Služby</a></li>
                 <li><a href="#pricing">Ceník</a></li>
                 <li><a href="#faq">FAQ</a></li>
@@ -873,7 +884,7 @@
             <div class="feature-card">
                 <div class="feature-icon"><i class="fas fa-chart-line"></i></div>
                 <h3>Individuální Plán</h3>
-                <p>Každý student má svůj vlastní tempo učení. Po první lekci gemeně vytváříme plán přesně na míru vašim potřebám a cílům.</p>
+                <p>Každý student má svůj vlastní tempo učení. Po první lekci společně vytváříme plán přesně na míru vašim potřebám a cílům.</p>
             </div>
             <div class="feature-card">
                 <div class="feature-icon"><i class="fas fa-lightbulb"></i></div>
@@ -883,68 +894,143 @@
         </div>
     </section>
 
-    <section class="subjects-split">
-        <div class="subject-column mathematics">
-            <div class="subject-header">
-                <h2><i class="fas fa-calculator"></i> Doučování Matematiky</h2>
-            </div>
-            <div class="subject-materials">
-                <h3>Studijní Materiály</h3>
-                <div class="materials-list">
-                    <div class="material-item-split">
-                        <div>
-                            <h4>Kvadratické Rovnice</h4>
-                            <p>8.–9. třída</p>
-                        </div>
-                        <a href="#" class="material-link-split">Brzy dostupné →</a>
-                    </div>
-                    <div class="material-item-split">
-                        <div>
-                            <h4>Přijímačky – Všechna Témata</h4>
-                            <p>Příprava</p>
-                        </div>
-                        <a href="#" class="material-link-split">Brzy dostupné →</a>
-                    </div>
-                    <div class="material-item-split">
-                        <div>
-                            <h4>Exponenciální Funkce</h4>
-                            <p>Střední škola</p>
-                        </div>
-                        <a href="#" class="material-link-split">Brzy dostupné →</a>
-                    </div>
-                </div>
-            </div>
+    <!-- NOVÁ SEKCE - STUDIJNÍ MATERIÁLY -->
+    <section class="materials" id="materials">
+        <h2>Studijní Materiály</h2>
+        <p class="materials-subtitle">Stažení bezplatných skriptů a sbírek příkladů pro matematiku a fyziku. Všechny materiály jsou vytvořeny s důrazem na pochopení.</p>
+        
+        <div class="materials-filters">
+            <button class="filter-btn active" onclick="filterMaterials('all')">Vše</button>
+            <button class="filter-btn" onclick="filterMaterials('mathematics')"><i class="fas fa-calculator"></i> Matematika</button>
+            <button class="filter-btn" onclick="filterMaterials('physics')"><i class="fas fa-atom"></i> Fyzika</button>
+            <button class="filter-btn" onclick="filterMaterials('preparation')"><i class="fas fa-book"></i> Příprava</button>
         </div>
 
-        <div class="subject-column physics">
-            <div class="subject-header">
-                <h2><i class="fas fa-atom"></i> Doučování Fyziky</h2>
-            </div>
-            <div class="subject-materials">
-                <h3>Studijní Materiály</h3>
-                <div class="materials-list">
-                    <div class="material-item-split">
-                        <div>
-                            <h4>Kinematika</h4>
-                            <p>Střední škola</p>
-                        </div>
-                        <a href="#" class="material-link-split">Brzy dostupné →</a>
-                    </div>
-                    <div class="material-item-split">
-                        <div>
-                            <h4>Vlnění a Zvuk</h4>
-                            <p>Střední škola</p>
-                        </div>
-                        <a href="#" class="material-link-split">Brzy dostupné →</a>
-                    </div>
-                    <div class="material-item-split">
-                        <div>
-                            <h4>Termodynamika</h4>
-                            <p>Příprava na maturitu</p>
-                        </div>
-                        <a href="#" class="material-link-split">Brzy dostupné →</a>
-                    </div>
+        <div class="materials-grid">
+            <!-- Matematika -->
+            <div class="material-card" data-category="mathematics">
+                <div class="material-card-icon">
+                    <i class="fas fa-calculator"></i>
                 </div>
+                <h3>Kvadratické Rovnice</h3>
+                <p>Kompletní průvodce kvadratickými rovnicemi s vyřešenými příklady, postupy a tipy pro řešení. Vhodné pro 8.–9. třídu.</p>
+                <div class="material-card-meta">
+                    <span>Střední škola</span>
+                    <span class="material-card-badge">Matematika</span>
+                </div>
+                <a href="#" class="download-btn"><i class="fas fa-download"></i> Stažení PDF</a>
+            </div>
+
+            <!-- Matematika -->
+            <div class="material-card" data-category="mathematics">
+                <div class="material-card-icon">
+                    <i class="fas fa-function"></i>
+                </div>
+                <h3>Exponenciální Funkce</h3>
+                <p>Detailní studijní materiál o exponenciálních funkcích, grafech a aplikacích. S praktickými příklady a grafickým vysvětlením.</p>
+                <div class="material-card-meta">
+                    <span>Střední škola</span>
+                    <span class="material-card-badge">Matematika</span>
+                </div>
+                <a href="#" class="download-btn"><i class="fas fa-download"></i> Stažení PDF</a>
+            </div>
+
+            <!-- Matematika -->
+            <div class="material-card" data-category="mathematics">
+                <div class="material-card-icon">
+                    <i class="fas fa-square-root-alt"></i>
+                </div>
+                <h3>Mocniny a Odmocniny</h3>
+                <p>Souborný materiál o mocninách a odmocninách s nejčastějšími chybami a triky. Ideální pro opakování a procvičování.</p>
+                <div class="material-card-meta">
+                    <span>Základní a střední škola</span>
+                    <span class="material-card-badge">Matematika</span>
+                </div>
+                <a href="#" class="download-btn"><i class="fas fa-download"></i> Stažení PDF</a>
+            </div>
+
+            <!-- Fyzika -->
+            <div class="material-card" data-category="physics">
+                <div class="material-card-icon physics">
+                    <i class="fas fa-arrow-right"></i>
+                </div>
+                <h3>Kinematika</h3>
+                <p>Komplexní výukový materiál o kinematice s řešenými úlohami. Pohyb, rychlost, zrychlení a grafy pohybu podrobně vysvětleny.</p>
+                <div class="material-card-meta">
+                    <span>Střední škola</span>
+                    <span class="material-card-badge physics">Fyzika</span>
+                </div>
+                <a href="#" class="download-btn"><i class="fas fa-download"></i> Stažení PDF</a>
+            </div>
+
+            <!-- Fyzika -->
+            <div class="material-card" data-category="physics">
+                <div class="material-card-icon physics">
+                    <i class="fas fa-water"></i>
+                </div>
+                <h3>Termodynamika</h3>
+                <p>Detailní průvodce termodynamikou zahrnující teplotu, teplo, energie a termodynamické zákony s praktickými příklady.</p>
+                <div class="material-card-meta">
+                    <span>Střední škola</span>
+                    <span class="material-card-badge physics">Fyzika</span>
+                </div>
+                <a href="#" class="download-btn"><i class="fas fa-download"></i> Stažení PDF</a>
+            </div>
+
+            <!-- Fyzika -->
+            <div class="material-card" data-category="physics">
+                <div class="material-card-icon physics">
+                    <i class="fas fa-wave-square"></i>
+                </div>
+                <h3>Vlnění a Zvuk</h3>
+                <p>Učební materiál o vlnění, zvuku a světle s grafy, obrázky a řešenými příklady. Všechny důležité pojmy vysvětleny jednoduše.</p>
+                <div class="material-card-meta">
+                    <span>Střední škola</span>
+                    <span class="material-card-badge physics">Fyzika</span>
+                </div>
+                <a href="#" class="download-btn"><i class="fas fa-download"></i> Stažení PDF</a>
+            </div>
+
+            <!-- Příprava -->
+            <div class="material-card" data-category="preparation">
+                <div class="material-card-icon preparation">
+                    <i class="fas fa-check-circle"></i>
+                </div>
+                <h3>Přijímačky - Sbírka Úloh</h3>
+                <p>Kompletní sbírka úloh na přijímačky z matematiky a fyziky s řešeními. Vhodné pro intenzivní přípravu.</p>
+                <div class="material-card-meta">
+                    <span>Všechny úrovně</span>
+                    <span class="material-card-badge preparation">Příprava</span>
+                </div>
+                <a href="#" class="download-btn"><i class="fas fa-download"></i> Stažení PDF</a>
+            </div>
+
+            <!-- Příprava -->
+            <div class="material-card" data-category="preparation">
+                <div class="material-card-icon preparation">
+                    <i class="fas fa-graduation-cap"></i>
+                </div>
+                <h3>Maturita - Opakování</h3>
+                <p>Revizní materiál na přípravu k maturitě. Klíčové pojmy, vzorce a postupy na jednom místě. Ideální pro poslední měsíc přípravy.</p>
+                <div class="material-card-meta">
+                    <span>Střední škola</span>
+                    <span class="material-card-badge preparation">Příprava</span>
+                </div>
+                <a href="#" class="download-btn"><i class="fas fa-download"></i> Stažení PDF</a>
+            </div>
+
+            <!-- Příprava -->
+            <div class="material-card" data-category="preparation">
+                <div class="material-card-icon preparation">
+                    <i class="fas fa-brain"></i>
+                </div>
+                <h3>Tipy na Zkoušky</h3>
+                <p>Praktické tipy a strategie pro zvládnutí zkoušek. Jak se připravit, co dělat během zkoušky a jak se vyhnout nejčastějším chybám.</p>
+                <div class="material-card-meta">
+                    <span>Všechny úrovně</span>
+                    <span class="material-card-badge preparation">Příprava</span>
+                </div>
+                <a href="#" class="download-btn"><i class="fas fa-download"></i> Stažení PDF</a>
             </div>
         </div>
     </section>
@@ -1056,16 +1142,16 @@
             </div>
 
             <div class="faq-item open" itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
-                <h3 itemprop="name" onclick="toggleFAQ(this)">Jak dlouho trvá jedna lekce? <span>▼</span></h3>
+                <h3 itemprop="name" onclick="toggleFAQ(this)">Můžu jako rodič být na hodině se svým dítětem <span>▼</span></h3>
                 <div itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
-                    <p itemprop="text">Standardní lekce trvají 60 minut. Zkušební konzultace je 30 minut a slouží k seznámení, diagnostice vašich potřeb a vytvoření plánu.</p>
+                    <p itemprop="text">Samozřejmě, většinou to pomáhá k vzájemnému pochopení potřeb a cílů</p>
                 </div>
             </div>
 
             <div class="faq-item open" itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
-                <h3 itemprop="name" onclick="toggleFAQ(this)">Jak se objednám? <span>▼</span></h3>
+                <h3 itemprop="name" onclick="toggleFAQ(this)">Můžete dojet za námi, nebo je to u vás? <span>▼</span></h3>
                 <div itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
-                    <p itemprop="text">Kontaktujte mě přes email vojtasteidl@seznam.cz, telefon +420 728 345 633 nebo LinkedIn. Vždy se snažím odpovídat co nejrychleji – víme, že někdy je písemka zítra!</p>
+                    <p itemprop="text">Standartně nedojíždím, doma to mám uzpůsobeno pro výuku a díky tabuli je to praktičtější.</p>
                 </div>
             </div>
         </div>
@@ -1106,6 +1192,26 @@
             const faqItem = element.parentElement;
             faqItem.classList.toggle('closed');
             faqItem.classList.toggle('open');
+        }
+
+        function filterMaterials(category) {
+            const cards = document.querySelectorAll('.material-card');
+            const buttons = document.querySelectorAll('.filter-btn');
+            
+            // Update button active state
+            buttons.forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            // Filter cards
+            cards.forEach(card => {
+                if (category === 'all' || card.getAttribute('data-category') === category) {
+                    card.style.display = 'flex';
+                    setTimeout(() => card.style.opacity = '1', 10);
+                } else {
+                    card.style.opacity = '0';
+                    setTimeout(() => card.style.display = 'none', 300);
+                }
+            });
         }
     </script>
 </body>
