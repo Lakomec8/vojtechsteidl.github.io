@@ -1560,38 +1560,50 @@
             const subject = document.getElementById('subject').value;
             const message = document.getElementById('message').value;
 
-            // Create mailto link with form data
-            const mailtoLink = `mailto:vojtasteidl@seznam.cz?subject=${encodeURIComponent('Nová zpráva z webu: ' + subject)}&body=${encodeURIComponent(
-                `Jméno: ${name}\nEmail: ${email}\nTelefon: ${phone}\n\n${message}`
-            )}`;
+            // Send via Web3Forms (bezplatné, bez registrace)
+            const formData = new FormData();
+            formData.append('access_key', '36faa5ca-b116-4bbb-9543-81ecd1f78b55');
+            formData.append('name', name);
+            formData.append('email', email);
+            formData.append('phone', phone);
+            formData.append('subject', subject);
+            formData.append('message', message);
 
-            // Show confirmation
             const btn = this.querySelector('button[type="submit"]');
             const originalText = btn.textContent;
-            btn.textContent = '✓ Zpráva připravena k odeslání';
-            btn.style.background = '#27ae60';
+            btn.textContent = 'Odesílám...';
+            btn.disabled = true;
 
-            // Copy to clipboard and open email
-            const clipboardText = `Jméno: ${name}\nEmail: ${email}\nTelefon: ${phone}\nPředmět: ${subject}\n\n${message}`;
-            
-            navigator.clipboard.writeText(clipboardText).then(() => {
-                alert(`Zpráva zkopírována do schránky.\n\nMůžete ji nyní vložit do emailu a poslat na:\nvojtasteidl@seznam.cz\n\nNebo klikněte OK pro otevření emailového klienta.`);
-                window.location.href = mailtoLink;
-            }).catch(() => {
-                alert('Prosím, zkopírujte si zprávu ručně a pošlete ji na: vojtasteidl@seznam.cz');
-                window.location.href = mailtoLink;
+            fetch('https://api.web3forms.com/submit', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    btn.textContent = '✓ Zpráva odeslána!';
+                    btn.style.background = '#27ae60';
+                    this.reset();
+                    
+                    setTimeout(() => {
+                        btn.textContent = originalText;
+                        btn.style.background = '';
+                        btn.disabled = false;
+                    }, 3000);
+                } else {
+                    throw new Error('Chyba při odeslání');
+                }
+            })
+            .catch(error => {
+                btn.textContent = '✗ Chyba - zkuste znovu';
+                btn.style.background = '#e74c3c';
+                btn.disabled = false;
+                
+                setTimeout(() => {
+                    btn.textContent = originalText;
+                    btn.style.background = '';
+                }, 3000);
             });
-
-            // Reset button after 3 seconds
-            setTimeout(() => {
-                btn.textContent = originalText;
-                btn.style.background = '';
-            }, 3000);
-
-            // Reset form
-            setTimeout(() => {
-                this.reset();
-            }, 1000);
         });
     </script>
 </body>
