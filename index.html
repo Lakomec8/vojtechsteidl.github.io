@@ -1115,13 +1115,13 @@
     </header>
 
     <section class="hero">
-        <h1>Doučování Matematiky a Fyziky v Jihlavě</h1>
-        <p>Individuální přístup k výuce matematiky a fyziky. Příprava na přijímačky, maturitu a zkoušky na vysoké škole. Zaměřuji se na pochopení, ne běžné memorování. Doučování probíhá <strong>online nebo osobně v Jihlavě</strong>.</p>
+        <h1>Doučování Matematiky a Fyziky Online</h1>
+        <p>Individuální přístup k výuce matematiky a fyziky. Převážně online doučování, ale také osobně v Jihlavě dle dohody. Příprava na přijímačky, maturitu a zkoušky na vysoké škole. Zaměřuji se na pochopení, ne běžné memorování.</p>
         <button class="cta-button" onclick="document.getElementById('contact').scrollIntoView({behavior: 'smooth'})">Objednat konzultaci</button>
     </section>
 
     <section class="features">
-        <h2>Proč si vybrat Vojtěcha Steidla?</h2>
+        <h2>Proč si mě vybrat?</h2>
         <div class="features-grid">
             <div class="feature-card">
                 <div class="feature-icon"><i class="fas fa-award"></i></div>
@@ -1426,7 +1426,7 @@
         <p class="contact-intro">Máte otázky? Chcete se domluvit na lekci? Napište mi zprávu nebo mě kontaktujte přímo.</p>
         
         <div class="contact-wrapper">
-            <form class="contact-form" action="https://formspree.io/f/YOUR_FORM_ID" method="POST">
+            <form class="contact-form" id="contactForm">
                 <div class="form-group">
                     <label for="name">Vaše Jméno *</label>
                     <input type="text" id="name" name="name" required>
@@ -1474,8 +1474,11 @@
                         <a href="https://www.linkedin.com/in/vojt%C4%9Bch-steidl-ba64b5158/" target="_blank" title="LinkedIn">
                             <i class="fab fa-linkedin"></i>
                         </a>
-                        <a href="https://www.superprof.cz" target="_blank" title="Superprof">
+                        <a href="https://www.superprof.cz/jako-absolvent-aplikovane-fyziky-muni-vam-pomuzu-zvladnout-slozite-matematicke-fyzikalni-koncepty-jednoduse.html" target="_blank" title="Superprof Profil">
                             <i class="fas fa-star"></i>
+                        </a>
+                        <a href="https://www.doucuji.eu/507905-doucovani-doucovani-matematiky-a-fyzika-osobne-ci-online" target="_blank" title="Doučuji.eu">
+                            <i class="fas fa-book"></i>
                         </a>
                     </div>
                 </div>
@@ -1488,7 +1491,8 @@
         <div class="divider"></div>
         <div class="social-links">
             <a href="https://www.linkedin.com/in/vojt%C4%9Bch-steidl-ba64b5158/" target="_blank">LinkedIn</a>
-            <a href="https://www.superprof.cz" target="_blank">Superprof Profil</a>
+            <a href="https://www.superprof.cz/jako-absolvent-aplikovane-fyziky-muni-vam-pomuzu-zvladnout-slozite-matematicke-fyzikalni-koncepty-jednoduse.html" target="_blank">Superprof Profil</a>
+            <a href="https://www.doucuji.eu/507905-doucovani-doucovani-matematiky-a-fyzika-osobne-ci-online" target="_blank">Doučuji.eu</a>
             <a href="mailto:vojtasteidl@seznam.cz">Email</a>
         </div>
     </footer>
@@ -1545,6 +1549,50 @@
             paragraph.classList.toggle('hidden');
             toggle.classList.toggle('open');
         }
+
+        // Contact Form Handler
+        document.getElementById('contactForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const name = document.getElementById('name').value;
+            const email = document.getElementById('email').value;
+            const phone = document.getElementById('phone').value;
+            const subject = document.getElementById('subject').value;
+            const message = document.getElementById('message').value;
+
+            // Create mailto link with form data
+            const mailtoLink = `mailto:vojtasteidl@seznam.cz?subject=${encodeURIComponent('Nová zpráva z webu: ' + subject)}&body=${encodeURIComponent(
+                `Jméno: ${name}\nEmail: ${email}\nTelefon: ${phone}\n\n${message}`
+            )}`;
+
+            // Show confirmation
+            const btn = this.querySelector('button[type="submit"]');
+            const originalText = btn.textContent;
+            btn.textContent = '✓ Zpráva připravena k odeslání';
+            btn.style.background = '#27ae60';
+
+            // Copy to clipboard and open email
+            const clipboardText = `Jméno: ${name}\nEmail: ${email}\nTelefon: ${phone}\nPředmět: ${subject}\n\n${message}`;
+            
+            navigator.clipboard.writeText(clipboardText).then(() => {
+                alert(`Zpráva zkopírována do schránky.\n\nMůžete ji nyní vložit do emailu a poslat na:\nvojtasteidl@seznam.cz\n\nNebo klikněte OK pro otevření emailového klienta.`);
+                window.location.href = mailtoLink;
+            }).catch(() => {
+                alert('Prosím, zkopírujte si zprávu ručně a pošlete ji na: vojtasteidl@seznam.cz');
+                window.location.href = mailtoLink;
+            });
+
+            // Reset button after 3 seconds
+            setTimeout(() => {
+                btn.textContent = originalText;
+                btn.style.background = '';
+            }, 3000);
+
+            // Reset form
+            setTimeout(() => {
+                this.reset();
+            }, 1000);
+        });
     </script>
 </body>
 </html>
