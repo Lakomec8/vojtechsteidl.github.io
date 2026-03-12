@@ -259,7 +259,8 @@
         .services,
         .pricing,
         .faq,
-        .contact {
+        .contact,
+        .student-zone {
             max-width: 1200px;
             margin: 0 auto;
             padding: 4rem 2rem;
@@ -271,7 +272,8 @@
         .services h2,
         .pricing h2,
         .faq h2,
-        .contact h2 {
+        .contact h2,
+        .student-zone h2 {
             font-size: 2.2rem;
             text-align: center;
             margin-bottom: 1rem;
@@ -286,7 +288,8 @@
 
         .testimonials-subtitle,
         .materials-subtitle,
-        .contact-intro {
+        .contact-intro,
+        .student-zone-intro {
             text-align: center;
             color: #666;
             margin-bottom: 3rem;
@@ -326,7 +329,8 @@
         .faq-item,
         .contact-form,
         .contact-item,
-        .about-image {
+        .about-image,
+        .student-zone-card {
             background: rgba(255, 255, 255, 0.75);
             backdrop-filter: blur(10px);
             -webkit-backdrop-filter: blur(10px);
@@ -338,7 +342,8 @@
         .testimonial-card,
         .material-card,
         .service-card,
-        .pricing-card {
+        .pricing-card,
+        .student-zone-card {
             border-radius: 16px;
             transition: all 0.3s;
         }
@@ -347,7 +352,8 @@
         .testimonial-card:hover,
         .material-card:hover,
         .service-card:hover,
-        .pricing-card:hover {
+        .pricing-card:hover,
+        .student-zone-card:hover {
             background: rgba(255, 255, 255, 0.9);
             box-shadow: 0 16px 48px rgba(31, 38, 135, 0.2);
             transform: translateY(-5px);
@@ -374,7 +380,8 @@
         .feature-card h3,
         .service-card h3,
         .pricing-card h3,
-        .material-card h3 {
+        .material-card h3,
+        .student-zone-card h3 {
             color: #2c3e50;
             margin-bottom: 0.9rem;
         }
@@ -384,7 +391,8 @@
         .material-card p,
         .pricing-card p,
         .about p,
-        .faq-item p {
+        .faq-item p,
+        .student-zone-card p {
             color: #666;
         }
 
@@ -683,6 +691,79 @@
             transform: rotate(180deg);
         }
 
+        .student-zone-card {
+            max-width: 760px;
+            margin: 0 auto;
+            padding: 2.2rem;
+            text-align: center;
+        }
+
+        .student-zone-icon {
+            width: 72px;
+            height: 72px;
+            margin: 0 auto 1.4rem;
+            border-radius: 16px;
+            background: linear-gradient(135deg, #2c3e50 0%, #1a252f 100%);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            box-shadow: 0 10px 25px rgba(44, 62, 80, 0.22);
+        }
+
+        .student-form {
+            margin-top: 1.8rem;
+        }
+
+        .student-form label {
+            display: block;
+            margin-bottom: 0.6rem;
+            font-weight: 600;
+            color: #2c3e50;
+            text-align: left;
+        }
+
+        .student-form-row {
+            display: flex;
+            gap: 1rem;
+            align-items: stretch;
+        }
+
+        .student-form input {
+            flex: 1;
+            padding: 0.95rem 1rem;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            font-family: inherit;
+            font-size: 1rem;
+            background: #fff;
+            transition: border-color 0.3s, box-shadow 0.3s;
+        }
+
+        .student-form input:focus {
+            outline: none;
+            border-color: #2c3e50;
+            box-shadow: 0 0 0 3px rgba(44, 62, 80, 0.1);
+        }
+
+        .student-form button {
+            white-space: nowrap;
+        }
+
+        .student-help {
+            margin-top: 1rem;
+            font-size: 0.92rem;
+            color: #777;
+        }
+
+        .student-error {
+            display: none;
+            margin-top: 1rem;
+            color: #c0392b;
+            font-weight: 600;
+        }
+
         .contact-wrapper {
             display: grid;
             grid-template-columns: 1.1fr 0.9fr;
@@ -922,6 +1003,14 @@
                 padding: 0.5rem 1rem;
                 font-size: 0.85rem;
             }
+
+            .student-form-row {
+                flex-direction: column;
+            }
+
+            .student-form button {
+                width: 100%;
+            }
         }
     </style>
 </head>
@@ -933,6 +1022,7 @@
                 <li><a href="#about">O mně</a></li>
                 <li><a href="#materials">Materiály</a></li>
                 <li><a href="#services">Služby</a></li>
+                <li><a href="#studenti">Studentská zóna</a></li>
                 <li><a href="#pricing">Ceník</a></li>
                 <li><a href="#faq">FAQ</a></li>
                 <li><a href="#contact">Kontakt</a></li>
@@ -1170,6 +1260,29 @@
         </div>
     </section>
 
+    <section class="student-zone" id="studenti">
+        <h2>Studentská zóna</h2>
+        <p class="student-zone-intro">Máte ode mě svůj kód? Zadejte ho sem a otevřou se vám vaše materiály, poznámky a dokumenty z hodin. Formulář s jasně přiřazeným labelem a tlačítkem je vhodný i pro klávesové ovládání a běžnou přístupnost. [web:131][web:134][web:137]</p>
+
+        <div class="student-zone-card">
+            <div class="student-zone-icon">
+                <i class="fas fa-user-lock"></i>
+            </div>
+            <h3>Přístup k vašim materiálům</h3>
+            <p>Zadejte osobní kód, který jste ode mě dostali. Po potvrzení se automaticky otevře vaše složka s dokumenty na Google Drive.</p>
+
+            <form class="student-form" id="studentAccessForm">
+                <label for="studentCode">Váš osobní kód</label>
+                <div class="student-form-row">
+                    <input type="text" id="studentCode" name="studentCode" placeholder="Např. ANICKA-2026" autocomplete="off" required>
+                    <button type="submit" class="cta-button">Otevřít dokumenty</button>
+                </div>
+                <p class="student-help">Pokud kód nefunguje, napište mi a přístup zkontroluji.</p>
+                <p class="student-error" id="studentError">Zadaný kód nebyl nalezen. Zkuste ho prosím znovu přesně podle zadání.</p>
+            </form>
+        </div>
+    </section>
+
     <section class="pricing" id="pricing">
         <h2>Ceník doučování</h2>
         <div class="pricing-grid">
@@ -1385,6 +1498,37 @@
             paragraph.classList.toggle('hidden');
             toggle.classList.toggle('open');
         }
+
+        const studentFolders = {
+            "ADAMKR-2026": "https://drive.google.com/drive/folders/1ZtWyls5_vDqp9VZ3btPt7e3Fb4P52yVi?usp=drive_link",
+            "ANICKA-2026": "https://drive.google.com/drive/folders/1URJ-MkmYbJUVYBPCuP7F5jzEkne-w9H4?usp=drive_link",
+            "JUSTYNA-2026": "https://drive.google.com/drive/folders/17wtQPjSyt2lcsJx1ECp7-8-eK_GdtuSm?usp=drive_link",
+            "MISA-2026": "https://drive.google.com/drive/folders/1cH4vn0dZyTyLNK_J-dl7FLes7lUQKJdu?usp=drive_link",
+            "PETR-2026": "https://drive.google.com/drive/folders/1IzG2YXliEjBF3Ucd5URXnFs83n4eHVSN?usp=drive_link",
+            "ROMAN-2026": "https://drive.google.com/drive/folders/11jMNAIQIY2WInmCoi28SOvuNg32P__iO?usp=drive_link",
+            "VERCA-2026": "https://drive.google.com/drive/folders/1SolX2HQcxPhoFtwZu8F4eciqd3OD_Ex1?usp=drive_link"
+        };
+
+        const studentAccessForm = document.getElementById('studentAccessForm');
+        const studentCodeInput = document.getElementById('studentCode');
+        const studentError = document.getElementById('studentError');
+
+        studentAccessForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const code = studentCodeInput.value.trim().toUpperCase();
+
+            if (studentFolders[code]) {
+                studentError.style.display = 'none';
+                window.open(studentFolders[code], '_blank', 'noopener');
+                studentCodeInput.value = '';
+            } else {
+                studentError.style.display = 'block';
+            }
+        });
+
+        studentCodeInput.addEventListener('input', function() {
+            studentError.style.display = 'none';
+        });
 
         document.getElementById('contactForm').addEventListener('submit', function(e) {
             e.preventDefault();
