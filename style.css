@@ -1,111 +1,215 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+:root {
+    --navy: #102A43;
+    --navy-light: #243B53;
+    --primary: #2563EB;
+    --primary-dark: #1D4ED8;
+    --teal: #0F766E;
+    --text: #334155;
+    --muted: #64748B;
+    --page-bg: #F8FAFC;
+    --surface: #FFFFFF;
+    --soft-blue: #EFF6FF;
+    --border: #E2E8F0;
+    --shadow-sm: 0 1px 2px rgba(15, 23, 42, 0.05);
+    --shadow-md: 0 10px 25px rgba(15, 23, 42, 0.08);
+    --radius: 14px;
+}
+
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
 
+html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 5rem;
+}
+
 body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    line-height: 1.6;
-    color: #333;
-    background-color: #f4f4f4;
+    font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    line-height: 1.65;
+    color: var(--text);
+    background: var(--page-bg);
+    font-size: 16px;
+    -webkit-font-smoothing: antialiased;
 }
 
 header {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    position: relative;
+    overflow: hidden;
     color: white;
-    padding: 3rem 1rem;
     text-align: center;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    padding: 5.5rem 1.25rem 5rem;
+    background:
+        radial-gradient(circle at 15% 15%, rgba(96, 165, 250, 0.42), transparent 32%),
+        radial-gradient(circle at 85% 75%, rgba(45, 212, 191, 0.18), transparent 28%),
+        linear-gradient(135deg, #102A43 0%, #163E6B 55%, #1D4ED8 145%);
+}
+
+header::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(15,23,42,0.18));
+}
+
+header h1,
+header p,
+header a {
+    position: relative;
+    z-index: 1;
 }
 
 header h1 {
-    font-size: 2.5rem;
-    margin-bottom: 0.5rem;
+    max-width: 850px;
+    margin: 0 auto 0.9rem;
+    font-size: clamp(2.15rem, 5vw, 3.75rem);
+    line-height: 1.12;
+    letter-spacing: -0.045em;
+    font-weight: 800;
 }
 
 header p {
-    font-size: 1.1rem;
-    opacity: 0.95;
+    max-width: 690px;
+    margin: 0 auto;
+    font-size: clamp(1rem, 2vw, 1.22rem);
+    line-height: 1.6;
+    color: rgba(255, 255, 255, 0.88);
 }
 
 nav {
-    background: #333;
-    padding: 1rem;
     position: sticky;
     top: 0;
     z-index: 100;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    display: flex;
+    justify-content: center;
+    gap: 0.2rem;
+    padding: 0.7rem 1rem;
+    overflow-x: auto;
+    white-space: nowrap;
+    background: rgba(16, 42, 67, 0.96);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 4px 16px rgba(15, 23, 42, 0.12);
+    scrollbar-width: none;
+}
+
+nav::-webkit-scrollbar {
+    display: none;
 }
 
 nav a {
-    color: white;
-    text-decoration: none;
-    padding: 0.5rem 1rem;
     display: inline-block;
-    border-radius: 3px;
-    transition: background 0.3s;
+    padding: 0.62rem 0.85rem;
+    border-radius: 8px;
+    color: rgba(255, 255, 255, 0.9);
+    text-decoration: none;
+    font-size: 0.92rem;
+    font-weight: 600;
+    transition: background 0.2s ease, color 0.2s ease;
 }
 
-nav a:hover {
-    background: #667eea;
+nav a:hover,
+nav a:focus-visible {
+    color: white;
+    background: rgba(255, 255, 255, 0.14);
+    outline: none;
 }
 
 .container {
-    max-width: 1000px;
-    margin: 2rem auto;
-    padding: 0 1rem;
+    width: min(1120px, calc(100% - 2rem));
+    margin: 0 auto;
+    padding: 2.75rem 0 4rem;
 }
 
 section {
-    background: white;
-    margin: 2rem 0;
-    padding: 2rem;
-    border-radius: 8px;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    margin: 1.4rem 0;
+    padding: clamp(1.5rem, 4vw, 3rem);
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-sm);
 }
 
 section h2 {
-    color: #667eea;
-    margin-bottom: 1rem;
-    border-bottom: 2px solid #667eea;
-    padding-bottom: 0.5rem;
+    display: inline-block;
+    margin-bottom: 1.25rem;
+    padding-bottom: 0.55rem;
+    color: var(--navy);
+    border-bottom: 3px solid var(--primary);
+    font-size: clamp(1.55rem, 3vw, 2.15rem);
+    line-height: 1.2;
+    letter-spacing: -0.03em;
 }
 
 section h3 {
-    color: #764ba2;
-    margin-top: 1.5rem;
-    margin-bottom: 0.5rem;
+    margin: 1.45rem 0 0.55rem;
+    color: var(--navy-light);
+    font-size: 1.15rem;
+    line-height: 1.35;
+}
+
+p {
+    margin-bottom: 1rem;
+}
+
+a {
+    color: var(--primary);
+}
+
+a:hover {
+    color: var(--primary-dark);
 }
 
 .cta-button {
-    background: #667eea;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 3.2rem;
+    margin-top: 1.15rem;
+    padding: 0.9rem 1.35rem;
+    border: 1px solid transparent;
+    border-radius: 10px;
+    background: var(--primary);
     color: white;
-    padding: 1rem 2rem;
-    border: none;
-    border-radius: 5px;
-    font-size: 1.1rem;
-    cursor: pointer;
-    transition: background 0.3s;
-    display: inline-block;
-    margin-top: 1rem;
     text-decoration: none;
+    font-size: 1rem;
+    font-weight: 700;
+    line-height: 1.2;
+    cursor: pointer;
+    box-shadow: 0 5px 14px rgba(37, 99, 235, 0.23);
+    transition: transform 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
 }
 
-.cta-button:hover {
-    background: #764ba2;
+.cta-button:hover,
+.cta-button:focus-visible {
+    background: var(--primary-dark);
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 9px 20px rgba(37, 99, 235, 0.28);
+    outline: none;
+}
+
+.cta-button:active {
+    transform: translateY(0);
 }
 
 .skriptum {
-    background: #f9f9f9;
-    padding: 1.5rem;
+    position: relative;
     margin: 1rem 0;
-    border-left: 4px solid #667eea;
-    border-radius: 5px;
+    padding: 1.3rem 1.35rem;
+    background: var(--soft-blue);
+    border: 1px solid #BFDBFE;
+    border-left: 4px solid var(--primary);
+    border-radius: 0 10px 10px 0;
 }
 
 .skriptum a {
-    color: #667eea;
+    color: var(--primary-dark);
+    font-weight: 700;
     text-decoration: none;
 }
 
@@ -113,66 +217,108 @@ section h3 {
     text-decoration: underline;
 }
 
-footer {
-    background: #333;
-    color: white;
-    text-align: center;
-    padding: 2rem;
-    margin-top: 3rem;
-}
-
 .cenika {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 2rem;
+    grid-template-columns: repeat(auto-fit, minmax(235px, 1fr));
+    gap: 1rem;
+    margin-top: 1.35rem;
 }
 
 .cena-karta {
-    background: white;
-    padding: 1.5rem;
-    border: 2px solid #eee;
-    border-radius: 8px;
-    text-align: center;
-    transition: transform 0.3s, box-shadow 0.3s;
+    display: flex;
+    flex-direction: column;
+    min-height: 100%;
+    padding: 1.6rem;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    text-align: left;
+    box-shadow: var(--shadow-sm);
+    transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
 }
 
 .cena-karta:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    transform: translateY(-4px);
+    border-color: #93C5FD;
+    box-shadow: var(--shadow-md);
 }
 
 .cena-karta h3 {
-    color: #667eea;
-    margin-bottom: 1rem;
+    margin: 0 0 0.85rem;
+    color: var(--navy);
+    font-size: 1.15rem;
 }
 
 .cena-karta .cena {
+    margin: 0.85rem 0;
+    color: var(--primary);
     font-size: 2rem;
-    color: #764ba2;
-    font-weight: bold;
-    margin: 1rem 0;
+    font-weight: 800;
+    line-height: 1;
+    letter-spacing: -0.04em;
 }
 
-ul, ol {
-    margin-left: 1.5rem;
-    margin-bottom: 1rem;
+ul,
+ol {
+    margin: 0.75rem 0 1.1rem 1.25rem;
 }
 
 li {
-    margin: 0.5rem 0;
+    margin: 0.45rem 0;
+}
+
+footer {
+    margin-top: 2rem;
+    padding: 2.5rem 1rem;
+    background: var(--navy);
+    color: rgba(255, 255, 255, 0.85);
+    text-align: center;
+}
+
+footer a {
+    color: #BFDBFE;
+}
+
+footer a:hover {
+    color: white;
 }
 
 @media (max-width: 768px) {
-    header h1 {
-        font-size: 1.8rem;
+    header {
+        padding: 4rem 1.1rem 3.6rem;
     }
-    
+
     nav {
-        text-align: center;
+        justify-content: flex-start;
     }
-    
-    nav a {
-        display: block;
-        margin: 0.5rem 0;
+
+    .container {
+        width: min(100% - 1.25rem, 1120px);
+        padding-top: 1.25rem;
+    }
+
+    section {
+        margin: 1rem 0;
+        border-radius: 12px;
+    }
+
+    .cenika {
+        grid-template-columns: 1fr;
+    }
+
+    .cta-button {
+        width: 100%;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    html {
+        scroll-behavior: auto;
+    }
+
+    *,
+    *::before,
+    *::after {
+        transition: none !important;
     }
 }
