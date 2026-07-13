@@ -1,0 +1,821 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Studentský portál | Vojtěch Steidl</title>
+  <meta name="description" content="Čistý bílý a jemně zelený studentský portál pro doučování matematiky a fyziky.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root {
+      --bg: #f7faf8;
+      --surface: #ffffff;
+      --surface-soft: #f3faf6;
+      --surface-2: #f8fcf9;
+      --line: rgba(15, 23, 42, 0.08);
+      --line-strong: rgba(22, 101, 52, 0.14);
+      --text: #1f2937;
+      --muted: #6b7280;
+      --muted-soft: #9aa3af;
+      --green: #1f9d55;
+      --green-dark: #147a40;
+      --green-soft: #eaf8f0;
+      --green-soft-2: #dff4e7;
+      --navy: #143124;
+      --shadow-sm: 0 1px 2px rgba(15, 23, 42, 0.04);
+      --shadow-md: 0 16px 36px rgba(15, 23, 42, 0.06);
+      --shadow-lg: 0 28px 60px rgba(15, 23, 42, 0.08);
+      --radius-sm: 16px;
+      --radius-md: 24px;
+      --radius-lg: 32px;
+      --content: 1460px;
+    }
+
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: 'Inter', sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at top left, rgba(31, 157, 85, 0.05), transparent 24%),
+        radial-gradient(circle at bottom right, rgba(31, 157, 85, 0.04), transparent 20%),
+        linear-gradient(180deg, #fbfefd 0%, #f6faf8 100%);
+    }
+
+    a { color: inherit; text-decoration: none; }
+
+    .shell {
+      display: grid;
+      grid-template-columns: 300px 1fr;
+      width: min(var(--content), calc(100% - 2rem));
+      min-height: calc(100vh - 2rem);
+      margin: 1rem auto;
+      border: 1px solid rgba(255,255,255,0.9);
+      border-radius: 34px;
+      background: rgba(255,255,255,0.82);
+      box-shadow: var(--shadow-lg);
+      backdrop-filter: blur(12px);
+      overflow: hidden;
+    }
+
+    .sidebar {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+      padding: 1.5rem;
+      background: linear-gradient(180deg, rgba(255,255,255,0.96), rgba(247,250,248,0.98));
+      border-right: 1px solid rgba(15, 23, 42, 0.05);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 0.95rem;
+    }
+
+    .brand-mark {
+      display: grid;
+      place-items: center;
+      width: 54px;
+      height: 54px;
+      border-radius: 20px;
+      background: linear-gradient(135deg, #1f9d55 0%, #24b862 100%);
+      color: white;
+      font-weight: 800;
+      letter-spacing: -0.04em;
+      box-shadow: 0 14px 28px rgba(31, 157, 85, 0.18);
+    }
+
+    .brand-title {
+      color: var(--navy);
+      font-size: 1rem;
+      font-weight: 800;
+      letter-spacing: -0.04em;
+    }
+
+    .brand-subtitle {
+      margin-top: 0.22rem;
+      color: var(--muted);
+      font-size: 0.87rem;
+    }
+
+    .nav-label {
+      margin: 0 0 0.3rem 0.25rem;
+      color: var(--muted-soft);
+      font-size: 0.74rem;
+      font-weight: 800;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    .nav-group { display: grid; gap: 0.5rem; }
+
+    .nav-link {
+      display: flex;
+      align-items: center;
+      gap: 0.85rem;
+      min-height: 52px;
+      padding: 0.92rem 0.98rem;
+      border: 1px solid transparent;
+      border-radius: 18px;
+      color: var(--muted);
+      font-size: 0.95rem;
+      font-weight: 600;
+      transition: background 180ms ease, border-color 180ms ease, color 180ms ease, transform 180ms ease;
+    }
+
+    .nav-link:hover,
+    .nav-link.active {
+      background: var(--green-soft);
+      border-color: rgba(31, 157, 85, 0.12);
+      color: var(--green-dark);
+      transform: translateX(2px);
+    }
+
+    .sidebar-note {
+      margin-top: auto;
+      padding: 1.25rem;
+      border: 1px solid rgba(31, 157, 85, 0.12);
+      border-radius: 24px;
+      background: linear-gradient(180deg, #ffffff, #f5fbf7);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .sidebar-note small {
+      display: block;
+      margin-bottom: 0.7rem;
+      color: var(--green);
+      font-size: 0.75rem;
+      font-weight: 800;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    .sidebar-note h3 {
+      margin: 0 0 0.55rem;
+      color: var(--navy);
+      font-size: 1rem;
+      line-height: 1.4;
+    }
+
+    .sidebar-note p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.9rem;
+      line-height: 1.7;
+    }
+
+    .main {
+      padding: 1.5rem;
+      background: linear-gradient(180deg, rgba(255,255,255,0.42), rgba(248,252,249,0.62));
+    }
+
+    .mobile-nav { display: none; }
+
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      margin-bottom: 1.25rem;
+      padding: 0.95rem 1rem;
+      border: 1px solid var(--line);
+      border-radius: 22px;
+      background: rgba(255,255,255,0.9);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .search {
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+      flex: 1;
+      min-height: 50px;
+      padding: 0 1rem;
+      border: 1px solid rgba(15, 23, 42, 0.07);
+      border-radius: 18px;
+      background: var(--surface);
+      color: var(--muted);
+      font-size: 0.94rem;
+    }
+
+    .top-actions { display: flex; align-items: center; gap: 0.75rem; }
+
+    .icon-btn,
+    .student-pill {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 48px;
+      padding: 0.8rem 1rem;
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      background: var(--surface);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .student-pill {
+      gap: 0.75rem;
+      color: var(--navy);
+      font-size: 0.92rem;
+      font-weight: 700;
+    }
+
+    .student-avatar {
+      display: grid;
+      place-items: center;
+      width: 34px;
+      height: 34px;
+      border-radius: 12px;
+      background: var(--green-soft);
+      color: var(--green-dark);
+      font-size: 0.82rem;
+      font-weight: 800;
+    }
+
+    .hero {
+      display: grid;
+      grid-template-columns: minmax(0, 1.45fr) minmax(320px, 0.78fr);
+      gap: 1.2rem;
+      margin-bottom: 1.2rem;
+    }
+
+    .card {
+      border: 1px solid var(--line);
+      border-radius: var(--radius-lg);
+      background: rgba(255,255,255,0.94);
+      box-shadow: var(--shadow-md);
+    }
+
+    .hero-card {
+      position: relative;
+      overflow: hidden;
+      padding: 2rem;
+      background:
+        radial-gradient(circle at top right, rgba(31, 157, 85, 0.08), transparent 28%),
+        linear-gradient(180deg, rgba(255,255,255,0.98), rgba(248,252,249,0.95));
+    }
+
+    .hero-card::after {
+      content: "";
+      position: absolute;
+      right: -36px;
+      bottom: -36px;
+      width: 170px;
+      height: 170px;
+      border-radius: 30px;
+      background: linear-gradient(135deg, rgba(31, 157, 85, 0.08), rgba(31, 157, 85, 0.02));
+      transform: rotate(16deg);
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.55rem;
+      margin-bottom: 1rem;
+      padding: 0.42rem 0.8rem;
+      border: 1px solid rgba(31, 157, 85, 0.1);
+      border-radius: 999px;
+      background: var(--green-soft);
+      color: var(--green-dark);
+      font-size: 0.79rem;
+      font-weight: 800;
+    }
+
+    h1 {
+      margin: 0 0 0.95rem;
+      max-width: 12ch;
+      color: var(--navy);
+      font-size: clamp(2.25rem, 3vw, 3.3rem);
+      line-height: 1.02;
+      letter-spacing: -0.06em;
+      text-wrap: balance;
+    }
+
+    .hero-text {
+      max-width: 57ch;
+      color: var(--muted);
+      font-size: 1rem;
+      line-height: 1.8;
+    }
+
+    .hero-actions {
+      display: flex;
+      gap: 0.85rem;
+      flex-wrap: wrap;
+      margin-top: 1.55rem;
+    }
+
+    .primary-btn,
+    .secondary-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.65rem;
+      min-height: 52px;
+      padding: 0.95rem 1.15rem;
+      border-radius: 18px;
+      font-size: 0.94rem;
+      font-weight: 700;
+    }
+
+    .primary-btn {
+      background: linear-gradient(135deg, #1f9d55 0%, #24b862 100%);
+      color: #fff;
+      box-shadow: 0 16px 32px rgba(31, 157, 85, 0.18);
+    }
+
+    .secondary-btn {
+      border: 1px solid rgba(15, 23, 42, 0.08);
+      background: #fff;
+      color: var(--navy);
+    }
+
+    .hero-side { display: grid; gap: 1.2rem; }
+
+    .panel,
+    .metric,
+    .item,
+    .timeline-item,
+    .progress-panel {
+      border: 1px solid var(--line);
+      border-radius: var(--radius-md);
+      background: var(--surface);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .panel,
+    .progress-panel { padding: 1.3rem; }
+
+    .panel-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.75rem;
+      margin-bottom: 1rem;
+    }
+
+    .panel-title {
+      color: var(--navy);
+      font-size: 1rem;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+    }
+
+    .panel-link {
+      color: var(--green);
+      font-size: 0.86rem;
+      font-weight: 700;
+    }
+
+    .next-lesson {
+      display: grid;
+      gap: 0.9rem;
+      padding: 1rem;
+      border: 1px solid rgba(31, 157, 85, 0.1);
+      border-radius: 20px;
+      background: linear-gradient(180deg, #ffffff, #f6fbf8);
+    }
+
+    .lesson-meta,
+    .item-meta {
+      color: var(--muted);
+      font-size: 0.87rem;
+      line-height: 1.65;
+    }
+
+    .lesson-meta {
+      display: flex;
+      gap: 0.8rem;
+      flex-wrap: wrap;
+      font-weight: 600;
+    }
+
+    .lesson-topic,
+    .item-title {
+      color: var(--navy);
+      font-size: 1rem;
+      font-weight: 700;
+      line-height: 1.45;
+    }
+
+    .lesson-topic { font-size: 1.08rem; font-weight: 800; }
+    .lesson-note { color: var(--muted); font-size: 0.92rem; line-height: 1.7; }
+
+    .progress-value {
+      margin: 0.25rem 0 0.8rem;
+      color: var(--navy);
+      font-size: 2rem;
+      font-weight: 800;
+      letter-spacing: -0.06em;
+    }
+
+    .progress-copy {
+      color: var(--muted);
+      font-size: 0.9rem;
+      line-height: 1.7;
+      max-width: 28ch;
+    }
+
+    .progress-track {
+      height: 11px;
+      margin-top: 1rem;
+      border-radius: 999px;
+      background: #e7edf0;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      width: 72%;
+      height: 100%;
+      border-radius: inherit;
+      background: linear-gradient(90deg, #1f9d55 0%, #24b862 100%);
+    }
+
+    .metrics {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 1rem;
+      margin-bottom: 1.2rem;
+    }
+
+    .metric { padding: 1.2rem; }
+
+    .metric-label {
+      margin-bottom: 0.55rem;
+      color: var(--muted-soft);
+      font-size: 0.75rem;
+      font-weight: 800;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    .metric-value {
+      margin-bottom: 0.35rem;
+      color: var(--navy);
+      font-size: 1.8rem;
+      font-weight: 800;
+      letter-spacing: -0.06em;
+    }
+
+    .metric-copy {
+      color: var(--muted);
+      font-size: 0.9rem;
+      line-height: 1.7;
+    }
+
+    .dashboard {
+      display: grid;
+      grid-template-columns: minmax(0, 1.18fr) minmax(320px, 0.82fr);
+      gap: 1.2rem;
+    }
+
+    .stack,
+    .list { display: grid; gap: 1.2rem; }
+    .list { gap: 0.9rem; }
+
+    .item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      padding: 1rem 1.05rem;
+    }
+
+    .item-main { display: grid; gap: 0.34rem; }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0.42rem 0.72rem;
+      border-radius: 999px;
+      font-size: 0.77rem;
+      font-weight: 800;
+      white-space: nowrap;
+    }
+
+    .pdf { background: var(--green-soft); color: var(--green-dark); }
+    .task { background: #f1f8f4; color: #19824a; }
+    .doc { background: #edf8f2; color: #177444; }
+    .todo { background: #eef8f2; color: #1a7f48; }
+    .progress { background: #e8f7ef; color: #177444; }
+    .done { background: #dcf5e7; color: #146b3c; }
+
+    .timeline-item {
+      display: grid;
+      grid-template-columns: 60px 1fr;
+      gap: 0.95rem;
+      align-items: start;
+      padding: 1rem;
+    }
+
+    .date-box {
+      display: grid;
+      place-items: center;
+      min-height: 60px;
+      border-radius: 18px;
+      background: linear-gradient(180deg, #eef8f2, #e4f5eb);
+      color: var(--green-dark);
+      text-align: center;
+      font-size: 0.76rem;
+      font-weight: 800;
+      line-height: 1.1;
+    }
+
+    .date-box strong {
+      display: block;
+      margin-top: 0.15rem;
+      font-size: 1rem;
+      letter-spacing: -0.03em;
+    }
+
+    @media (max-width: 1220px) {
+      .hero, .dashboard { grid-template-columns: 1fr; }
+      .metrics { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+
+    @media (max-width: 980px) {
+      .shell {
+        grid-template-columns: 1fr;
+        width: min(var(--content), calc(100% - 1rem));
+        min-height: auto;
+        margin: 0.5rem auto;
+        border-radius: 28px;
+      }
+      .sidebar { display: none; }
+      .main { padding: 1rem; }
+      .mobile-nav {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 0.7rem;
+        margin-bottom: 1rem;
+      }
+      .mobile-nav a {
+        display: grid;
+        place-items: center;
+        gap: 0.45rem;
+        min-height: 66px;
+        padding: 0.75rem 0.5rem;
+        border: 1px solid var(--line);
+        border-radius: 18px;
+        background: #fff;
+        color: var(--muted);
+        font-size: 0.8rem;
+        font-weight: 700;
+      }
+      .mobile-nav a.active {
+        color: var(--green-dark);
+        background: var(--green-soft);
+        border-color: rgba(31, 157, 85, 0.12);
+      }
+      .topbar { flex-direction: column; align-items: stretch; }
+      .top-actions { justify-content: space-between; }
+    }
+
+    @media (max-width: 680px) {
+      .metrics { grid-template-columns: 1fr; }
+      .mobile-nav { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      h1 { font-size: 2.1rem; }
+      .hero-actions, .top-actions { flex-direction: column; align-items: stretch; }
+      .primary-btn, .secondary-btn, .icon-btn, .student-pill { width: 100%; justify-content: center; }
+      .item { flex-direction: column; align-items: flex-start; }
+    }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="brand-mark">VS</div>
+        <div>
+          <div class="brand-title">Studentský portál</div>
+          <div class="brand-subtitle">Doučování matematiky a fyziky</div>
+        </div>
+      </div>
+
+      <div class="nav-group">
+        <div class="nav-label">Přehled</div>
+        <a class="nav-link active" href="#"><i class="fa-solid fa-table-columns"></i> Nástěnka</a>
+        <a class="nav-link" href="#"><i class="fa-regular fa-folder-open"></i> Materiály</a>
+        <a class="nav-link" href="#"><i class="fa-regular fa-square-check"></i> Úkoly</a>
+        <a class="nav-link" href="#"><i class="fa-regular fa-calendar"></i> Lekce</a>
+      </div>
+
+      <div class="nav-group">
+        <div class="nav-label">Organizace</div>
+        <a class="nav-link" href="#"><i class="fa-regular fa-note-sticky"></i> Poznámky</a>
+        <a class="nav-link" href="#"><i class="fa-solid fa-link"></i> Odkazy</a>
+      </div>
+
+      <div class="sidebar-note">
+        <small>White + green</small>
+        <h3>Čisté rozhraní s jemnými zelenými akcenty a bez zbytečných efektů.</h3>
+        <p>Směr stojí na bílé ploše, zelených detailech a jednoduchém layoutu, který působí moderně a čitelně.</p>
+      </div>
+    </aside>
+
+    <main class="main">
+      <div class="mobile-nav">
+        <a class="active" href="#"><i class="fa-solid fa-table-columns"></i> Nástěnka</a>
+        <a href="#"><i class="fa-regular fa-folder-open"></i> Materiály</a>
+        <a href="#"><i class="fa-regular fa-square-check"></i> Úkoly</a>
+        <a href="#"><i class="fa-regular fa-calendar"></i> Lekce</a>
+      </div>
+
+      <div class="topbar">
+        <div class="search"><i class="fa-solid fa-magnifying-glass"></i> Vyhledat materiál, okruh nebo lekci</div>
+        <div class="top-actions">
+          <button class="icon-btn" type="button"><i class="fa-regular fa-bell"></i></button>
+          <div class="student-pill">
+            <div class="student-avatar">A</div>
+            <span>Student demo</span>
+          </div>
+        </div>
+      </div>
+
+      <section class="hero">
+        <article class="hero-card card">
+          <div class="eyebrow"><i class="fa-solid fa-sparkles"></i> Studentský přehled</div>
+          <h1>Vše důležité pro výuku na jednom místě.</h1>
+          <div class="hero-text">
+            Materiály, úkoly i termíny lekcí přehledně, klidně a bez zbytečného zahlcení.
+            Student se rychle zorientuje a hned ví, co má právě řešit.
+          </div>
+          <div class="hero-actions">
+            <a class="primary-btn" href="#"><i class="fa-regular fa-folder-open"></i> Otevřít materiály</a>
+            <a class="secondary-btn" href="#"><i class="fa-regular fa-calendar"></i> Zobrazit lekce</a>
+          </div>
+        </article>
+
+        <div class="hero-side">
+          <section class="panel">
+            <div class="panel-head">
+              <div class="panel-title">Nejbližší lekce</div>
+              <a class="panel-link" href="#">Rozpis</a>
+            </div>
+            <div class="next-lesson">
+              <div class="lesson-meta">
+                <span><i class="fa-regular fa-calendar"></i> St 17. července</span>
+                <span><i class="fa-regular fa-clock"></i> 17:00–18:00</span>
+              </div>
+              <div class="lesson-topic">Kvadratické rovnice a grafy funkcí</div>
+              <div class="lesson-note">Navážeme na minulou lekci a projdeme si typové příklady k procvičení.</div>
+            </div>
+          </section>
+
+          <section class="progress-panel">
+            <div class="panel-title">Průběžný postup</div>
+            <div class="progress-value">72 %</div>
+            <div class="progress-copy">Hlavní okruhy jsou rozjeté dobře a zbývá dopracovat dvě slabší oblasti.</div>
+            <div class="progress-track"><div class="progress-fill"></div></div>
+          </section>
+        </div>
+      </section>
+
+      <section class="metrics">
+        <article class="metric">
+          <div class="metric-label">Materiály</div>
+          <div class="metric-value">18</div>
+          <div class="metric-copy">PDF, pracovní listy a stručná shrnutí k opakování.</div>
+        </article>
+        <article class="metric">
+          <div class="metric-label">Aktivní úkoly</div>
+          <div class="metric-value">3</div>
+          <div class="metric-copy">Jasně označené priority bez zbytečného chaosu.</div>
+        </article>
+        <article class="metric">
+          <div class="metric-label">Další lekce</div>
+          <div class="metric-value">2</div>
+          <div class="metric-copy">Domluvené termíny, které student najde během chvíle.</div>
+        </article>
+        <article class="metric">
+          <div class="metric-label">Studijní bloky</div>
+          <div class="metric-value">5</div>
+          <div class="metric-copy">Matematika a fyzika rozdělené do přehledných celků.</div>
+        </article>
+      </section>
+
+      <section class="dashboard">
+        <div class="stack">
+          <section class="panel">
+            <div class="panel-head">
+              <div class="panel-title">Poslední materiály</div>
+              <a class="panel-link" href="#">Všechny soubory</a>
+            </div>
+            <div class="list">
+              <article class="item">
+                <div class="item-main">
+                  <div class="item-title">Kvadratické rovnice – shrnutí postupu</div>
+                  <div class="item-meta">PDF materiál · Matematika · Přidáno včera</div>
+                </div>
+                <span class="badge pdf">PDF</span>
+              </article>
+              <article class="item">
+                <div class="item-main">
+                  <div class="item-title">Pracovní list: lineární funkce</div>
+                  <div class="item-meta">Cvičení · Matematika · 2 strany</div>
+                </div>
+                <span class="badge task">Úkol</span>
+              </article>
+              <article class="item">
+                <div class="item-main">
+                  <div class="item-title">Tahák k jednotkám a převodům</div>
+                  <div class="item-meta">Stručný přehled · Fyzika · Ke stažení</div>
+                </div>
+                <span class="badge doc">DOC</span>
+              </article>
+            </div>
+          </section>
+
+          <section class="panel">
+            <div class="panel-head">
+              <div class="panel-title">Aktivní úkoly</div>
+              <a class="panel-link" href="#">Správa úkolů</a>
+            </div>
+            <div class="list">
+              <article class="item">
+                <div class="item-main">
+                  <div class="item-title">Dopočítat příklady 1–6 z pracovního listu</div>
+                  <div class="item-meta">Termín: pátek · Odhad 25 minut</div>
+                </div>
+                <span class="badge progress">Rozpracováno</span>
+              </article>
+              <article class="item">
+                <div class="item-main">
+                  <div class="item-title">Projít shrnutí ke kvadratickým rovnicím</div>
+                  <div class="item-meta">Termín: neděle · Krátké opakování</div>
+                </div>
+                <span class="badge todo">Čeká</span>
+              </article>
+              <article class="item">
+                <div class="item-main">
+                  <div class="item-title">Dopsat poznámky z fyziky k pohybu</div>
+                  <div class="item-meta">Termín: příští týden · Navazuje na poslední lekci</div>
+                </div>
+                <span class="badge done">Hotovo</span>
+              </article>
+            </div>
+          </section>
+        </div>
+
+        <div class="stack">
+          <section class="panel">
+            <div class="panel-head">
+              <div class="panel-title">Časová osa</div>
+              <a class="panel-link" href="#">Historie</a>
+            </div>
+            <div class="list">
+              <article class="timeline-item">
+                <div class="date-box">Čvc<strong>17</strong></div>
+                <div>
+                  <div class="item-title">Lekce: kvadratické rovnice</div>
+                  <div class="item-meta">Zaměříme se na diskriminant, kořeny a grafické pochopení funkcí.</div>
+                </div>
+              </article>
+              <article class="timeline-item">
+                <div class="date-box">Čvc<strong>14</strong></div>
+                <div>
+                  <div class="item-title">Nahrán nový materiál</div>
+                  <div class="item-meta">Shrnutí postupu řešení a dva vzorové příklady ke stažení.</div>
+                </div>
+              </article>
+              <article class="timeline-item">
+                <div class="date-box">Čvc<strong>12</strong></div>
+                <div>
+                  <div class="item-title">Dokončen úkol z lineárních funkcí</div>
+                  <div class="item-meta">Student má splněné všechny příklady z minulého týdne.</div>
+                </div>
+              </article>
+            </div>
+          </section>
+
+          <section class="panel">
+            <div class="panel-head">
+              <div class="panel-title">Nadcházející termíny</div>
+              <a class="panel-link" href="#">Rozpis</a>
+            </div>
+            <div class="list">
+              <article class="item">
+                <div class="item-main">
+                  <div class="item-title">Středa · Matematika</div>
+                  <div class="item-meta">17:00–18:00 · Online lekce</div>
+                </div>
+              </article>
+              <article class="item">
+                <div class="item-main">
+                  <div class="item-title">Neděle · Opakování testu</div>
+                  <div class="item-meta">18:30–19:15 · Krátká konzultace</div>
+                </div>
+              </article>
+            </div>
+          </section>
+        </div>
+      </section>
+    </main>
+  </div>
+</body>
+</html>
