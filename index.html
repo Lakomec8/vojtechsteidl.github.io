@@ -192,7 +192,7 @@
                     <h3>Krátká úvodní konzultace</h3>
                     <p>
                         Nejdřív probereme ročník, aktuální problém, cíl a formu výuky.
-                        Konzultace is nezávazná a zdarma.
+                        Konzultace je nezávazná a zdarma.
                     </p>
                 </article>
                 <article class="process-card">
@@ -618,5 +618,73 @@
         const studentPasswordInput = document.getElementById("studentPassword");
         const passwordError = document.getElementById("passwordError");
 
-        // Vyhledáme všechny odkazy vedoucí na "student-portal.html"
- 
+        const studentZoneLinks = document.querySelectorAll('a[href="student-portal.html"]');
+
+        studentZoneLinks.forEach(link => {
+            link.addEventListener("click", (event) => {
+                event.preventDefault();
+                openStudentModal();
+            });
+        });
+
+        function openStudentModal() {
+            passwordModal.classList.add("active");
+            passwordModal.setAttribute("aria-hidden", "false");
+            studentPasswordInput.focus();
+        }
+
+        function closeModal() {
+            passwordModal.classList.remove("active");
+            passwordModal.setAttribute("aria-hidden", "true");
+            studentPasswordInput.value = "";
+            passwordError.style.display = "none";
+        }
+
+        closeModalBtn.addEventListener("click", closeModal);
+
+        passwordModal.addEventListener("click", (event) => {
+            if (event.target === passwordModal) {
+                closeModal();
+            }
+        });
+
+        document.addEventListener("keydown", (event) => {
+            if (event.key === "Escape" && passwordModal.classList.contains("active")) {
+                closeModal();
+            }
+        });
+
+        passwordForm.addEventListener("submit", async (event) => {
+            event.preventDefault();
+            const password = studentPasswordInput.value.trim().toLowerCase(); // Převede na malá písmena pro stabilitu
+            if (!password) return;
+
+            // Cílový JSON na serveru
+            const targetJson = `students/${password}.json`;
+
+            try {
+                const response = await fetch(targetJson, { method: 'HEAD' });
+                
+                if (response.ok) {
+                    // Uložíme zadané heslo do paměti prohlížeče
+                    sessionStorage.setItem("student_token", password);
+                    window.location.href = "student-portal.html";
+                } else {
+                    showPasswordError("Zadané heslo není správné nebo účet neexistuje.");
+                }
+            } catch (error) {
+                // Vývojářský fallback pro lokální testování (pokud HEAD selže na CORS)
+                sessionStorage.setItem("student_token", password);
+                window.location.href = "student-portal.html";
+            }
+        });
+
+        function showPasswordError(message) {
+            passwordError.textContent = message;
+            passwordError.style.display = "block";
+            studentPasswordInput.focus();
+            studentPasswordInput.select();
+        }
+    </script>
+</body>
+</html>
