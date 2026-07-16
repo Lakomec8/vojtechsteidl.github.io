@@ -1,0 +1,42 @@
+{
+  "studentName": "Student Demo",
+  "studentInitials": "SD",
+  "progress": 72,
+  "progressText": "Kvadratické funkce ti už jdou skvěle. Příště doladíme grafy kvadratických funkcí a budeme mít hotovo!",
+  "nextLesson": {
+    "date": "St 22. července",
+    "time": "17:00–18:00",
+    "topic": "Kvadratické rovnice a grafy funkcí",
+    "note": "Navážeme na minulou lekci a projdeme si typové příklady k procvičení z listu."
+  },
+  "metrics": {
+    "materialsCount": 3,
+    "activeTasks": 2,
+    "upcomingLessons": 1,
+    "blocksCount": 2
+  },
+  "materials": [
+    { "title": "Kvadratické rovnice – shrnutí postupu", "meta": "PDF materiál · Matematika · Přidáno včera", "badge": "PDF", "badgeClass": "pdf", "url": "#" },
+    { "title": "Pracovní list: lineární funkce", "meta": "Cvičení · Matematika · 2 strany", "badge": "Úkol", "badgeClass": "task", "url": "#" },
+    { "title": "Tahák k jednotkám a převodům", "meta": "Stručný přehled · Fyzika · Ke stažení", "badge": "DOC", "badgeClass": "doc", "url": "#" }
+  ],
+  "tasks": [
+    { "id": "task1", "title": "Dopočítat příklady 1–6 z pracovního listu", "meta": "Termín: pátek · Odhad 25 minut" },
+    { "id": "task2", "title": "Projít shrnutí ke kvadratickým rovnicím", "meta": "Termín: neděle · Krátké opakování" },
+    { "id": "task3", "title": "Dopsat poznámky z fyziky k pohybu", "meta": "Termín: příští týden · Navazuje na poslední lekci" }
+  ],
+  "timeline": [
+    { "month": "Čvc", "day": "17", "title": "Lekce: kvadratické rovnice", "desc": "Zaměříme se na diskriminant, kořeny a grafické pochopení funkcí." },
+    { "month": "Čvc", "day": "14", "title": "Nahrán nový materiál", "desc": "Shrnutí postupu řešení a dva vzorové příklady ke stažení." },
+    { "month": "Čvc", "day": "12", "title": "Dokončen úkol z lineárních funkcí", "desc": "Student má splněné všechny příklady z minulého týdne." }
+  ],
+  "upcoming": [
+    { "title": "Středa · Matematika", "meta": "17:00–18:00 · Online lekce" },
+    { "title": "Neděle · Opakování testu", "meta": "18:30–19:15 · Krátká konzultace" }
+  ],
+  "notes": "Zde budou tvé osobní poznámky k výuce, které uvidíš pouze ty.",
+  "links": [
+    { "title": "Interaktivní tabule Miro", "url": "https://miro.com", "desc": "Zde kreslíme příklady během lekcí." },
+    { "title": "GeoGebra kalkulačka", "url": "https://geogebra.org", "desc": "Skvělý nástroj pro vizualizaci grafů funkcí." }
+  ]
+}
