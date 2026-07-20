@@ -10,33 +10,33 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
-    :root { --green:#168447; --green-dark:#0d5c31; --green-soft:#eaf8f0; --ink:#143124; --text:#263238; --muted:#667085; --line:#e4ebe7; --bg:#f5f8f6; --card:#fff; }
+    :root { --blue:#2563eb; --blue-dark:#1d4ed8; --blue-soft:#eff6ff; --navy:#102a43; --ink:#102a43; --text:#334155; --muted:#64748b; --line:#e2e8f0; --bg:#f8fafc; --card:#fff; }
     * { box-sizing:border-box; }
-    body { margin:0; min-height:100vh; font-family:Inter,system-ui,sans-serif; color:var(--text); background:linear-gradient(145deg,#fbfefd,#edf6f0); }
+    body { margin:0; min-height:100vh; font-family:Inter,system-ui,sans-serif; color:var(--text); background:linear-gradient(145deg,#f8fbff,#eff6ff); }
     button,input { font:inherit; }
     button { cursor:pointer; }
     #loader { position:fixed; inset:0; z-index:10; display:grid; place-content:center; gap:1rem; text-align:center; color:var(--ink); font-weight:700; background:var(--bg); transition:opacity .25s ease,visibility .25s ease; }
     #loader.hidden { opacity:0; visibility:hidden; }
-    .spinner { width:42px; height:42px; margin:auto; border:4px solid var(--green-soft); border-top-color:var(--green); border-radius:50%; animation:spin .8s linear infinite; }
+    .spinner { width:42px; height:42px; margin:auto; border:4px solid var(--blue-soft); border-top-color:var(--blue); border-radius:50%; animation:spin .8s linear infinite; }
     @keyframes spin { to { transform:rotate(360deg); } }
-    .shell { display:grid; grid-template-columns:260px minmax(0,1fr); max-width:1380px; min-height:calc(100vh - 2rem); margin:1rem auto; overflow:hidden; border:1px solid #fff; border-radius:28px; background:rgba(255,255,255,.86); box-shadow:0 22px 60px rgba(19,49,36,.12); }
+    .shell { display:grid; grid-template-columns:260px minmax(0,1fr); max-width:1380px; min-height:calc(100vh - 2rem); margin:1rem auto; overflow:hidden; border:1px solid #fff; border-radius:28px; background:rgba(255,255,255,.86); box-shadow:0 22px 60px rgba(15,23,42,.12); }
     .sidebar { display:flex; flex-direction:column; padding:1.4rem; background:#fff; border-right:1px solid var(--line); }
     .brand { display:flex; gap:.8rem; align-items:center; margin-bottom:2rem; color:var(--ink); }
-    .brand-mark { display:grid; place-items:center; width:46px; height:46px; border-radius:15px; color:#fff; font-weight:800; background:linear-gradient(135deg,var(--green),#27b663); }
+    .brand-mark { display:grid; place-items:center; width:46px; height:46px; border-radius:15px; color:#fff; font-weight:800; background:linear-gradient(135deg,var(--blue),#60a5fa); }
     .brand small { display:block; margin-top:.15rem; color:var(--muted); font-weight:500; }
     .nav { display:grid; gap:.45rem; }
     .nav button { display:flex; align-items:center; gap:.8rem; width:100%; padding:.85rem .9rem; border:1px solid transparent; border-radius:14px; background:transparent; color:var(--muted); text-align:left; font-weight:700; }
-    .nav button:hover,.nav button.active { color:var(--green-dark); border-color:#d8efe1; background:var(--green-soft); }
+    .nav button:hover,.nav button.active { color:var(--blue-dark); border-color:#d8efe1; background:var(--blue-soft); }
     .logout { display:flex; align-items:center; justify-content:center; gap:.55rem; width:100%; margin-top:auto; padding:.78rem .9rem; border:1px solid #f0d4d1; border-radius:14px; color:#b42318; background:#fffafa; font-weight:700; transition:background .15s ease,border-color .15s ease,transform .15s ease; }
     .logout:hover { border-color:#e8bcb7; background:#fff1f0; transform:translateY(-1px); }
     .logout:focus-visible { outline:3px solid rgba(180,35,24,.18); outline-offset:2px; }
     .main { padding:1.5rem; }
     .topbar { display:flex; justify-content:space-between; gap:1rem; align-items:center; margin-bottom:1.3rem; }
     .student { display:flex; gap:.7rem; align-items:center; font-weight:800; color:var(--ink); }
-    .avatar { display:grid; place-items:center; width:40px; height:40px; border-radius:13px; color:var(--green-dark); background:var(--green-soft); }
+    .avatar { display:grid; place-items:center; width:40px; height:40px; border-radius:13px; color:var(--blue-dark); background:var(--blue-soft); }
     .view { display:none; }
     .view.active { display:block; }
-    .hero { display:flex; justify-content:space-between; gap:1.5rem; align-items:flex-start; padding:2rem; border-radius:24px; color:#fff; background:linear-gradient(125deg,#116936,#22a95c); box-shadow:0 16px 36px rgba(22,132,71,.18); }
+    .hero { display:flex; justify-content:space-between; gap:1.5rem; align-items:flex-start; padding:2rem; border-radius:24px; color:#fff; background:linear-gradient(135deg,#102a43 0%,#173f6c 56%,#2563eb 100%); box-shadow:0 16px 36px rgba(37,99,235,.18); }
     .eyebrow { margin:0 0 .7rem; font-size:.78rem; font-weight:800; letter-spacing:.08em; text-transform:uppercase; opacity:.85; }
     h1 { max-width:16ch; margin:0; font-size:clamp(2rem,4vw,3.25rem); line-height:1.05; letter-spacing:-.055em; }
     .hero p:last-child { max-width:64ch; margin:1rem 0 0; line-height:1.7; opacity:.94; }
@@ -45,31 +45,30 @@
     .track { height:9px; margin-top:.75rem; overflow:hidden; border-radius:99px; background:rgba(255,255,255,.25); }
     .fill { height:100%; border-radius:inherit; background:#fff; }
     .metrics { display:grid; grid-template-columns:repeat(4,1fr); gap:1rem; margin:1.3rem 0; }
-    .card { padding:1.2rem; border:1px solid var(--line); border-radius:20px; background:var(--card); box-shadow:0 4px 14px rgba(23,49,36,.035); }
+    .card { padding:1.2rem; border:1px solid var(--line); border-radius:20px; background:var(--card); box-shadow:0 4px 14px rgba(15,23,42,.035); }
     .metric-label { color:var(--muted); font-size:.78rem; font-weight:800; letter-spacing:.06em; text-transform:uppercase; }
     .metric-value { margin-top:.45rem; color:var(--ink); font-size:1.9rem; font-weight:800; }
     .grid { display:grid; grid-template-columns:1.15fr .85fr; gap:1.2rem; }
-    h2 { margin:0 0:1rem; color:var(--ink); font-size:1.15rem; }
+    h2 { margin:0 0 1rem; color:var(--ink); font-size:1.15rem; }
     .items { display:grid; gap:.75rem; }
     .item { display:flex; gap:1rem; align-items:center; justify-content:space-between; padding:1rem; border:1px solid var(--line); border-radius:16px; background:#fff; }
     .item-main { min-width:0; }
     .item-title { color:var(--ink); font-weight:800; line-height:1.4; }
     .item-meta { margin-top:.25rem; color:var(--muted); font-size:.88rem; line-height:1.5; }
-    .badge { flex:none; padding:.34rem .6rem; border-radius:999px; color:var(--green-dark); background:var(--green-soft); font-size:.72rem; font-weight:800; }
+    .badge { flex:none; padding:.34rem .6rem; border-radius:999px; color:var(--blue-dark); background:var(--blue-soft); font-size:.72rem; font-weight:800; }
     a.item { color:inherit; text-decoration:none; transition:transform .15s ease,border-color .15s ease; }
-    a.item:hover { transform:translateY(-1px); border-color:#bde3cb; }
+    a.item:hover { transform:translateY(-1px); border-color:#bfdbfe; }
     .task-item { cursor:pointer; }
-    .task-check { display:grid; flex:none; place-items:center; width:24px; height:24px; border:2px solid #a3b1aa; border-radius:8px; color:transparent; }
+    .task-check { display:grid; flex:none; place-items:center; width:24px; height:24px; border:2px solid #94a3b8; border-radius:8px; color:transparent; }
     .task-item.done { opacity:.65; }
-    .task-item.done .task-check { border-color:var(--green); color:#fff; background:var(--green); }
+    .task-item.done .task-check { border-color:var(--blue); color:#fff; background:var(--blue); }
     .task-item.done .item-title { text-decoration:line-through; }
     .empty { padding:1.2rem; color:var(--muted); text-align:center; }
-    .notes { width:100%; min-height:220px; padding:1rem; border:1px solid var(--line); border-radius:16px; color:var(--text); background:#fff; line-height:1.6; resize:vertical; }
     .search { width:min(360px,100%); padding:.75rem .9rem; border:1px solid var(--line); border-radius:12px; outline:none; background:#fff; }
-    .search:focus { border-color:var(--green); box-shadow:0 0 0 3px rgba(22,132,71,.12); }
+    .search:focus { border-color:var(--blue); box-shadow:0 0 0 3px rgba(37,99,235,.12); }
     .error { max-width:540px; margin:10vh auto; padding:2rem; border-radius:22px; text-align:center; background:#fff; box-shadow:0 18px 50px rgba(23,49,36,.12); }
     .error h1 { max-width:none; font-size:1.7rem; }
-    .error a { display:inline-block; margin-top:1.2rem; padding:.8rem 1rem; border-radius:12px; color:#fff; background:var(--green); text-decoration:none; font-weight:800; }
+    .error a { display:inline-block; margin-top:1.2rem; padding:.8rem 1rem; border-radius:12px; color:#fff; background:var(--blue); text-decoration:none; font-weight:800; }
     @media (max-width:900px) { .shell{grid-template-columns:1fr;margin:0;border-radius:0}.sidebar{position:sticky;top:0;z-index:2;flex-direction:row;align-items:center;gap:1rem;padding:.75rem;overflow:auto;border-right:0;border-bottom:1px solid var(--line)}.brand{margin:0;white-space:nowrap}.brand small{display:none}.nav{display:flex}.nav button{width:auto;white-space:nowrap}.logout{margin:0}.hero,.grid{display:grid;grid-template-columns:1fr}.metrics{grid-template-columns:repeat(2,1fr)} }
     @media (max-width:560px) { .main{padding:1rem}.topbar{align-items:flex-start;flex-direction:column}.metrics{grid-template-columns:1fr}.nav button{padding:.65rem}.nav button span{display:none}.hero{padding:1.35rem}.item{align-items:flex-start}.badge{display:none} }
   </style>
@@ -84,7 +83,6 @@
         <button data-view="materials"><i class="fa-regular fa-folder-open"></i><span>Materiály</span></button>
         <button data-view="tasks"><i class="fa-regular fa-square-check"></i><span>Úkoly</span></button>
         <button data-view="lessons"><i class="fa-regular fa-calendar"></i><span>Lekce</span></button>
-        <button data-view="notes"><i class="fa-regular fa-note-sticky"></i><span>Poznámky</span></button>
         <button data-view="links"><i class="fa-solid fa-link"></i><span>Odkazy</span></button>
       </nav>
       <button class="logout" id="logout" type="button"><i class="fa-solid fa-arrow-right-from-bracket"></i><span>Odhlásit se</span></button>
@@ -92,14 +90,13 @@
     <main class="main">
       <div class="topbar"><input class="search" id="search" type="search" placeholder="Vyhledat v materiálech a úkolech…"><div class="student"><div class="avatar" id="initials">U</div><span id="name">Načítání…</span></div></div>
       <section class="view active" id="dashboard">
-        <div class="hero"><div><p class="eyebrow">Studentský přehled</p><h1>Vše důležité pro výuku na jednom místě.</h1><p id="progressText"></p></div><div class="progress"><span>Průběžný postup</span><strong id="progressValue">0 %</strong><div class="track"><div class="fill" id="progressFill"></div></div></div></div>
-        <div class="metrics"><div class="card"><div class="metric-label">Materiály</div><div class="metric-value" id="materialsCount">0</div></div><div class="card"><div class="metric-label">Aktivní úkoly</div><div class="metric-value" id="tasksCount">0</div></div><div class="card"><div class="metric-label">Další lekce</div><div class="metric-value" id="lessonsCount">0</div></div><div class="card"><div class="metric-label">Studijní bloky</div><div class="metric-value" id="blocksCount">0</div></div></div>
-        <div class="grid"><section class="card"><h2>Poslední materiály</h2><div class="items" id="dashboardMaterials"></div></section><section class="card"><h2>Nejbližší lekce</h2><div class="items" id="nextLesson"></div></section></div>
+        <div class="hero"><div><p class="eyebrow">Studentský přehled</p><h1>Vše důležité pro výuku na jednom místě.</h1><p id="progressText"></p></div><div class="progress"><span id="progressLabel">Příprava na finální test</span><strong id="progressValue">0 %</strong><small id="deadlineCopy"></small><div class="track"><div class="fill" id="progressFill"></div></div></div></div>
+        <div class="metrics"><div class="card"><div class="metric-label">Materiály</div><div class="metric-value" id="materialsCount">0</div></div><div class="card"><div class="metric-label">Aktivní úkoly</div><div class="metric-value" id="tasksCount">0</div></div><div class="card"><div class="metric-label">Finální test</div><div class="metric-value" id="deadlineDate">–</div></div><div class="card"><div class="metric-label">Studijní bloky</div><div class="metric-value" id="blocksCount">0</div></div></div>
+        <div class="grid"><section class="card"><h2>Poslední materiály</h2><div class="items" id="dashboardMaterials"></div></section><section class="card"><h2>Důležitý termín</h2><div class="items" id="nextLesson"></div></section></div>
       </section>
       <section class="view" id="materials"><div class="card"><h2>Materiály</h2><div class="items" id="materialsList"></div></div></section>
       <section class="view" id="tasks"><div class="card"><h2>Úkoly</h2><div class="items" id="tasksList"></div></div></section>
       <section class="view" id="lessons"><div class="grid"><section class="card"><h2>Časová osa</h2><div class="items" id="timelineList"></div></section><section class="card"><h2>Nadcházející termíny</h2><div class="items" id="upcomingList"></div></section></div></section>
-      <section class="view" id="notes"><div class="card"><h2>Poznámky</h2><textarea class="notes" id="notesBox" placeholder="Poznámky k výuce…"></textarea></div></section>
       <section class="view" id="links"><div class="card"><h2>Užitečné odkazy</h2><div class="items" id="linksList"></div></div></section>
     </main>
   </div>
@@ -124,10 +121,16 @@
         document.getElementById("progressText").textContent = data.progressText || "";
         document.getElementById("progressValue").textContent = (data.progress || 0) + " %";
         document.getElementById("progressFill").style.width = Math.max(0, Math.min(100, Number(data.progress) || 0)) + "%";
+        const deadline = data.deadline || {};
+        const testDate = deadline.date ? new Date(deadline.date + "T00:00:00") : null;
+        const deadlineDisplay = testDate ? new Intl.DateTimeFormat("cs-CZ", { day: "numeric", month: "numeric", year: "numeric" }).format(testDate) : "";
+        const daysRemaining = testDate ? Math.max(0, Math.ceil((testDate - new Date()) / 86400000)) : null;
+        document.getElementById("progressLabel").textContent = deadline.label ? "Příprava na " + deadline.label.toLowerCase() : "Průběžný postup";
+        document.getElementById("deadlineCopy").textContent = deadlineDisplay ? "Deadline " + deadlineDisplay + " · zbývá " + (daysRemaining === 0 ? "dnes" : daysRemaining + " dní") : "";
+        document.getElementById("deadlineDate").textContent = testDate ? new Intl.DateTimeFormat("cs-CZ", { day: "numeric", month: "numeric" }).format(testDate) : "–";
         const metrics = data.metrics || {};
         document.getElementById("materialsCount").textContent = metrics.materialsCount ?? (data.materials || []).length;
         document.getElementById("tasksCount").textContent = metrics.activeTasks ?? (data.tasks || []).length;
-        document.getElementById("lessonsCount").textContent = metrics.upcomingLessons ?? (data.upcoming || []).length;
         document.getElementById("blocksCount").textContent = metrics.blocksCount ?? 0;
         const renderMaterials = list => list.length ? list.map(material => '<a class="item" href="' + escape(material.url || "#") + '" target="_blank" rel="noopener"><div class="item-main"><div class="item-title">' + escape(material.title) + '</div><div class="item-meta">' + escape(material.meta) + '</div></div><span class="badge">' + escape(material.badge || "Soubor") + '</span></a>').join("") : empty("Zatím tu nejsou žádné materiály.");
         const materials = Array.isArray(data.materials) ? data.materials : [];
@@ -142,7 +145,6 @@
         document.getElementById("timelineList").innerHTML = (data.timeline || []).length ? data.timeline.map(row => item((row.month ? row.month + " " : "") + (row.day || "") + " · " + (row.title || ""), row.desc || "", "Historie")).join("") : empty("Zatím tu není žádná historie.");
         document.getElementById("upcomingList").innerHTML = (data.upcoming || []).length ? data.upcoming.map(row => item(row.title, row.meta, "Termín")).join("") : empty("Zatím nejsou žádné další termíny.");
         document.getElementById("linksList").innerHTML = (data.links || []).length ? data.links.map(link => '<a class="item" href="' + escape(link.url || "#") + '" target="_blank" rel="noopener"><div class="item-main"><div class="item-title">' + escape(link.title) + '</div><div class="item-meta">' + escape(link.desc) + '</div></div><span class="badge">Otevřít</span></a>').join("") : empty("Zatím tu nejsou žádné odkazy.");
-        const notes = document.getElementById("notesBox"); notes.value = localStorage.getItem(storageKey + "notes") ?? (data.notes || ""); notes.addEventListener("input", () => localStorage.setItem(storageKey + "notes", notes.value));
         document.querySelectorAll("[data-view]").forEach(button => button.addEventListener("click", () => { document.querySelectorAll("[data-view]").forEach(node => node.classList.toggle("active", node === button)); document.querySelectorAll(".view").forEach(view => view.classList.toggle("active", view.id === button.dataset.view)); }));
         document.getElementById("search").addEventListener("input", event => { const query = event.target.value.toLocaleLowerCase("cs"); document.querySelectorAll("#materialsList .item, #tasksList .item, #timelineList .item").forEach(row => { row.hidden = !!query && !row.textContent.toLocaleLowerCase("cs").includes(query); }); });
         document.getElementById("logout").addEventListener("click", () => { sessionStorage.removeItem("student_token"); window.location.href = "index.html"; });
