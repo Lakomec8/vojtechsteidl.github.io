@@ -660,7 +660,7 @@
             if (!enteredPassword) return;
 
             // Zkratky pro současné studentské účty.
-            const studentAliases = { demo: "demo123", evelin: "evelina" };
+            const studentAliases = { demo: "demo123", evelin: "evelina", evelin123: "evelina" };
             const studentKey = studentAliases[enteredPassword] || enteredPassword;
             const targetJson = "students/" + encodeURIComponent(studentKey) + ".json";
 
