@@ -10,767 +10,147 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
-    :root {
-      --bg: #f7faf8;
-      --surface: #ffffff;
-      --surface-soft: #f3faf6;
-      --surface-2: #f8fcf9;
-      --line: rgba(15, 23, 42, 0.08);
-      --line-strong: rgba(22, 101, 52, 0.14);
-      --text: #1f2937;
-      --muted: #6b7280;
-      --muted-soft: #9aa3af;
-      --green: #1f9d55;
-      --green-dark: #147a40;
-      --green-soft: #eaf8f0;
-      --green-soft-2: #dff4e7;
-      --navy: #143124;
-      --shadow-sm: 0 1px 2px rgba(15, 23, 42, 0.04);
-      --shadow-md: 0 16px 36px rgba(15, 23, 42, 0.06);
-      --shadow-lg: 0 28px 60px rgba(15, 23, 42, 0.08);
-      --radius-sm: 16px;
-      --radius-md: 24px;
-      --radius-lg: 32px;
-      --content: 1460px;
-    }
-    * { box-sizing: border-box; }
-    body {
-      margin: 0;
-      min-height: 100vh;
-      font-family: 'Inter', sans-serif;
-      color: var(--text);
-      background:
-        radial-gradient(circle at top left, rgba(31, 157, 85, 0.05), transparent 24%),
-        radial-gradient(circle at bottom right, rgba(31, 157, 85, 0.04), transparent 20%),
-        linear-gradient(180deg, #fbfefd 0%, #f6faf8 100%);
-    }
-    a { color: inherit; text-decoration: none; }
-    
-    /* Načítací obrazovka */
-    #loader {
-      position: fixed;
-      inset: 0;
-      z-index: 2000;
-      background: var(--bg);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      font-weight: 700;
-      color: var(--navy);
-      transition: opacity 0.4s ease;
-    }
-    .spinner {
-      width: 48px;
-      height: 48px;
-      border: 5px solid var(--green-soft);
-      border-top-color: var(--green);
-      border-radius: 50%;
-      animation: spin 1s infinite linear;
-      margin-bottom: 1rem;
-    }
-    @keyframes spin {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
-    }
-
-    .shell {
-      display: grid;
-      grid-template-columns: 300px 1fr;
-      width: min(var(--content), calc(100% - 2rem));
-      min-height: calc(100vh - 2rem);
-      margin: 1rem auto;
-      border: 1px solid rgba(255,255,255,0.9);
-      border-radius: 34px;
-      background: rgba(255,255,255,0.82);
-      box-shadow: var(--shadow-lg);
-      backdrop-filter: blur(12px);
-      overflow: hidden;
-    }
-    .sidebar {
-      display: flex;
-      flex-direction: column;
-      gap: 1.5rem;
-      padding: 1.5rem;
-      background: linear-gradient(180deg, rgba(255,255,255,0.96), rgba(247,250,248,0.98));
-      border-right: 1px solid rgba(15, 23, 42, 0.05);
-    }
-    .brand {
-      display: flex;
-      align-items: center;
-      gap: 0.95rem;
-    }
-    .brand-mark {
-      display: grid;
-      place-items: center;
-      width: 54px;
-      height: 54px;
-      border-radius: 20px;
-      background: linear-gradient(135deg, #1f9d55 0%, #24b862 100%);
-      color: white;
-      font-weight: 800;
-      letter-spacing: -0.04em;
-      box-shadow: 0 14px 28px rgba(31, 157, 85, 0.18);
-    }
-    .brand-title {
-      color: var(--navy);
-      font-size: 1rem;
-      font-weight: 800;
-      letter-spacing: -0.04em;
-    }
-    .brand-subtitle {
-      margin-top: 0.22rem;
-      color: var(--muted);
-      font-size: 0.87rem;
-    }
-    .nav-label {
-      margin: 0 0 0.3rem 0.25rem;
-      color: var(--muted-soft);
-      font-size: 0.74rem;
-      font-weight: 800;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-    }
-    .nav-group { display: grid; gap: 0.5rem; }
-    .nav-link {
-      display: flex;
-      align-items: center;
-      gap: 0.85rem;
-      min-height: 52px;
-      padding: 0.92rem 0.98rem;
-      border: 1px solid transparent;
-      border-radius: 18px;
-      color: var(--muted);
-      font-size: 0.95rem;
-      font-weight: 600;
-      cursor: pointer;
-      transition: background 180ms ease, border-color 180ms ease, color 180ms ease, transform 180ms ease;
-    }
-    .nav-link:hover,
-    .nav-link.active {
-      background: var(--green-soft);
-      border-color: rgba(31, 157, 85, 0.12);
-      color: var(--green-dark);
-      transform: translateX(2px);
-    }
-    .sidebar-note {
-      margin-top: auto;
-      padding: 1.25rem;
-      border: 1px solid rgba(31, 157, 85, 0.12);
-      border-radius: 24px;
-      background: linear-gradient(180deg, #ffffff, #f5fbf7);
-      box-shadow: var(--shadow-sm);
-    }
-    .sidebar-note small {
-      display: block;
-      margin-bottom: 0.7rem;
-      color: var(--green);
-      font-size: 0.75rem;
-      font-weight: 800;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-    }
-    .sidebar-note h3 {
-      margin: 0 0 0.55rem;
-      color: var(--navy);
-      font-size: 1rem;
-      line-height: 1.4;
-    }
-    .sidebar-note p {
-      margin: 0;
-      color: var(--muted);
-      font-size: 0.9rem;
-      line-height: 1.7;
-    }
-    .main {
-      padding: 1.5rem;
-      background: linear-gradient(180deg, rgba(255,255,255,0.42), rgba(248,252,249,0.62));
-    }
-    .mobile-nav { display: none; }
-    .topbar {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 1rem;
-      margin-bottom: 1.25rem;
-      padding: 0.95rem 1rem;
-      border: 1px solid var(--line);
-      border-radius: 22px;
-      background: rgba(255,255,255,0.9);
-      box-shadow: var(--shadow-sm);
-    }
-    .search {
-      display: flex;
-      align-items: center;
-      gap: 0.8rem;
-      flex: 1;
-      min-height: 50px;
-      padding: 0 1rem;
-      border: 1px solid rgba(15, 23, 42, 0.07);
-      border-radius: 18px;
-      background: var(--surface);
-      color: var(--muted);
-      font-size: 0.94rem;
-    }
-    .search input {
-      border: 0;
-      outline: none;
-      width: 100%;
-      font-family: inherit;
-      font-size: inherit;
-      color: var(--text);
-    }
-    .top-actions { display: flex; align-items: center; gap: 0.75rem; }
-    .icon-btn,
-    .student-pill {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      min-height: 48px;
-      padding: 0.8rem 1rem;
-      border: 1px solid var(--line);
-      border-radius: 18px;
-      background: var(--surface);
-      box-shadow: var(--shadow-sm);
-    }
-    .student-pill {
-      gap: 0.75rem;
-      color: var(--navy);
-      font-size: 0.92rem;
-      font-weight: 700;
-    }
-    .student-avatar {
-      display: grid;
-      place-items: center;
-      width: 34px;
-      height: 34px;
-      border-radius: 12px;
-      background: var(--green-soft);
-      color: var(--green-dark);
-      font-size: 0.82rem;
-      font-weight: 800;
-    }
-    
-    /* Sekce SPA */
-    .view-section {
-      display: none;
-      animation: fadeIn 0.3s ease;
-    }
-    .view-section.active-view {
-      display: block;
-    }
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(10px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    .hero {
-      display: grid;
-      grid-template-columns: minmax(0, 1.45fr) minmax(320px, 0.78fr);
-      gap: 1.2rem;
-      margin-bottom: 1.2rem;
-    }
-    .card {
-      border: 1px solid var(--line);
-      border-radius: var(--radius-lg);
-      background: rgba(255,255,255,0.94);
-      box-shadow: var(--shadow-md);
-    }
-    .hero-card {
-      position: relative;
-      overflow: hidden;
-      padding: 2rem;
-      background:
-        radial-gradient(circle at top right, rgba(31, 157, 85, 0.08), transparent 28%),
-        linear-gradient(180deg, rgba(255,255,255,0.98), rgba(248,252,249,0.95));
-    }
-    .hero-card::after {
-      content: "";
-      position: absolute;
-      right: -36px;
-      bottom: -36px;
-      width: 170px;
-      height: 170px;
-      border-radius: 30px;
-      background: linear-gradient(135deg, rgba(31, 157, 85, 0.08), rgba(31, 157, 85, 0.02));
-      transform: rotate(16deg);
-    }
-    .eyebrow {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.55rem;
-      margin-bottom: 1rem;
-      padding: 0.42rem 0.8rem;
-      border: 1px solid rgba(31, 157, 85, 0.1);
-      border-radius: 999px;
-      background: var(--green-soft);
-      color: var(--green-dark);
-      font-size: 0.79rem;
-      font-weight: 800;
-    }
-    h1 {
-      margin: 0 0 0.95rem;
-      max-width: 12ch;
-      color: var(--navy);
-      font-size: clamp(2.25rem, 3vw, 3.3rem);
-      line-height: 1.02;
-      letter-spacing: -0.06em;
-      text-wrap: balance;
-    }
-    .hero-text {
-      max-width: 57ch;
-      color: var(--muted);
-      font-size: 1rem;
-      line-height: 1.8;
-    }
-    .hero-actions {
-      display: flex;
-      gap: 0.85rem;
-      flex-wrap: wrap;
-      margin-top: 1.55rem;
-    }
-    .primary-btn,
-    .secondary-btn {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.65rem;
-      min-height: 52px;
-      padding: 0.95rem 1.15rem;
-      border-radius: 18px;
-      font-size: 0.94rem;
-      font-weight: 700;
-      cursor: pointer;
-    }
-    .primary-btn {
-      background: linear-gradient(135deg, #1f9d55 0%, #24b862 100%);
-      color: #fff;
-      box-shadow: 0 16px 32px rgba(31, 157, 85, 0.18);
-    }
-    .secondary-btn {
-      border: 1px solid rgba(15, 23, 42, 0.08);
-      background: #fff;
-      color: var(--navy);
-    }
-    .hero-side { display: grid; gap: 1.2rem; }
-    .panel,
-    .metric,
-    .item,
-    .timeline-item,
-    .progress-panel {
-      border: 1px solid var(--line);
-      border-radius: var(--radius-md);
-      background: var(--surface);
-      box-shadow: var(--shadow-sm);
-    }
-    .panel,
-    .progress-panel { padding: 1.3rem; }
-    .panel-head {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 0.75rem;
-      margin-bottom: 1rem;
-    }
-    .panel-title {
-      color: var(--navy);
-      font-size: 1rem;
-      font-weight: 800;
-      letter-spacing: -0.03em;
-    }
-    .panel-link {
-      color: var(--green);
-      font-size: 0.86rem;
-      font-weight: 700;
-      cursor: pointer;
-    }
-    .next-lesson {
-      display: grid;
-      gap: 0.9rem;
-      padding: 1rem;
-      border: 1px solid rgba(31, 157, 85, 0.1);
-      border-radius: 20px;
-      background: linear-gradient(180deg, #ffffff, #f6fbf8);
-    }
-    .lesson-meta,
-    .item-meta {
-      color: var(--muted);
-      font-size: 0.87rem;
-      line-height: 1.65;
-    }
-    .lesson-meta {
-      display: flex;
-      gap: 0.8rem;
-      flex-wrap: wrap;
-      font-weight: 600;
-    }
-    .lesson-topic,
-    .item-title {
-      color: var(--navy);
-      font-size: 1rem;
-      font-weight: 700;
-      line-height: 1.45;
-    }
-    .lesson-topic { font-size: 1.08rem; font-weight: 800; }
-    .lesson-note { color: var(--muted); font-size: 0.92rem; line-height: 1.7; }
-    .progress-value {
-      margin: 0.25rem 0 0.8rem;
-      color: var(--navy);
-      font-size: 2rem;
-      font-weight: 800;
-      letter-spacing: -0.06em;
-    }
-    .progress-copy {
-      color: var(--muted);
-      font-size: 0.9rem;
-      line-height: 1.7;
-      max-width: 28ch;
-    }
-    .progress-track {
-      height: 11px;
-      margin-top: 1rem;
-      border-radius: 999px;
-      background: #e7edf0;
-      overflow: hidden;
-    }
-    .progress-fill {
-      width: 0%; /* Spočítá JS */
-      height: 100%;
-      border-radius: inherit;
-      background: linear-gradient(90deg, #1f9d55 0%, #24b862 100%);
-      transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-    .metrics {
-      display: grid;
-      grid-template-columns: repeat(4, minmax(0, 1fr));
-      gap: 1rem;
-      margin-bottom: 1.2rem;
-    }
-    .metric { padding: 1.2rem; }
-    .metric-label {
-      margin-bottom: 0.55rem;
-      color: var(--muted-soft);
-      font-size: 0.75rem;
-      font-weight: 800;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-    }
-    .metric-value {
-      margin-bottom: 0.35rem;
-      color: var(--navy);
-      font-size: 1.8rem;
-      font-weight: 800;
-      letter-spacing: -0.06em;
-    }
-    .metric-copy {
-      color: var(--muted);
-      font-size: 0.9rem;
-      line-height: 1.7;
-    }
-    .dashboard {
-      display: grid;
-      grid-template-columns: minmax(0, 1.18fr) minmax(320px, 0.82fr);
-      gap: 1.2rem;
-    }
-    .stack,
-    .list { display: grid; gap: 1.2rem; }
-    .list { gap: 0.9rem; }
-    .item {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 1rem;
-      padding: 1rem 1.05rem;
-    }
-    .item-main { display: grid; gap: 0.34rem; }
-    .badge {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      padding: 0.42rem 0.72rem;
-      border-radius: 999px;
-      font-size: 0.77rem;
-      font-weight: 800;
-      white-space: nowrap;
-    }
-    .pdf { background: var(--green-soft); color: var(--green-dark); }
-    .task { background: #f1f8f4; color: #19824a; }
-    .doc { background: #edf8f2; color: #177444; }
-    .todo { background: #eef8f2; color: #1a7f48; }
-    .progress { background: #e8f7ef; color: #177444; }
-    .done { background: #dcf5e7; color: #146b3c; }
-    .timeline-item {
-      display: grid;
-      grid-template-columns: 60px 1fr;
-      gap: 0.95rem;
-      align-items: start;
-      padding: 1rem;
-    }
-    .date-box {
-      display: grid;
-      place-items: center;
-      min-height: 60px;
-      border-radius: 18px;
-      background: linear-gradient(180deg, #eef8f2, #e4f5eb);
-      color: var(--green-dark);
-      text-align: center;
-      font-size: 0.76rem;
-      font-weight: 800;
-      line-height: 1.1;
-    }
-    .date-box strong {
-      display: block;
-      margin-top: 0.15rem;
-      font-size: 1rem;
-      letter-spacing: -0.03em;
-    }
-
-    /* Interaktivní úkoly (Checkbox) */
-    .task-item {
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-      padding: 1.1rem 1.25rem;
-      border: 1px solid var(--line);
-      border-radius: var(--radius-md);
-      background: var(--surface);
-      cursor: pointer;
-      transition: all 0.2s ease;
-    }
-    .task-item:hover {
-      border-color: rgba(31, 157, 85, 0.24);
-      background: var(--surface-2);
-    }
-    .task-checkbox {
-      display: grid;
-      place-items: center;
-      width: 24px;
-      height: 24px;
-      border: 2px solid var(--muted-soft);
-      border-radius: 8px;
-      background: var(--surface);
-      color: transparent;
-      font-size: 0.75rem;
-      transition: all 0.15s ease;
-    }
-    .task-item.is-completed .task-checkbox {
-      background: var(--green);
-      border-color: var(--green);
-      color: white;
-    }
-    .task-item.is-completed .item-title {
-      text-decoration: line-through;
-      color: var(--muted-soft);
-    }
-    .task-item.is-completed {
-      opacity: 0.75;
-    }
-
-    /* Poznámky a Odkazy */
-    .notes-box {
-      width: 100%;
-      min-height: 200px;
-      padding: 1.5rem;
-      border: 1px solid var(--line);
-      border-radius: var(--radius-md);
-      background: var(--surface);
-      font-size: 1rem;
-      line-height: 1.8;
-      color: var(--text);
-      white-space: pre-wrap;
-    }
-
-    .logout-btn {
-      margin-top: auto;
-      border: 1px solid rgba(220, 38, 38, 0.12);
-      background: #fff8f8;
-      color: #dc2626;
-    }
-    .logout-btn:hover {
-      background: #fde8e8;
-      border-color: rgba(220, 38, 38, 0.2);
-    }
-
-    @media (max-width: 1220px) {
-      .hero, .dashboard { grid-template-columns: 1fr; }
-      .metrics { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-    }
-    @media (max-width: 980px) {
-      .shell {
-        grid-template-columns: 1fr;
-        width: min(var(--content), calc(100% - 1rem));
-        min-height: auto;
-        margin: 0.5rem auto;
-        border-radius: 28px;
-      }
-      .sidebar { display: none; }
-      .main { padding: 1rem; }
-      .mobile-nav {
-        display: grid;
-        grid-template-columns: repeat(4, minmax(0, 1fr));
-        gap: 0.7rem;
-        margin-bottom: 1rem;
-      }
-      .mobile-nav a {
-        display: grid;
-        place-items: center;
-        gap: 0.45rem;
-        min-height: 66px;
-        padding: 0.75rem 0.5rem;
-        border: 1px solid var(--line);
-        border-radius: 18px;
-        background: #fff;
-        color: var(--muted);
-        font-size: 0.8rem;
-        font-weight: 700;
-        cursor: pointer;
-      }
-      .mobile-nav a.active {
-        color: var(--green-dark);
-        background: var(--green-soft);
-        border-color: rgba(31, 157, 85, 0.12);
-      }
-      .topbar { flex-direction: column; align-items: stretch; }
-      .top-actions { justify-content: space-between; }
-    }
-    @media (max-width: 680px) {
-      .metrics { grid-template-columns: 1fr; }
-      .mobile-nav { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-      h1 { font-size: 2.1rem; }
-      .hero-actions, .top-actions { flex-direction: column; align-items: stretch; }
-      .primary-btn, .secondary-btn, .icon-btn, .student-pill { width: 100%; justify-content: center; }
-      .item { flex-direction: column; align-items: flex-start; }
-    }
+    :root { --green:#168447; --green-dark:#0d5c31; --green-soft:#eaf8f0; --ink:#143124; --text:#263238; --muted:#667085; --line:#e4ebe7; --bg:#f5f8f6; --card:#fff; }
+    * { box-sizing:border-box; }
+    body { margin:0; min-height:100vh; font-family:Inter,system-ui,sans-serif; color:var(--text); background:linear-gradient(145deg,#fbfefd,#edf6f0); }
+    button,input { font:inherit; }
+    button { cursor:pointer; }
+    #loader { position:fixed; inset:0; z-index:10; display:grid; place-content:center; gap:1rem; text-align:center; color:var(--ink); font-weight:700; background:var(--bg); transition:opacity .25s ease,visibility .25s ease; }
+    #loader.hidden { opacity:0; visibility:hidden; }
+    .spinner { width:42px; height:42px; margin:auto; border:4px solid var(--green-soft); border-top-color:var(--green); border-radius:50%; animation:spin .8s linear infinite; }
+    @keyframes spin { to { transform:rotate(360deg); } }
+    .shell { display:grid; grid-template-columns:260px minmax(0,1fr); max-width:1380px; min-height:calc(100vh - 2rem); margin:1rem auto; overflow:hidden; border:1px solid #fff; border-radius:28px; background:rgba(255,255,255,.86); box-shadow:0 22px 60px rgba(19,49,36,.12); }
+    .sidebar { display:flex; flex-direction:column; padding:1.4rem; background:#fff; border-right:1px solid var(--line); }
+    .brand { display:flex; gap:.8rem; align-items:center; margin-bottom:2rem; color:var(--ink); }
+    .brand-mark { display:grid; place-items:center; width:46px; height:46px; border-radius:15px; color:#fff; font-weight:800; background:linear-gradient(135deg,var(--green),#27b663); }
+    .brand small { display:block; margin-top:.15rem; color:var(--muted); font-weight:500; }
+    .nav { display:grid; gap:.45rem; }
+    .nav button { display:flex; align-items:center; gap:.8rem; width:100%; padding:.85rem .9rem; border:1px solid transparent; border-radius:14px; background:transparent; color:var(--muted); text-align:left; font-weight:700; }
+    .nav button:hover,.nav button.active { color:var(--green-dark); border-color:#d8efe1; background:var(--green-soft); }
+    .logout { margin-top:auto; color:#b42318!important; }
+    .main { padding:1.5rem; }
+    .topbar { display:flex; justify-content:space-between; gap:1rem; align-items:center; margin-bottom:1.3rem; }
+    .student { display:flex; gap:.7rem; align-items:center; font-weight:800; color:var(--ink); }
+    .avatar { display:grid; place-items:center; width:40px; height:40px; border-radius:13px; color:var(--green-dark); background:var(--green-soft); }
+    .view { display:none; }
+    .view.active { display:block; }
+    .hero { display:flex; justify-content:space-between; gap:1.5rem; align-items:flex-start; padding:2rem; border-radius:24px; color:#fff; background:linear-gradient(125deg,#116936,#22a95c); box-shadow:0 16px 36px rgba(22,132,71,.18); }
+    .eyebrow { margin:0 0 .7rem; font-size:.78rem; font-weight:800; letter-spacing:.08em; text-transform:uppercase; opacity:.85; }
+    h1 { max-width:16ch; margin:0; font-size:clamp(2rem,4vw,3.25rem); line-height:1.05; letter-spacing:-.055em; }
+    .hero p:last-child { max-width:64ch; margin:1rem 0 0; line-height:1.7; opacity:.94; }
+    .progress { min-width:210px; padding:1.1rem; border:1px solid rgba(255,255,255,.25); border-radius:18px; background:rgba(255,255,255,.13); }
+    .progress strong { display:block; font-size:2rem; }
+    .track { height:9px; margin-top:.75rem; overflow:hidden; border-radius:99px; background:rgba(255,255,255,.25); }
+    .fill { height:100%; border-radius:inherit; background:#fff; }
+    .metrics { display:grid; grid-template-columns:repeat(4,1fr); gap:1rem; margin:1.3rem 0; }
+    .card { padding:1.2rem; border:1px solid var(--line); border-radius:20px; background:var(--card); box-shadow:0 4px 14px rgba(23,49,36,.035); }
+    .metric-label { color:var(--muted); font-size:.78rem; font-weight:800; letter-spacing:.06em; text-transform:uppercase; }
+    .metric-value { margin-top:.45rem; color:var(--ink); font-size:1.9rem; font-weight:800; }
+    .grid { display:grid; grid-template-columns:1.15fr .85fr; gap:1.2rem; }
+    h2 { margin:0 0:1rem; color:var(--ink); font-size:1.15rem; }
+    .items { display:grid; gap:.75rem; }
+    .item { display:flex; gap:1rem; align-items:center; justify-content:space-between; padding:1rem; border:1px solid var(--line); border-radius:16px; background:#fff; }
+    .item-main { min-width:0; }
+    .item-title { color:var(--ink); font-weight:800; line-height:1.4; }
+    .item-meta { margin-top:.25rem; color:var(--muted); font-size:.88rem; line-height:1.5; }
+    .badge { flex:none; padding:.34rem .6rem; border-radius:999px; color:var(--green-dark); background:var(--green-soft); font-size:.72rem; font-weight:800; }
+    a.item { color:inherit; text-decoration:none; transition:transform .15s ease,border-color .15s ease; }
+    a.item:hover { transform:translateY(-1px); border-color:#bde3cb; }
+    .task-item { cursor:pointer; }
+    .task-check { display:grid; flex:none; place-items:center; width:24px; height:24px; border:2px solid #a3b1aa; border-radius:8px; color:transparent; }
+    .task-item.done { opacity:.65; }
+    .task-item.done .task-check { border-color:var(--green); color:#fff; background:var(--green); }
+    .task-item.done .item-title { text-decoration:line-through; }
+    .empty { padding:1.2rem; color:var(--muted); text-align:center; }
+    .notes { width:100%; min-height:220px; padding:1rem; border:1px solid var(--line); border-radius:16px; color:var(--text); background:#fff; line-height:1.6; resize:vertical; }
+    .search { width:min(360px,100%); padding:.75rem .9rem; border:1px solid var(--line); border-radius:12px; outline:none; background:#fff; }
+    .search:focus { border-color:var(--green); box-shadow:0 0 0 3px rgba(22,132,71,.12); }
+    .error { max-width:540px; margin:10vh auto; padding:2rem; border-radius:22px; text-align:center; background:#fff; box-shadow:0 18px 50px rgba(23,49,36,.12); }
+    .error h1 { max-width:none; font-size:1.7rem; }
+    .error a { display:inline-block; margin-top:1.2rem; padding:.8rem 1rem; border-radius:12px; color:#fff; background:var(--green); text-decoration:none; font-weight:800; }
+    @media (max-width:900px) { .shell{grid-template-columns:1fr;margin:0;border-radius:0}.sidebar{position:sticky;top:0;z-index:2;flex-direction:row;align-items:center;gap:1rem;padding:.75rem;overflow:auto;border-right:0;border-bottom:1px solid var(--line)}.brand{margin:0;white-space:nowrap}.brand small{display:none}.nav{display:flex}.nav button{width:auto;white-space:nowrap}.logout{margin:0}.hero,.grid{display:grid;grid-template-columns:1fr}.metrics{grid-template-columns:repeat(2,1fr)} }
+    @media (max-width:560px) { .main{padding:1rem}.topbar{align-items:flex-start;flex-direction:column}.metrics{grid-template-columns:1fr}.nav button{padding:.65rem}.nav button span{display:none}.hero{padding:1.35rem}.item{align-items:flex-start}.badge{display:none} }
   </style>
 </head>
 <body>
-
-  <!-- Načítací obrazovka -->
-  <div id="loader">
-    <div class="spinner"></div>
-    <div>Načítám klientskou zónu...</div>
-  </div>
-
-  <div class="shell">
+  <div id="loader"><div class="spinner"></div><div>Načítám klientskou zónu…</div></div>
+  <div id="app" class="shell" hidden>
     <aside class="sidebar">
-      <div class="brand">
-        <div class="brand-mark">VS</div>
-        <div>
-          <div class="brand-title">Studentský portál</div>
-          <div class="brand-subtitle">Doučování matematiky a fyziky</div>
-        </div>
-      </div>
-      
-      <div class="nav-group">
-        <div class="nav-label">Přehled</div>
-        <div class="nav-link active" data-view="dashboard"><i class="fa-solid fa-table-columns"></i> Nástěnka</div>
-        <div class="nav-link" data-view="materials"><i class="fa-regular fa-folder-open"></i> Materiály</div>
-        <div class="nav-link" data-view="tasks"><i class="fa-regular fa-square-check"></i> Úkoly</div>
-        <div class="nav-link" data-view="lessons"><i class="fa-regular fa-calendar"></i> Lekce</div>
-      </div>
-      
-      <div class="nav-group">
-        <div class="nav-label">Organizace</div>
-        <div class="nav-link" data-view="notes"><i class="fa-regular fa-note-sticky"></i> Poznámky</div>
-        <div class="nav-link" data-view="links"><i class="fa-solid fa-link"></i> Odkazy</div>
-      </div>
-
-      <div class="nav-link logout-btn" id="logoutBtnSidebar">
-        <i class="fa-solid fa-arrow-right-from-bracket"></i> Odhlásit se
-      </div>
+      <div class="brand"><div class="brand-mark">VS</div><div><strong>Studentský portál</strong><small>Doučování matematiky a fyziky</small></div></div>
+      <nav class="nav" aria-label="Studentský portál">
+        <button class="active" data-view="dashboard"><i class="fa-solid fa-table-columns"></i><span>Nástěnka</span></button>
+        <button data-view="materials"><i class="fa-regular fa-folder-open"></i><span>Materiály</span></button>
+        <button data-view="tasks"><i class="fa-regular fa-square-check"></i><span>Úkoly</span></button>
+        <button data-view="lessons"><i class="fa-regular fa-calendar"></i><span>Lekce</span></button>
+        <button data-view="notes"><i class="fa-regular fa-note-sticky"></i><span>Poznámky</span></button>
+        <button data-view="links"><i class="fa-solid fa-link"></i><span>Odkazy</span></button>
+      </nav>
+      <button class="nav logout" id="logout"><i class="fa-solid fa-arrow-right-from-bracket"></i><span>Odhlásit se</span></button>
     </aside>
-
     <main class="main">
-      <div class="mobile-nav">
-        <div class="nav-link active" data-view="dashboard"><i class="fa-solid fa-table-columns"></i> Nástěnka</div>
-        <div class="nav-link" data-view="materials"><i class="fa-regular fa-folder-open"></i> Materiály</div>
-        <div class="nav-link" data-view="tasks"><i class="fa-regular fa-square-check"></i> Úkoly</div>
-        <div class="nav-link" data-view="lessons"><i class="fa-regular fa-calendar"></i> Lekce</div>
-      </div>
-
-      <div class="topbar">
-        <div class="search">
-          <i class="fa-solid fa-magnifying-glass"></i> 
-          <input type="text" id="searchInput" placeholder="Vyhledat materiál, okruh nebo lekci...">
-        </div>
-        <div class="top-actions">
-          <button class="icon-btn" type="button" id="logoutBtnMobile" title="Odhlásit se">
-            <i class="fa-solid fa-arrow-right-from-bracket" style="color: var(--muted)"></i>
-          </button>
-          <div class="student-pill">
-            <div class="student-avatar" id="studentAvatar">U</div>
-            <span id="studentName">Načítání...</span>
-          </div>
-        </div>
-      </div>
-
-      <!-- ZOBRAZENÍ 1: NÁSTĚNKA (Dashboard) -->
-      <section id="dashboardView" class="view-section active-view">
-        <div class="hero">
-          <article class="hero-card card">
-            <div class="eyebrow"><i class="fa-solid fa-sparkles"></i> Studentský přehled</div>
-            <h1>Vše důležité pro výuku na jednom místě.</h1>
-            <div class="hero-text">
-              Materiály, úkoly i termíny lekcí přehledně, klidně a bez zbytečného zahlcení.
-              Rychlá orientace a přehled o tvé výuce.
-            </div>
-            <div class="hero-actions">
-              <button class="primary-btn" onclick="switchTab('materials')"><i class="fa-regular fa-folder-open"></i> Otevřít materiály</button>
-              <button class="secondary-btn" onclick="switchTab('lessons')"><i class="fa-regular fa-calendar"></i> Zobrazit lekce</button>
-            </div>
-          </article>
-          <div class="hero-side">
-            <section class="panel">
-              <div class="panel-head">
-                <div class="panel-title">Nejbližší lekce</div>
-                <a class="panel-link" onclick="switchTab('lessons')">Rozpis</a>
-              </div>
-              <div class="next-lesson">
-                <div class="lesson-meta">
-                  <span><i class="fa-regular fa-calendar"></i> <span id="dashLessonDate">-</span></span>
-                  <span><i class="fa-regular fa-clock"></i> <span id="dashLessonTime">-</span></span>
-                </div>
-                <div class="lesson-topic" id="dashLessonTopic">-</div>
-                <div class="lesson-note" id="dashLessonNote">-</div>
-              </div>
-            </section>
-            <section class="progress-panel">
-              <div class="panel-title">Průběžný postup</div>
-              <div class="progress-value" id="progressVal">0 %</div>
-              <div class="progress-copy" id="progressCopy">-</div>
-              <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
-            </section>
-          </div>
-        </div>
-
-        <section class="metrics">
-          <article class="metric">
-            <div class="metric-label">Materiály</div>
-            <div class="metric-value" id="metricMaterials">0</div>
-            <div class="metric-copy">PDF, pracovní listy a stručná shrnutí k opakování.</div>
-          </article>
-          <article class="metric">
-            <div class="metric-label">Aktivní úkoly</div>
-            <div class="metric-value" id="metricTasks">0</div>
-            <div class="metric-copy">Jasně označené priority bez zbytečného chaosu.</div>
-          </article>
-          <article class="metric">
-            <div class="metric-label">Další lekce</div>
-            <div class="metric-value" id="metricLessons">0</div>
-            <div class="metric-copy">Domluvené termíny, které student najde během chvíle.</div>
-          </article>
-          <article class="metric">
-            <div class="metric-label">Studijní bloky</div>
-            <div class="metric-value" id="metricBlocks">0</div>
-            <div class="metric-copy">Matematika a fyzika rozdělené do přehledných celků.</div>
-          </article>
-        </section>
-
-        <div class="dashboard">
-          <div class="stack">
-            <section class="panel">
-              <div class="panel-head">
-                <div class="panel-title">Poslední materiály</div>
-                <a class="panel-link" onclick="switchTab('materials')">Všechny soubory</a>
-              </div>
-              <div class="list" id="dashMaterialsList">
-                <!-- Dynamické p
+      <div class="topbar"><input class="search" id="search" type="search" placeholder="Vyhledat v materiálech a úkolech…"><div class="student"><div class="avatar" id="initials">U</div><span id="name">Načítání…</span></div></div>
+      <section class="view active" id="dashboard">
+        <div class="hero"><div><p class="eyebrow">Studentský přehled</p><h1>Vše důležité pro výuku na jednom místě.</h1><p id="progressText"></p></div><div class="progress"><span>Průběžný postup</span><strong id="progressValue">0 %</strong><div class="track"><div class="fill" id="progressFill"></div></div></div></div>
+        <div class="metrics"><div class="card"><div class="metric-label">Materiály</div><div class="metric-value" id="materialsCount">0</div></div><div class="card"><div class="metric-label">Aktivní úkoly</div><div class="metric-value" id="tasksCount">0</div></div><div class="card"><div class="metric-label">Další lekce</div><div class="metric-value" id="lessonsCount">0</div></div><div class="card"><div class="metric-label">Studijní bloky</div><div class="metric-value" id="blocksCount">0</div></div></div>
+        <div class="grid"><section class="card"><h2>Poslední materiály</h2><div class="items" id="dashboardMaterials"></div></section><section class="card"><h2>Nejbližší lekce</h2><div class="items" id="nextLesson"></div></section></div>
+      </section>
+      <section class="view" id="materials"><div class="card"><h2>Materiály</h2><div class="items" id="materialsList"></div></div></section>
+      <section class="view" id="tasks"><div class="card"><h2>Úkoly</h2><div class="items" id="tasksList"></div></div></section>
+      <section class="view" id="lessons"><div class="grid"><section class="card"><h2>Časová osa</h2><div class="items" id="timelineList"></div></section><section class="card"><h2>Nadcházející termíny</h2><div class="items" id="upcomingList"></div></section></div></section>
+      <section class="view" id="notes"><div class="card"><h2>Poznámky</h2><textarea class="notes" id="notesBox" placeholder="Poznámky k výuce…"></textarea></div></section>
+      <section class="view" id="links"><div class="card"><h2>Užitečné odkazy</h2><div class="items" id="linksList"></div></div></section>
+    </main>
+  </div>
+  <script>
+    (async function () {
+      const loader = document.getElementById("loader");
+      const app = document.getElementById("app");
+      const token = sessionStorage.getItem("student_token");
+      const escape = value => String(value || "").replace(/[&<>"']/g, char => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[char]));
+      const empty = message => '<div class="empty">' + escape(message) + '</div>';
+      const item = (title, meta, badge) => '<div class="item"><div class="item-main"><div class="item-title">' + escape(title) + '</div><div class="item-meta">' + escape(meta) + '</div></div>' + (badge ? '<span class="badge">' + escape(badge) + '</span>' : "") + '</div>';
+      const showError = message => { document.body.innerHTML = '<main class="error"><h1>Studentský portál není dostupný</h1><p>' + escape(message) + '</p><a href="index.html">Zpět na hlavní stránku</a></main>'; };
+      try {
+        if (!token) throw new Error("Nejdřív se prosím přihlas na hlavní stránce.");
+        const response = await fetch("students/" + encodeURIComponent(token) + ".json", { cache: "no-store" });
+        if (!response.ok) throw new Error("Účet se nepodařilo načíst. Vrať se na hlavní stránku a přihlas se znovu.");
+        const data = await response.json();
+        const storageKey = "student-portal:" + token + ":";
+        document.title = "Studentský portál | " + data.studentName;
+        document.getElementById("name").textContent = data.studentName || "Student";
+        document.getElementById("initials").textContent = data.studentInitials || "S";
+        document.getElementById("progressText").textContent = data.progressText || "";
+        document.getElementById("progressValue").textContent = (data.progress || 0) + " %";
+        document.getElementById("progressFill").style.width = Math.max(0, Math.min(100, Number(data.progress) || 0)) + "%";
+        const metrics = data.metrics || {};
+        document.getElementById("materialsCount").textContent = metrics.materialsCount ?? (data.materials || []).length;
+        document.getElementById("tasksCount").textContent = metrics.activeTasks ?? (data.tasks || []).length;
+        document.getElementById("lessonsCount").textContent = metrics.upcomingLessons ?? (data.upcoming || []).length;
+        document.getElementById("blocksCount").textContent = metrics.blocksCount ?? 0;
+        const renderMaterials = list => list.length ? list.map(material => '<a class="item" href="' + escape(material.url || "#") + '" target="_blank" rel="noopener"><div class="item-main"><div class="item-title">' + escape(material.title) + '</div><div class="item-meta">' + escape(material.meta) + '</div></div><span class="badge">' + escape(material.badge || "Soubor") + '</span></a>').join("") : empty("Zatím tu nejsou žádné materiály.");
+        const materials = Array.isArray(data.materials) ? data.materials : [];
+        document.getElementById("materialsList").innerHTML = renderMaterials(materials);
+        document.getElementById("dashboardMaterials").innerHTML = renderMaterials(materials.slice(0, 3));
+        const next = data.nextLesson || {};
+        document.getElementById("nextLesson").innerHTML = item(next.topic || "Termín zatím není domluvený", (next.date || "") + (next.time ? " · " + next.time : "") + (next.note ? " · " + next.note : ""), "Lekce");
+        const completed = JSON.parse(localStorage.getItem(storageKey + "tasks") || "{}");
+        const renderTasks = () => { const tasks = Array.isArray(data.tasks) ? data.tasks : []; document.getElementById("tasksList").innerHTML = tasks.length ? tasks.map(task => '<div class="item task-item ' + (completed[task.id] ? "done" : "") + '" data-task="' + escape(task.id) + '"><span class="task-check"><i class="fa-solid fa-check"></i></span><div class="item-main"><div class="item-title">' + escape(task.title) + '</div><div class="item-meta">' + escape(task.meta) + '</div></div></div>').join("") : empty("Zatím tu nejsou žádné úkoly."); };
+        renderTasks();
+        document.getElementById("tasksList").addEventListener("click", event => { const task = event.target.closest("[data-task]"); if (!task) return; const id = task.dataset.task; completed[id] = !completed[id]; localStorage.setItem(storageKey + "tasks", JSON.stringify(completed)); renderTasks(); });
+        document.getElementById("timelineList").innerHTML = (data.timeline || []).length ? data.timeline.map(row => item((row.month ? row.month + " " : "") + (row.day || "") + " · " + (row.title || ""), row.desc || "", "Historie")).join("") : empty("Zatím tu není žádná historie.");
+        document.getElementById("upcomingList").innerHTML = (data.upcoming || []).length ? data.upcoming.map(row => item(row.title, row.meta, "Termín")).join("") : empty("Zatím nejsou žádné další termíny.");
+        document.getElementById("linksList").innerHTML = (data.links || []).length ? data.links.map(link => '<a class="item" href="' + escape(link.url || "#") + '" target="_blank" rel="noopener"><div class="item-main"><div class="item-title">' + escape(link.title) + '</div><div class="item-meta">' + escape(link.desc) + '</div></div><span class="badge">Otevřít</span></a>').join("") : empty("Zatím tu nejsou žádné odkazy.");
+        const notes = document.getElementById("notesBox"); notes.value = localStorage.getItem(storageKey + "notes") ?? (data.notes || ""); notes.addEventListener("input", () => localStorage.setItem(storageKey + "notes", notes.value));
+        document.querySelectorAll("[data-view]").forEach(button => button.addEventListener("click", () => { document.querySelectorAll("[data-view]").forEach(node => node.classList.toggle("active", node === button)); document.querySelectorAll(".view").forEach(view => view.classList.toggle("active", view.id === button.dataset.view)); }));
+        document.getElementById("search").addEventListener("input", event => { const query = event.target.value.toLocaleLowerCase("cs"); document.querySelectorAll("#materialsList .item, #tasksList .item, #timelineList .item").forEach(row => { row.hidden = !!query && !row.textContent.toLocaleLowerCase("cs").includes(query); }); });
+        document.getElementById("logout").addEventListener("click", () => { sessionStorage.removeItem("student_token"); window.location.href = "index.html"; });
+        app.hidden = false;
+      } catch (error) {
+        showError(error.message || "Došlo k neočekávané chybě.");
+      } finally {
+        loader.classList.add("hidden");
+      }
+    })();
+  </script>
+</body>
+</html>
