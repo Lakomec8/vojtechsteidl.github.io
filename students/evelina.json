@@ -1,0 +1,56 @@
+{
+  "studentName": "Evelína",
+  "studentInitials": "E",
+  "progress": 12,
+  "progressText": "Začínáme první společnou lekcí. Postupně si nastavíme systém práce, přehled témat a jistotu v úpravách mnohočlenů.",
+  "nextLesson": {
+    "date": "Termín doplníme",
+    "time": "Po domluvě",
+    "topic": "První společná lekce",
+    "note": "Navážeme na první materiál a projdeme si úpravy mnohočlenů, nejasné příklady a další postup."
+  },
+  "metrics": {
+    "materialsCount": 1,
+    "activeTasks": 1,
+    "upcomingLessons": 0,
+    "blocksCount": 1
+  },
+  "materials": [
+    {
+      "title": "1. hodina – Mnohočleny a úpravy",
+      "meta": "PDF materiál · Matematika · Přidáno dnes",
+      "badge": "PDF",
+      "badgeClass": "pdf",
+      "url": "./Materials/Evelin/Evelína__1__hodina__Mnohočleny_a_úpravy.pdf"
+    }
+  ],
+  "tasks": [
+    {
+      "id": "evelina-task-1",
+      "title": "Projít pracovní list z 1. hodiny",
+      "meta": "Vyřeš, co půjde, a označ si příklady, které budeš chtít dovysvětlit."
+    }
+  ],
+  "timeline": [
+    {
+      "month": "Čvc",
+      "day": "20",
+      "title": "Nahrán první materiál",
+      "desc": "Do portálu byl přidán první pracovní list k tématu mnohočleny a algebraické úpravy."
+    }
+  ],
+  "upcoming": [
+    {
+      "title": "Další lekce",
+      "meta": "Termín doplníme po domluvě"
+    }
+  ],
+  "notes": "Zde budou tvé osobní poznámky k výuce, které uvidíš pouze ty.",
+  "links": [
+    {
+      "title": "GeoGebra kalkulačka",
+      "url": "https://www.geogebra.org",
+      "desc": "Užitečné pro vizualizaci a kontrolu výpočtů."
+    }
+  ]
+}
