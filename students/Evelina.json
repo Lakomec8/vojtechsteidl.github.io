@@ -2,17 +2,17 @@
   "studentName": "Evelína",
   "studentInitials": "E",
   "progress": 12,
-  "progressText": "Začínáme první společnou lekcí. Postupně si nastavíme systém práce, přehled témat a jistotu v úpravách mnohočlenů.",
+  "progressText": "Příprava na finální test 21. srpna právě začíná. V materiálech a úkolech bude přibývat vše potřebné k jeho zvládnutí.",
   "nextLesson": {
-    "date": "Termín doplníme",
-    "time": "Po domluvě",
-    "topic": "První společná lekce",
-    "note": "Navážeme na první materiál a projdeme si úpravy mnohočlenů, nejasné příklady a další postup."
+    "date": "Čt 21. srpna",
+    "time": "čas doplníme",
+    "topic": "Finální test",
+    "note": "Závěrečné ověření úprav mnohočlenů a navazující látky."
   },
   "metrics": {
     "materialsCount": 1,
     "activeTasks": 1,
-    "upcomingLessons": 0,
+    "upcomingLessons": 1,
     "blocksCount": 1
   },
   "materials": [
@@ -28,7 +28,7 @@
     {
       "id": "evelina-task-1",
       "title": "Projít pracovní list z 1. hodiny",
-      "meta": "Vyřeš, co půjde, a označ si příklady, které budeš chtít dovysvětlit."
+      "meta": "Dokonči do 20. srpna a označ si příklady, které budeš chtít dovysvětlit."
     }
   ],
   "timeline": [
@@ -37,20 +37,29 @@
       "day": "20",
       "title": "Nahrán první materiál",
       "desc": "Do portálu byl přidán první pracovní list k tématu mnohočleny a algebraické úpravy."
+    },
+    {
+      "month": "Srp",
+      "day": "21",
+      "title": "Finální test",
+      "desc": "Závěrečné ověření úprav mnohočlenů a navazující látky."
     }
   ],
   "upcoming": [
     {
-      "title": "Další lekce",
-      "meta": "Termín doplníme po domluvě"
+      "title": "Finální test",
+      "meta": "21. srpna · čas doplníme"
     }
   ],
-  "notes": "Zde budou tvé osobní poznámky k výuce, které uvidíš pouze ty.",
   "links": [
     {
       "title": "GeoGebra kalkulačka",
       "url": "https://www.geogebra.org",
       "desc": "Užitečné pro vizualizaci a kontrolu výpočtů."
     }
-  ]
+  ],
+  "deadline": {
+    "date": "2026-08-21",
+    "label": "Finální test"
+  }
 }
