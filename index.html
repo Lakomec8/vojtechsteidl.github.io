@@ -656,26 +656,26 @@
 
         passwordForm.addEventListener("submit", async (event) => {
             event.preventDefault();
-            const password = studentPasswordInput.value.trim().toLowerCase(); // Převede na malá písmena pro stabilitu
-            if (!password) return;
+            const enteredPassword = studentPasswordInput.value.trim().toLowerCase();
+            if (!enteredPassword) return;
 
-            // Cílový JSON na serveru
-            const targetJson = `students/${password}.json`;
+            // Zkratky pro současné studentské účty.
+            const studentAliases = { demo: "demo123", evelin: "evelina" };
+            const studentKey = studentAliases[enteredPassword] || enteredPassword;
+            const targetJson = "students/" + encodeURIComponent(studentKey) + ".json";
 
             try {
                 const response = await fetch(targetJson, { method: 'HEAD' });
                 
                 if (response.ok) {
                     // Uložíme zadané heslo do paměti prohlížeče
-                    sessionStorage.setItem("student_token", password);
+                    sessionStorage.setItem("student_token", studentKey);
                     window.location.href = "student-portal.html";
                 } else {
                     showPasswordError("Zadané heslo není správné nebo účet neexistuje.");
                 }
             } catch (error) {
-                // Vývojářský fallback pro lokální testování (pokud HEAD selže na CORS)
-                sessionStorage.setItem("student_token", password);
-                window.location.href = "student-portal.html";
+                showPasswordError("Přihlášení se nepodařilo ověřit. Zkuste to prosím znovu.");
             }
         });
 
