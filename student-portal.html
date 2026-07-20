@@ -27,7 +27,9 @@
     .nav { display:grid; gap:.45rem; }
     .nav button { display:flex; align-items:center; gap:.8rem; width:100%; padding:.85rem .9rem; border:1px solid transparent; border-radius:14px; background:transparent; color:var(--muted); text-align:left; font-weight:700; }
     .nav button:hover,.nav button.active { color:var(--green-dark); border-color:#d8efe1; background:var(--green-soft); }
-    .logout { margin-top:auto; color:#b42318!important; }
+    .logout { display:flex; align-items:center; justify-content:center; gap:.55rem; width:100%; margin-top:auto; padding:.78rem .9rem; border:1px solid #f0d4d1; border-radius:14px; color:#b42318; background:#fffafa; font-weight:700; transition:background .15s ease,border-color .15s ease,transform .15s ease; }
+    .logout:hover { border-color:#e8bcb7; background:#fff1f0; transform:translateY(-1px); }
+    .logout:focus-visible { outline:3px solid rgba(180,35,24,.18); outline-offset:2px; }
     .main { padding:1.5rem; }
     .topbar { display:flex; justify-content:space-between; gap:1rem; align-items:center; margin-bottom:1.3rem; }
     .student { display:flex; gap:.7rem; align-items:center; font-weight:800; color:var(--ink); }
@@ -85,7 +87,7 @@
         <button data-view="notes"><i class="fa-regular fa-note-sticky"></i><span>Poznámky</span></button>
         <button data-view="links"><i class="fa-solid fa-link"></i><span>Odkazy</span></button>
       </nav>
-      <button class="nav logout" id="logout"><i class="fa-solid fa-arrow-right-from-bracket"></i><span>Odhlásit se</span></button>
+      <button class="logout" id="logout" type="button"><i class="fa-solid fa-arrow-right-from-bracket"></i><span>Odhlásit se</span></button>
     </aside>
     <main class="main">
       <div class="topbar"><input class="search" id="search" type="search" placeholder="Vyhledat v materiálech a úkolech…"><div class="student"><div class="avatar" id="initials">U</div><span id="name">Načítání…</span></div></div>
