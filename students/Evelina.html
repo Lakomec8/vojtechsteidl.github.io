@@ -1,1 +1,872 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Evelína | Studentský portál – Vojtěch Steidl</title>
+  <meta name="description" content="Osobní studijní zóna Evelíny.">
 
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <style>
+    :root {
+      --bg: #f7faf8;
+      --surface: #ffffff;
+      --surface-soft: #f3faf6;
+      --line: rgba(15, 23, 42, 0.08);
+      --text: #1f2937;
+      --muted: #6b7280;
+      --muted-soft: #9aa3af;
+      --green: #1f9d55;
+      --green-dark: #147a40;
+      --green-soft: #eaf8f0;
+      --navy: #143124;
+      --shadow-sm: 0 1px 2px rgba(15, 23, 42, 0.04);
+      --shadow-md: 0 16px 36px rgba(15, 23, 42, 0.06);
+      --shadow-lg: 0 28px 60px rgba(15, 23, 42, 0.08);
+      --radius-md: 24px;
+      --radius-lg: 32px;
+      --content: 1460px;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: "Inter", sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at top left, rgba(31, 157, 85, 0.05), transparent 24%),
+        radial-gradient(circle at bottom right, rgba(31, 157, 85, 0.04), transparent 20%),
+        linear-gradient(180deg, #fbfefd 0%, #f6faf8 100%);
+    }
+
+    button, a, input, textarea { font: inherit; }
+    a { color: inherit; text-decoration: none; }
+
+    .login-screen {
+      position: fixed;
+      inset: 0;
+      z-index: 100;
+      display: grid;
+      place-items: center;
+      padding: 1rem;
+      background: rgba(20, 49, 36, 0.24);
+      backdrop-filter: blur(8px);
+    }
+
+    .login-card {
+      width: min(100%, 430px);
+      padding: 2rem;
+      border: 1px solid rgba(255, 255, 255, 0.9);
+      border-radius: 30px;
+      background: rgba(255, 255, 255, 0.96);
+      box-shadow: var(--shadow-lg);
+    }
+
+    .login-mark,
+    .brand-mark {
+      display: grid;
+      place-items: center;
+      width: 56px;
+      height: 56px;
+      border-radius: 20px;
+      background: linear-gradient(135deg, #1f9d55, #24b862);
+      color: #fff;
+      font-weight: 800;
+      box-shadow: 0 14px 28px rgba(31, 157, 85, 0.18);
+    }
+
+    .login-card h1 {
+      margin: 1.35rem 0 0.65rem;
+      color: var(--navy);
+      font-size: 2rem;
+      line-height: 1.08;
+      letter-spacing: -0.06em;
+    }
+
+    .login-card p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.7;
+    }
+
+    .login-form {
+      display: grid;
+      gap: 0.85rem;
+      margin-top: 1.5rem;
+    }
+
+    .login-form label {
+      color: var(--navy);
+      font-size: 0.9rem;
+      font-weight: 700;
+    }
+
+    .login-form input {
+      width: 100%;
+      min-height: 52px;
+      padding: 0 1rem;
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      outline: none;
+      color: var(--text);
+      background: #fff;
+    }
+
+    .login-form input:focus {
+      border-color: rgba(31, 157, 85, 0.5);
+      box-shadow: 0 0 0 4px rgba(31, 157, 85, 0.1);
+    }
+
+    .primary-btn,
+    .secondary-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.65rem;
+      min-height: 52px;
+      padding: 0.95rem 1.15rem;
+      border: 0;
+      border-radius: 18px;
+      cursor: pointer;
+      font-size: 0.94rem;
+      font-weight: 700;
+    }
+
+    .primary-btn {
+      color: #fff;
+      background: linear-gradient(135deg, #1f9d55, #24b862);
+      box-shadow: 0 16px 32px rgba(31, 157, 85, 0.18);
+    }
+
+    .secondary-btn {
+      border: 1px solid var(--line);
+      color: var(--navy);
+      background: #fff;
+    }
+
+    .login-error {
+      display: none;
+      margin: 0;
+      color: #c2410c !important;
+      font-size: 0.9rem;
+      font-weight: 600;
+    }
+
+    .shell {
+      display: none;
+      grid-template-columns: 280px 1fr;
+      width: min(var(--content), calc(100% - 2rem));
+      min-height: calc(100vh - 2rem);
+      margin: 1rem auto;
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, 0.9);
+      border-radius: 34px;
+      background: rgba(255, 255, 255, 0.82);
+      box-shadow: var(--shadow-lg);
+      backdrop-filter: blur(12px);
+    }
+
+    .shell.is-visible { display: grid; }
+
+    .sidebar {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+      padding: 1.5rem;
+      border-right: 1px solid rgba(15, 23, 42, 0.05);
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.96), rgba(247, 250, 248, 0.98));
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 0.95rem;
+    }
+
+    .brand-title {
+      color: var(--navy);
+      font-size: 1rem;
+      font-weight: 800;
+      letter-spacing: -0.04em;
+    }
+
+    .brand-subtitle {
+      margin-top: 0.22rem;
+      color: var(--muted);
+      font-size: 0.84rem;
+    }
+
+    .nav-label {
+      margin: 0 0 0.3rem 0.25rem;
+      color: var(--muted-soft);
+      font-size: 0.74rem;
+      font-weight: 800;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    .nav-group { display: grid; gap: 0.5rem; }
+
+    .nav-link {
+      display: flex;
+      align-items: center;
+      gap: 0.85rem;
+      min-height: 52px;
+      padding: 0.92rem 0.98rem;
+      border: 1px solid transparent;
+      border-radius: 18px;
+      color: var(--muted);
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .nav-link:hover,
+    .nav-link.active {
+      border-color: rgba(31, 157, 85, 0.12);
+      color: var(--green-dark);
+      background: var(--green-soft);
+    }
+
+    .logout-btn {
+      margin-top: auto;
+      border-color: rgba(220, 38, 38, 0.12);
+      color: #dc2626;
+      background: #fff8f8;
+    }
+
+    .main {
+      padding: 1.5rem;
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.42), rgba(248, 252, 249, 0.62));
+    }
+
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      margin-bottom: 1.25rem;
+      padding: 0.95rem 1rem;
+      border: 1px solid var(--line);
+      border-radius: 22px;
+      background: rgba(255, 255, 255, 0.9);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .topbar-copy {
+      color: var(--muted);
+      font-size: 0.93rem;
+    }
+
+    .student-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.75rem;
+      min-height: 48px;
+      padding: 0.45rem 0.75rem 0.45rem 0.5rem;
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      color: var(--navy);
+      background: #fff;
+      box-shadow: var(--shadow-sm);
+      font-size: 0.92rem;
+      font-weight: 700;
+    }
+
+    .student-avatar {
+      display: grid;
+      place-items: center;
+      width: 34px;
+      height: 34px;
+      border-radius: 12px;
+      color: var(--green-dark);
+      background: var(--green-soft);
+      font-size: 0.82rem;
+      font-weight: 800;
+    }
+
+    .view-section { display: none; }
+    .view-section.active-view { display: block; }
+
+    .hero {
+      display: grid;
+      grid-template-columns: minmax(0, 1.45fr) minmax(320px, 0.78fr);
+      gap: 1.2rem;
+      margin-bottom: 1.2rem;
+    }
+
+    .card,
+    .panel,
+    .metric,
+    .item {
+      border: 1px solid var(--line);
+      border-radius: var(--radius-md);
+      background: rgba(255, 255, 255, 0.94);
+      box-shadow: var(--shadow-md);
+    }
+
+    .hero-card {
+      padding: 2rem;
+      border-radius: var(--radius-lg);
+      background:
+        radial-gradient(circle at top right, rgba(31, 157, 85, 0.08), transparent 28%),
+        linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(248, 252, 249, 0.95));
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.55rem;
+      margin-bottom: 1rem;
+      padding: 0.42rem 0.8rem;
+      border: 1px solid rgba(31, 157, 85, 0.1);
+      border-radius: 999px;
+      color: var(--green-dark);
+      background: var(--green-soft);
+      font-size: 0.79rem;
+      font-weight: 800;
+    }
+
+    h1 {
+      margin: 0 0 0.95rem;
+      max-width: 12ch;
+      color: var(--navy);
+      font-size: clamp(2.25rem, 3vw, 3.3rem);
+      line-height: 1.02;
+      letter-spacing: -0.06em;
+    }
+
+    .hero-text,
+    .panel-copy,
+    .item-meta {
+      color: var(--muted);
+      line-height: 1.75;
+    }
+
+    .hero-actions {
+      display: flex;
+      gap: 0.85rem;
+      flex-wrap: wrap;
+      margin-top: 1.55rem;
+    }
+
+    .hero-side,
+    .stack,
+    .list { display: grid; gap: 1.2rem; }
+
+    .list { gap: 0.9rem; }
+
+    .panel { padding: 1.3rem; }
+
+    .panel-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    .panel-title {
+      color: var(--navy);
+      font-size: 1rem;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+    }
+
+    .panel-link {
+      border: 0;
+      color: var(--green);
+      background: transparent;
+      font-size: 0.86rem;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .next-lesson {
+      display: grid;
+      gap: 0.85rem;
+      padding: 1rem;
+      border: 1px solid rgba(31, 157, 85, 0.1);
+      border-radius: 20px;
+      background: linear-gradient(180deg, #ffffff, #f6fbf8);
+    }
+
+    .lesson-meta {
+      color: var(--muted);
+      font-size: 0.87rem;
+      font-weight: 600;
+    }
+
+    .lesson-topic,
+    .item-title {
+      color: var(--navy);
+      font-size: 1rem;
+      font-weight: 700;
+      line-height: 1.45;
+    }
+
+    .metrics {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 1rem;
+      margin-bottom: 1.2rem;
+    }
+
+    .metric { padding: 1.2rem; }
+
+    .metric-label {
+      margin-bottom: 0.55rem;
+      color: var(--muted-soft);
+      font-size: 0.75rem;
+      font-weight: 800;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    .metric-value {
+      margin-bottom: 0.35rem;
+      color: var(--navy);
+      font-size: 1.8rem;
+      font-weight: 800;
+      letter-spacing: -0.06em;
+    }
+
+    .metric-copy {
+      color: var(--muted);
+      font-size: 0.88rem;
+      line-height: 1.65;
+    }
+
+    .dashboard {
+      display: grid;
+      grid-template-columns: minmax(0, 1.18fr) minmax(320px, 0.82fr);
+      gap: 1.2rem;
+    }
+
+    .item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      padding: 1rem 1.05rem;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .item-main { display: grid; gap: 0.34rem; }
+
+    .document-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.55rem;
+      min-height: 42px;
+      padding: 0.7rem 0.9rem;
+      border: 1px solid rgba(31, 157, 85, 0.14);
+      border-radius: 14px;
+      color: var(--green-dark);
+      background: var(--green-soft);
+      font-size: 0.86rem;
+      font-weight: 700;
+    }
+
+    .task-item {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 1.1rem 1.25rem;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-md);
+      background: var(--surface);
+      cursor: pointer;
+    }
+
+    .task-checkbox {
+      display: grid;
+      place-items: center;
+      width: 24px;
+      height: 24px;
+      flex: 0 0 24px;
+      border: 2px solid var(--muted-soft);
+      border-radius: 8px;
+      color: transparent;
+    }
+
+    .task-item.is-completed .task-checkbox {
+      border-color: var(--green);
+      color: #fff;
+      background: var(--green);
+    }
+
+    .task-item.is-completed .item-title {
+      color: var(--muted-soft);
+      text-decoration: line-through;
+    }
+
+    .notes-box {
+      width: 100%;
+      min-height: 210px;
+      padding: 1.25rem;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-md);
+      outline: none;
+      resize: vertical;
+      color: var(--text);
+      background: #fff;
+      line-height: 1.75;
+    }
+
+    .empty-state {
+      padding: 1.2rem;
+      border: 1px dashed rgba(31, 157, 85, 0.25);
+      border-radius: 18px;
+      color: var(--muted);
+      background: var(--surface-soft);
+      line-height: 1.7;
+    }
+
+    @media (max-width: 1120px) {
+      .hero,
+      .dashboard { grid-template-columns: 1fr; }
+      .metrics { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+
+    @media (max-width: 860px) {
+      .shell {
+        display: none;
+        width: min(var(--content), calc(100% - 1rem));
+        margin: 0.5rem auto;
+        border-radius: 28px;
+      }
+
+      .shell.is-visible { display: block; }
+
+      .sidebar {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 0.5rem;
+        padding: 0.75rem;
+        border-right: 0;
+        border-bottom: 1px solid var(--line);
+      }
+
+      .brand,
+      .nav-label { display: none; }
+
+      .nav-group { display: contents; }
+
+      .nav-link {
+        justify-content: center;
+        min-height: 48px;
+        padding: 0.7rem;
+        font-size: 0.8rem;
+      }
+
+      .logout-btn { margin-top: 0; }
+      .main { padding: 1rem; }
+
+      .topbar {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .student-pill { justify-content: center; }
+    }
+
+    @media (max-width: 560px) {
+      .metrics { grid-template-columns: 1fr; }
+      .sidebar { grid-template-columns: repeat(2, 1fr); }
+      .hero-card { padding: 1.5rem; }
+      h1 { font-size: 2.2rem; }
+
+      .hero-actions,
+      .item {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .primary-btn,
+      .secondary-btn,
+      .document-link { width: 100%; }
+
+      .item { align-items: flex-start; }
+    }
+  </style>
+</head>
+<body>
+  <section class="login-screen" id="loginScreen">
+    <div class="login-card">
+      <div class="login-mark">VS</div>
+      <h1>Ahoj, Evelíno.</h1>
+      <p>Vítej ve své osobní studijní zóně. Zadej přístupové heslo a otevři si materiály, úkoly a přehled lekcí.</p>
+
+      <form class="login-form" id="loginForm">
+        <label for="passwordInput">Přístupové heslo</label>
+        <input id="passwordInput" type="password" autocomplete="current-password" placeholder="Zadej heslo" required>
+        <p class="login-error" id="loginError">Heslo nesedí. Zkus to prosím znovu.</p>
+        <button class="primary-btn" type="submit">
+          Vstoupit do zóny <i class="fa-solid fa-arrow-right"></i>
+        </button>
+      </form>
+    </div>
+  </section>
+
+  <div class="shell" id="portalShell">
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="brand-mark">VS</div>
+        <div>
+          <div class="brand-title">Studentský portál</div>
+          <div class="brand-subtitle">Doučování matematiky a fyziky</div>
+        </div>
+      </div>
+
+      <div class="nav-group">
+        <div class="nav-label">Přehled</div>
+        <button class="nav-link active" type="button" data-view="dashboard"><i class="fa-solid fa-table-columns"></i> Nástěnka</button>
+        <button class="nav-link" type="button" data-view="materials"><i class="fa-regular fa-folder-open"></i> Materiály</button>
+        <button class="nav-link" type="button" data-view="tasks"><i class="fa-regular fa-square-check"></i> Úkoly</button>
+        <button class="nav-link" type="button" data-view="lessons"><i class="fa-regular fa-calendar"></i> Lekce</button>
+      </div>
+
+      <div class="nav-group">
+        <div class="nav-label">Organizace</div>
+        <button class="nav-link" type="button" data-view="notes"><i class="fa-regular fa-note-sticky"></i> Poznámky</button>
+      </div>
+
+      <button class="nav-link logout-btn" id="logoutBtn" type="button">
+        <i class="fa-solid fa-arrow-right-from-bracket"></i> Odhlásit se
+      </button>
+    </aside>
+
+    <main class="main">
+      <div class="topbar">
+        <div class="topbar-copy">Osobní studijní přehled a materiály pro Evelínu.</div>
+        <div class="student-pill">
+          <div class="student-avatar">E</div>
+          <span>Evelína</span>
+        </div>
+      </div>
+
+      <section class="view-section active-view" id="dashboardView">
+        <div class="hero">
+          <article class="hero-card card">
+            <div class="eyebrow"><i class="fa-solid fa-sparkles"></i> Studentský přehled</div>
+            <h1>Vše důležité pro výuku na jednom místě.</h1>
+            <div class="hero-text">
+              Ahoj Evelíno, tady najdeš materiály z lekcí, aktuální úkoly i domluvené termíny.
+              Postupně sem budeme přidávat vše, co budeš potřebovat k procvičování.
+            </div>
+            <div class="hero-actions">
+              <button class="primary-btn" type="button" data-go="materials"><i class="fa-regular fa-folder-open"></i> Otevřít materiály</button>
+              <button class="secondary-btn" type="button" data-go="tasks"><i class="fa-regular fa-square-check"></i> Zobrazit úkoly</button>
+            </div>
+          </article>
+
+          <div class="hero-side">
+            <section class="panel">
+              <div class="panel-head">
+                <div class="panel-title">Nejbližší lekce</div>
+              </div>
+              <div class="next-lesson">
+                <div class="lesson-meta"><i class="fa-regular fa-calendar"></i> Termín doplníme po domluvě</div>
+                <div class="lesson-topic">První společná lekce</div>
+                <div class="panel-copy">Po lekci sem přidáme stručné shrnutí a materiály k dalšímu procvičování.</div>
+              </div>
+            </section>
+
+            <section class="panel">
+              <div class="panel-title">Průběžný postup</div>
+              <div class="metric-value">Start</div>
+              <div class="panel-copy">Začínáme budovat přehled témat a pravidelný systém procvičování.</div>
+            </section>
+          </div>
+        </div>
+
+        <section class="metrics">
+          <article class="metric">
+            <div class="metric-label">Materiály</div>
+            <div class="metric-value">1</div>
+            <div class="metric-copy">První pracovní list je připravený.</div>
+          </article>
+          <article class="metric">
+            <div class="metric-label">Aktivní úkoly</div>
+            <div class="metric-value">1</div>
+            <div class="metric-copy">Jednoduchý první krok k procvičení.</div>
+          </article>
+          <article class="metric">
+            <div class="metric-label">Další lekce</div>
+            <div class="metric-value">—</div>
+            <div class="metric-copy">Termín přidáme po domluvě.</div>
+          </article>
+          <article class="metric">
+            <div class="metric-label">Studijní bloky</div>
+            <div class="metric-value">1</div>
+            <div class="metric-copy">Zatím začínáme prvním tématem.</div>
+          </article>
+        </section>
+
+        <div class="dashboard">
+          <section class="panel">
+            <div class="panel-head">
+              <div class="panel-title">Poslední materiál</div>
+              <button class="panel-link" type="button" data-go="materials">Všechny soubory</button>
+            </div>
+
+            <div class="item">
+              <div class="item-main">
+                <div class="item-title">1. hodina – Mnohočleny a úpravy</div>
+                <div class="item-meta">Matematika · PDF · přidáno 20. 7. 2026</div>
+              </div>
+              <a class="document-link" href="../Materials/Evelin/Evelína__1__hodina__Mnohočleny_a_úpravy.pdf" target="_blank" rel="noopener noreferrer">
+                <i class="fa-regular fa-file-pdf"></i> Otevřít
+              </a>
+            </div>
+          </section>
+
+          <section class="panel">
+            <div class="panel-head">
+              <div class="panel-title">Aktuální úkol</div>
+              <button class="panel-link" type="button" data-go="tasks">Zobrazit</button>
+            </div>
+
+            <div class="task-item">
+              <div class="task-checkbox"><i class="fa-solid fa-check"></i></div>
+              <div class="item-main">
+                <div class="item-title">Projít pracovní list z 1. hodiny</div>
+                <div class="item-meta">Vyřeš úlohy, které zvládneš. Nejasné příklady si označ na příští společnou lekci.</div>
+              </div>
+            </div>
+          </section>
+        </div>
+      </section>
+
+      <section class="view-section" id="materialsView">
+        <section class="panel">
+          <div class="panel-head">
+            <div>
+              <div class="panel-title">Materiály</div>
+              <div class="item-meta">Všechny pracovní listy, PDF a shrnutí z lekcí.</div>
+            </div>
+          </div>
+
+          <div class="list">
+            <div class="item">
+              <div class="item-main">
+                <div class="item-title">1. hodina – Mnohočleny a úpravy</div>
+                <div class="item-meta">Matematika · PDF · přidáno 20. 7. 2026</div>
+              </div>
+              <a class="document-link" href="../Materials/Evelin/Evelína__1__hodina__Mnohočleny_a_úpravy.pdf" target="_blank" rel="noopener noreferrer">
+                <i class="fa-regular fa-file-pdf"></i> Otevřít PDF
+              </a>
+            </div>
+          </div>
+        </section>
+      </section>
+
+      <section class="view-section" id="tasksView">
+        <section class="panel">
+          <div class="panel-head">
+            <div>
+              <div class="panel-title">Úkoly</div>
+              <div class="item-meta">Tady budeš mít zadanou práci mezi lekcemi.</div>
+            </div>
+          </div>
+
+          <div class="list">
+            <div class="item">
+              <div class="item-main">
+                <div class="item-title">Projít pracovní list z 1. hodiny</div>
+                <div class="item-meta">Vyřeš, co půjde, a označ si příklady, které budeš chtít dovysvětlit.</div>
+              </div>
+            </div>
+          </div>
+        </section>
+      </section>
+
+      <section class="view-section" id="lessonsView">
+        <section class="panel">
+          <div class="panel-head">
+            <div>
+              <div class="panel-title">Lekce</div>
+              <div class="item-meta">Domluvené termíny a stručný obsah výuky.</div>
+            </div>
+          </div>
+
+          <div class="empty-state">
+            Zatím nemáme zapsaný další termín. Jakmile se domluvíme, najdeš ho tady.
+          </div>
+        </section>
+      </section>
+
+      <section class="view-section" id="notesView">
+        <section class="panel">
+          <div class="panel-head">
+            <div>
+              <div class="panel-title">Poznámky</div>
+              <div class="item-meta">Sem můžeš přidat vlastní poznámky nebo otázky k další hodině.</div>
+            </div>
+          </div>
+
+          <textarea class="notes-box" placeholder="Např. nerozumím úloze 3, zopakovat rozklad mnohočlenů, procvičit úpravy výrazů..."></textarea>
+        </section>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    const PASSWORD = "Evelin123";
+
+    const loginScreen = document.getElementById("loginScreen");
+    const portalShell = document.getElementById("portalShell");
+    const loginForm = document.getElementById("loginForm");
+    const passwordInput = document.getElementById("passwordInput");
+    const loginError = document.getElementById("loginError");
+    const logoutBtn = document.getElementById("logoutBtn");
+
+    loginForm.addEventListener("submit", (event) => {
+      event.preventDefault();
+
+      if (passwordInput.value === PASSWORD) {
+        loginError.style.display = "none";
+        loginScreen.style.display = "none";
+        portalShell.classList.add("is-visible");
+      } else {
+        loginError.style.display = "block";
+        passwordInput.select();
+      }
+    });
+
+    logoutBtn.addEventListener("click", () => {
+      portalShell.classList.remove("is-visible");
+      loginScreen.style.display = "grid";
+      passwordInput.value = "";
+      passwordInput.focus();
+    });
+
+    function switchTab(viewName) {
+      document.querySelectorAll(".view-section").forEach((section) => {
+        section.classList.toggle("active-view", section.id === `${viewName}View`);
+      });
+
+      document.querySelectorAll(".nav-link[data-view]").forEach((button) => {
+        button.classList.toggle("active", button.dataset.view === viewName);
+      });
+
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    document.querySelectorAll("[data-view]").forEach((button) => {
+      button.addEventListener("click", () => switchTab(button.dataset.view));
+    });
+
+    document.querySelectorAll("[data-go]").forEach((button) => {
+      button.addEventListener("click", () => switchTab(button.dataset.go));
+    });
+  </script>
+</body>
+</html>
