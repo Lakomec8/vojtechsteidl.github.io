@@ -74,8 +74,10 @@
     document.getElementById("overallScore").textContent=averageScore!==null?averageScore.toFixed(1).replace(".0","")+"/10":"–";
     document.getElementById("overallScoreCopy").textContent=averageScore!==null?(averageScore>=7?"Dobře zvládnuto":averageScore>=4?"Částečně zvládnuto":"Potřebuje procvičit"):"Zatím bez hodnocení";
     const deadline=data.deadline||{};
-    document.getElementById("nextDate").textContent=shortDate(deadline.date)||(upcoming[0]?.date||"–");
-    document.getElementById("nextDateCopy").textContent=deadline.label||upcoming[0]?.title||"Termín není uveden";
+    const nextEvent=upcoming.find(row=>row&&row.date)||null;
+    const nextEventDate=nextEvent?.date||data.nextLesson?.dateISO||deadline.date;
+    document.getElementById("nextDate").textContent=shortDate(nextEventDate);
+    document.getElementById("nextDateCopy").textContent=nextEvent?.title||data.nextLesson?.topic||deadline.label||"Termín není uveden";
 
     const materialButtons=material=>{const url=attr(material.url||"#");return '<div class="actions"><a class="secondary" href="'+url+'" target="_blank" rel="noopener">Otevřít</a><a class="download" href="'+url+'" download>Stáhnout PDF</a></div>';};
     const renderMaterials=list=>list.length?list.map(material=>'<div class="item" data-searchable="'+attr([material.title,material.meta,material.badge].join(" ").toLocaleLowerCase("cs"))+'"><div class="item-main"><h3>'+esc(material.title)+'</h3><p>'+esc(material.meta)+'</p>'+materialButtons(material)+'</div><span class="badge">'+esc(material.badge||"Soubor")+'</span></div>').join(""):empty("Zatím tu nejsou žádné materiály.");
