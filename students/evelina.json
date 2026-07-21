@@ -1,24 +1,59 @@
 {
   "studentName": "Evelína",
   "studentInitials": "E",
-  "progress": 12,
-  "progressText": "Příprava na finální test 21. srpna právě začíná. V materiálech a úkolech bude přibývat vše potřebné k jeho zvládnutí.",
+  "progress": 42,
+  "progressText": "První hodinu máš úspěšně za sebou. Do další lekce si dokonči pracovní list a označ příklady, které chceš dovysvětlit.",
+  "priority": {
+    "title": "Další hodina je v pátek 24. července.",
+    "text": "První hodinu máš za sebou s hodnocením 7/10. Před další lekcí dokonči pracovní list k mnohočlenům a označ nejasné příklady.",
+    "deadline": "Pátek 24. 7. · čas doplníme"
+  },
+  "readiness": {
+    "label": "Připravenost na finální test",
+    "lessonWeight": 60,
+    "taskWeight": 40
+  },
   "nextLesson": {
-    "date": "Čt 21. srpna",
+    "date": "Pá 24. července",
+    "dateISO": "2026-07-24",
     "time": "čas doplníme",
-    "topic": "Finální test",
-    "note": "Závěrečné ověření úprav mnohočlenů a navazující látky."
+    "topic": "2. hodina – navázání na mnohočleny",
+    "note": "Zkontrolujeme pracovní list, vysvětlíme nejasné příklady a navážeme dalšími algebraickými úpravami."
   },
   "metrics": {
     "materialsCount": 1,
     "activeTasks": 1,
     "upcomingLessons": 1,
-    "blocksCount": 1
+    "blocksCount": 1,
+    "lessonsCount": 1
   },
+  "lessons": [
+    {
+      "id": "evelina-lesson-1",
+      "date": "2026-07-20",
+      "displayDate": "20. července 2026",
+      "title": "1. hodina — Mnohočleny a algebraické úpravy",
+      "subject": "Matematika",
+      "subtitle": "První společná lekce · dokončeno",
+      "score": 7,
+      "scoreLabel": "Dobře zvládnuto",
+      "topics": [
+        "sčítání a odčítání mnohočlenů",
+        "roznásobování závorek",
+        "úprava a zjednodušování výrazů"
+      ],
+      "improvement": "Ještě procvičit práci se znaménky a násobení záporným číslem.",
+      "homework": "Do další hodiny v pátek 24. července dokončit pracovní list a označit příklady, které bude potřeba znovu vysvětlit.",
+      "material": {
+        "title": "Pracovní list z první hodiny — mnohočleny a algebraické úpravy",
+        "url": "./Materials/Evelin/Evelína___1__hodina__Mnohočleny_a_úpravy.pdf"
+      }
+    }
+  ],
   "materials": [
     {
       "title": "1. hodina – Mnohočleny a úpravy",
-      "meta": "PDF materiál · Matematika · Přidáno dnes",
+      "meta": "PDF materiál · Matematika · 1. hodina dokončena 20. července 2026",
       "badge": "PDF",
       "badgeClass": "pdf",
       "url": "./Materials/Evelin/Evelína___1__hodina__Mnohočleny_a_úpravy.pdf"
@@ -27,28 +62,46 @@
   "tasks": [
     {
       "id": "evelina-task-1",
-      "title": "Projít pracovní list z 1. hodiny",
-      "meta": "Dokonči do 20. srpna a označ si příklady, které budeš chtít dovysvětlit."
+      "title": "Dokončit pracovní list z 1. hodiny",
+      "meta": "Dokonči před další hodinou v pátek 24. července a označ příklady, které budeš chtít dovysvětlit.",
+      "badge": "Do 24. 7."
     }
   ],
   "timeline": [
     {
       "month": "Čvc",
       "day": "20",
-      "title": "Nahrán první materiál",
-      "desc": "Do portálu byl přidán první pracovní list k tématu mnohočleny a algebraické úpravy."
+      "title": "První hodina dokončena",
+      "desc": "Proběhla lekce zaměřená na mnohočleny a algebraické úpravy. Celkové zvládnutí bylo ohodnoceno 7/10.",
+      "badge": "7/10"
+    },
+    {
+      "month": "Čvc",
+      "day": "24",
+      "title": "Druhá hodina",
+      "desc": "Kontrola pracovního listu, vysvětlení nejasných příkladů a navázání dalšími algebraickými úpravami.",
+      "badge": "Lekce"
     },
     {
       "month": "Srp",
       "day": "21",
       "title": "Finální test",
-      "desc": "Závěrečné ověření úprav mnohočlenů a navazující látky."
+      "desc": "Závěrečné ověření úprav mnohočlenů a navazující látky.",
+      "badge": "Test"
     }
   ],
   "upcoming": [
     {
+      "date": "2026-07-24",
+      "title": "2. hodina – navázání na mnohočleny",
+      "meta": "Pátek 24. července 2026 · čas doplníme",
+      "badge": "Lekce"
+    },
+    {
+      "date": "2026-08-21",
       "title": "Finální test",
-      "meta": "21. srpna · čas doplníme"
+      "meta": "21. srpna 2026 · čas doplníme",
+      "badge": "Test"
     }
   ],
   "links": [
