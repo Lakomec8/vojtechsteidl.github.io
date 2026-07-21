@@ -12,7 +12,7 @@
 
   try{
     if(!token)throw new Error("Nejdřív se prosím přihlas na hlavní stránce.");
-    const response=await fetch("students/"+encodeURIComponent(token)+".json",{cache:"no-store"});
+    const response=await fetch("students/"+encodeURIComponent(token)+".json?v=20260721-3",{cache:"no-store"});
     if(!response.ok)throw new Error("Účet se nepodařilo načíst. Vrať se na hlavní stránku a přihlas se znovu.");
     const data=await response.json();
     const lessons=Array.isArray(data.lessons)?data.lessons:[];
