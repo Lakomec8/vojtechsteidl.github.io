@@ -1,8 +1,18 @@
 {
   "studentName": "Evelína",
   "studentInitials": "E",
-  "progress": 12,
-  "progressText": "Příprava na finální test 21. srpna právě začíná. V materiálech a úkolech bude přibývat vše potřebné k jeho zvládnutí.",
+  "progress": 42,
+  "progressText": "Na první hodině jsme začali s mnohočleny. Teď je nejdůležitější dokončit pracovní list a označit nejasné příklady.",
+  "priority": {
+    "title": "Teď je nejdůležitější dokončit pracovní list.",
+    "text": "Na první hodině byly probrány mnohočleny. Materiál, hodnocení i doporučení najdeš v historii hodin.",
+    "deadline": "Termín: 20. srpna"
+  },
+  "readiness": {
+    "label": "Připravenost na finální test",
+    "lessonWeight": 60,
+    "taskWeight": 40
+  },
   "nextLesson": {
     "date": "Čt 21. srpna",
     "time": "čas doplníme",
@@ -13,12 +23,36 @@
     "materialsCount": 1,
     "activeTasks": 1,
     "upcomingLessons": 1,
-    "blocksCount": 1
+    "blocksCount": 1,
+    "lessonsCount": 1
   },
+  "lessons": [
+    {
+      "id": "evelina-lesson-1",
+      "date": "2026-07-20",
+      "displayDate": "20. července 2026",
+      "title": "1. hodina — Mnohočleny a algebraické úpravy",
+      "subject": "Matematika",
+      "subtitle": "První společná lekce",
+      "score": 7,
+      "scoreLabel": "Dobře zvládnuto",
+      "topics": [
+        "sčítání a odčítání mnohočlenů",
+        "roznásobování závorek",
+        "úprava a zjednodušování výrazů"
+      ],
+      "improvement": "Ještě procvičit práci se znaménky a násobení záporným číslem.",
+      "homework": "Dokončit pracovní list do 20. srpna a označit příklady, které bude potřeba znovu vysvětlit.",
+      "material": {
+        "title": "Pracovní list z první hodiny — mnohočleny a algebraické úpravy",
+        "url": "./Materials/Evelin/Evelína___1__hodina__Mnohočleny_a_úpravy.pdf"
+      }
+    }
+  ],
   "materials": [
     {
       "title": "1. hodina – Mnohočleny a úpravy",
-      "meta": "PDF materiál · Matematika · Přidáno dnes",
+      "meta": "PDF materiál · Matematika · Přidáno 20. července 2026",
       "badge": "PDF",
       "badgeClass": "pdf",
       "url": "./Materials/Evelin/Evelína___1__hodina__Mnohočleny_a_úpravy.pdf"
@@ -28,27 +62,36 @@
     {
       "id": "evelina-task-1",
       "title": "Projít pracovní list z 1. hodiny",
-      "meta": "Dokonči do 20. srpna a označ si příklady, které budeš chtít dovysvětlit."
+      "meta": "Dokonči do 20. srpna a označ si příklady, které budeš chtít dovysvětlit.",
+      "badge": "Do 20. 8."
     }
   ],
   "timeline": [
     {
       "month": "Čvc",
       "day": "20",
-      "title": "Nahrán první materiál",
-      "desc": "Do portálu byl přidán první pracovní list k tématu mnohočleny a algebraické úpravy."
+      "title": "První hodina",
+      "desc": "Proběhla lekce zaměřená na mnohočleny a algebraické úpravy.",
+      "badge": "7/10"
     },
     {
       "month": "Srp",
       "day": "21",
       "title": "Finální test",
-      "desc": "Závěrečné ověření úprav mnohočlenů a navazující látky."
+      "desc": "Závěrečné ověření úprav mnohočlenů a navazující látky.",
+      "badge": "Test"
     }
   ],
   "upcoming": [
     {
+      "title": "Dokončení pracovního listu",
+      "meta": "20. srpna 2026",
+      "badge": "Úkol"
+    },
+    {
       "title": "Finální test",
-      "meta": "21. srpna · čas doplníme"
+      "meta": "21. srpna 2026 · čas doplníme",
+      "badge": "Test"
     }
   ],
   "links": [
