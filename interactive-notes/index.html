@@ -6,287 +6,71 @@
   <meta name="description" content="Interaktivní náhled lekce o aritmetických a geometrických posloupnostech, konvergenci a divergenci.">
   <meta name="robots" content="noindex,nofollow">
   <title>Posloupnosti interaktivně | Vojtěch Steidl</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <script>
+    window.MathJax = {
+      tex: {inlineMath: [['\\(', '\\)']], displayMath: [['\\[', '\\]']]},
+      svg: {fontCache: 'global'}
+    };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
   <style>
-    @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap");
-    :root{--navy:#102a43;--navy-light:#243b53;--blue:#2563eb;--blue-dark:#1d4ed8;--blue-soft:#eff6ff;--teal:#0f766e;--teal-soft:#ecfdf5;--green:#15803d;--amber:#d97706;--red:#b91c1c;--text:#334155;--muted:#64748b;--page:#f8fafc;--surface:#fff;--border:#e2e8f0;--border-blue:#bfdbfe;--shadow-small:0 1px 2px rgba(15,23,42,.05);--shadow-medium:0 18px 45px rgba(15,23,42,.1);--radius:16px}
+    :root{--navy:#102a43;--navy-light:#243b53;--blue:#2563eb;--blue-dark:#1d4ed8;--blue-soft:#eff6ff;--teal:#0f766e;--teal-soft:#ecfdf5;--green:#15803d;--amber:#d97706;--red:#b91c1c;--text:#334155;--muted:#64748b;--page:#f8fafc;--surface:#fff;--border:#e2e8f0;--border-blue:#bfdbfe;--shadow:0 18px 45px rgba(15,23,42,.10);--radius:16px}
     *{box-sizing:border-box}html{scroll-behavior:smooth;scroll-padding-top:5.5rem}body{min-width:320px;margin:0;background:var(--page);color:var(--text);font-family:"Inter","Segoe UI",sans-serif;line-height:1.65;-webkit-font-smoothing:antialiased}body.modal-open{overflow:hidden}a{color:var(--blue)}button,input{font:inherit}.shell{width:min(1180px,calc(100% - 2.5rem));margin:0 auto}
     .site-header{position:sticky;top:0;z-index:50;border-bottom:1px solid rgba(226,232,240,.88);background:rgba(255,255,255,.94);box-shadow:0 4px 18px rgba(15,23,42,.06);backdrop-filter:blur(14px)}.topbar{min-height:4.8rem;display:flex;align-items:center;justify-content:space-between;gap:1rem}.brand{color:var(--navy);font-size:1.05rem;font-weight:800;letter-spacing:-.03em;text-decoration:none}.nav-actions{display:flex;align-items:center;gap:.55rem}.nav-link,.nav-button{display:inline-flex;align-items:center;justify-content:center;min-height:2.8rem;padding:.7rem 1rem;border-radius:9px;font-size:.88rem;font-weight:700;text-decoration:none}.nav-link{color:var(--muted)}.nav-link:hover{background:var(--blue-soft);color:var(--blue-dark)}.nav-button{background:var(--navy);color:#fff}.nav-button:hover{background:var(--blue-dark);color:#fff}
-    .hero{position:relative;overflow:hidden;padding:5.5rem 0 4.7rem;background:radial-gradient(circle at 18% 15%,rgba(96,165,250,.38),transparent 31%),radial-gradient(circle at 83% 72%,rgba(45,212,191,.17),transparent 27%),linear-gradient(135deg,#102a43 0%,#173f6c 56%,#1d4ed8 150%);color:#fff}.hero:before{position:absolute;inset:0;background:linear-gradient(180deg,rgba(255,255,255,.02),rgba(15,23,42,.2));content:""}.hero-inner{position:relative;z-index:1;display:grid;grid-template-columns:minmax(0,1.2fr) minmax(300px,.8fr);gap:4rem;align-items:end}.hero-badge{display:inline-flex;align-items:center;gap:.5rem;padding:.42rem .8rem;border:1px solid rgba(255,255,255,.22);border-radius:999px;background:rgba(255,255,255,.12);font-size:.8rem;font-weight:700}.hero h1{max-width:760px;margin:1.25rem 0 1rem;font-size:clamp(2.6rem,6vw,4.8rem);font-weight:800;letter-spacing:-.06em;line-height:1.04}.hero p{max-width:700px;margin:0;color:rgba(255,255,255,.88);font-size:clamp(1rem,2vw,1.18rem)}.hero-meta{display:grid;gap:.8rem;padding:1.25rem;border:1px solid rgba(255,255,255,.18);border-radius:18px;background:rgba(255,255,255,.1);backdrop-filter:blur(10px)}.hero-meta-row{display:flex;align-items:center;justify-content:space-between;gap:1rem;padding-bottom:.7rem;border-bottom:1px solid rgba(255,255,255,.13)}.hero-meta-row:last-child{padding-bottom:0;border:0}.hero-meta span{color:rgba(255,255,255,.7);font-size:.82rem}.hero-meta strong{font-size:.9rem}
-    .lesson-layout{display:grid;grid-template-columns:230px minmax(0,1fr);gap:2rem;padding:3rem 0 6rem}.lesson-nav{position:sticky;top:6.4rem;align-self:start;padding:1.2rem;border:1px solid var(--border);border-radius:var(--radius);background:var(--surface);box-shadow:var(--shadow-small)}.lesson-nav strong{display:block;margin-bottom:.75rem;color:var(--navy);font-size:.82rem;text-transform:uppercase;letter-spacing:.08em}.lesson-nav a{display:block;padding:.65rem .7rem;border-radius:8px;color:var(--muted);font-size:.88rem;font-weight:600;text-decoration:none}.lesson-nav a:hover{background:var(--blue-soft);color:var(--blue-dark)}.lesson-nav .progress{height:6px;margin-top:1rem;border-radius:99px;background:#e7edf4;overflow:hidden}.lesson-nav .progress span{display:block;width:42%;height:100%;background:var(--blue)}
-    .document{overflow:hidden;border:1px solid var(--border);border-radius:22px;background:var(--surface);box-shadow:var(--shadow-medium)}.document-header{display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:1.15rem 1.4rem;border-bottom:1px solid var(--border);background:#fbfdff}.document-header-left{display:flex;align-items:center;gap:.8rem}.doc-mark{display:grid;width:38px;height:38px;place-items:center;border-radius:10px;background:var(--navy);color:#fff;font-weight:800}.document-header strong{display:block;color:var(--navy);font-size:.9rem}.document-header span{display:block;color:var(--muted);font-size:.75rem}.doc-status{display:inline-flex!important;align-items:center;gap:.45rem;padding:.4rem .65rem;border-radius:999px;background:var(--teal-soft);color:var(--teal)!important;font-weight:700}.doc-status:before{width:7px;height:7px;border-radius:50%;background:#10b981;content:""}.article{padding:clamp(1.4rem,5vw,4rem)}.chapter-label{color:var(--blue);font-size:.76rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase}.article h2{max-width:800px;margin:.65rem 0 1rem;color:var(--navy);font-size:clamp(2rem,4vw,3.2rem);font-weight:800;letter-spacing:-.05em;line-height:1.12}.article h3{margin:0 0 .7rem;color:var(--navy);font-size:1.25rem}.lead{max-width:820px;color:var(--muted);font-size:1.08rem}.concept-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin:2rem 0 3rem}.concept-card{padding:1.35rem;border:1px solid var(--border);border-radius:var(--radius);background:#fff}.concept-icon{display:grid;width:42px;height:42px;margin-bottom:1rem;place-items:center;border-radius:11px;background:var(--blue-soft);color:var(--blue);font-weight:800}.concept-card p{margin:0;color:var(--muted);font-size:.9rem}.formula-strip{display:flex;align-items:center;justify-content:space-between;gap:1rem;margin:2rem 0;padding:1.2rem 1.35rem;border-radius:14px;background:var(--navy);color:#fff}.formula-strip span{color:rgba(255,255,255,.7);font-size:.8rem}.formula-strip strong{font-family:Georgia,"Times New Roman",serif;font-size:1.55rem;font-weight:500}
-    .lab{margin:2rem 0 3rem;border:1px solid var(--border);border-radius:20px;background:#fff;box-shadow:0 12px 30px rgba(15,23,42,.07);overflow:hidden}.lab-head{display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:1.25rem 1.35rem;border-bottom:1px solid var(--border);background:#fbfdff}.lab-head small{display:block;color:var(--blue);font-size:.72rem;font-weight:800;text-transform:uppercase;letter-spacing:.08em}.lab-head h3{margin:.2rem 0 0;font-size:1.15rem}.live{display:inline-flex;align-items:center;gap:.45rem;color:var(--muted);font-size:.78rem}.live:before{width:8px;height:8px;border-radius:50%;background:#10b981;box-shadow:0 0 0 5px rgba(16,185,129,.12);content:""}.sequence-tabs{display:flex;gap:.45rem;padding:1rem 1.35rem 0}.sequence-tab{padding:.65rem .9rem;border:1px solid var(--border);border-radius:9px;background:#fff;color:var(--muted);cursor:pointer;font-size:.86rem;font-weight:700}.sequence-tab.active{border-color:var(--navy);background:var(--navy);color:#fff}.lab-body{display:grid;grid-template-columns:310px minmax(0,1fr);gap:1.2rem;padding:1.2rem 1.35rem 1.4rem}.control-panel{display:flex;flex-direction:column;gap:.85rem}.current-formula{padding:1.05rem;border-radius:13px;background:var(--blue-soft);color:var(--navy)}.current-formula span{display:block;margin-bottom:.25rem;color:var(--blue-dark);font-size:.7rem;font-weight:800;text-transform:uppercase;letter-spacing:.08em}.current-formula strong{font-family:Georgia,"Times New Roman",serif;font-size:1.35rem}.control{padding:.9rem;border:1px solid var(--border);border-radius:12px;background:#fff}.control-head{display:flex;justify-content:space-between;gap:1rem;margin-bottom:.55rem;color:var(--navy);font-size:.83rem;font-weight:700}.control output{color:var(--blue-dark);font-weight:800}.control input{width:100%;accent-color:var(--blue)}.presets{display:flex;flex-wrap:wrap;gap:.45rem}.preset{padding:.5rem .65rem;border:1px solid var(--border);border-radius:999px;background:#fff;color:var(--muted);cursor:pointer;font-size:.75rem;font-weight:700}.preset:hover{border-color:var(--border-blue);color:var(--blue-dark)}.replay{display:inline-flex;align-items:center;justify-content:center;gap:.45rem;min-height:2.8rem;border:0;border-radius:9px;background:var(--navy);color:#fff;cursor:pointer;font-weight:800}.replay:hover{background:var(--blue-dark)}
+    .hero{position:relative;overflow:hidden;padding:5.5rem 0 4.7rem;background:radial-gradient(circle at 18% 15%,rgba(96,165,250,.38),transparent 31%),radial-gradient(circle at 83% 72%,rgba(45,212,191,.17),transparent 27%),linear-gradient(135deg,#102a43 0%,#173f6c 56%,#1d4ed8 150%);color:#fff}.hero:before{position:absolute;inset:0;background:linear-gradient(180deg,rgba(255,255,255,.02),rgba(15,23,42,.2));content:""}.hero-inner{position:relative;z-index:1;display:grid;grid-template-columns:minmax(0,1.2fr) minmax(300px,.8fr);gap:4rem;align-items:end}.hero-badge{display:inline-flex;padding:.42rem .8rem;border:1px solid rgba(255,255,255,.22);border-radius:999px;background:rgba(255,255,255,.12);font-size:.8rem;font-weight:700}.hero h1{max-width:760px;margin:1.25rem 0 1rem;font-size:clamp(2.6rem,6vw,4.8rem);font-weight:800;letter-spacing:-.06em;line-height:1.04}.hero p{max-width:700px;margin:0;color:rgba(255,255,255,.88);font-size:clamp(1rem,2vw,1.18rem)}.hero-meta{display:grid;gap:.8rem;padding:1.25rem;border:1px solid rgba(255,255,255,.18);border-radius:18px;background:rgba(255,255,255,.1);backdrop-filter:blur(10px)}.hero-meta-row{display:flex;justify-content:space-between;gap:1rem;padding-bottom:.7rem;border-bottom:1px solid rgba(255,255,255,.13)}.hero-meta-row:last-child{padding-bottom:0;border:0}.hero-meta span{color:rgba(255,255,255,.7);font-size:.82rem}.hero-meta strong{font-size:.9rem}
+    .lesson-layout{display:grid;grid-template-columns:230px minmax(0,1fr);gap:2rem;padding:3rem 0 6rem}.lesson-nav{position:sticky;top:6.4rem;align-self:start;padding:1.2rem;border:1px solid var(--border);border-radius:var(--radius);background:var(--surface)}.lesson-nav strong{display:block;margin-bottom:.75rem;color:var(--navy);font-size:.82rem;text-transform:uppercase;letter-spacing:.08em}.lesson-nav a{display:block;padding:.65rem .7rem;border-radius:8px;color:var(--muted);font-size:.88rem;font-weight:600;text-decoration:none}.lesson-nav a:hover{background:var(--blue-soft);color:var(--blue-dark)}.lesson-nav .progress{height:6px;margin-top:1rem;border-radius:99px;background:#e7edf4;overflow:hidden}.lesson-nav .progress span{display:block;width:42%;height:100%;background:var(--blue)}
+    .document{overflow:hidden;border:1px solid var(--border);border-radius:22px;background:var(--surface);box-shadow:var(--shadow)}.document-header{display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:1.15rem 1.4rem;border-bottom:1px solid var(--border);background:#fbfdff}.document-header-left{display:flex;align-items:center;gap:.8rem}.doc-mark{display:grid;width:38px;height:38px;place-items:center;border-radius:10px;background:var(--navy);color:#fff;font-weight:800}.document-header strong{display:block;color:var(--navy);font-size:.9rem}.document-header span{display:block;color:var(--muted);font-size:.75rem}.doc-status{display:inline-flex!important;align-items:center;gap:.45rem;padding:.4rem .65rem;border-radius:999px;background:var(--teal-soft);color:var(--teal)!important;font-weight:700}.doc-status:before{width:7px;height:7px;border-radius:50%;background:#10b981;content:""}.article{padding:clamp(1.4rem,5vw,4rem)}.chapter-label{color:var(--blue);font-size:.76rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase}.article h2{max-width:820px;margin:.65rem 0 1rem;color:var(--navy);font-size:clamp(2rem,4vw,3.2rem);font-weight:800;letter-spacing:-.05em;line-height:1.12}.article h3{margin:0;color:var(--navy);font-size:1.2rem}.lead{max-width:820px;color:var(--muted);font-size:1.08rem}
+    .math-notes{display:grid;gap:1rem;margin:2rem 0 3rem}.math-note{display:grid;grid-template-columns:190px minmax(0,1fr);gap:1.4rem;align-items:center;padding:1.45rem 1.55rem;border:1px solid var(--border);border-radius:14px;background:#fff}.math-note-label{color:var(--navy);font-size:.82rem;font-weight:800;text-transform:uppercase;letter-spacing:.07em}.math-note-formula{min-width:0;color:var(--navy);font-size:1.45rem}.math-note-copy{grid-column:2;color:var(--muted);font-size:.92rem}.math-note mjx-container{margin:0!important;text-align:left!important}
+    .definition{margin:2rem 0;padding:1.2rem 1.35rem;border-left:4px solid var(--blue);border-radius:0 12px 12px 0;background:#f8fbff}.definition strong{color:var(--navy)}.definition mjx-container{margin:.65rem 0 .2rem!important;font-size:115%!important}
+    .lab{margin:2rem 0 3rem;border:1px solid var(--border);border-radius:20px;background:#fff;box-shadow:0 12px 30px rgba(15,23,42,.07);overflow:hidden}.lab-head{display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:1.25rem 1.35rem;border-bottom:1px solid var(--border);background:#fbfdff}.lab-head small{display:block;color:var(--blue);font-size:.72rem;font-weight:800;text-transform:uppercase;letter-spacing:.08em}.lab-head h3{margin:.2rem 0 0;font-size:1.15rem}.live{display:inline-flex;align-items:center;gap:.45rem;color:var(--muted);font-size:.78rem}.live:before{width:8px;height:8px;border-radius:50%;background:#10b981;box-shadow:0 0 0 5px rgba(16,185,129,.12);content:""}.sequence-tabs{display:flex;gap:.45rem;padding:1rem 1.35rem 0}.sequence-tab{padding:.65rem .9rem;border:1px solid var(--border);border-radius:9px;background:#fff;color:var(--muted);cursor:pointer;font-size:.86rem;font-weight:700}.sequence-tab.active{border-color:var(--navy);background:var(--navy);color:#fff}.lab-body{display:grid;grid-template-columns:320px minmax(0,1fr);gap:1.2rem;padding:1.2rem 1.35rem 1.4rem}.control-panel{display:flex;flex-direction:column;gap:.85rem}
+    .current-formula{padding:1.15rem 1.2rem;border:1px solid var(--border-blue);border-radius:12px;background:#fff}.current-formula-label{display:block;margin-bottom:.7rem;color:var(--muted);font-size:.72rem;font-weight:800;text-transform:uppercase;letter-spacing:.08em}.current-formula-math{min-height:48px;color:var(--navy);font-size:1.45rem;overflow-x:auto}.current-formula-math mjx-container{margin:0!important;text-align:left!important}.formula-values{display:flex;flex-wrap:wrap;gap:.45rem;margin-top:.8rem}.formula-value{padding:.35rem .55rem;border-radius:7px;background:var(--blue-soft);color:var(--blue-dark);font-size:.75rem;font-weight:700}
+    .control{padding:.9rem;border:1px solid var(--border);border-radius:12px;background:#fff}.control-head{display:flex;justify-content:space-between;gap:1rem;margin-bottom:.55rem;color:var(--navy);font-size:.83rem;font-weight:700}.control output{color:var(--blue-dark);font-weight:800}.control input{width:100%;accent-color:var(--blue)}.presets{display:flex;flex-wrap:wrap;gap:.45rem}.preset{padding:.5rem .65rem;border:1px solid var(--border);border-radius:999px;background:#fff;color:var(--muted);cursor:pointer;font-size:.75rem;font-weight:700}.preset:hover{border-color:var(--border-blue);color:var(--blue-dark)}.replay{display:inline-flex;align-items:center;justify-content:center;min-height:2.8rem;border:0;border-radius:9px;background:var(--navy);color:#fff;cursor:pointer;font-weight:800}.replay:hover{background:var(--blue-dark)}
     .visual-panel{min-width:0}.canvas-wrap{position:relative;height:390px;border:1px solid var(--border);border-radius:15px;background:#fbfdff;overflow:hidden}.canvas-wrap canvas{display:block;width:100%;height:100%}.canvas-badge{position:absolute;left:12px;bottom:12px;padding:.45rem .65rem;border-radius:8px;background:rgba(16,42,67,.9);color:#fff;font-size:.74rem}.result-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:.65rem;margin-top:.75rem}.result{min-width:0;padding:.8rem;border:1px solid var(--border);border-radius:11px;background:#fff}.result span{display:block;color:var(--muted);font-size:.68rem;text-transform:uppercase;letter-spacing:.06em}.result strong{display:block;margin-top:.22rem;overflow:hidden;color:var(--navy);font-size:.98rem;text-overflow:ellipsis;white-space:nowrap}.interpretation{margin-top:.75rem;padding:.9rem 1rem;border-left:4px solid var(--teal);border-radius:0 10px 10px 0;background:var(--teal-soft);color:#285e57;font-size:.9rem}
-    .theory{margin-top:3.6rem}.theory-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-top:1.2rem}.theory-card{padding:1.4rem;border:1px solid var(--border);border-radius:var(--radius);background:#fff}.theory-card .type{display:inline-flex;padding:.3rem .58rem;border-radius:999px;background:var(--blue-soft);color:var(--blue-dark);font-size:.7rem;font-weight:800;text-transform:uppercase;letter-spacing:.06em}.theory-card h3{margin:.85rem 0 .55rem}.theory-card p{color:var(--muted);font-size:.92rem}.rule-list{display:grid;gap:.55rem;margin-top:1rem}.rule{display:flex;gap:.7rem;align-items:flex-start;padding:.72rem;border-radius:10px;background:#f8fafc;font-size:.86rem}.rule b{color:var(--navy)}.rule-dot{flex:0 0 9px;width:9px;height:9px;margin-top:.38rem;border-radius:50%;background:var(--blue)}.warning{margin:1.2rem 0 0;padding:1rem 1.1rem;border:1px solid #fed7aa;border-radius:12px;background:#fff7ed;color:#9a3412;font-size:.9rem}
-    .quiz{margin-top:3.4rem;padding:1.5rem;border:1px solid var(--border-blue);border-radius:18px;background:linear-gradient(135deg,#eff6ff,#f8fafc)}.quiz-top{display:flex;align-items:flex-start;justify-content:space-between;gap:1rem}.quiz-number{display:inline-flex;padding:.3rem .6rem;border-radius:999px;background:var(--navy);color:#fff;font-size:.72rem;font-weight:800}.quiz h3{margin:.9rem 0 .4rem}.quiz p{margin:0;color:var(--muted)}.answers{display:grid;grid-template-columns:repeat(3,1fr);gap:.65rem;margin-top:1rem}.answer{padding:.85rem;border:1px solid var(--border);border-radius:10px;background:#fff;color:var(--navy);cursor:pointer;font-weight:700;text-align:left}.answer:hover{border-color:var(--blue)}.answer.correct{border-color:#86efac;background:#f0fdf4;color:#166534}.answer.wrong{border-color:#fecaca;background:#fef2f2;color:#991b1b}.quiz-feedback{min-height:1.5rem;margin-top:.8rem!important;color:var(--navy)!important;font-weight:700}
-    .gate{position:relative;min-height:540px;margin-top:3.5rem;border:1px solid var(--border);border-radius:20px;overflow:hidden;background:#fff}.locked{padding:2rem;filter:blur(5px);opacity:.45;pointer-events:none;user-select:none}.locked h3{font-size:1.7rem}.locked-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-top:1.2rem}.locked-card{height:190px;padding:1.2rem;border:1px solid var(--border);border-radius:14px;background:#f8fafc}.skeleton{height:9px;margin:.65rem 0;border-radius:99px;background:#cbd5e1}.skeleton.short{width:55%}.lock-overlay{position:absolute;inset:0;display:grid;place-items:center;padding:1.4rem;background:linear-gradient(to bottom,rgba(255,255,255,0) 0%,rgba(255,255,255,.86) 35%,rgba(255,255,255,.98) 100%)}.lock-card{width:min(560px,100%);padding:2rem;border:1px solid var(--border);border-radius:18px;background:#fff;box-shadow:0 24px 60px rgba(15,23,42,.18);text-align:center}.lock-icon{display:grid;width:54px;height:54px;margin:0 auto 1rem;place-items:center;border-radius:15px;background:var(--blue-soft);color:var(--blue-dark);font-size:1.35rem}.lock-card h3{margin:0 0 .55rem;font-size:1.7rem}.lock-card p{margin:0;color:var(--muted)}.pay-button{display:inline-flex;align-items:center;justify-content:center;margin-top:1.2rem;padding:.85rem 1.15rem;border:0;border-radius:9px;background:var(--navy);color:#fff;cursor:pointer;font-weight:800}.pay-button:hover{background:var(--blue-dark)}.micro{display:block;margin-top:.7rem;color:var(--muted);font-size:.75rem}
-    .modal{position:fixed;inset:0;z-index:100;display:none;place-items:center;padding:1.2rem;background:rgba(16,42,67,.68);backdrop-filter:blur(8px)}.modal.open{display:grid}.modal-card{position:relative;width:min(520px,100%);padding:2rem;border-radius:18px;background:#fff;box-shadow:0 30px 90px rgba(0,0,0,.28)}.modal-close{position:absolute;top:1rem;right:1rem;width:38px;height:38px;border:1px solid var(--border);border-radius:9px;background:#fff;cursor:pointer;font-size:1.25rem}.modal-card h3{margin:0 2.5rem .5rem 0;font-size:1.6rem}.modal-card p{color:var(--muted)}.order-summary{margin:1rem 0;padding:1rem;border-radius:12px;background:var(--blue-soft)}.order-summary strong{display:flex;justify-content:space-between;gap:1rem;color:var(--navy)}.order-link{display:flex;align-items:center;justify-content:center;width:100%;min-height:3rem;border-radius:9px;background:var(--navy);color:#fff;font-weight:800;text-decoration:none}.order-link:hover{background:var(--blue-dark);color:#fff}.modal-note{margin:.65rem 0 0!important;font-size:.75rem;text-align:center}footer{padding:2rem 0 3rem;color:var(--muted);font-size:.82rem}.footer-inner{display:flex;justify-content:space-between;gap:1rem;border-top:1px solid var(--border);padding-top:1.4rem}
-    @media(max-width:980px){.hero-inner{grid-template-columns:1fr;gap:2rem}.lesson-layout{grid-template-columns:1fr}.lesson-nav{display:none}.lab-body{grid-template-columns:1fr}.canvas-wrap{height:370px}.concept-grid{grid-template-columns:1fr}.result-grid{grid-template-columns:repeat(2,1fr)}}
-    @media(max-width:700px){.shell{width:min(100% - 2rem,1180px)}.topbar{min-height:4.4rem}.nav-link{display:none}.hero{padding:4.2rem 0 3.7rem}.hero h1{font-size:clamp(2.4rem,12vw,3.5rem)}.article{padding:1.35rem}.document-header{padding:1rem}.doc-status{display:none!important}.concept-grid,.theory-grid,.answers,.locked-grid{grid-template-columns:1fr}.lab-head,.formula-strip{align-items:flex-start;flex-direction:column}.sequence-tabs{overflow-x:auto}.lab-body{padding:1rem}.canvas-wrap{height:320px}.result-grid{grid-template-columns:1fr 1fr}.footer-inner{flex-direction:column}}
-    @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*:before,*:after{animation-duration:.01ms!important;transition-duration:.01ms!important}}
+    .theory{margin-top:3.6rem}.theory-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-top:1.2rem}.theory-card{padding:1.45rem;border:1px solid var(--border);border-radius:var(--radius);background:#fff}.theory-card .type{display:inline-flex;padding:.3rem .58rem;border-radius:999px;background:var(--blue-soft);color:var(--blue-dark);font-size:.7rem;font-weight:800;text-transform:uppercase;letter-spacing:.06em}.theory-formula{min-height:62px;margin:.9rem 0 .7rem;color:var(--navy);font-size:1.22rem}.theory-formula mjx-container{margin:0!important;text-align:left!important}.theory-card p{color:var(--muted);font-size:.92rem}.rule-list{display:grid;gap:.55rem;margin-top:1rem}.rule{display:flex;gap:.7rem;align-items:flex-start;padding:.72rem;border-radius:10px;background:#f8fafc;font-size:.86rem}.rule b{color:var(--navy)}.rule-dot{flex:0 0 9px;width:9px;height:9px;margin-top:.38rem;border-radius:50%;background:var(--blue)}.warning{margin:1.2rem 0 0;padding:1rem 1.1rem;border:1px solid #fed7aa;border-radius:12px;background:#fff7ed;color:#9a3412;font-size:.9rem}.warning mjx-container{margin:0 .15rem!important}
+    .quiz{margin-top:3.4rem;padding:1.5rem;border:1px solid var(--border-blue);border-radius:18px;background:linear-gradient(135deg,#eff6ff,#f8fafc)}.quiz-number{display:inline-flex;padding:.3rem .6rem;border-radius:999px;background:var(--navy);color:#fff;font-size:.72rem;font-weight:800}.quiz h3{margin:.9rem 0 .4rem}.quiz p{margin:0;color:var(--muted)}.answers{display:grid;grid-template-columns:repeat(3,1fr);gap:.65rem;margin-top:1rem}.answer{padding:.85rem;border:1px solid var(--border);border-radius:10px;background:#fff;color:var(--navy);cursor:pointer;font-weight:700;text-align:left}.answer:hover{border-color:var(--blue)}.answer.correct{border-color:#86efac;background:#f0fdf4;color:#166534}.answer.wrong{border-color:#fecaca;background:#fef2f2;color:#991b1b}.quiz-feedback{min-height:1.5rem;margin-top:.8rem!important;color:var(--navy)!important;font-weight:700}
+    .gate{position:relative;min-height:520px;margin-top:3.5rem;border:1px solid var(--border);border-radius:20px;overflow:hidden;background:#fff}.locked{padding:2rem;filter:blur(5px);opacity:.45;pointer-events:none}.locked-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-top:1.2rem}.locked-card{height:180px;padding:1.2rem;border:1px solid var(--border);border-radius:14px;background:#f8fafc}.skeleton{height:9px;margin:.65rem 0;border-radius:99px;background:#cbd5e1}.skeleton.short{width:55%}.lock-overlay{position:absolute;inset:0;display:grid;place-items:center;padding:1.4rem;background:linear-gradient(to bottom,rgba(255,255,255,0),rgba(255,255,255,.9) 38%,#fff)}.lock-card{max-width:560px;padding:2rem;border:1px solid var(--border);border-radius:18px;background:#fff;box-shadow:var(--shadow);text-align:center}.lock-icon{display:grid;width:54px;height:54px;margin:0 auto 1rem;place-items:center;border-radius:14px;background:var(--blue-soft);font-size:1.3rem}.lock-card h3{font-size:1.7rem}.lock-card p{color:var(--muted)}.pay-button{min-height:3rem;padding:.75rem 1.1rem;border:0;border-radius:9px;background:var(--navy);color:#fff;cursor:pointer;font-weight:800}.micro{display:block;margin-top:.7rem;color:var(--muted);font-size:.75rem}
+    footer{padding:2.3rem 0;background:var(--navy);color:rgba(255,255,255,.8)}.footer-inner{display:flex;justify-content:space-between;gap:1rem;font-size:.82rem}.modal{position:fixed;inset:0;z-index:100;display:none;place-items:center;padding:1.2rem;background:rgba(16,42,67,.66);backdrop-filter:blur(8px)}.modal.open{display:grid}.modal-card{position:relative;width:min(520px,100%);padding:2rem;border-radius:20px;background:#fff;box-shadow:0 30px 90px rgba(0,0,0,.3)}.modal-close{position:absolute;top:1rem;right:1rem;width:38px;height:38px;border:1px solid var(--border);border-radius:9px;background:#fff;cursor:pointer;font-size:1.25rem}.modal-card h3{margin:0 2.5rem .7rem 0;color:var(--navy);font-size:1.8rem}.modal-card p{color:var(--muted)}.order-summary{margin:1.2rem 0;padding:1rem;border:1px solid var(--border);border-radius:12px;background:#f8fafc}.order-summary strong{display:flex;justify-content:space-between;gap:1rem;color:var(--navy)}.order-link{display:flex;justify-content:center;padding:.85rem;border-radius:9px;background:var(--navy);color:#fff;font-weight:800;text-decoration:none}.modal-note{text-align:center;font-size:.75rem}
+    @media(max-width:980px){.hero-inner,.lesson-layout,.lab-body{grid-template-columns:1fr}.lesson-nav{position:static}.theory-grid{grid-template-columns:1fr}.hero-meta{max-width:600px}.math-note{grid-template-columns:1fr}.math-note-copy{grid-column:auto}.result-grid{grid-template-columns:1fr 1fr}}
+    @media(max-width:680px){.shell{width:min(100% - 1.5rem,1180px)}.topbar{min-height:4.3rem}.nav-link{display:none}.hero{padding:4rem 0}.hero h1{font-size:2.6rem}.article{padding:1.35rem}.document-header{align-items:flex-start}.doc-status{display:none!important}.lab-head{align-items:flex-start}.live{display:none}.sequence-tabs{flex-direction:column}.sequence-tab{width:100%}.canvas-wrap{height:330px}.result-grid,.answers{grid-template-columns:1fr}.locked-grid{grid-template-columns:1fr}.locked-card:nth-child(n+2){display:none}.footer-inner{flex-direction:column}.math-note-formula,.current-formula-math{font-size:1.22rem}}
   </style>
 </head>
 <body>
-  <header class="site-header">
-    <div class="shell topbar">
-      <a class="brand" href="/">Vojtěch Steidl</a>
-      <div class="nav-actions"><a class="nav-link" href="/">Zpět na hlavní stránku</a><a class="nav-button" href="#laborator">Vyzkoušet lekci</a></div>
-    </div>
-  </header>
-
-  <section class="hero">
-    <div class="shell hero-inner">
-      <div>
-        <span class="hero-badge">Interaktivní matematický zápis · náhled</span>
-        <h1>Posloupnosti: od pravidla k limitě</h1>
-        <p>Aritmetická a geometrická posloupnost, jejich chování a rozdíl mezi konvergencí a divergencí v jednom propojeném výkladu.</p>
-      </div>
-      <div class="hero-meta" aria-label="Informace o lekci">
-        <div class="hero-meta-row"><span>Úroveň</span><strong>SŠ / úvod VŠ</strong></div>
-        <div class="hero-meta-row"><span>Délka</span><strong>15–25 minut</strong></div>
-        <div class="hero-meta-row"><span>Obsah</span><strong>Výklad · experiment · test</strong></div>
-      </div>
-    </div>
-  </section>
-
-  <main class="shell lesson-layout">
-    <aside class="lesson-nav" aria-label="Obsah lekce">
-      <strong>Obsah náhledu</strong>
-      <a href="#uvod">1. Co je posloupnost</a>
-      <a href="#laborator">2. Interaktivní laboratoř</a>
-      <a href="#konvergence">3. Konvergence a divergence</a>
-      <a href="#overeni">4. Ověření pochopení</a>
-      <div class="progress" aria-label="42 procent lekce je dostupných"><span></span></div>
-    </aside>
-
-    <article class="document">
-      <header class="document-header">
-        <div class="document-header-left"><div class="doc-mark">aₙ</div><div><strong>Interaktivní zápis z matematiky</strong><span>Kapitola: Posloupnosti</span></div></div>
-        <span class="doc-status">Náhled zdarma</span>
-      </header>
-
-      <div class="article">
-        <section id="uvod">
-          <span class="chapter-label">01 · Základní myšlenka</span>
-          <h2>Posloupnost je funkce, jejímž vstupem je pořadí členu.</h2>
-          <p class="lead">Každému přirozenému číslu <strong>n</strong> přiřazuje právě jednu hodnotu <strong>a<sub>n</sub></strong>. Nezkoumáme tedy spojitou křivku, ale jednotlivé, očíslované body.</p>
-
-          <div class="concept-grid">
-            <div class="concept-card"><div class="concept-icon">n</div><h3>Index</h3><p>Číslo <strong>n</strong> říká, který člen posloupnosti právě sledujeme.</p></div>
-            <div class="concept-card"><div class="concept-icon">aₙ</div><h3>Člen posloupnosti</h3><p>Hodnota <strong>a<sub>n</sub></strong> je výsledek pravidla pro zvolené pořadí.</p></div>
-            <div class="concept-card"><div class="concept-icon">lim</div><h3>Dlouhodobé chování</h3><p>Sledujeme, kam se členy přibližují, když <strong>n</strong> roste.</p></div>
-          </div>
-
-          <div class="formula-strip"><span>Zápis posloupnosti</span><strong>(a<sub>n</sub>)<sub>n=1</sub><sup>∞</sup> = a₁, a₂, a₃, …</strong></div>
-        </section>
-
-        <section id="laborator">
-          <span class="chapter-label">02 · Interaktivní laboratoř</span>
-          <h2>Změň pravidlo a sleduj, co udělají jednotlivé členy.</h2>
-          <p class="lead">Přepínej mezi aritmetickou a geometrickou posloupností. Graf zobrazuje samostatné body, protože posloupnost není definovaná mezi celými indexy.</p>
-
-          <div class="lab">
-            <div class="lab-head"><div><small>Živý matematický model</small><h3>Experiment s posloupností</h3></div><span class="live">Výsledek se přepočítává okamžitě</span></div>
-            <div class="sequence-tabs" role="tablist">
-              <button class="sequence-tab active" type="button" data-type="arithmetic">Aritmetická posloupnost</button>
-              <button class="sequence-tab" type="button" data-type="geometric">Geometrická posloupnost</button>
-            </div>
-            <div class="lab-body">
-              <div class="control-panel">
-                <div class="current-formula"><span>Aktuální předpis</span><strong id="formulaText">aₙ = 2 + (n − 1) · 1</strong></div>
-                <label class="control"><span class="control-head"><span>První člen a₁</span><output id="firstOut">2</output></span><input id="first" type="range" min="-8" max="8" value="2" step="0.5"></label>
-                <label class="control"><span class="control-head"><span id="parameterLabel">Diference d</span><output id="parameterOut">1</output></span><input id="parameter" type="range" min="-3" max="3" value="1" step="0.1"></label>
-                <label class="control"><span class="control-head"><span>Počet zobrazených členů</span><output id="countOut">18</output></span><input id="count" type="range" min="6" max="30" value="18" step="1"></label>
-                <div class="presets" id="presets" aria-label="Rychlé příklady"></div>
-                <button class="replay" id="replay" type="button">↻ Přehrát vykreslení znovu</button>
-              </div>
-              <div class="visual-panel">
-                <div class="canvas-wrap"><canvas id="sequenceCanvas" aria-label="Graf členů posloupnosti"></canvas><div class="canvas-badge" id="canvasBadge">Klikni nebo najeď na bod</div></div>
-                <div class="result-grid">
-                  <div class="result"><span>Poslední zobrazený člen</span><strong id="lastTerm">19</strong></div>
-                  <div class="result"><span>Chování</span><strong id="behavior">Rostoucí</strong></div>
-                  <div class="result"><span>Omezenost</span><strong id="bounded">Neomezená</strong></div>
-                  <div class="result"><span>Závěr</span><strong id="conclusion">Divergentní</strong></div>
-                </div>
-                <div class="interpretation" id="interpretation">Nenulová diference způsobuje, že se členy aritmetické posloupnosti vzdalují bez omezení. Posloupnost proto nemá konečnou limitu.</div>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <section class="theory" id="konvergence">
-          <span class="chapter-label">03 · Teorie konvergence</span>
-          <h2>Konvergentní posloupnost se blíží k jednomu konečnému číslu.</h2>
-          <p class="lead">Divergence neznamená pouze „roste do nekonečna“. Posloupnost může také klesat k −∞ nebo oscilovat mezi více hodnotami.</p>
-
-          <div class="theory-grid">
-            <div class="theory-card">
-              <span class="type">Aritmetická</span>
-              <h3>a<sub>n</sub> = a₁ + (n − 1)d</h3>
-              <p>Každý další člen vzniká přičtením stejné diference <strong>d</strong>.</p>
-              <div class="rule-list">
-                <div class="rule"><span class="rule-dot"></span><span><b>d = 0:</b> posloupnost je konstantní a konverguje k a₁.</span></div>
-                <div class="rule"><span class="rule-dot"></span><span><b>d &gt; 0:</b> roste k +∞, takže diverguje.</span></div>
-                <div class="rule"><span class="rule-dot"></span><span><b>d &lt; 0:</b> klesá k −∞, takže diverguje.</span></div>
-              </div>
-            </div>
-            <div class="theory-card">
-              <span class="type">Geometrická</span>
-              <h3>a<sub>n</sub> = a₁ · q<sup>n−1</sup></h3>
-              <p>Každý další člen vzniká násobením stejným kvocientem <strong>q</strong>.</p>
-              <div class="rule-list">
-                <div class="rule"><span class="rule-dot"></span><span><b>|q| &lt; 1:</b> členy se přibližují k nule.</span></div>
-                <div class="rule"><span class="rule-dot"></span><span><b>q = 1:</b> posloupnost je konstantní a konverguje k a₁.</span></div>
-                <div class="rule"><span class="rule-dot"></span><span><b>q = −1:</b> střídá dvě hodnoty a obvykle diverguje.</span></div>
-                <div class="rule"><span class="rule-dot"></span><span><b>|q| &gt; 1:</b> absolutní hodnota členů roste a posloupnost diverguje.</span></div>
-              </div>
-            </div>
-          </div>
-          <div class="warning"><strong>Pozor:</strong> omezená posloupnost nemusí být konvergentní. Například a<sub>n</sub> = (−1)<sup>n</sup> zůstává mezi −1 a 1, ale žádné jediné hodnotě se nepřibližuje.</div>
-        </section>
-
-        <section class="quiz" id="overeni">
-          <div class="quiz-top"><div><span class="quiz-number">Ověření 1/3</span><h3>Jak se chová posloupnost a<sub>n</sub> = 5 · (−0,6)<sup>n−1</sup>?</h3><p>Vyber nejpřesnější odpověď.</p></div></div>
-          <div class="answers">
-            <button class="answer" type="button" data-correct="false">Roste k +∞</button>
-            <button class="answer" type="button" data-correct="true">Osciluje a konverguje k 0</button>
-            <button class="answer" type="button" data-correct="false">Osciluje a diverguje</button>
-          </div>
-          <p class="quiz-feedback" id="quizFeedback" aria-live="polite"></p>
-        </section>
-
-        <section class="gate" id="paywallGate">
-          <div class="locked"><span class="chapter-label">Pokračování plné lekce</span><h3>Součty posloupností, nekonečné řady a další procvičení</h3><div class="locked-grid"><div class="locked-card"><div class="skeleton short"></div><div class="skeleton"></div><div class="skeleton"></div><div class="skeleton short"></div></div><div class="locked-card"><div class="skeleton short"></div><div class="skeleton"></div><div class="skeleton"></div><div class="skeleton"></div></div><div class="locked-card"><div class="skeleton short"></div><div class="skeleton"></div><div class="skeleton short"></div><div class="skeleton"></div></div></div></div>
-          <div class="lock-overlay"><div class="lock-card"><div class="lock-icon">🔒</div><h3>Pokračování je součástí plného zápisu</h3><p>Odemkne další teorii, vedené příklady, test s vysvětlením a materiál pro tisk.</p><button class="pay-button open-order" type="button">Předobjednat za 199 Kč</button><span class="micro">Pilotní verze · tlačítko zatím připraví nezávazný e-mail</span></div></div>
-        </section>
-      </div>
-    </article>
-  </main>
-
+  <header class="site-header"><div class="shell topbar"><a class="brand" href="/">Vojtěch Steidl</a><div class="nav-actions"><a class="nav-link" href="/">Zpět na hlavní stránku</a><a class="nav-button" href="#laborator">Vyzkoušet lekci</a></div></div></header>
+  <section class="hero"><div class="shell hero-inner"><div><span class="hero-badge">Interaktivní matematický zápis</span><h1>Posloupnosti: od pravidla k limitě</h1><p>Aritmetická a geometrická posloupnost, konvergence a divergence v jednom čistém matematickém zápisu s živým experimentem.</p></div><div class="hero-meta"><div class="hero-meta-row"><span>Téma</span><strong>Posloupnosti</strong></div><div class="hero-meta-row"><span>Úroveň</span><strong>SŠ / úvod VŠ</strong></div><div class="hero-meta-row"><span>Forma</span><strong>Teorie + experiment + ověření</strong></div></div></div></section>
+  <main class="shell lesson-layout"><aside class="lesson-nav"><strong>Obsah náhledu</strong><a href="#zapis">1. Matematický zápis</a><a href="#laborator">2. Interaktivní laboratoř</a><a href="#konvergence">3. Konvergence</a><a href="#overeni">4. Ověření</a><div class="progress"><span></span></div></aside>
+    <article class="document"><header class="document-header"><div class="document-header-left"><div class="doc-mark">aₙ</div><div><strong>Posloupnosti interaktivně</strong><span>Náhled tematického zápisu</span></div></div><span class="doc-status">Aktivní dokument</span></header><div class="article">
+      <section id="zapis"><span class="chapter-label">01 · Matematický zápis</span><h2>Posloupnost přiřazuje každému přirozenému indexu právě jeden člen.</h2><p class="lead">Na rozdíl od spojité funkce pracujeme pouze s diskrétními hodnotami \(a_1,a_2,a_3,\ldots\). Základní typ posloupnosti určuje způsob, jakým z jednoho členu vzniká další.</p><div class="definition"><strong>Definice posloupnosti</strong> — posloupnost reálných čísel je zobrazení \(a:\mathbb{N}\to\mathbb{R}\). Hodnotu při indexu \(n\) zapisujeme jako \(a_n\).</div><div class="math-notes"><div class="math-note"><div class="math-note-label">Aritmetická posloupnost</div><div class="math-note-formula">\[a_n=a_1+(n-1)d\]</div><div class="math-note-copy">Rozdíl dvou sousedních členů je konstantní: \(a_{n+1}-a_n=d\).</div></div><div class="math-note"><div class="math-note-label">Geometrická posloupnost</div><div class="math-note-formula">\[a_n=a_1q^{\,n-1}\]</div><div class="math-note-copy">Poměr dvou sousedních nenulových členů je konstantní: \(\frac{a_{n+1}}{a_n}=q\).</div></div></div></section>
+      <section id="laborator"><span class="chapter-label">02 · Interaktivní laboratoř</span><h2>Změň parametry a sleduj chování jednotlivých členů.</h2><p class="lead">Graf zobrazuje pouze body s celočíselným indexem. Současně se aktualizuje předpis, klasifikace posloupnosti a závěr o její konvergenci.</p><div class="lab"><div class="lab-head"><div><small>Živý matematický model</small><h3>Experiment s posloupností</h3></div><span class="live">Okamžitý přepočet</span></div><div class="sequence-tabs"><button class="sequence-tab active" type="button" data-type="arithmetic">Aritmetická posloupnost</button><button class="sequence-tab" type="button" data-type="geometric">Geometrická posloupnost</button></div><div class="lab-body"><div class="control-panel"><div class="current-formula"><span class="current-formula-label">Aktuální předpis</span><div class="current-formula-math" id="formulaText">\(a_n=2+(n-1)\cdot1\)</div><div class="formula-values"><span class="formula-value" id="firstChip">a₁ = 2</span><span class="formula-value" id="parameterChip">d = 1</span></div></div><label class="control"><span class="control-head"><span>První člen \(a_1\)</span><output id="firstOut">2</output></span><input id="first" type="range" min="-8" max="8" value="2" step="0.5"></label><label class="control"><span class="control-head"><span id="parameterLabel">Diference \(d\)</span><output id="parameterOut">1</output></span><input id="parameter" type="range" min="-3" max="3" value="1" step="0.1"></label><label class="control"><span class="control-head"><span>Počet členů</span><output id="countOut">16</output></span><input id="count" type="range" min="6" max="20" value="16" step="1"></label><div class="presets"><button class="preset" data-type="arithmetic" data-a1="2" data-p="1">Rostoucí</button><button class="preset" data-type="arithmetic" data-a1="4" data-p="0">Konstantní</button><button class="preset" data-type="geometric" data-a1="5" data-p="0.6">Konvergentní</button><button class="preset" data-type="geometric" data-a1="3" data-p="-1">Oscilující</button><button class="preset" data-type="geometric" data-a1="1" data-p="1.35">Divergentní</button></div><button class="replay" id="replay" type="button">Přehrát vykreslení znovu</button></div><div class="visual-panel"><div class="canvas-wrap"><canvas id="sequenceCanvas" aria-label="Graf členů posloupnosti"></canvas><div class="canvas-badge" id="canvasBadge">Najeď na bod</div></div><div class="result-grid"><div class="result"><span>Poslední člen</span><strong id="lastTerm">17</strong></div><div class="result"><span>Chování</span><strong id="behavior">Rostoucí</strong></div><div class="result"><span>Omezenost</span><strong id="bounded">Neomezená</strong></div><div class="result"><span>Závěr</span><strong id="conclusion">Divergentní</strong></div></div><div class="interpretation" id="interpretation">Nenulová diference způsobuje, že se členy vzdalují bez omezení. Posloupnost proto nemá konečnou limitu.</div></div></div></div></section>
+      <section class="theory" id="konvergence"><span class="chapter-label">03 · Teorie konvergence</span><h2>Konvergence znamená přibližování k jedné konečné hodnotě.</h2><p class="lead">Posloupnost \((a_n)\) konverguje k číslu \(L\), jestliže její členy mohou být pro dostatečně velká \(n\) libovolně blízko hodnotě \(L\).</p><div class="definition"><strong>Zápis limity</strong>\[\lim_{n\to\infty}a_n=L\]</div><div class="theory-grid"><div class="theory-card"><span class="type">Aritmetická</span><div class="theory-formula">\[a_n=a_1+(n-1)d\]</div><div class="rule-list"><div class="rule"><span class="rule-dot"></span><span><b>\(d=0\):</b> konstantní posloupnost, \(\lim a_n=a_1\).</span></div><div class="rule"><span class="rule-dot"></span><span><b>\(d&gt;0\):</b> \(a_n\to+\infty\), posloupnost diverguje.</span></div><div class="rule"><span class="rule-dot"></span><span><b>\(d&lt;0\):</b> \(a_n\to-\infty\), posloupnost diverguje.</span></div></div></div><div class="theory-card"><span class="type">Geometrická</span><div class="theory-formula">\[a_n=a_1q^{\,n-1}\]</div><div class="rule-list"><div class="rule"><span class="rule-dot"></span><span><b>\(|q|&lt;1\):</b> \(\lim a_n=0\).</span></div><div class="rule"><span class="rule-dot"></span><span><b>\(q=1\):</b> konstantní posloupnost, \(\lim a_n=a_1\).</span></div><div class="rule"><span class="rule-dot"></span><span><b>\(q=-1\):</b> při \(a_1\neq0\) osciluje a diverguje.</span></div><div class="rule"><span class="rule-dot"></span><span><b>\(|q|&gt;1\):</b> absolutní hodnota členů roste, posloupnost diverguje.</span></div></div></div></div><div class="warning"><strong>Pozor:</strong> omezenost sama nestačí. Posloupnost \(a_n=(-1)^n\) je omezená, ale nemá limitu.</div></section>
+      <section class="quiz" id="overeni"><span class="quiz-number">Ověření 1/3</span><h3>Jak se chová posloupnost \(a_n=5\cdot(-0{,}6)^{n-1}\)?</h3><p>Vyber nejpřesnější odpověď.</p><div class="answers"><button class="answer" data-correct="false">Roste k \(+\infty\)</button><button class="answer" data-correct="true">Osciluje a konverguje k \(0\)</button><button class="answer" data-correct="false">Osciluje a diverguje</button></div><p class="quiz-feedback" id="quizFeedback" aria-live="polite"></p></section>
+      <section class="gate" id="paywallGate"><div class="locked"><span class="chapter-label">Pokračování plné lekce</span><h3>Součty posloupností, nekonečné řady a další procvičení</h3><div class="locked-grid"><div class="locked-card"><div class="skeleton short"></div><div class="skeleton"></div><div class="skeleton"></div></div><div class="locked-card"><div class="skeleton short"></div><div class="skeleton"></div><div class="skeleton"></div></div><div class="locked-card"><div class="skeleton short"></div><div class="skeleton"></div><div class="skeleton"></div></div></div></div><div class="lock-overlay"><div class="lock-card"><div class="lock-icon">🔒</div><h3>Pokračování je součástí plného zápisu</h3><p>Další teorie, vedené příklady, test s vysvětlením a materiál pro tisk.</p><button class="pay-button open-order" type="button">Předobjednat za 199 Kč</button><span class="micro">Pilotní verze · nezávazná předobjednávka</span></div></div></section>
+    </div></article></main>
   <footer><div class="shell footer-inner"><span>Vojtěch Steidl · matematika a fyzika</span><span>Interaktivní zápis · pilotní náhled</span></div></footer>
-
-  <div class="modal" id="orderModal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
-    <div class="modal-card"><button class="modal-close" id="modalClose" type="button" aria-label="Zavřít">×</button><h3 id="modalTitle">Předobjednávka interaktivního zápisu</h3><p>V pilotní fázi zatím neprobíhá online platba. Tlačítko připraví nezávazný e-mail se zájmem o celý materiál.</p><div class="order-summary"><strong><span>Posloupnosti interaktivně</span><span>199 Kč</span></strong></div><a class="order-link" href="mailto:vojtasteidl@seznam.cz?subject=P%C5%99edobjedn%C3%A1vka%3A%20Posloupnosti%20interaktivn%C4%9B&body=Dobr%C3%BD%20den%2C%0A%0Am%C3%A1m%20z%C3%A1jem%20o%20p%C5%99edobjedn%C3%A1vku%20interaktivn%C3%ADho%20z%C3%A1pisu%20Posloupnosti%20za%20199%20K%C4%8D.%0A%0APros%C3%ADm%20o%20informace%20k%20dostupnosti%20a%20dal%C5%A1%C3%ADmu%20postupu.%0A">Mám zájem o předobjednávku</a><p class="modal-note">Odesláním e-mailu nevzniká povinnost zaplatit.</p></div>
-  </div>
-
+  <div class="modal" id="orderModal" role="dialog" aria-modal="true"><div class="modal-card"><button class="modal-close" id="modalClose" type="button">×</button><h3>Předobjednávka interaktivního zápisu</h3><p>V pilotní fázi zatím neprobíhá online platba. Tlačítko připraví nezávazný e-mail.</p><div class="order-summary"><strong><span>Posloupnosti interaktivně</span><span>199 Kč</span></strong></div><a class="order-link" href="mailto:vojtasteidl@seznam.cz?subject=Předobjednávka:%20Posloupnosti%20interaktivně&body=Dobrý%20den,%0A%0Amám%20zájem%20o%20předobjednávku%20interaktivního%20zápisu%20Posloupnosti%20za%20199%20Kč.%0A">Mám zájem o předobjednávku</a><p class="modal-note">Odesláním e-mailu nevzniká povinnost zaplatit.</p></div></div>
   <script>
-    const canvas=document.getElementById('sequenceCanvas');
-    const first=document.getElementById('first');
-    const parameter=document.getElementById('parameter');
-    const count=document.getElementById('count');
-    const firstOut=document.getElementById('firstOut');
-    const parameterOut=document.getElementById('parameterOut');
-    const countOut=document.getElementById('countOut');
-    const parameterLabel=document.getElementById('parameterLabel');
-    const formulaText=document.getElementById('formulaText');
-    const lastTerm=document.getElementById('lastTerm');
-    const behavior=document.getElementById('behavior');
-    const bounded=document.getElementById('bounded');
-    const conclusion=document.getElementById('conclusion');
-    const interpretation=document.getElementById('interpretation');
-    const presets=document.getElementById('presets');
-    const canvasBadge=document.getElementById('canvasBadge');
-    const replay=document.getElementById('replay');
+    const canvas=document.getElementById('sequenceCanvas'),first=document.getElementById('first'),parameter=document.getElementById('parameter'),count=document.getElementById('count');
+    const firstOut=document.getElementById('firstOut'),parameterOut=document.getElementById('parameterOut'),countOut=document.getElementById('countOut'),parameterLabel=document.getElementById('parameterLabel');
+    const formulaText=document.getElementById('formulaText'),firstChip=document.getElementById('firstChip'),parameterChip=document.getElementById('parameterChip');
+    const lastTerm=document.getElementById('lastTerm'),behavior=document.getElementById('behavior'),bounded=document.getElementById('bounded'),conclusion=document.getElementById('conclusion'),interpretation=document.getElementById('interpretation'),badge=document.getElementById('canvasBadge');
     let type='arithmetic',progress=1,frame=null,points=[];
-
-    const presetData={
-      arithmetic:[
-        {label:'Rostoucí',a:2,p:1},{label:'Konstantní',a:3,p:0},{label:'Klesající',a:4,p:-.8}
-      ],
-      geometric:[
-        {label:'→ 0',a:8,p:.65},{label:'Osciluje → 0',a:8,p:-.65},{label:'Konstantní',a:3,p:1},{label:'Diverguje',a:1,p:1.25}
-      ]
-    };
-
-    function fmt(value){
-      if(!Number.isFinite(value)) return '—';
-      if(Math.abs(value)>=100000) return value.toExponential(2).replace('.',',');
-      const rounded=Math.abs(value)<1e-9?0:value;
-      return rounded.toLocaleString('cs-CZ',{maximumFractionDigits:2});
-    }
-
-    function terms(){
-      const a=+first.value,p=+parameter.value,n=+count.value;
-      return Array.from({length:n},(_,i)=>type==='arithmetic'?a+i*p:a*Math.pow(p,i));
-    }
-
-    function classification(values){
-      const a=+first.value,p=+parameter.value;
-      if(type==='arithmetic'){
-        if(Math.abs(p)<1e-9) return {behavior:'Konstantní',bounded:'Ano',conclusion:'Konvergentní',limit:fmt(a),text:`Diference d = 0. Všechny členy mají hodnotu ${fmt(a)}, takže limita je ${fmt(a)}.`};
-        if(p>0) return {behavior:'Rostoucí',bounded:'Ne',conclusion:'Divergentní',limit:'+∞',text:'Kladná nenulová diference způsobuje neomezený růst. Posloupnost nemá konečnou limitu a diverguje k +∞.'};
-        return {behavior:'Klesající',bounded:'Ne',conclusion:'Divergentní',limit:'−∞',text:'Záporná nenulová diference způsobuje neomezený pokles. Posloupnost nemá konečnou limitu a diverguje k −∞.'};
-      }
-      if(Math.abs(a)<1e-9) return {behavior:'Konstantně nulová',bounded:'Ano',conclusion:'Konvergentní',limit:'0',text:'Protože první člen je nulový, jsou nulové všechny členy bez ohledu na kvocient. Limita je 0.'};
-      const abs=Math.abs(p);
-      if(abs<1){
-        const b=p<0?'Oscilační':'Směřuje k nule';
-        return {behavior:b,bounded:'Ano',conclusion:'Konvergentní',limit:'0',text:p<0?'Záporný kvocient střídá znaménko, ale protože |q| < 1, absolutní hodnota členů klesá. Posloupnost konverguje k 0.':'Protože |q| < 1, každý další člen má menší absolutní hodnotu. Posloupnost konverguje k 0.'};
-      }
-      if(Math.abs(p-1)<1e-9) return {behavior:'Konstantní',bounded:'Ano',conclusion:'Konvergentní',limit:fmt(a),text:`Pro q = 1 se hodnota nemění. Posloupnost je konstantní a její limita je ${fmt(a)}.`};
-      if(Math.abs(p+1)<1e-9) return {behavior:'Oscilační',bounded:'Ano',conclusion:'Divergentní',limit:'Neexistuje',text:'Pro q = −1 se členy střídají mezi dvěma hodnotami. Posloupnost je omezená, ale nepřibližuje se k jedinému číslu.'};
-      return {behavior:p<0?'Oscilační růst':'Růst v absolutní hodnotě',bounded:'Ne',conclusion:'Divergentní',limit:'Neexistuje',text:p<0?'Protože |q| > 1 a q je záporné, znaménko se střídá a absolutní hodnota roste. Posloupnost diverguje.':'Protože |q| > 1, absolutní hodnota členů neomezeně roste. Posloupnost diverguje.'};
-    }
-
-    function updateText(){
-      const a=+first.value,p=+parameter.value,values=terms(),c=classification(values);
-      firstOut.textContent=fmt(a);parameterOut.textContent=fmt(p);countOut.textContent=count.value;
-      parameterLabel.textContent=type==='arithmetic'?'Diference d':'Kvocient q';
-      formulaText.innerHTML=type==='arithmetic'?`a<sub>n</sub> = ${fmt(a)} + (n − 1) · ${fmt(p)}`:`a<sub>n</sub> = ${fmt(a)} · ${fmt(p)}<sup>n−1</sup>`;
-      lastTerm.textContent=fmt(values.at(-1));behavior.textContent=c.behavior;bounded.textContent=c.bounded;conclusion.textContent=c.conclusion;interpretation.textContent=c.text;
-      renderPresets();
-    }
-
-    function renderPresets(){
-      presets.innerHTML='';
-      presetData[type].forEach(item=>{const b=document.createElement('button');b.type='button';b.className='preset';b.textContent=item.label;b.addEventListener('click',()=>{first.value=item.a;parameter.value=item.p;updateText();animate()});presets.appendChild(b)});
-    }
-
-    function setupCanvas(){
-      const rect=canvas.getBoundingClientRect(),dpr=Math.min(window.devicePixelRatio||1,2);
-      canvas.width=Math.round(rect.width*dpr);canvas.height=Math.round(rect.height*dpr);
-      const ctx=canvas.getContext('2d');ctx.setTransform(dpr,0,0,dpr,0,0);
-      return {ctx,w:rect.width,h:rect.height};
-    }
-
-    function draw(){
-      const {ctx,w,h}=setupCanvas();
-      const values=terms(),pad={l:54,r:24,t:25,b:42},plotW=w-pad.l-pad.r,plotH=h-pad.t-pad.b;
-      let maxAbs=Math.max(...values.map(v=>Math.abs(v)).filter(Number.isFinite),1);
-      if(!Number.isFinite(maxAbs)||maxAbs===0) maxAbs=1;
-      maxAbs*=1.18;
-      const x=n=>pad.l+(n-1)/Math.max(1,values.length-1)*plotW;
-      const y=v=>pad.t+(maxAbs-v)/(2*maxAbs)*plotH;
-      ctx.clearRect(0,0,w,h);ctx.font='11px Inter, sans-serif';ctx.fillStyle='#64748b';ctx.strokeStyle='#e2e8f0';ctx.lineWidth=1;
-      for(let i=0;i<=4;i++){const yy=pad.t+i*plotH/4;ctx.beginPath();ctx.moveTo(pad.l,yy);ctx.lineTo(w-pad.r,yy);ctx.stroke();const value=maxAbs-(2*maxAbs*i/4);ctx.textAlign='right';ctx.textBaseline='middle';ctx.fillText(fmt(value),pad.l-8,yy)}
-      const zeroY=y(0);ctx.strokeStyle='#94a3b8';ctx.lineWidth=1.5;ctx.beginPath();ctx.moveTo(pad.l,zeroY);ctx.lineTo(w-pad.r,zeroY);ctx.stroke();
-      const every=values.length>22?5:values.length>12?2:1;for(let i=0;i<values.length;i+=every){const xx=x(i+1);ctx.fillStyle='#64748b';ctx.textAlign='center';ctx.textBaseline='top';ctx.fillText(String(i+1),xx,h-pad.b+10)}
-      ctx.fillStyle='#64748b';ctx.textAlign='right';ctx.fillText('n',w-pad.r,h-12);
-      const c=classification(values);if(c.conclusion==='Konvergentní'){const limit=c.limit==='0'?0:+String(c.limit).replace(',','.');if(Number.isFinite(limit)){const ly=y(limit);ctx.setLineDash([6,6]);ctx.strokeStyle='#0f766e';ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(pad.l,ly);ctx.lineTo(w-pad.r,ly);ctx.stroke();ctx.setLineDash([]);ctx.fillStyle='#0f766e';ctx.textAlign='left';ctx.textBaseline='bottom';ctx.fillText('limita '+c.limit,pad.l+7,ly-5)}}
-      points=[];const visible=Math.max(1,Math.ceil(values.length*progress));
-      for(let i=0;i<visible;i++){
-        const value=values[i];if(!Number.isFinite(value)) continue;const xx=x(i+1),yy=y(value);points.push({x:xx,y:yy,n:i+1,value});
-        ctx.strokeStyle='rgba(37,99,235,.22)';ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(xx,zeroY);ctx.lineTo(xx,yy);ctx.stroke();
-        ctx.beginPath();ctx.arc(xx,yy,5.5,0,Math.PI*2);ctx.fillStyle='#2563eb';ctx.shadowColor='rgba(37,99,235,.28)';ctx.shadowBlur=8;ctx.fill();ctx.shadowBlur=0;ctx.lineWidth=2;ctx.strokeStyle='#fff';ctx.stroke();
-      }
-    }
-
-    function animate(){cancelAnimationFrame(frame);const start=performance.now(),duration=650;function tick(now){const p=Math.min((now-start)/duration,1);progress=1-Math.pow(1-p,3);draw();if(p<1) frame=requestAnimationFrame(tick)}frame=requestAnimationFrame(tick)}
-
-    function hoverPoint(clientX,clientY){
-      const rect=canvas.getBoundingClientRect(),mx=clientX-rect.left,my=clientY-rect.top;let best=null,dist=Infinity;for(const p of points){const d=Math.hypot(mx-p.x,my-p.y);if(d<dist){dist=d;best=p}}
-      canvasBadge.textContent=best&&dist<28?`a${best.n} = ${fmt(best.value)}`:'Klikni nebo najeď na bod';
-    }
-
-    [first,parameter,count].forEach(el=>el.addEventListener('input',()=>{updateText();draw()}));
-    [first,parameter,count].forEach(el=>el.addEventListener('change',animate));
-    document.querySelectorAll('.sequence-tab').forEach(tab=>tab.addEventListener('click',()=>{type=tab.dataset.type;document.querySelectorAll('.sequence-tab').forEach(t=>t.classList.toggle('active',t===tab));if(type==='arithmetic'){first.value=2;parameter.min=-3;parameter.max=3;parameter.step=.1;parameter.value=1}else{first.value=8;parameter.min=-1.5;parameter.max=1.5;parameter.step=.05;parameter.value=.65}updateText();animate()}));
-    replay.addEventListener('click',animate);canvas.addEventListener('mousemove',e=>hoverPoint(e.clientX,e.clientY));canvas.addEventListener('mouseleave',()=>canvasBadge.textContent='Klikni nebo najeď na bod');canvas.addEventListener('click',e=>hoverPoint(e.clientX,e.clientY));window.addEventListener('resize',draw);
-
-    const answers=[...document.querySelectorAll('.answer')],quizFeedback=document.getElementById('quizFeedback');answers.forEach(btn=>btn.addEventListener('click',()=>{answers.forEach(a=>a.classList.remove('correct','wrong'));if(btn.dataset.correct==='true'){btn.classList.add('correct');quizFeedback.textContent='Správně. Záporné q střídá znaménko a |q| = 0,6 < 1 zmenšuje absolutní hodnotu, proto je limita 0.'}else{btn.classList.add('wrong');quizFeedback.textContent='Ne. Sleduj současně znaménko q a jeho absolutní hodnotu.'}}));
-
-    const modal=document.getElementById('orderModal'),modalClose=document.getElementById('modalClose');function openModal(){modal.classList.add('open');document.body.classList.add('modal-open')}function closeModal(){modal.classList.remove('open');document.body.classList.remove('modal-open')}document.querySelectorAll('.open-order').forEach(b=>b.addEventListener('click',openModal));modalClose.addEventListener('click',closeModal);modal.addEventListener('click',e=>{if(e.target===modal)closeModal()});document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal()});
-
-    updateText();draw();animate();
+    const fmt=n=>{if(!Number.isFinite(n))return n>0?'∞':'−∞';const a=Math.abs(n);if(a>=10000)return n.toExponential(2).replace('.',',');return n.toLocaleString('cs-CZ',{maximumFractionDigits:3})};
+    const texNum=n=>Number(n).toLocaleString('cs-CZ',{maximumFractionDigits:3}).replace(',','{,}');
+    function values(){const a1=+first.value,p=+parameter.value,n=+count.value;return Array.from({length:n},(_,i)=>type==='arithmetic'?a1+i*p:a1*Math.pow(p,i))}
+    function classification(a1,p){if(type==='arithmetic'){if(Math.abs(p)<1e-9)return{behavior:'Konstantní',bounded:'Omezená',conclusion:'Konvergentní',text:`Všechny členy jsou rovny ${fmt(a1)}. Limita je proto ${fmt(a1)}.`};return{behavior:p>0?'Rostoucí':'Klesající',bounded:'Neomezená',conclusion:'Divergentní',text:p>0?'Kladná diference vede k růstu bez omezení. Posloupnost diverguje k +∞.':'Záporná diference vede k poklesu bez omezení. Posloupnost diverguje k −∞.'}}if(Math.abs(a1)<1e-9)return{behavior:'Konstantní nulová',bounded:'Omezená',conclusion:'Konvergentní',text:'Všechny členy jsou nulové, takže limita je 0.'};const ap=Math.abs(p);if(ap<1)return{behavior:p<0?'Oscilující se zmenšující amplitudou':'Směřující k nule',bounded:'Omezená',conclusion:'Konvergentní',text:'Protože |q| < 1, absolutní hodnoty členů se zmenšují a limita je 0.'};if(Math.abs(p-1)<1e-9)return{behavior:'Konstantní',bounded:'Omezená',conclusion:'Konvergentní',text:`Pro q = 1 jsou všechny členy rovny ${fmt(a1)}.`};if(Math.abs(p+1)<1e-9)return{behavior:'Oscilující',bounded:'Omezená',conclusion:'Divergentní',text:'Pro q = −1 se střídají dvě hodnoty. Posloupnost se nepřibližuje k jedinému číslu.'};return{behavior:p<0?'Oscilující s rostoucí amplitudou':(a1>0?'Rostoucí v absolutní hodnotě':'Klesající v absolutní hodnotě'),bounded:'Neomezená',conclusion:'Divergentní',text:'Protože |q| > 1, absolutní hodnoty členů rostou bez omezení.'}}
+    function mathTypeset(el){if(window.MathJax?.typesetPromise){MathJax.typesetClear?.([el]);MathJax.typesetPromise([el]).catch(()=>{})}}
+    function updateFormula(){const a1=+first.value,p=+parameter.value;const latex=type==='arithmetic'?`a_n=${texNum(a1)}+(n-1)\\cdot${texNum(p)}`:`a_n=${texNum(a1)}\\cdot\\left(${texNum(p)}\\right)^{n-1}`;formulaText.textContent=`\\(${latex}\\)`;firstChip.textContent=`a₁ = ${fmt(a1)}`;parameterChip.textContent=`${type==='arithmetic'?'d':'q'} = ${fmt(p)}`;mathTypeset(formulaText)}
+    function updateText(){const a1=+first.value,p=+parameter.value,vals=values(),c=classification(a1,p);firstOut.textContent=fmt(a1);parameterOut.textContent=fmt(p);countOut.textContent=count.value;parameterLabel.innerHTML=type==='arithmetic'?'Diference \\(d\\)':'Kvocient \\(q\\)';lastTerm.textContent=fmt(vals.at(-1));behavior.textContent=c.behavior;bounded.textContent=c.bounded;conclusion.textContent=c.conclusion;interpretation.textContent=c.text;updateFormula();mathTypeset(parameterLabel)}
+    function setup(){const r=canvas.getBoundingClientRect(),d=Math.min(devicePixelRatio||1,2);canvas.width=Math.round(r.width*d);canvas.height=Math.round(r.height*d);const ctx=canvas.getContext('2d');ctx.setTransform(d,0,0,d,0,0);return{ctx,w:r.width,h:r.height}}
+    function draw(){const {ctx,w,h}=setup(),vals=values(),pad={l:50,r:25,t:25,b:42};let min=Math.min(0,...vals),max=Math.max(0,...vals);if(Math.abs(max-min)<1e-9){min-=1;max+=1}else{const extra=(max-min)*.12;min-=extra;max+=extra}const sx=i=>pad.l+i/(vals.length-1)*(w-pad.l-pad.r),sy=v=>pad.t+(max-v)/(max-min)*(h-pad.t-pad.b);ctx.clearRect(0,0,w,h);ctx.font='11px Inter';ctx.fillStyle='#64748b';ctx.strokeStyle='#e2e8f0';ctx.lineWidth=1;for(let j=0;j<=5;j++){const y=pad.t+j*(h-pad.t-pad.b)/5,v=max-j*(max-min)/5;ctx.beginPath();ctx.moveTo(pad.l,y);ctx.lineTo(w-pad.r,y);ctx.stroke();ctx.fillText(fmt(v),6,y+4)}const zeroY=sy(0);ctx.strokeStyle='#94a3b8';ctx.lineWidth=1.5;ctx.beginPath();ctx.moveTo(pad.l,zeroY);ctx.lineTo(w-pad.r,zeroY);ctx.stroke();const shown=Math.max(1,Math.ceil(vals.length*progress));points=[];for(let i=0;i<shown;i++){const x=sx(i),y=sy(vals[i]);ctx.strokeStyle='rgba(37,99,235,.28)';ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(x,zeroY);ctx.lineTo(x,y);ctx.stroke();ctx.fillStyle='#2563eb';ctx.beginPath();ctx.arc(x,y,5.5,0,Math.PI*2);ctx.fill();ctx.strokeStyle='#fff';ctx.lineWidth=2;ctx.stroke();points.push({x,y,n:i+1,v:vals[i]});if(i===0||i===shown-1||((i+1)%5===0)){ctx.fillStyle='#64748b';ctx.textAlign='center';ctx.fillText(String(i+1),x,h-18)}}ctx.textAlign='start'}
+    function animate(){cancelAnimationFrame(frame);const start=performance.now();function step(t){const p=Math.min((t-start)/600,1);progress=1-Math.pow(1-p,3);draw();if(p<1)frame=requestAnimationFrame(step)}frame=requestAnimationFrame(step)}
+    function configure(t,a1,p){type=t;document.querySelectorAll('.sequence-tab').forEach(b=>b.classList.toggle('active',b.dataset.type===type));first.value=a1;parameter.min=type==='arithmetic'?-3:-2;parameter.max=type==='arithmetic'?3:2;parameter.value=p;updateText();animate()}
+    document.querySelectorAll('.sequence-tab').forEach(b=>b.addEventListener('click',()=>configure(b.dataset.type,+first.value,b.dataset.type==='arithmetic'?1:.6)));[first,parameter,count].forEach(el=>el.addEventListener('input',()=>{progress=1;updateText();draw()}));[first,parameter,count].forEach(el=>el.addEventListener('change',animate));document.querySelectorAll('.preset').forEach(b=>b.addEventListener('click',()=>configure(b.dataset.type,+b.dataset.a1,+b.dataset.p)));document.getElementById('replay').addEventListener('click',animate);window.addEventListener('resize',draw);
+    canvas.addEventListener('mousemove',e=>{const r=canvas.getBoundingClientRect(),x=e.clientX-r.left,y=e.clientY-r.top;const hit=points.find(p=>Math.hypot(p.x-x,p.y-y)<11);badge.textContent=hit?`a${hit.n} = ${fmt(hit.v)}`:'Najeď na bod'});canvas.addEventListener('mouseleave',()=>badge.textContent='Najeď na bod');
+    document.querySelectorAll('.answer').forEach(b=>b.addEventListener('click',()=>{document.querySelectorAll('.answer').forEach(x=>x.classList.remove('correct','wrong'));const ok=b.dataset.correct==='true';b.classList.add(ok?'correct':'wrong');document.getElementById('quizFeedback').textContent=ok?'Správně. Záporný kvocient způsobuje střídání znamének a |q| < 1 zajišťuje konvergenci k nule.':'Zkus porovnat absolutní hodnotu kvocientu s číslem 1.'}));
+    const modal=document.getElementById('orderModal');document.querySelectorAll('.open-order').forEach(b=>b.addEventListener('click',()=>{modal.classList.add('open');document.body.classList.add('modal-open')}));document.getElementById('modalClose').addEventListener('click',()=>{modal.classList.remove('open');document.body.classList.remove('modal-open')});modal.addEventListener('click',e=>{if(e.target===modal){modal.classList.remove('open');document.body.classList.remove('modal-open')}});updateText();draw();animate();
   </script>
 </body>
 </html>
