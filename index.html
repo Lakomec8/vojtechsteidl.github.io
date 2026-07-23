@@ -4,12 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Doučování matematiky a fyziky | Jihlava i online | Vojtěch Steidl</title>
-    <meta name="description" content="Individuální doučování matematiky a fyziky v Jihlavě i online. Součástí výuky jsou vlastní statické i interaktivní materiály.">
-    <meta name="keywords" content="doučování matematiky Jihlava, doučování fyziky Jihlava, online doučování matematiky, interaktivní výukové materiály, maturita matematika">
+    <meta name="description" content="Individuální doučování matematiky a fyziky v Jihlavě i online. Součástí výuky jsou vlastní materiály a osobní studentská zóna.">
+    <meta name="keywords" content="doučování matematiky Jihlava, doučování fyziky Jihlava, online doučování matematiky, interaktivní výukové materiály, studentský portál">
     <meta name="author" content="Vojtěch Steidl">
     <meta name="robots" content="index, follow">
     <meta property="og:title" content="Doučování matematiky a fyziky | Jihlava i online">
-    <meta property="og:description" content="Individuální výuka matematiky a fyziky doplněná o vlastní přehledné a interaktivní materiály.">
+    <meta property="og:description" content="Individuální výuka, vlastní materiály a osobní studentská zóna na jednom místě.">
     <meta property="og:url" content="https://vojtechsteidl.eu/">
     <meta property="og:type" content="website">
     <meta property="og:image" content="https://vojtechsteidl.eu/foto.jpg">
@@ -23,16 +23,25 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="style.css">
     <style>
-        .expectations {
-            padding-bottom: 3rem;
+        .nav-links .nav-student {
+            margin-left: .2rem;
+            border: 1px solid var(--border-blue);
+            background: var(--blue-soft);
+            color: var(--blue-dark);
         }
+        .nav-links .nav-student:hover,
+        .nav-links .nav-student:focus-visible {
+            background: #dbeafe;
+            color: var(--navy);
+        }
+        .expectations { padding-bottom: 3rem; }
         .expectations-grid {
             display: grid;
-            grid-template-columns: repeat(3, 1fr);
+            grid-template-columns: repeat(4, 1fr);
             gap: 1.2rem;
         }
         .expectation-card {
-            padding: 1.9rem;
+            padding: 1.8rem;
             border: 1px solid var(--border);
             border-radius: var(--radius);
             background: var(--surface);
@@ -52,37 +61,25 @@
         .expectation-card h3 {
             margin-bottom: .55rem;
             color: var(--navy);
-            font-size: 1.1rem;
+            font-size: 1.08rem;
         }
-        .expectation-card p {
-            color: var(--muted);
-            font-size: .94rem;
-        }
+        .expectation-card p { color: var(--muted); font-size: .92rem; }
         .materials-block {
             width: min(1180px, calc(100% - 2.5rem));
             margin: 0 auto;
-            padding: 2.2rem 0 6rem;
+            padding: 2.2rem 0 5.5rem;
         }
-        .materials-intro {
-            display: flex;
-            justify-content: space-between;
-            gap: 2rem;
-            align-items: end;
-            margin-bottom: 1.8rem;
-        }
-        .materials-intro > div {
-            max-width: 720px;
-        }
-        .materials-intro h2 {
+        .materials-intro { max-width: 760px; margin-bottom: 1.8rem; }
+        .materials-intro h2,
+        .student-zone-copy h2 {
             margin: .55rem 0 .75rem;
             color: var(--navy);
             font-size: clamp(1.9rem, 4vw, 2.7rem);
             letter-spacing: -.045em;
             line-height: 1.12;
         }
-        .materials-intro p:last-child {
-            color: var(--muted);
-        }
+        .materials-intro p:last-child,
+        .student-zone-copy > p { color: var(--muted); }
         .materials-offers {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -108,15 +105,8 @@
             box-shadow: 0 22px 48px rgba(15, 23, 42, .13);
             transform: translateY(-5px);
         }
-        .material-offer-copy {
-            padding: 2rem 2rem 1.5rem;
-        }
-        .offer-head {
-            display: flex;
-            justify-content: space-between;
-            gap: 1rem;
-            align-items: flex-start;
-        }
+        .material-offer-copy { padding: 2rem 2rem 1.5rem; }
+        .offer-head { display: flex; justify-content: space-between; gap: 1rem; align-items: flex-start; }
         .offer-badge {
             display: inline-flex;
             padding: .36rem .7rem;
@@ -128,34 +118,11 @@
             letter-spacing: .06em;
             text-transform: uppercase;
         }
-        .material-offer.premium .offer-badge {
-            background: #eef2ff;
-            color: #4f46e5;
-        }
-        .offer-price {
-            color: var(--navy);
-            font-size: 1.45rem;
-            font-weight: 800;
-            letter-spacing: -.04em;
-        }
-        .material-offer h3 {
-            margin: 1.2rem 0 .7rem;
-            color: var(--navy);
-            font-size: 1.65rem;
-            letter-spacing: -.035em;
-            line-height: 1.18;
-        }
-        .material-offer-copy > p {
-            color: var(--muted);
-        }
-        .offer-link {
-            display: inline-flex;
-            align-items: center;
-            gap: .55rem;
-            margin-top: 1.25rem;
-            color: var(--blue-dark);
-            font-weight: 800;
-        }
+        .material-offer.premium .offer-badge { background: #eef2ff; color: #4f46e5; }
+        .offer-price { color: var(--navy); font-size: 1.45rem; font-weight: 800; letter-spacing: -.04em; }
+        .material-offer h3 { margin: 1.2rem 0 .7rem; color: var(--navy); font-size: 1.65rem; letter-spacing: -.035em; line-height: 1.18; }
+        .material-offer-copy > p { color: var(--muted); }
+        .offer-link { display: inline-flex; align-items: center; gap: .55rem; margin-top: 1.25rem; color: var(--blue-dark); font-weight: 800; }
         .offer-preview {
             position: absolute;
             right: 1.5rem;
@@ -168,115 +135,120 @@
             background: #f8fafc;
             box-shadow: 0 -8px 28px rgba(15, 23, 42, .08);
         }
-        .static-page {
-            width: 72%;
-            height: 210px;
-            margin: 18px auto 0;
-            padding: 18px;
-            border: 1px solid #dbe3ec;
-            border-radius: 8px 8px 0 0;
-            background: #fff;
-            transform: rotate(-2deg);
-        }
-        .preview-title,
-        .preview-line,
-        .preview-formula {
-            border-radius: 99px;
-            background: #dce4ee;
-        }
-        .preview-title {
-            width: 55%;
-            height: 12px;
-            margin-bottom: 15px;
-            background: var(--navy);
-        }
-        .preview-line {
+        .static-page { width: 72%; height: 210px; margin: 18px auto 0; padding: 18px; border: 1px solid #dbe3ec; border-radius: 8px 8px 0 0; background: #fff; transform: rotate(-2deg); }
+        .preview-title,.preview-line,.preview-formula { border-radius: 99px; background: #dce4ee; }
+        .preview-title { width: 55%; height: 12px; margin-bottom: 15px; background: var(--navy); }
+        .preview-line { width: 100%; height: 7px; margin: 8px 0; }
+        .preview-line.short { width: 68%; }
+        .preview-formula { width: 75%; height: 38px; margin: 18px 0; background: #dbeafe; }
+        .interactive-preview { display: grid; grid-template-columns: .85fr 1.15fr; gap: 14px; height: 100%; padding: 16px; background: linear-gradient(145deg, #f8fafc, #eef2ff); }
+        .preview-copy-box { padding: 12px; border-radius: 12px; background: #fff; }
+        .preview-graph { position: relative; overflow: hidden; border: 1px solid #d9e2ec; border-radius: 12px; background: linear-gradient(#e9edf3 1px, transparent 1px), linear-gradient(90deg, #e9edf3 1px, transparent 1px), #fff; background-size: 24px 24px; }
+        .preview-graph::before { position: absolute; left: -10%; top: 54%; width: 120%; height: 4px; border-radius: 99px; background: #6758e8; content: ""; transform: rotate(-25deg); box-shadow: 0 0 14px rgba(103,88,232,.35); }
+        .preview-control { width: 100%; height: 7px; margin-top: 16px; border-radius: 99px; background: linear-gradient(90deg, #6758e8 62%, #dbe2ea 62%); }
+        .materials-footnote { margin-top: 1rem; color: var(--muted); font-size: .84rem; text-align: center; }
+        .student-zone-section {
             width: 100%;
-            height: 7px;
-            margin: 8px 0;
+            padding: 5.5rem max(1.25rem, calc((100% - 1180px) / 2));
+            border-top: 1px solid var(--border);
+            border-bottom: 1px solid var(--border);
+            background: linear-gradient(135deg, #0d243b 0%, #123b64 55%, #1d4ed8 145%);
+            color: #fff;
         }
-        .preview-line.short {
-            width: 68%;
-        }
-        .preview-formula {
-            width: 75%;
-            height: 38px;
-            margin: 18px 0;
-            background: #dbeafe;
-        }
-        .interactive-preview {
+        .student-zone-layout {
             display: grid;
-            grid-template-columns: .85fr 1.15fr;
-            gap: 14px;
-            height: 100%;
-            padding: 16px;
-            background: linear-gradient(145deg, #f8fafc, #eef2ff);
+            grid-template-columns: minmax(290px,.7fr) minmax(560px,1.3fr);
+            gap: clamp(2rem,5vw,5rem);
+            align-items: center;
         }
-        .preview-copy-box {
-            padding: 12px;
-            border-radius: 12px;
+        .student-zone-copy .eyebrow { color: #93c5fd; }
+        .student-zone-copy h2 { color: #fff; }
+        .student-zone-copy > p { color: rgba(255,255,255,.78); font-size: 1.05rem; }
+        .zone-points { display: grid; gap: .8rem; margin: 1.5rem 0 1.8rem; }
+        .zone-point { display: flex; gap: .75rem; align-items: flex-start; color: rgba(255,255,255,.9); }
+        .zone-point i { margin-top: .25rem; color: #5eead4; }
+        .zone-button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: .65rem;
+            min-height: 3.25rem;
+            padding: .9rem 1.25rem;
+            border-radius: 10px;
             background: #fff;
+            color: var(--navy);
+            font-weight: 850;
+            text-decoration: none;
+            box-shadow: 0 13px 30px rgba(0,0,0,.2);
         }
-        .preview-graph {
-            position: relative;
+        .zone-button:hover,.zone-button:focus-visible { color: var(--navy); background: #eff6ff; outline: none; transform: translateY(-2px); }
+        .zone-note { display: block; margin-top: .8rem; color: rgba(255,255,255,.62); font-size: .8rem; }
+        .portal-preview-shell {
             overflow: hidden;
-            border: 1px solid #d9e2ec;
-            border-radius: 12px;
-            background: linear-gradient(#e9edf3 1px, transparent 1px), linear-gradient(90deg, #e9edf3 1px, transparent 1px), #fff;
-            background-size: 24px 24px;
+            border: 1px solid rgba(255,255,255,.22);
+            border-radius: 22px;
+            background: #f4f7fb;
+            box-shadow: 0 30px 90px rgba(0,0,0,.32);
+            color: #243b53;
         }
-        .preview-graph::before {
-            position: absolute;
-            left: -10%;
-            top: 54%;
-            width: 120%;
-            height: 4px;
-            border-radius: 99px;
-            background: #6758e8;
-            content: "";
-            transform: rotate(-25deg);
-            box-shadow: 0 0 14px rgba(103, 88, 232, .35);
+        .portal-preview-bar { display: flex; gap: 7px; padding: 12px 16px; background: #e8edf4; border-bottom: 1px solid #d7e0ea; }
+        .portal-preview-bar span { width: 9px; height: 9px; border-radius: 50%; background: #b7c1ce; }
+        .portal-preview {
+            display: grid;
+            grid-template-columns: 145px 1fr;
+            min-height: 390px;
         }
-        .preview-control {
-            width: 100%;
-            height: 7px;
-            margin-top: 16px;
-            border-radius: 99px;
-            background: linear-gradient(90deg, #6758e8 62%, #dbe2ea 62%);
+        .portal-side { padding: 20px 14px; background: #102a43; color: #fff; }
+        .portal-brand { margin-bottom: 22px; font-size: .88rem; font-weight: 850; }
+        .portal-brand small { display: block; margin-top: 3px; color: rgba(255,255,255,.58); font-size: .58rem; font-weight: 500; }
+        .portal-nav-demo { display: grid; gap: 6px; }
+        .portal-nav-demo span { padding: 8px 10px; border-radius: 7px; color: rgba(255,255,255,.68); font-size: .65rem; }
+        .portal-nav-demo span.active { background: rgba(255,255,255,.14); color: #fff; }
+        .portal-main-demo { padding: 18px; }
+        .portal-demo-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+        .portal-search { width: 58%; height: 28px; border-radius: 7px; background: #fff; border: 1px solid #dbe3ed; }
+        .portal-avatar { width: 30px; height: 30px; border-radius: 50%; background: #dbeafe; }
+        .portal-hero-demo { display: grid; grid-template-columns: 1.4fr .6fr; gap: 12px; padding: 18px; border-radius: 14px; background: linear-gradient(135deg,#eaf2ff,#fff); }
+        .portal-kicker { color: #2563eb; font-size: .55rem; font-weight: 850; letter-spacing: .1em; }
+        .portal-hero-demo h3 { margin: 7px 0 5px; color: var(--navy); font-size: 1rem; line-height: 1.25; }
+        .portal-hero-demo p { color: #718096; font-size: .62rem; }
+        .portal-progress { padding: 12px; border-radius: 11px; background: #fff; }
+        .portal-progress span { color: #718096; font-size: .58rem; }
+        .portal-progress strong { display: block; margin: 4px 0 8px; color: var(--navy); font-size: 1.15rem; }
+        .portal-track { height: 6px; border-radius: 99px; background: #e2e8f0; }
+        .portal-fill { width: 68%; height: 100%; border-radius: 99px; background: #2563eb; }
+        .portal-metrics { display: grid; grid-template-columns: repeat(4,1fr); gap: 8px; margin-top: 12px; }
+        .portal-metric { padding: 10px; border: 1px solid #e0e7ef; border-radius: 10px; background: #fff; }
+        .portal-metric span { display: block; color: #7a8798; font-size: .5rem; }
+        .portal-metric strong { display: block; margin-top: 3px; color: var(--navy); font-size: .82rem; }
+        .portal-bottom { display: grid; grid-template-columns: 1fr 1fr; gap: 9px; margin-top: 10px; }
+        .portal-panel { min-height: 80px; padding: 11px; border: 1px solid #e0e7ef; border-radius: 10px; background: #fff; }
+        .portal-panel strong { display: block; margin-bottom: 9px; color: var(--navy); font-size: .62rem; }
+        .portal-line { height: 5px; margin: 6px 0; border-radius: 99px; background: #e2e8f0; }
+        .portal-line.short { width: 66%; }
+        @media (max-width: 1050px) {
+            .expectations-grid { grid-template-columns: repeat(2,1fr); }
+            .student-zone-layout { grid-template-columns: 1fr; }
+            .portal-preview-shell { max-width: 780px; }
         }
-        .materials-footnote {
-            margin-top: 1rem;
-            color: var(--muted);
-            font-size: .84rem;
-            text-align: center;
-        }
-        @media (max-width: 900px) {
-            .expectations-grid,
-            .materials-offers {
-                grid-template-columns: 1fr;
-            }
-            .materials-intro {
-                display: block;
-            }
-        }
+        @media (max-width: 900px) { .materials-offers { grid-template-columns: 1fr; } }
         @media (max-width: 760px) {
-            .expectations-grid {
-                grid-template-columns: 1fr;
-            }
-            .materials-block {
-                width: min(100% - 2rem, 1180px);
-                padding-bottom: 4rem;
-            }
-            .material-offer {
-                min-height: 440px;
-            }
-            .material-offer-copy {
-                padding: 1.55rem;
-            }
-            .offer-preview {
-                right: 1rem;
-                left: 1rem;
-            }
+            .nav-links .nav-student { margin-left: 0; }
+            .expectations-grid { grid-template-columns: 1fr; }
+            .materials-block { width: min(100% - 2rem,1180px); padding-bottom: 4rem; }
+            .material-offer { min-height: 440px; }
+            .material-offer-copy { padding: 1.55rem; }
+            .offer-preview { right: 1rem; left: 1rem; }
+            .student-zone-section { padding: 4rem 1rem; }
+            .portal-preview { grid-template-columns: 105px 1fr; min-height: 345px; }
+            .portal-side { padding: 15px 9px; }
+            .portal-nav-demo span { padding: 7px 6px; font-size: .53rem; }
+            .portal-main-demo { padding: 10px; }
+            .portal-hero-demo { grid-template-columns: 1fr; padding: 12px; }
+            .portal-progress { display: none; }
+            .portal-metrics { grid-template-columns: repeat(2,1fr); }
+            .portal-bottom { grid-template-columns: 1fr; }
+            .portal-panel:last-child { display: none; }
         }
     </style>
     <script type="application/ld+json">
@@ -285,15 +257,10 @@
         "@type": "LocalBusiness",
         "name": "Vojtěch Steidl – doučování matematiky a fyziky",
         "image": "https://vojtechsteidl.eu/foto.jpg",
-        "description": "Individuální doučování matematiky a fyziky online nebo osobně v Jihlavě, doplněné o vlastní výukové materiály.",
+        "description": "Individuální doučování matematiky a fyziky online nebo osobně v Jihlavě, doplněné o vlastní materiály a osobní studentskou zónu.",
         "telephone": "+420728345633",
         "email": "vojtasteidl@seznam.cz",
-        "address": {
-            "@type": "PostalAddress",
-            "addressLocality": "Jihlava",
-            "postalCode": "58601",
-            "addressCountry": "CZ"
-        },
+        "address": {"@type":"PostalAddress","addressLocality":"Jihlava","postalCode":"58601","addressCountry":"CZ"},
         "url": "https://vojtechsteidl.eu/",
         "priceRange": "0–3400 Kč"
     }
@@ -303,432 +270,68 @@
     <header class="site-header">
         <nav class="nav" aria-label="Hlavní navigace">
             <a href="#" class="logo">Vojtěch Steidl</a>
-            <button class="hamburger" id="hamburger" type="button" aria-label="Otevřít menu" aria-expanded="false">
-                <span></span><span></span><span></span>
-            </button>
+            <button class="hamburger" id="hamburger" type="button" aria-label="Otevřít menu" aria-expanded="false"><span></span><span></span><span></span></button>
             <ul class="nav-links" id="navLinks">
                 <li><a href="#ocekavat">Co můžete očekávat</a></li>
                 <li><a href="#materialy">Vlastní materiály</a></li>
+                <li><a href="#studentska-zona">Součást služby</a></li>
                 <li><a href="#reference">Reference</a></li>
                 <li><a href="#cenik">Ceník</a></li>
-                <li><a href="student-portal.html">Studentská zóna</a></li>
+                <li><a href="student-portal.html" class="nav-student"><i class="fas fa-user-lock"></i> Studentská zóna</a></li>
                 <li><a href="#kontakt" class="nav-contact">Kontakt</a></li>
             </ul>
         </nav>
     </header>
-
     <main>
         <section class="hero">
             <div class="hero-content">
-                <div class="hero-badges">
-                    <span class="hero-badge">Online i osobně v Jihlavě</span>
-                    <span class="hero-badge">Matematika a fyzika</span>
-                    <span class="hero-badge">Vlastní výukové materiály</span>
-                </div>
+                <div class="hero-badges"><span class="hero-badge">Online i osobně v Jihlavě</span><span class="hero-badge">Matematika a fyzika</span><span class="hero-badge">Materiály a studentská zóna</span></div>
                 <h1>Doučování, po kterém student látce opravdu rozumí.</h1>
-                <p>
-                    Individuální výuka matematiky a fyziky doplněná o přehledné zápisy,
-                    procvičování a nové interaktivní materiály, ke kterým se student může vracet i po hodině.
-                </p>
-                <div class="hero-actions">
-                    <a href="#kontakt" class="cta-button">
-                        Domluvit úvodní konzultaci zdarma
-                        <i class="fas fa-arrow-right"></i>
-                    </a>
-                    <a href="#materialy" class="cta-button cta-button-secondary">
-                        Prohlédnout vlastní materiály
-                        <i class="fas fa-book-open"></i>
-                    </a>
-                </div>
-                <p class="hero-note">Nezávazně probereme situaci, cíl studenta a vhodný další postup.</p>
+                <p>Individuální výuka doplněná o přehledné zápisy, interaktivní materiály a osobní studentskou zónu, kde má student návaznost mezi jednotlivými hodinami.</p>
+                <div class="hero-actions"><a href="#kontakt" class="cta-button">Domluvit úvodní konzultaci zdarma <i class="fas fa-arrow-right"></i></a><a href="student-portal.html" class="cta-button cta-button-secondary"><i class="fas fa-user-lock"></i> Vstoupit do studentské zóny</a></div>
+                <p class="hero-note">Studentská zóna je součástí pravidelné spolupráce a je přístupná osobním heslem.</p>
             </div>
         </section>
-
         <section class="expectations section" id="ocekavat">
-            <div class="section-heading">
-                <p class="eyebrow">Konkrétní výstup spolupráce</p>
-                <h2>Co můžete očekávat</h2>
-                <p>Nejde pouze o jednu hodinu vysvětlování. Student dostává jasnou návaznost a materiály, se kterými může dále pracovat.</p>
-            </div>
+            <div class="section-heading"><p class="eyebrow">Konkrétní výstup spolupráce</p><h2>Co můžete očekávat</h2><p>Nejde pouze o jednu hodinu vysvětlování. Student dostává jasnou návaznost a místo, kde má vše důležité pohromadě.</p></div>
             <div class="expectations-grid">
-                <article class="expectation-card">
-                    <div class="expectation-icon"><i class="fas fa-user-graduate"></i></div>
-                    <h3>Individuální lekce 1:1</h3>
-                    <p>Výklad přizpůsobený konkrétní úrovni, cíli a tempu studenta, online nebo osobně v Jihlavě.</p>
-                </article>
-                <article class="expectation-card">
-                    <div class="expectation-icon"><i class="fas fa-route"></i></div>
-                    <h3>Jasný plán a návaznost</h3>
-                    <p>Po hodině je zřejmé, co už student chápe, co má procvičit a jaký bude další krok.</p>
-                </article>
-                <article class="expectation-card">
-                    <div class="expectation-icon"><i class="fas fa-layer-group"></i></div>
-                    <h3>Vlastní materiály</h3>
-                    <p>Statické zápisy zdarma i rozšířené interaktivní verze s animacemi, experimenty a kontrolou pochopení.</p>
-                </article>
+                <article class="expectation-card"><div class="expectation-icon"><i class="fas fa-user-graduate"></i></div><h3>Individuální lekce 1:1</h3><p>Výklad přizpůsobený konkrétní úrovni, cíli a tempu studenta.</p></article>
+                <article class="expectation-card"><div class="expectation-icon"><i class="fas fa-route"></i></div><h3>Jasný plán a návaznost</h3><p>Po hodině je zřejmé, co student chápe, co má procvičit a co následuje.</p></article>
+                <article class="expectation-card"><div class="expectation-icon"><i class="fas fa-layer-group"></i></div><h3>Vlastní materiály</h3><p>Statické zápisy zdarma i interaktivní verze s animacemi a experimenty.</p></article>
+                <article class="expectation-card"><div class="expectation-icon"><i class="fas fa-gauge-high"></i></div><h3>Osobní studentská zóna</h3><p>Historie hodin, materiály, úkoly, termíny a studijní postup na jednom místě.</p></article>
             </div>
         </section>
-
         <section class="materials-block" id="materialy">
-            <div class="materials-intro">
-                <div>
-                    <p class="eyebrow">Učení i po skončení lekce</p>
-                    <h2>Vlastní materiály ke konkrétním tématům</h2>
-                    <p>Každá varianta má jiný účel. Bezplatný zápis slouží jako rychlý přehled; interaktivní verze umožňuje látku skutečně zkoumat.</p>
-                </div>
-            </div>
+            <div class="materials-intro"><p class="eyebrow">Učení i po skončení lekce</p><h2>Vlastní materiály ke konkrétním tématům</h2><p>Bezplatný zápis slouží jako rychlý přehled; interaktivní verze umožňuje látku skutečně zkoumat a měnit její parametry.</p></div>
             <div class="materials-offers">
-                <a class="material-offer" href="/materialy-zdarma/" aria-label="Otevřít bezplatný náhled statického zápisu">
-                    <div class="material-offer-copy">
-                        <div class="offer-head">
-                            <span class="offer-badge">Zdarma</span>
-                            <span class="offer-price">0 Kč</span>
-                        </div>
-                        <h3>Statický zápis a PDF</h3>
-                        <p>Stručný přehled látky, vzorce, řešený příklad a úloha k procvičení. Vhodné pro rychlé opakování nebo tisk.</p>
-                        <span class="offer-link">Otevřít bezplatný náhled <i class="fas fa-arrow-right"></i></span>
-                    </div>
-                    <div class="offer-preview" aria-hidden="true">
-                        <div class="static-page">
-                            <div class="preview-title"></div>
-                            <div class="preview-line"></div>
-                            <div class="preview-line short"></div>
-                            <div class="preview-formula"></div>
-                            <div class="preview-line"></div>
-                            <div class="preview-line short"></div>
-                        </div>
-                    </div>
-                </a>
-
-                <a class="material-offer premium" href="/interactive-notes/" aria-label="Otevřít náhled placeného interaktivního zápisu">
-                    <div class="material-offer-copy">
-                        <div class="offer-head">
-                            <span class="offer-badge">Interaktivní</span>
-                            <span class="offer-price">od 199 Kč</span>
-                        </div>
-                        <h3>Animovaný zápis</h3>
-                        <p>Výklad, živá vizualizace, změna parametrů, vlastní experiment a krátké ověření pochopení v jednom materiálu.</p>
-                        <span class="offer-link">Vyzkoušet interaktivní ukázku <i class="fas fa-arrow-right"></i></span>
-                    </div>
-                    <div class="offer-preview" aria-hidden="true">
-                        <div class="interactive-preview">
-                            <div class="preview-copy-box">
-                                <div class="preview-title"></div>
-                                <div class="preview-line"></div>
-                                <div class="preview-line short"></div>
-                                <div class="preview-formula"></div>
-                                <div class="preview-control"></div>
-                            </div>
-                            <div class="preview-graph"></div>
-                        </div>
-                    </div>
-                </a>
+                <a class="material-offer" href="/materialy-zdarma/" aria-label="Otevřít bezplatný náhled statického zápisu"><div class="material-offer-copy"><div class="offer-head"><span class="offer-badge">Zdarma</span><span class="offer-price">0 Kč</span></div><h3>Statický zápis a PDF</h3><p>Stručný přehled látky, vzorce, řešený příklad a úloha k procvičení.</p><span class="offer-link">Otevřít bezplatný náhled <i class="fas fa-arrow-right"></i></span></div><div class="offer-preview" aria-hidden="true"><div class="static-page"><div class="preview-title"></div><div class="preview-line"></div><div class="preview-line short"></div><div class="preview-formula"></div><div class="preview-line"></div><div class="preview-line short"></div></div></div></a>
+                <a class="material-offer premium" href="/interactive-notes/" aria-label="Otevřít náhled placeného interaktivního zápisu"><div class="material-offer-copy"><div class="offer-head"><span class="offer-badge">Interaktivní</span><span class="offer-price">od 199 Kč</span></div><h3>Animovaný zápis</h3><p>Výklad, živá vizualizace, změna parametrů, experiment a ověření pochopení.</p><span class="offer-link">Vyzkoušet interaktivní ukázku <i class="fas fa-arrow-right"></i></span></div><div class="offer-preview" aria-hidden="true"><div class="interactive-preview"><div class="preview-copy-box"><div class="preview-title"></div><div class="preview-line"></div><div class="preview-line short"></div><div class="preview-formula"></div><div class="preview-control"></div></div><div class="preview-graph"></div></div></div></a>
             </div>
             <p class="materials-footnote">Obě varianty jsou otevřené jako náhled. Placená verze je zatím v pilotním režimu předobjednávky.</p>
         </section>
-
-        <section class="process section" id="jak-to-funguje">
-            <div class="section-heading">
-                <p class="eyebrow">Jasný postup</p>
-                <h2>Jak spolupráce probíhá</h2>
-                <p>Od první zprávy až po pravidelné lekce má spolupráce jasnou strukturu.</p>
-            </div>
-            <div class="process-grid">
-                <article class="process-card">
-                    <span class="process-number">1</span>
-                    <h3>Krátká úvodní konzultace</h3>
-                    <p>Probereme ročník, aktuální problém, cíl a vhodnou formu výuky. Konzultace je nezávazná a zdarma.</p>
-                </article>
-                <article class="process-card">
-                    <span class="process-number">2</span>
-                    <h3>Plán podle potřeb studenta</h3>
-                    <p>Určíme, kde začít, co je potřeba procvičit a jak často se budeme potkávat.</p>
-                </article>
-                <article class="process-card">
-                    <span class="process-number">3</span>
-                    <h3>Výuka, materiály a posun</h3>
-                    <p>Na lekci vysvětlujeme a procvičujeme. Po ní student dostává jasnou návaznost a vhodné podklady.</p>
-                </article>
-            </div>
-        </section>
-
-        <section class="testimonials section" id="reference">
-            <div class="section-heading">
-                <p class="eyebrow">Zkušenosti studentů</p>
-                <h2>Co říkají studenti a rodiče</h2>
-                <p>Reference z reálné spolupráce.</p>
-            </div>
-            <div class="testimonials-grid">
-                <article class="testimonial-card">
-                    <div class="rating" aria-label="5 z 5 hvězdiček"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
-                    <p class="testimonial-text">„Vojta je hrozně fajn učitel. S fyzikou jsem bojoval v prvním ročníku na gymplu a díky Vojtovi jsem to rychle dohnal. Jeho vysvětlování je opravdu jasné a snadno pochopitelné.“</p>
-                    <p class="testimonial-author">Petr S.</p>
-                    <p class="testimonial-role">Student střední školy</p>
-                </article>
-                <article class="testimonial-card">
-                    <div class="rating" aria-label="5 z 5 hvězdiček"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
-                    <p class="testimonial-text">„Doporučuji každému, kdo potřebuje matematiku opravdu pochopit, a ne se ji jen mechanicky učit.“</p>
-                    <p class="testimonial-author">Kateřina N.</p>
-                    <p class="testimonial-role">Příprava na přijímačky</p>
-                </article>
-                <article class="testimonial-card">
-                    <div class="rating" aria-label="5 z 5 hvězdiček"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
-                    <p class="testimonial-text">„Online lekce byly velmi efektivní. Potřebovala jsem dohnat matice a soustavy rovnic a během hodiny jsem konečně pochopila, jak na to.“</p>
-                    <p class="testimonial-author">Milada B.</p>
-                    <p class="testimonial-role">Rodič studentky</p>
-                </article>
-            </div>
-        </section>
-
-        <section class="pricing section" id="cenik">
-            <div class="section-heading">
-                <p class="eyebrow">Transparentní cena</p>
-                <h2>Ceník doučování</h2>
-                <p>Můžete začít jednorázovou pomocí, nebo navázat pravidelnou spolupráci. Úvodní konzultace je vždy zdarma.</p>
-            </div>
-            <div class="pricing-grid">
-                <article class="pricing-card free-trial">
-                    <h3>Úvodní konzultace</h3>
-                    <p class="price free">Zdarma</p>
-                    <p class="price-period">30 minut</p>
-                    <p>Krátké seznámení, ujasnění cíle a doporučení vhodného dalšího postupu.</p>
-                    <a href="#kontakt" class="card-button">Domluvit konzultaci</a>
-                </article>
-                <article class="pricing-card">
-                    <h3>Jedna lekce</h3>
-                    <p class="price">400 Kč</p>
-                    <p class="price-period">60 minut</p>
-                    <p>Vhodné pro jednorázovou pomoc, konkrétní test nebo první vyzkoušení spolupráce.</p>
-                    <a href="#kontakt" class="card-button">Mám zájem</a>
-                </article>
-                <article class="pricing-card featured">
-                    <p class="recommended">Doporučeno</p>
-                    <h3>Balíček 5 lekcí</h3>
-                    <p class="price">1 800 Kč</p>
-                    <p class="price-period">5 × 60 minut</p>
-                    <p>Dobrá volba pro pravidelnější výuku, dohánění látky a průběžný posun.</p>
-                    <a href="#kontakt" class="card-button">Vybrat balíček</a>
-                </article>
-                <article class="pricing-card">
-                    <h3>Balíček 10 lekcí</h3>
-                    <p class="price">3 400 Kč</p>
-                    <p class="price-period">10 × 60 minut</p>
-                    <p>Pro dlouhodobější spolupráci a systematickou přípravu na důležitý cíl.</p>
-                    <a href="#kontakt" class="card-button">Vybrat balíček</a>
-                </article>
-            </div>
-        </section>
-
-        <section class="about section" id="o-mne">
-            <div class="about-content">
-                <div class="about-image"><img src="foto.jpg" alt="Vojtěch Steidl, lektor matematiky a fyziky"></div>
-                <div class="about-text">
-                    <p class="eyebrow">Kdo vás bude doučovat</p>
-                    <h2>O mně</h2>
-                    <p>K matematice a fyzice jsem si nenašel cestu hned. Právě proto rozumím studentům, kteří mají pocit, že jim tyto předměty nejdou nebo jim byly vysvětleny příliš rychle.</p>
-                    <p>Vystudoval jsem aplikovanou fyziku v Brně a složitější témata převádím do srozumitelné podoby. Cílem není studenta zahltit, ale pomoci mu získat jistotu a samostatnost.</p>
-                    <p>Vlastní materiály vznikají ze stejného principu: méně mechanického opisování, více souvislostí a aktivního pochopení.</p>
-                    <a href="#kontakt" class="text-link">Napsat mi <i class="fas fa-arrow-right"></i></a>
+        <section class="student-zone-section" id="studentska-zona">
+            <div class="student-zone-layout">
+                <div class="student-zone-copy">
+                    <p class="eyebrow">Součást pravidelné spolupráce</p><h2>Osobní studentská zóna</h2><p>Student nemusí hledat zápisy, úkoly a doporučení v e-mailech. Po přihlášení má vlastní přehled, který propojuje jednotlivé hodiny.</p>
+                    <div class="zone-points"><div class="zone-point"><i class="fas fa-check-circle"></i><span>Historie hodin a probírané látky</span></div><div class="zone-point"><i class="fas fa-check-circle"></i><span>Materiály, úkoly a doporučený další krok</span></div><div class="zone-point"><i class="fas fa-check-circle"></i><span>Termíny, studijní postup a důležité odkazy</span></div></div>
+                    <a href="student-portal.html" class="zone-button"><i class="fas fa-user-lock"></i> Vstoupit do studentské zóny</a><span class="zone-note">Přístup je chráněný osobním heslem. Náhled vedle neobsahuje skutečná studentská data.</span>
                 </div>
+                <div class="portal-preview-shell" aria-label="Anonymní náhled studentského portálu"><div class="portal-preview-bar"><span></span><span></span><span></span></div><div class="portal-preview"><aside class="portal-side"><div class="portal-brand">Studentský portál<small>Matematika a fyzika</small></div><div class="portal-nav-demo"><span class="active">Nástěnka</span><span>Historie hodin</span><span>Materiály</span><span>Úkoly</span><span>Termíny</span><span>Odkazy</span></div></aside><div class="portal-main-demo"><div class="portal-demo-top"><div class="portal-search"></div><div class="portal-avatar"></div></div><div class="portal-hero-demo"><div><span class="portal-kicker">STUDIJNÍ PLÁN</span><h3>Vše důležité pro výuku na jednom místě.</h3><p>Aktuální priorita, návaznost na poslední hodinu a doporučený další krok.</p></div><div class="portal-progress"><span>Studijní postup</span><strong>68 %</strong><div class="portal-track"><div class="portal-fill"></div></div></div></div><div class="portal-metrics"><div class="portal-metric"><span>Absolvované hodiny</span><strong>8</strong></div><div class="portal-metric"><span>Celkové zvládnutí</span><strong>72 %</strong></div><div class="portal-metric"><span>Aktivní úkoly</span><strong>3</strong></div><div class="portal-metric"><span>Další termín</span><strong>St 17:00</strong></div></div><div class="portal-bottom"><div class="portal-panel"><strong>Poslední hodina</strong><div class="portal-line"></div><div class="portal-line short"></div><div class="portal-line"></div></div><div class="portal-panel"><strong>Doporučený další krok</strong><div class="portal-line"></div><div class="portal-line"></div><div class="portal-line short"></div></div></div></div></div></div>
             </div>
         </section>
-
-        <section class="faq section" id="faq">
-            <div class="section-heading">
-                <p class="eyebrow">Praktické informace</p>
-                <h2>Časté otázky</h2>
-            </div>
-            <div class="faq-list">
-                <article class="faq-item">
-                    <button class="faq-question" type="button" aria-expanded="false">Jsou vlastní materiály součástí každé lekce?<i class="fas fa-chevron-down"></i></button>
-                    <div class="faq-answer"><p>Materiály vybírám podle tématu a potřeb studenta. Základní zápisy mohou být součástí lekce, rozsáhlejší interaktivní produkty budou dostupné samostatně.</p></div>
-                </article>
-                <article class="faq-item">
-                    <button class="faq-question" type="button" aria-expanded="false">Jak rychle je možné domluvit první lekci?<i class="fas fa-chevron-down"></i></button>
-                    <div class="faq-answer"><p>Termín záleží na aktuální kapacitě. V naléhavých případech se často podaří domluvit první lekci během několika dnů.</p></div>
-                </article>
-                <article class="faq-item">
-                    <button class="faq-question" type="button" aria-expanded="false">Je možné využívat doučování jen nárazově?<i class="fas fa-chevron-down"></i></button>
-                    <div class="faq-answer"><p>Ano. Někteří studenti chodí pravidelně, jiní využívají pomoc jen před testem, přijímačkami, maturitou nebo zkouškou.</p></div>
-                </article>
-                <article class="faq-item">
-                    <button class="faq-question" type="button" aria-expanded="false">Probíhá výuka online nebo osobně?<i class="fas fa-chevron-down"></i></button>
-                    <div class="faq-answer"><p>Obě možnosti jsou možné. Většina výuky probíhá online, osobní lekce jsou po domluvě v Jihlavě.</p></div>
-                </article>
-            </div>
-        </section>
-
-        <section class="contact section" id="kontakt">
-            <div class="section-heading">
-                <p class="eyebrow">První krok</p>
-                <h2>Domluvme úvodní konzultaci</h2>
-                <p>Napište mi stručně, s čím student potřebuje pomoci. Ozvu se vám zpravidla do 24 hodin.</p>
-            </div>
-            <div class="contact-wrapper">
-                <form class="contact-form" id="contactForm">
-                    <div class="form-group"><label for="name">Jméno</label><input type="text" id="name" name="name" autocomplete="name" required></div>
-                    <div class="form-group"><label for="email">E-mail</label><input type="email" id="email" name="email" autocomplete="email" required></div>
-                    <div class="form-group">
-                        <label for="grade">Ročník studenta</label>
-                        <select id="grade" name="grade" required>
-                            <option value="" selected disabled>Vyberte ročník</option>
-                            <option value="1-stupen-zs">1. stupeň ZŠ</option>
-                            <option value="2-stupen-zs">2. stupeň ZŠ</option>
-                            <option value="stredni-skola">Střední škola</option>
-                            <option value="vysoka-skola">Vysoká škola</option>
-                            <option value="jine">Jiné / neuvedeno</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="service">S čím potřebujete pomoci?</label>
-                        <select id="service" name="service" required>
-                            <option value="" selected disabled>Vyberte možnost</option>
-                            <option value="prubezne-doucovani">Průběžné doučování</option>
-                            <option value="test">Příprava na test</option>
-                            <option value="prijimacky">Příprava na přijímačky</option>
-                            <option value="maturita">Příprava na maturitu</option>
-                            <option value="fyzika">Doučování fyziky</option>
-                            <option value="vysoka-skola">Pomoc s vysokoškolskou látkou</option>
-                            <option value="materialy">Vlastní výukové materiály</option>
-                        </select>
-                    </div>
-                    <div class="form-group"><label for="message">Zpráva</label><textarea id="message" name="message" placeholder="Napište prosím téma, cíl a zda preferujete online nebo osobní lekci." required></textarea></div>
-                    <label class="consent"><input type="checkbox" id="consent" required><span>Souhlasím se zpracováním údajů za účelem vyřízení mé poptávky.</span></label>
-                    <button type="submit" class="submit-button">Poslat nezávaznou poptávku</button>
-                    <p class="form-status" id="formStatus" aria-live="polite"></p>
-                </form>
-                <div class="contact-info">
-                    <div class="contact-item"><i class="fas fa-phone"></i><div><h3>Telefon</h3><a href="tel:+420728345633">+420 728 345 633</a><p>Pondělí až pátek přibližně 14:00–20:00</p></div></div>
-                    <div class="contact-item"><i class="fas fa-envelope"></i><div><h3>E-mail</h3><a href="mailto:vojtasteidl@seznam.cz">vojtasteidl@seznam.cz</a><p>Odpovídám zpravidla do 24 hodin.</p></div></div>
-                    <div class="contact-item"><i class="fas fa-location-dot"></i><div><h3>Lokalita</h3><p>Jihlava, Česká republika</p><p>Osobní lekce po domluvě, online výuka po celé ČR.</p></div></div>
-                    <div class="student-zone-link"><i class="fas fa-user-lock"></i><div><h3>Již jste student?</h3><p>Pro přístup ke svým materiálům otevřete studentskou zónu.</p><a href="student-portal.html">Otevřít studentskou zónu <i class="fas fa-arrow-right"></i></a></div></div>
-                </div>
-            </div>
-        </section>
+        <section class="process section" id="jak-to-funguje"><div class="section-heading"><p class="eyebrow">Jasný postup</p><h2>Jak spolupráce probíhá</h2><p>Od první zprávy až po pravidelné lekce má spolupráce jasnou strukturu.</p></div><div class="process-grid"><article class="process-card"><span class="process-number">1</span><h3>Krátká úvodní konzultace</h3><p>Probereme ročník, aktuální problém, cíl a vhodnou formu výuky.</p></article><article class="process-card"><span class="process-number">2</span><h3>Plán podle potřeb studenta</h3><p>Určíme, kde začít, co procvičit a jak často se budeme potkávat.</p></article><article class="process-card"><span class="process-number">3</span><h3>Výuka, materiály a přehled</h3><p>Po lekci student dostává návaznost, vhodné podklady a aktualizaci své zóny.</p></article></div></section>
+        <section class="testimonials section" id="reference"><div class="section-heading"><p class="eyebrow">Zkušenosti studentů</p><h2>Co říkají studenti a rodiče</h2><p>Reference z reálné spolupráce.</p></div><div class="testimonials-grid"><article class="testimonial-card"><div class="rating" aria-label="5 z 5 hvězdiček"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div><p class="testimonial-text">„Vojta je hrozně fajn učitel. S fyzikou jsem bojoval v prvním ročníku na gymplu a díky Vojtovi jsem to rychle dohnal. Jeho vysvětlování je opravdu jasné a snadno pochopitelné.“</p><p class="testimonial-author">Petr S.</p><p class="testimonial-role">Student střední školy</p></article><article class="testimonial-card"><div class="rating" aria-label="5 z 5 hvězdiček"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div><p class="testimonial-text">„Doporučuji každému, kdo potřebuje matematiku opravdu pochopit, a ne se ji jen mechanicky učit.“</p><p class="testimonial-author">Kateřina N.</p><p class="testimonial-role">Příprava na přijímačky</p></article><article class="testimonial-card"><div class="rating" aria-label="5 z 5 hvězdiček"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div><p class="testimonial-text">„Online lekce byly velmi efektivní. Potřebovala jsem dohnat matice a soustavy rovnic a během hodiny jsem konečně pochopila, jak na to.“</p><p class="testimonial-author">Milada B.</p><p class="testimonial-role">Rodič studentky</p></article></div></section>
+        <section class="pricing section" id="cenik"><div class="section-heading"><p class="eyebrow">Transparentní cena</p><h2>Ceník doučování</h2><p>Můžete začít jednorázovou pomocí, nebo navázat pravidelnou spolupráci.</p></div><div class="pricing-grid"><article class="pricing-card free-trial"><h3>Úvodní konzultace</h3><p class="price free">Zdarma</p><p class="price-period">30 minut</p><p>Seznámení, ujasnění cíle a doporučení dalšího postupu.</p><a href="#kontakt" class="card-button">Domluvit konzultaci</a></article><article class="pricing-card"><h3>Jedna lekce</h3><p class="price">400 Kč</p><p class="price-period">60 minut</p><p>Vhodné pro jednorázovou pomoc, konkrétní test nebo vyzkoušení spolupráce.</p><a href="#kontakt" class="card-button">Mám zájem</a></article><article class="pricing-card featured"><p class="recommended">Doporučeno</p><h3>Balíček 5 lekcí</h3><p class="price">1 800 Kč</p><p class="price-period">5 × 60 minut</p><p>Pro pravidelnější výuku, materiály a průběžnou návaznost.</p><a href="#kontakt" class="card-button">Vybrat balíček</a></article><article class="pricing-card"><h3>Balíček 10 lekcí</h3><p class="price">3 400 Kč</p><p class="price-period">10 × 60 minut</p><p>Pro dlouhodobější spolupráci a systematickou přípravu.</p><a href="#kontakt" class="card-button">Vybrat balíček</a></article></div></section>
+        <section class="about section" id="o-mne"><div class="about-content"><div class="about-image"><img src="foto.jpg" alt="Vojtěch Steidl, lektor matematiky a fyziky"></div><div class="about-text"><p class="eyebrow">Kdo vás bude doučovat</p><h2>O mně</h2><p>K matematice a fyzice jsem si nenašel cestu hned. Právě proto rozumím studentům, kterým byly tyto předměty vysvětleny příliš rychle nebo bez souvislostí.</p><p>Vystudoval jsem aplikovanou fyziku v Brně a složitější témata převádím do srozumitelné podoby.</p><p>Materiály a studentská zóna vznikají ze stejného principu: méně chaosu, jasnější návaznost a více aktivního pochopení.</p><a href="#kontakt" class="text-link">Napsat mi <i class="fas fa-arrow-right"></i></a></div></div></section>
+        <section class="faq section" id="faq"><div class="section-heading"><p class="eyebrow">Praktické informace</p><h2>Časté otázky</h2></div><div class="faq-list"><article class="faq-item"><button class="faq-question" type="button" aria-expanded="false">Je studentská zóna součástí doučování?<i class="fas fa-chevron-down"></i></button><div class="faq-answer"><p>Ano, u pravidelné spolupráce může student získat osobní přístup k historii hodin, materiálům, úkolům, termínům a studijnímu postupu.</p></div></article><article class="faq-item"><button class="faq-question" type="button" aria-expanded="false">Jsou vlastní materiály součástí každé lekce?<i class="fas fa-chevron-down"></i></button><div class="faq-answer"><p>Materiály vybírám podle tématu a potřeb studenta. Základní podklady mohou být součástí lekce, rozsáhlejší interaktivní produkty jsou dostupné samostatně.</p></div></article><article class="faq-item"><button class="faq-question" type="button" aria-expanded="false">Je možné využívat doučování jen nárazově?<i class="fas fa-chevron-down"></i></button><div class="faq-answer"><p>Ano. Někteří studenti chodí pravidelně, jiní využívají pomoc jen před testem, přijímačkami, maturitou nebo zkouškou.</p></div></article><article class="faq-item"><button class="faq-question" type="button" aria-expanded="false">Probíhá výuka online nebo osobně?<i class="fas fa-chevron-down"></i></button><div class="faq-answer"><p>Obě možnosti jsou možné. Většina výuky probíhá online, osobní lekce jsou po domluvě v Jihlavě.</p></div></article></div></section>
+        <section class="contact section" id="kontakt"><div class="section-heading"><p class="eyebrow">První krok</p><h2>Domluvme úvodní konzultaci</h2><p>Napište mi stručně, s čím student potřebuje pomoci. Ozvu se vám zpravidla do 24 hodin.</p></div><div class="contact-wrapper"><form class="contact-form" id="contactForm"><div class="form-group"><label for="name">Jméno</label><input type="text" id="name" name="name" autocomplete="name" required></div><div class="form-group"><label for="email">E-mail</label><input type="email" id="email" name="email" autocomplete="email" required></div><div class="form-group"><label for="grade">Ročník studenta</label><select id="grade" name="grade" required><option value="" selected disabled>Vyberte ročník</option><option value="1-stupen-zs">1. stupeň ZŠ</option><option value="2-stupen-zs">2. stupeň ZŠ</option><option value="stredni-skola">Střední škola</option><option value="vysoka-skola">Vysoká škola</option><option value="jine">Jiné / neuvedeno</option></select></div><div class="form-group"><label for="service">S čím potřebujete pomoci?</label><select id="service" name="service" required><option value="" selected disabled>Vyberte možnost</option><option value="prubezne-doucovani">Průběžné doučování</option><option value="test">Příprava na test</option><option value="prijimacky">Příprava na přijímačky</option><option value="maturita">Příprava na maturitu</option><option value="fyzika">Doučování fyziky</option><option value="vysoka-skola">Pomoc s vysokoškolskou látkou</option><option value="materialy">Vlastní výukové materiály</option></select></div><div class="form-group"><label for="message">Zpráva</label><textarea id="message" name="message" placeholder="Napište prosím téma, cíl a zda preferujete online nebo osobní lekci." required></textarea></div><label class="consent"><input type="checkbox" id="consent" required><span>Souhlasím se zpracováním údajů za účelem vyřízení mé poptávky.</span></label><button type="submit" class="submit-button">Poslat nezávaznou poptávku</button><p class="form-status" id="formStatus" aria-live="polite"></p></form><div class="contact-info"><div class="contact-item"><i class="fas fa-phone"></i><div><h3>Telefon</h3><a href="tel:+420728345633">+420 728 345 633</a><p>Pondělí až pátek přibližně 14:00–20:00</p></div></div><div class="contact-item"><i class="fas fa-envelope"></i><div><h3>E-mail</h3><a href="mailto:vojtasteidl@seznam.cz">vojtasteidl@seznam.cz</a><p>Odpovídám zpravidla do 24 hodin.</p></div></div><div class="contact-item"><i class="fas fa-location-dot"></i><div><h3>Lokalita</h3><p>Jihlava, Česká republika</p><p>Osobní lekce po domluvě, online výuka po celé ČR.</p></div></div><div class="student-zone-link"><i class="fas fa-user-lock"></i><div><h3>Studentská zóna</h3><p>Osobní přístup k hodinám, materiálům, úkolům a termínům.</p><a href="student-portal.html">Vstoupit do studentské zóny <i class="fas fa-arrow-right"></i></a></div></div></div></div></section>
     </main>
-
-    <footer>
-        <p>© 2026 Vojtěch Steidl · Doučování matematiky a fyziky v Jihlavě i online</p>
-        <div class="footer-divider"></div>
-        <div class="footer-links">
-            <a href="https://www.linkedin.com/in/vojt%C4%9Bch-steidl-ba64b5158/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
-            <a href="https://www.superprof.cz/jako-absolvent-aplikovane-fyziky-muni-vam-pomuzu-zvladnout-slozite-matematicke-fyzikalni-koncepty-jednoduse.html" target="_blank" rel="noopener noreferrer">Superprof</a>
-            <a href="https://www.doucuji.eu/507905-doucovani-doucovani-matematiky-a-fyzika-osobne-ci-online" target="_blank" rel="noopener noreferrer">Doučuji.eu</a>
-            <a href="mailto:vojtasteidl@seznam.cz">E-mail</a>
-        </div>
-    </footer>
-
-    <div id="passwordModal" class="modal-overlay" aria-hidden="true">
-        <div class="modal-card">
-            <button class="modal-close" id="closeModalBtn" aria-label="Zavřít">&times;</button>
-            <h3>Vstup do studentské zóny</h3>
-            <p>Pro přístup k tvým materiálům zadej své osobní heslo.</p>
-            <form id="passwordForm">
-                <div class="form-group"><input type="password" id="studentPassword" placeholder="Zadej heslo studenta" required autocomplete="current-password"></div>
-                <button type="submit" class="submit-button">Vstoupit do zóny</button>
-                <p id="passwordError" class="form-status error" style="display:none;margin-top:.8rem;text-align:center;"></p>
-            </form>
-        </div>
-    </div>
-
+    <footer><p>© 2026 Vojtěch Steidl · Doučování matematiky a fyziky v Jihlavě i online</p><div class="footer-divider"></div><div class="footer-links"><a href="https://www.linkedin.com/in/vojt%C4%9Bch-steidl-ba64b5158/" target="_blank" rel="noopener noreferrer">LinkedIn</a><a href="https://www.superprof.cz/jako-absolvent-aplikovane-fyziky-muni-vam-pomuzu-zvladnout-slozite-matematicke-fyzikalni-koncepty-jednoduse.html" target="_blank" rel="noopener noreferrer">Superprof</a><a href="https://www.doucuji.eu/507905-doucovani-doucovani-matematiky-a-fyzika-osobne-ci-online" target="_blank" rel="noopener noreferrer">Doučuji.eu</a><a href="mailto:vojtasteidl@seznam.cz">E-mail</a></div></footer>
+    <div id="passwordModal" class="modal-overlay" aria-hidden="true"><div class="modal-card"><button class="modal-close" id="closeModalBtn" aria-label="Zavřít">&times;</button><h3>Vstup do studentské zóny</h3><p>Pro přístup k materiálům zadejte osobní heslo studenta.</p><form id="passwordForm"><div class="form-group"><input type="password" id="studentPassword" placeholder="Zadejte heslo studenta" required autocomplete="current-password"></div><button type="submit" class="submit-button">Vstoupit do zóny</button><p id="passwordError" class="form-status error" style="display:none;margin-top:.8rem;text-align:center;"></p></form></div></div>
     <script>
-        const hamburger = document.getElementById("hamburger");
-        const navLinks = document.getElementById("navLinks");
-        hamburger.addEventListener("click", () => {
-            const isOpen = navLinks.classList.toggle("active");
-            hamburger.classList.toggle("active", isOpen);
-            hamburger.setAttribute("aria-expanded", isOpen ? "true" : "false");
-        });
-        navLinks.querySelectorAll("a").forEach((link) => {
-            link.addEventListener("click", () => {
-                navLinks.classList.remove("active");
-                hamburger.classList.remove("active");
-                hamburger.setAttribute("aria-expanded", "false");
-            });
-        });
-        document.querySelectorAll(".faq-question").forEach((button) => {
-            button.addEventListener("click", () => {
-                const faqItem = button.closest(".faq-item");
-                const isOpen = faqItem.classList.toggle("open");
-                button.setAttribute("aria-expanded", isOpen ? "true" : "false");
-            });
-        });
-
-        const contactForm = document.getElementById("contactForm");
-        const formStatus = document.getElementById("formStatus");
-        contactForm.addEventListener("submit", async function (event) {
-            event.preventDefault();
-            const submitButton = contactForm.querySelector('button[type="submit"]');
-            const originalText = submitButton.textContent;
-            const formData = new FormData(contactForm);
-            formData.append("access_key", "36faa5ca-b116-4bbb-9543-81ecd1f78b55");
-            formData.append("subject", "Nová poptávka z webu vojtechsteidl.eu");
-            submitButton.disabled = true;
-            submitButton.textContent = "Odesílám...";
-            formStatus.textContent = "";
-            formStatus.className = "form-status";
-            try {
-                const response = await fetch("https://api.web3forms.com/submit", { method: "POST", body: formData });
-                const data = await response.json();
-                if (!data.success) throw new Error("Formulář se nepodařilo odeslat.");
-                contactForm.reset();
-                formStatus.textContent = "Děkuji, zpráva byla odeslána. Ozvu se vám co nejdříve.";
-                formStatus.classList.add("success");
-            } catch (error) {
-                formStatus.textContent = "Zprávu se nepodařilo odeslat. Zkuste to prosím znovu nebo mi napište e-mail.";
-                formStatus.classList.add("error");
-            } finally {
-                submitButton.disabled = false;
-                submitButton.textContent = originalText;
-            }
-        });
-
-        const passwordModal = document.getElementById("passwordModal");
-        const closeModalBtn = document.getElementById("closeModalBtn");
-        const passwordForm = document.getElementById("passwordForm");
-        const studentPasswordInput = document.getElementById("studentPassword");
-        const passwordError = document.getElementById("passwordError");
-        const studentZoneLinks = document.querySelectorAll('a[href="student-portal.html"]');
-        studentZoneLinks.forEach(link => link.addEventListener("click", event => { event.preventDefault(); openStudentModal(); }));
-        function openStudentModal() {
-            passwordModal.classList.add("active");
-            passwordModal.setAttribute("aria-hidden", "false");
-            studentPasswordInput.focus();
-        }
-        function closeModal() {
-            passwordModal.classList.remove("active");
-            passwordModal.setAttribute("aria-hidden", "true");
-            studentPasswordInput.value = "";
-            passwordError.style.display = "none";
-        }
-        closeModalBtn.addEventListener("click", closeModal);
-        passwordModal.addEventListener("click", event => { if (event.target === passwordModal) closeModal(); });
-        document.addEventListener("keydown", event => { if (event.key === "Escape" && passwordModal.classList.contains("active")) closeModal(); });
-        passwordForm.addEventListener("submit", async event => {
-            event.preventDefault();
-            const enteredPassword = studentPasswordInput.value.trim().toLowerCase();
-            if (!enteredPassword) return;
-            const studentAliases = { demo: "demo123", evelin: "evelina", evelin123: "evelina" };
-            const studentKey = studentAliases[enteredPassword] || enteredPassword;
-            const targetJson = "students/" + encodeURIComponent(studentKey) + ".json";
-            try {
-                const response = await fetch(targetJson, { method: "HEAD" });
-                if (response.ok) {
-                    sessionStorage.setItem("student_token", studentKey);
-                    window.location.href = "student-portal.html";
-                } else {
-                    showPasswordError("Zadané heslo není správné nebo účet neexistuje.");
-                }
-            } catch (error) {
-                showPasswordError("Přihlášení se nepodařilo ověřit. Zkuste to prosím znovu.");
-            }
-        });
-        function showPasswordError(message) {
-            passwordError.textContent = message;
-            passwordError.style.display = "block";
-            studentPasswordInput.focus();
-            studentPasswordInput.select();
-        }
+        const hamburger=document.getElementById("hamburger"),navLinks=document.getElementById("navLinks");hamburger.addEventListener("click",()=>{const isOpen=navLinks.classList.toggle("active");hamburger.classList.toggle("active",isOpen);hamburger.setAttribute("aria-expanded",isOpen?"true":"false")});navLinks.querySelectorAll("a").forEach(link=>link.addEventListener("click",()=>{navLinks.classList.remove("active");hamburger.classList.remove("active");hamburger.setAttribute("aria-expanded","false")}));document.querySelectorAll(".faq-question").forEach(button=>button.addEventListener("click",()=>{const faqItem=button.closest(".faq-item"),isOpen=faqItem.classList.toggle("open");button.setAttribute("aria-expanded",isOpen?"true":"false")}));
+        const contactForm=document.getElementById("contactForm"),formStatus=document.getElementById("formStatus");contactForm.addEventListener("submit",async event=>{event.preventDefault();const submitButton=contactForm.querySelector('button[type="submit"]'),originalText=submitButton.textContent,formData=new FormData(contactForm);formData.append("access_key","36faa5ca-b116-4bbb-9543-81ecd1f78b55");formData.append("subject","Nová poptávka z webu vojtechsteidl.eu");submitButton.disabled=true;submitButton.textContent="Odesílám...";formStatus.textContent="";formStatus.className="form-status";try{const response=await fetch("https://api.web3forms.com/submit",{method:"POST",body:formData}),data=await response.json();if(!data.success)throw new Error("Formulář se nepodařilo odeslat.");contactForm.reset();formStatus.textContent="Děkuji, zpráva byla odeslána. Ozvu se vám co nejdříve.";formStatus.classList.add("success")}catch(error){formStatus.textContent="Zprávu se nepodařilo odeslat. Zkuste to prosím znovu nebo mi napište e-mail.";formStatus.classList.add("error")}finally{submitButton.disabled=false;submitButton.textContent=originalText}});
+        const passwordModal=document.getElementById("passwordModal"),closeModalBtn=document.getElementById("closeModalBtn"),passwordForm=document.getElementById("passwordForm"),studentPasswordInput=document.getElementById("studentPassword"),passwordError=document.getElementById("passwordError");document.querySelectorAll('a[href="student-portal.html"]').forEach(link=>link.addEventListener("click",event=>{event.preventDefault();passwordModal.classList.add("active");passwordModal.setAttribute("aria-hidden","false");studentPasswordInput.focus()}));function closeStudentModal(){passwordModal.classList.remove("active");passwordModal.setAttribute("aria-hidden","true");studentPasswordInput.value="";passwordError.style.display="none"}closeModalBtn.addEventListener("click",closeStudentModal);passwordModal.addEventListener("click",event=>{if(event.target===passwordModal)closeStudentModal()});document.addEventListener("keydown",event=>{if(event.key==="Escape"&&passwordModal.classList.contains("active"))closeStudentModal()});passwordForm.addEventListener("submit",async event=>{event.preventDefault();const enteredPassword=studentPasswordInput.value.trim().toLowerCase();if(!enteredPassword)return;const studentAliases={demo:"demo123",evelin:"evelina",evelin123:"evelina"},studentKey=studentAliases[enteredPassword]||enteredPassword,targetJson="students/"+encodeURIComponent(studentKey)+".json";try{const response=await fetch(targetJson,{method:"HEAD"});if(response.ok){sessionStorage.setItem("student_token",studentKey);window.location.href="student-portal.html"}else showPasswordError("Zadané heslo není správné nebo účet neexistuje.")}catch(error){showPasswordError("Přihlášení se nepodařilo ověřit. Zkuste to prosím znovu.")}});function showPasswordError(message){passwordError.textContent=message;passwordError.style.display="block";studentPasswordInput.focus();studentPasswordInput.select()}
     </script>
 </body>
 </html>
