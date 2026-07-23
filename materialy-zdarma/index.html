@@ -3,39 +3,29 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <meta name="description" content="Bezplatný náhled zápisu z matematiky – lineární funkce.">
+  <meta name="description" content="Bezplatný statický zápis o aritmetických a geometrických posloupnostech ve formátu PDF.">
   <meta name="robots" content="noindex,nofollow">
-  <title>Bezplatný zápis – Lineární funkce</title>
+  <meta http-equiv="refresh" content="0; url=/Posloupnost_%C3%BAvod.pdf">
+  <title>Posloupnosti – statický zápis v PDF</title>
   <style>
-    :root{--navy:#102a43;--blue:#2563eb;--muted:#64748b;--line:#dfe5ec;--paper:#f3f6fa;--ink:#243b53;--green:#15803d}
-    *{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink);font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;line-height:1.7}.top{width:min(920px,calc(100% - 32px));margin:24px auto;display:flex;align-items:center;justify-content:space-between;gap:16px}.back{color:var(--navy);font-weight:800;text-decoration:none}.print{border:0;border-radius:999px;padding:11px 17px;background:var(--navy);color:#fff;font-weight:800;cursor:pointer}.sheet{width:min(860px,calc(100% - 32px));margin:0 auto 48px;padding:64px 72px;background:#fff;border:1px solid var(--line);border-radius:20px;box-shadow:0 26px 70px rgba(16,42,67,.12)}.badge{display:inline-flex;padding:6px 11px;border-radius:999px;background:#ecfdf3;color:var(--green);font-size:12px;font-weight:850;text-transform:uppercase;letter-spacing:.1em}h1{margin:18px 0 10px;color:var(--navy);font-size:clamp(36px,7vw,58px);line-height:1.05;letter-spacing:-.05em}h2{margin:38px 0 12px;color:var(--navy);font-size:25px;letter-spacing:-.03em}.lead{color:var(--muted);font-size:18px}.formula{margin:25px 0;padding:23px 26px;border-radius:16px;background:var(--navy);color:#fff;font-family:Georgia,"Times New Roman",serif;font-size:32px}.note{padding:18px 20px;border-left:4px solid var(--blue);background:#eff6ff;border-radius:0 14px 14px 0}.example{margin-top:18px;padding:20px;border:1px solid var(--line);border-radius:15px}.example strong{color:var(--navy)}.grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}.axis{position:relative;height:230px;margin-top:18px;border:1px solid var(--line);border-radius:14px;background:linear-gradient(#eef2f7 1px,transparent 1px),linear-gradient(90deg,#eef2f7 1px,transparent 1px);background-size:28px 28px;overflow:hidden}.axis:before,.axis:after{content:"";position:absolute;background:#8995a7}.axis:before{left:50%;top:0;width:2px;height:100%}.axis:after{left:0;top:50%;width:100%;height:2px}.line{position:absolute;left:-10%;top:48%;width:120%;height:4px;background:var(--blue);transform:rotate(-27deg);border-radius:99px}.task{margin-top:30px;padding:22px;border-radius:16px;background:#fff8e8;border:1px solid #fde2a8}.footer{margin-top:45px;padding-top:20px;border-top:1px solid var(--line);color:var(--muted);font-size:13px}@media(max-width:650px){.sheet{padding:38px 24px}.grid{grid-template-columns:1fr}.top{align-items:flex-start}.print{white-space:nowrap}}@media print{body{background:#fff}.top{display:none}.sheet{width:100%;margin:0;padding:25mm 20mm;border:0;border-radius:0;box-shadow:none}.badge{border:1px solid #bbf7d0}}
+    :root{--navy:#102a43;--blue:#2563eb;--muted:#64748b;--page:#f8fafc;--border:#e2e8f0}
+    *{box-sizing:border-box}
+    body{min-height:100vh;margin:0;display:grid;place-items:center;padding:24px;background:var(--page);color:var(--navy);font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;text-align:center}
+    main{width:min(520px,100%);padding:36px;border:1px solid var(--border);border-radius:18px;background:#fff;box-shadow:0 18px 45px rgba(15,23,42,.1)}
+    h1{margin:0 0 12px;font-size:clamp(28px,6vw,42px);letter-spacing:-.04em;line-height:1.1}
+    p{margin:0 0 22px;color:var(--muted)}
+    a{display:inline-flex;align-items:center;justify-content:center;min-height:48px;padding:12px 18px;border-radius:10px;background:var(--navy);color:#fff;font-weight:800;text-decoration:none}
+    a:hover{background:var(--blue)}
   </style>
+  <script>
+    window.location.replace('/Posloupnost_%C3%BAvod.pdf');
+  </script>
 </head>
 <body>
-  <div class="top"><a class="back" href="/">← Zpět na hlavní stránku</a><button class="print" type="button" onclick="window.print()">Vytisknout / uložit jako PDF</button></div>
-  <main class="sheet">
-    <span class="badge">Bezplatný materiál</span>
-    <h1>Lineární funkce</h1>
-    <p class="lead">Stručný zápis z hodiny: předpis, význam koeficientů, graf a jednoduché ověření.</p>
-
-    <h2>Základní předpis</h2>
-    <div class="formula">y = ax + b</div>
-    <div class="note"><strong>Koeficient a</strong> určuje sklon přímky. <strong>Koeficient b</strong> určuje průsečík s osou y.</div>
-
-    <div class="grid">
-      <div>
-        <h2>Jak číst koeficient a</h2>
-        <p>Když je <strong>a &gt; 0</strong>, přímka roste. Když je <strong>a &lt; 0</strong>, přímka klesá. Pro <strong>a = 0</strong> je přímka vodorovná.</p>
-        <div class="example"><strong>Příklad:</strong> Funkce y = 2x − 1 roste a protíná osu y v bodě (0; −1).</div>
-      </div>
-      <div>
-        <div class="axis" aria-label="Statický graf rostoucí lineární funkce"><div class="line"></div></div>
-      </div>
-    </div>
-
-    <div class="task"><strong>Zkus samostatně:</strong> Urči, zda funkce y = −1,5x + 3 roste, nebo klesá, a napiš její průsečík s osou y.</div>
-
-    <p class="footer">Toto je ukázka bezplatného statického materiálu. Interaktivní verze umožňuje měnit parametry, animovat graf a okamžitě kontrolovat výsledky.</p>
+  <main>
+    <h1>Posloupnosti</h1>
+    <p>Otevírám bezplatný statický zápis ve formátu PDF.</p>
+    <a href="/Posloupnost_%C3%BAvod.pdf">Otevřít statický zápis v PDF</a>
   </main>
 </body>
 </html>
