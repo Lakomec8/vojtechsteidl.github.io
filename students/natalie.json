@@ -1,0 +1,35 @@
+{
+  "studentName": "Natalie",
+  "studentInitials": "N",
+  "progress": 0,
+  "progressText": "Studentský profil je připravený. Zápis z první hodiny, materiály a další doporučení doplníme v dalším kroku.",
+  "priority": {
+    "title": "Profil je připravený k doplnění.",
+    "text": "V dalším kroku společně doplníme zápis z první hodiny a navazující PDF materiál.",
+    "deadline": "Zatím bez aktuálního termínu"
+  },
+  "readiness": {
+    "label": "Studijní postup",
+    "lessonWeight": 60,
+    "taskWeight": 40
+  },
+  "metrics": {
+    "materialsCount": 0,
+    "activeTasks": 0,
+    "upcomingLessons": 0,
+    "blocksCount": 0,
+    "lessonsCount": 0
+  },
+  "lessons": [],
+  "materials": [],
+  "tasks": [],
+  "timeline": [],
+  "upcoming": [],
+  "links": [
+    {
+      "title": "GeoGebra kalkulačka",
+      "url": "https://www.geogebra.org",
+      "desc": "Užitečné pro vizualizaci a kontrolu výpočtů."
+    }
+  ]
+}
