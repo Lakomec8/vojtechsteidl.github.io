@@ -83,7 +83,6 @@
     const renderMaterials=list=>list.length?list.map(material=>'<div class="item" data-searchable="'+attr([material.title,material.meta,material.badge].join(" ").toLocaleLowerCase("cs"))+'"><div class="item-main"><h3>'+esc(material.title)+'</h3><p>'+esc(material.meta)+'</p>'+materialButtons(material)+'</div><span class="badge">'+esc(material.badge||"Soubor")+'</span></div>').join(""):empty("Zatím tu nejsou žádné materiály.");
     document.getElementById("materialsList").innerHTML=renderMaterials(materials);
     const featuredMaterial=data.featuredMaterial||materials[0]||null;
-    document.getElementById("featuredMaterial").innerHTML=featuredMaterial?renderMaterials([featuredMaterial]):empty("Zatím tu není žádný aktuální materiál.");
 
     const renderLesson=lesson=>{
       const topics=Array.isArray(lesson.topics)?lesson.topics:[];
@@ -94,7 +93,9 @@
     };
     document.getElementById("historyList").innerHTML=lessons.length?lessons.map(renderLesson).join(""):empty("Zatím tu není žádná absolvovaná hodina.");
 
-    if(lastLesson){
+    if(featuredMaterial){
+      document.getElementById("lastLesson").innerHTML='<div class="item"><div class="item-main"><h3>'+esc(featuredMaterial.title)+'</h3><p>'+esc(featuredMaterial.meta||"PDF materiál")+'</p></div><span class="badge">'+esc(featuredMaterial.badge||"PDF")+'</span></div>'+materialButtons(featuredMaterial);
+    }else if(lastLesson){
       const lastMaterial=lastLesson.material||{};
       document.getElementById("lastLesson").innerHTML='<div class="item"><div class="item-main"><h3>'+esc(lastLesson.title)+'</h3><p>'+esc((lastLesson.displayDate||formatDate(lastLesson.date))+(lastLesson.score!=null?" · zvládnutí "+lastLesson.score+"/10":"")+(lastLesson.improvement?" · "+lastLesson.improvement:""))+'</p></div>'+(lastLesson.score!=null?'<span class="badge good">'+esc(lastLesson.score)+'/10</span>':"")+'</div><div class="actions"><button class="primary" data-open="history">Detail hodiny</button>'+(lastMaterial.url?'<a class="download" href="'+attr(lastMaterial.url)+'" download>Stáhnout PDF</a>':"")+'</div>';
     }else{document.getElementById("lastLesson").innerHTML=empty("Zatím tu není žádná absolvovaná hodina.");}
