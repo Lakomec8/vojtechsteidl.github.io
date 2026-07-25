@@ -21,7 +21,7 @@
     "note": "Zkontrolujeme pracovní list, vysvětlíme nejasné příklady a navážeme dalšími algebraickými úpravami."
   },
   "metrics": {
-    "materialsCount": 1,
+    "materialsCount": 2,
     "activeTasks": 1,
     "upcomingLessons": 1,
     "blocksCount": 1,
@@ -51,6 +51,13 @@
     }
   ],
   "materials": [
+    {
+      "title": "Mocniny a odmocniny – úvod",
+      "meta": "PDF materiál · Matematika · 1. ročník SŠ",
+      "badge": "PDF",
+      "badgeClass": "pdf",
+      "url": "./Mocniny_úvod.pdf"
+    },
     {
       "title": "1. hodina – Mnohočleny a úpravy",
       "meta": "PDF materiál · Matematika · 1. hodina dokončena 20. července 2026",
