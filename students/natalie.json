@@ -2,10 +2,10 @@
   "studentName": "Natalie",
   "studentInitials": "N",
   "progress": 0,
-  "progressText": "Studentský profil je připravený. Zápis z první hodiny, materiály a další doporučení doplníme v dalším kroku.",
+  "progressText": "Materiál k intervalům je připravený ve studentské zóně. Zápis z první hodiny a další doporučení doplníme v dalším kroku.",
   "priority": {
-    "title": "Profil je připravený k doplnění.",
-    "text": "V dalším kroku společně doplníme zápis z první hodiny a navazující PDF materiál.",
+    "title": "Prostuduj si přehled intervalů.",
+    "text": "V sekci Materiály najdeš PDF s vizuálním i matematickým zápisem intervalů a procvičením k didaktickému testu.",
     "deadline": "Zatím bez aktuálního termínu"
   },
   "readiness": {
@@ -14,14 +14,22 @@
     "taskWeight": 40
   },
   "metrics": {
-    "materialsCount": 0,
+    "materialsCount": 1,
     "activeTasks": 0,
     "upcomingLessons": 0,
     "blocksCount": 0,
     "lessonsCount": 0
   },
   "lessons": [],
-  "materials": [],
+  "materials": [
+    {
+      "title": "Intervaly – příprava k didaktickému testu",
+      "meta": "PDF materiál · Matematika · vizuální a matematický zápis",
+      "badge": "PDF",
+      "badgeClass": "pdf",
+      "url": "./Natalie___Intervaly.pdf"
+    }
+  ],
   "tasks": [],
   "timeline": [],
   "upcoming": [],
