@@ -82,6 +82,8 @@
     const materialButtons=material=>{const url=attr(material.url||"#");return '<div class="actions"><a class="secondary" href="'+url+'" target="_blank" rel="noopener">Otevřít</a><a class="download" href="'+url+'" download>Stáhnout PDF</a></div>';};
     const renderMaterials=list=>list.length?list.map(material=>'<div class="item" data-searchable="'+attr([material.title,material.meta,material.badge].join(" ").toLocaleLowerCase("cs"))+'"><div class="item-main"><h3>'+esc(material.title)+'</h3><p>'+esc(material.meta)+'</p>'+materialButtons(material)+'</div><span class="badge">'+esc(material.badge||"Soubor")+'</span></div>').join(""):empty("Zatím tu nejsou žádné materiály.");
     document.getElementById("materialsList").innerHTML=renderMaterials(materials);
+    const featuredMaterial=data.featuredMaterial||materials[0]||null;
+    document.getElementById("featuredMaterial").innerHTML=featuredMaterial?renderMaterials([featuredMaterial]):empty("Zatím tu není žádný aktuální materiál.");
 
     const renderLesson=lesson=>{
       const topics=Array.isArray(lesson.topics)?lesson.topics:[];
