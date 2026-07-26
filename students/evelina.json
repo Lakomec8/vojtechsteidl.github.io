@@ -1,33 +1,39 @@
 {
   "studentName": "Evelína",
   "studentInitials": "E",
-  "progress": 42,
-  "progressText": "První hodinu máš úspěšně za sebou. Do další lekce si dokonči pracovní list a označ příklady, které chceš dovysvětlit.",
+  "progress": 0,
+  "progressText": "Máš za sebou dvě hodiny. Po mnohočlenech jsme navázali mocninami a odmocninami; aktuální materiál najdeš u druhé hodiny i v sekci Materiály.",
   "priority": {
-    "title": "Další hodina je v pátek 24. července.",
-    "text": "První hodinu máš za sebou s hodnocením 7/10. Před další lekcí dokonči pracovní list k mnohočlenům a označ nejasné příklady.",
-    "deadline": "Pátek 24. 7. · čas doplníme"
+    "title": "Procvič si mocniny a odmocniny.",
+    "text": "Projdi si poslední materiál, zopakuj pravidla pro práci s mocninami a označ příklady, které bude potřeba dovysvětlit.",
+    "deadline": "Termín další hodiny zatím není uveden"
   },
   "readiness": {
-    "label": "Připravenost na finální test",
+    "label": "Studijní postup",
     "lessonWeight": 60,
     "taskWeight": 40
   },
-  "nextLesson": {
-    "date": "Pá 24. července",
-    "dateISO": "2026-07-24",
-    "time": "čas doplníme",
-    "topic": "2. hodina – navázání na mnohočleny",
-    "note": "Zkontrolujeme pracovní list, vysvětlíme nejasné příklady a navážeme dalšími algebraickými úpravami."
-  },
-  "metrics": {
-    "materialsCount": 2,
-    "activeTasks": 1,
-    "upcomingLessons": 1,
-    "blocksCount": 1,
-    "lessonsCount": 1
-  },
   "lessons": [
+    {
+      "id": "evelina-lesson-2",
+      "date": "2026-07-24",
+      "displayDate": "24. července 2026",
+      "title": "2. hodina — Mocniny a odmocniny",
+      "subject": "Matematika",
+      "subtitle": "Druhá společná lekce · dokončeno",
+      "topics": [
+        "základní pravidla pro počítání s mocninami",
+        "násobení a dělení mocnin",
+        "mocnina součinu a podílu",
+        "úvod do odmocnin"
+      ],
+      "improvement": "Procvičit správnou volbu pravidla a pečlivě rozlišovat základ mocniny a exponent.",
+      "homework": "Projít si materiál k mocninám a odmocninám a označit nejasné příklady.",
+      "material": {
+        "title": "Mocniny a odmocniny — materiál z 2. hodiny",
+        "url": "./Mocniny_úvod.pdf"
+      }
+    },
     {
       "id": "evelina-lesson-1",
       "date": "2026-07-20",
@@ -43,7 +49,7 @@
         "úprava a zjednodušování výrazů"
       ],
       "improvement": "Ještě procvičit práci se znaménky a násobení záporným číslem.",
-      "homework": "Do další hodiny v pátek 24. července dokončit pracovní list a označit příklady, které bude potřeba znovu vysvětlit.",
+      "homework": "Dokončit pracovní list a označit příklady, které bude potřeba znovu vysvětlit.",
       "material": {
         "title": "Pracovní list z první hodiny — mnohočleny a algebraické úpravy",
         "url": "./Materials/Evelin/Evelína___1__hodina__Mnohočleny_a_úpravy.pdf"
@@ -52,15 +58,15 @@
   ],
   "materials": [
     {
-      "title": "Mocniny a odmocniny – úvod",
-      "meta": "PDF materiál · Matematika · 1. ročník SŠ",
-      "badge": "PDF",
+      "title": "Mocniny a odmocniny — materiál z 2. hodiny",
+      "meta": "PDF materiál · Matematika · poslední probírané téma",
+      "badge": "Aktuální PDF",
       "badgeClass": "pdf",
       "url": "./Mocniny_úvod.pdf"
     },
     {
-      "title": "1. hodina – Mnohočleny a úpravy",
-      "meta": "PDF materiál · Matematika · 1. hodina dokončena 20. července 2026",
+      "title": "1. hodina — Mnohočleny a úpravy",
+      "meta": "PDF materiál · Matematika · dokončeno 20. července 2026",
       "badge": "PDF",
       "badgeClass": "pdf",
       "url": "./Materials/Evelin/Evelína___1__hodina__Mnohočleny_a_úpravy.pdf"
@@ -68,13 +74,20 @@
   ],
   "tasks": [
     {
-      "id": "evelina-task-1",
-      "title": "Dokončit pracovní list z 1. hodiny",
-      "meta": "Dokonči před další hodinou v pátek 24. července a označ příklady, které budeš chtít dovysvětlit.",
-      "badge": "Do 24. 7."
+      "id": "evelina-task-2",
+      "title": "Procvičit mocniny a odmocniny",
+      "meta": "Projdi si poslední PDF a označ příklady, které chceš na další hodině dovysvětlit.",
+      "badge": "Aktuální úkol"
     }
   ],
   "timeline": [
+    {
+      "month": "Čvc",
+      "day": "24",
+      "title": "Druhá hodina dokončena",
+      "desc": "Lekce byla zaměřena na základní pravidla pro mocniny a úvod do odmocnin.",
+      "badge": "Lekce"
+    },
     {
       "month": "Čvc",
       "day": "20",
@@ -83,27 +96,14 @@
       "badge": "7/10"
     },
     {
-      "month": "Čvc",
-      "day": "24",
-      "title": "Druhá hodina",
-      "desc": "Kontrola pracovního listu, vysvětlení nejasných příkladů a navázání dalšími algebraickými úpravami.",
-      "badge": "Lekce"
-    },
-    {
       "month": "Srp",
       "day": "21",
       "title": "Finální test",
-      "desc": "Závěrečné ověření úprav mnohočlenů a navazující látky.",
+      "desc": "Závěrečné ověření probírané látky.",
       "badge": "Test"
     }
   ],
   "upcoming": [
-    {
-      "date": "2026-07-24",
-      "title": "2. hodina – navázání na mnohočleny",
-      "meta": "Pátek 24. července 2026 · čas doplníme",
-      "badge": "Lekce"
-    },
     {
       "date": "2026-08-21",
       "title": "Finální test",
