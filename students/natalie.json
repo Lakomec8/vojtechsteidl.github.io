@@ -2,36 +2,62 @@
   "studentName": "Natalie",
   "studentInitials": "N",
   "progress": 0,
-  "progressText": "Materiál k intervalům je připravený ve studentské zóně. Zápis z první hodiny a další doporučení doplníme v dalším kroku.",
+  "progressText": "První hodinu zaměřenou na intervaly máš za sebou. Projdi si přiložený zápis a při dalším setkání navážeme procvičováním.",
   "priority": {
-    "title": "Prostuduj si přehled intervalů.",
-    "text": "V sekci Materiály najdeš PDF s vizuálním i matematickým zápisem intervalů a procvičením k didaktickému testu.",
-    "deadline": "Zatím bez aktuálního termínu"
+    "title": "Procvič si zápis intervalů.",
+    "text": "V materiálech najdeš zápis z první hodiny s vizuálním i matematickým zápisem intervalů a procvičením k didaktickému testu.",
+    "deadline": "Termín další hodiny zatím není uveden"
   },
   "readiness": {
     "label": "Studijní postup",
     "lessonWeight": 60,
     "taskWeight": 40
   },
-  "metrics": {
-    "materialsCount": 1,
-    "activeTasks": 0,
-    "upcomingLessons": 0,
-    "blocksCount": 0,
-    "lessonsCount": 0
-  },
-  "lessons": [],
+  "lessons": [
+    {
+      "id": "natalie-lesson-1",
+      "displayDate": "1. hodina",
+      "title": "1. hodina — Intervaly",
+      "subject": "Matematika",
+      "subtitle": "Příprava k didaktickému testu · dokončeno",
+      "topics": [
+        "zápis intervalů pomocí závorek",
+        "otevřené, uzavřené a polouzavřené intervaly",
+        "znázornění intervalů na číselné ose",
+        "převod mezi grafickým a matematickým zápisem"
+      ],
+      "improvement": "Procvičit rozlišení otevřených a uzavřených krajních bodů a správný zápis nekonečna.",
+      "homework": "Projít si zápis z hodiny a vyřešit procvičovací příklady v přiloženém materiálu.",
+      "material": {
+        "title": "Intervaly — zápis z 1. hodiny",
+        "url": "./Natalie___Intervaly.pdf"
+      }
+    }
+  ],
   "materials": [
     {
-      "title": "Intervaly – příprava k didaktickému testu",
-      "meta": "PDF materiál · Matematika · vizuální a matematický zápis",
+      "title": "Intervaly — zápis z 1. hodiny",
+      "meta": "PDF materiál · Matematika · příprava k didaktickému testu",
       "badge": "PDF",
       "badgeClass": "pdf",
       "url": "./Natalie___Intervaly.pdf"
     }
   ],
-  "tasks": [],
-  "timeline": [],
+  "tasks": [
+    {
+      "id": "natalie-task-1",
+      "title": "Procvičit intervaly",
+      "meta": "Projdi si zápis z první hodiny a vyřeš procvičovací příklady v PDF.",
+      "badge": "Procvičení"
+    }
+  ],
+  "timeline": [
+    {
+      "title": "První hodina dokončena",
+      "desc": "Lekce byla zaměřena na intervaly, jejich matematický zápis a znázornění na číselné ose.",
+      "badge": "Lekce"
+    }
+  ],
   "upcoming": [],
   "links": [
     {
