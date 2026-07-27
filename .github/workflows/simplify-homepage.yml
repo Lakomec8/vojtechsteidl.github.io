@@ -1,0 +1,48 @@
+name: Simplify homepage
+
+on:
+  pull_request:
+    branches:
+      - main
+    types:
+      - opened
+      - synchronize
+      - reopened
+    paths:
+      - scripts/remove_redundant_home_sections.py
+      - .github/workflows/simplify-homepage.yml
+
+permissions:
+  contents: write
+  pull-requests: read
+
+jobs:
+  simplify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout branch
+        uses: actions/checkout@v4
+        with:
+          ref: agent/simplify-homepage
+          fetch-depth: 0
+
+      - name: Remove redundant sections
+        run: python scripts/remove_redundant_home_sections.py
+
+      - name: Validate retained site content
+        run: |
+          python scripts/validate_student_data.py
+          python scripts/validate_interactive_materials.py
+          grep -q '450 Kč' index.html
+          grep -q 'Studium Plus' index.html
+          ! grep -q 'id="ocekavat"' index.html
+          ! grep -q 'id="jak-to-funguje"' index.html
+          ! grep -q 'href="#ocekavat"' index.html
+
+      - name: Commit simplified homepage
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "Remove redundant homepage sections"
+          git push origin HEAD:agent/simplify-homepage
