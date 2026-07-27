@@ -16,7 +16,8 @@
   "lessons": [
     {
       "id": "natalie-lesson-1",
-      "displayDate": "1. hodina",
+      "date": "2026-07-26",
+      "displayDate": "26. července 2026",
       "title": "1. hodina — Intervaly",
       "subject": "Matematika",
       "subtitle": "Příprava k didaktickému testu · dokončeno",
@@ -53,6 +54,8 @@
   ],
   "timeline": [
     {
+      "month": "Čvc",
+      "day": "26",
       "title": "První hodina dokončena",
       "desc": "Lekce byla zaměřena na intervaly, jejich matematický zápis a znázornění na číselné ose.",
       "badge": "Lekce"
