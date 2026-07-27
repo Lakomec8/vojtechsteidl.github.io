@@ -1162,3 +1162,59 @@ footer p {
     font-size: 1.05rem;
     letter-spacing: 0.1em;
 }
+
+/* Pět nabídek v ceníku: tři nahoře, dvě vycentrované dole. */
+@media (min-width: 1025px) {
+    .pricing-grid.five-plans {
+        grid-template-columns: repeat(6, minmax(0, 1fr));
+    }
+
+    .pricing-grid.five-plans .pricing-card {
+        grid-column: span 2;
+    }
+
+    .pricing-grid.five-plans .pricing-card:nth-child(4) {
+        grid-column: 2 / span 2;
+    }
+
+    .pricing-grid.five-plans .pricing-card:nth-child(5) {
+        grid-column: 4 / span 2;
+    }
+}
+
+.premium-plan {
+    background: linear-gradient(145deg, #ffffff, #f5f8ff);
+}
+
+.pricing-features {
+    display: grid;
+    gap: 0.55rem;
+    margin: 0 0 1.4rem;
+    padding: 0;
+    color: var(--muted);
+    font-size: 0.88rem;
+    text-align: left;
+    list-style: none;
+}
+
+.pricing-features li {
+    position: relative;
+    padding-left: 1.25rem;
+}
+
+.pricing-features li::before {
+    position: absolute;
+    left: 0;
+    color: var(--green);
+    font-weight: 800;
+    content: "✓";
+}
+
+.pricing-note {
+    max-width: 760px;
+    margin: 1.25rem auto 0;
+    color: var(--muted);
+    font-size: 0.84rem;
+    text-align: center;
+}
+
