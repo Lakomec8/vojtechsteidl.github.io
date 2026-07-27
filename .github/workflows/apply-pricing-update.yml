@@ -7,9 +7,20 @@ on:
     paths:
       - scripts/apply_pricing_update.py
       - .github/workflows/apply-pricing-update.yml
+  pull_request:
+    branches:
+      - main
+    types:
+      - opened
+      - synchronize
+      - reopened
+    paths:
+      - scripts/apply_pricing_update.py
+      - .github/workflows/apply-pricing-update.yml
 
 permissions:
   contents: write
+  pull-requests: read
 
 jobs:
   apply:
