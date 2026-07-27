@@ -2,6 +2,17 @@
 
 Doučování matematiky a fyziky v Jihlavě a online.
 
+## Interaktivní materiály
+
+- [`Funkce: od předpisu ke grafu`](interactive-notes/functions/index.html) — plnohodnotná interaktivní lekce s grafickou laboratoří, procvičováním a závěrečným testem.
+
+Kontrola interaktivních materiálů:
+
+```bash
+python scripts/validate_interactive_materials.py
+node --check interactive-notes/functions/app.js
+```
+
 ## Studentská data
 
 Šablona nového profilu a pravidla datového formátu jsou v dokumentu [`docs/STUDENT_DATA.md`](docs/STUDENT_DATA.md).

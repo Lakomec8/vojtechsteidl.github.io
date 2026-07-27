@@ -1,0 +1,354 @@
+<!doctype html>
+<html lang="cs">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Interaktivní cvičný materiál k funkcím: předpis, graf, definiční obor, obor hodnot, transformace a procvičování.">
+  <meta name="robots" content="index,follow">
+  <meta name="theme-color" content="#102a43">
+  <title>Funkce interaktivně | Vojtěch Steidl</title>
+  <link rel="stylesheet" href="styles.css?v=20260727-1">
+</head>
+<body>
+  <header class="site-header">
+    <div class="shell topbar">
+      <a class="brand" href="../../index.html">Vojtěch Steidl <span>Interaktivní materiály</span></a>
+      <div class="header-progress" aria-label="Průběh lekce">
+        <span id="headerProgressText">0 % dokončeno</span>
+        <div class="progress-track" aria-hidden="true"><span id="headerProgressBar"></span></div>
+      </div>
+      <button class="outline-button compact" id="resetProgress" type="button">Obnovit lekci</button>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="shell hero-grid">
+        <div>
+          <span class="hero-badge">Matematika · střední škola</span>
+          <h1>Funkce: od předpisu ke grafu</h1>
+          <p>Neučte se grafy nazpaměť. Pochopte, jak předpis určuje každý bod, co lze z grafu vyčíst a jak se funkce mění při posunu, převrácení nebo natažení.</p>
+          <div class="hero-actions">
+            <a class="primary-button" href="#start">Začít lekci</a>
+            <a class="ghost-button" href="#final-test">Přejít na závěrečný test</a>
+          </div>
+        </div>
+        <div class="hero-summary" aria-label="Obsah lekce">
+          <div><span>Délka</span><strong>45–70 minut</strong></div>
+          <div><span>Interakce</span><strong>5 laboratoří</strong></div>
+          <div><span>Procvičování</span><strong>30+ úloh</strong></div>
+          <div><span>Výstup</span><strong>Okamžité vyhodnocení</strong></div>
+        </div>
+      </div>
+    </section>
+
+    <div class="shell lesson-layout">
+      <aside class="lesson-nav" aria-label="Obsah lekce">
+        <strong>Obsah lekce</strong>
+        <a href="#start" data-section-link="start">1. Co je funkce</a>
+        <a href="#domain" data-section-link="domain">2. Definiční obor</a>
+        <a href="#graph-lab" data-section-link="graph-lab">3. Laboratoř grafů</a>
+        <a href="#transformations" data-section-link="transformations">4. Transformace</a>
+        <a href="#reading" data-section-link="reading">5. Čtení z grafu</a>
+        <a href="#model" data-section-link="model">6. Modelová úloha</a>
+        <a href="#final-test" data-section-link="final-test">7. Závěrečný test</a>
+        <div class="nav-score"><span>Nejlepší test</span><strong id="navBestScore">–</strong></div>
+      </aside>
+
+      <article class="document">
+        <section class="lesson-section" id="start" data-track-section>
+          <p class="chapter">1 · Základní myšlenka</p>
+          <h2>Funkce je pravidlo s právě jedním výstupem</h2>
+          <p class="lead">Každému dovolenému vstupu <strong>x</strong> přiřadí funkce právě jednu hodnotu <strong>y</strong>. Stejný vstup nesmí mít dva různé výstupy.</p>
+
+          <div class="definition">
+            <strong>Definice:</strong> Funkce <span class="math">f</span> z množiny <span class="math">D(f)</span> do množiny reálných čísel přiřazuje každému <span class="math">x ∈ D(f)</span> právě jednu hodnotu <span class="math">y = f(x)</span>.
+          </div>
+
+          <div class="concept-grid">
+            <div class="concept-card"><span>Vstup</span><strong>x</strong><p>Číslo, které do funkce dosadíme.</p></div>
+            <div class="concept-arrow" aria-hidden="true">→</div>
+            <div class="concept-card accent"><span>Pravidlo</span><strong>f(x)</strong><p>Předpis, tabulka nebo graf.</p></div>
+            <div class="concept-arrow" aria-hidden="true">→</div>
+            <div class="concept-card"><span>Výstup</span><strong>y</strong><p>Výsledek přiřazený vstupu.</p></div>
+          </div>
+
+          <div class="lab" aria-labelledby="machineTitle">
+            <div class="lab-head">
+              <div><small>Interaktivní laboratoř 1</small><h3 id="machineTitle">Funkční stroj</h3></div>
+              <span class="live-indicator">živý výpočet</span>
+            </div>
+            <div class="machine-layout">
+              <div class="control-stack">
+                <label class="field-label" for="machineRule">Vyberte pravidlo</label>
+                <select id="machineRule">
+                  <option value="linear">f(x) = 2x + 3</option>
+                  <option value="quadratic">f(x) = x² − 1</option>
+                  <option value="absolute">f(x) = |x|</option>
+                  <option value="reciprocal">f(x) = 1 / (x − 1)</option>
+                </select>
+                <label class="field-label" for="machineInput">Zadejte vstup x</label>
+                <input id="machineInput" type="number" value="2" step="1">
+                <div class="machine-result" aria-live="polite">
+                  <span>Výstup</span>
+                  <strong id="machineOutput">7</strong>
+                  <p id="machineSteps">f(2) = 2 · 2 + 3 = 7</p>
+                </div>
+              </div>
+              <div>
+                <table class="value-table">
+                  <caption>Tabulka vybraných hodnot</caption>
+                  <thead><tr><th>x</th><th>f(x)</th></tr></thead>
+                  <tbody id="machineTable"></tbody>
+                </table>
+              </div>
+            </div>
+            <div class="practice-box">
+              <div><span class="practice-label">Krátké ověření</span><p id="machineQuestion">Kolik je f(4) pro předpis f(x) = 2x + 3?</p></div>
+              <div class="answer-row">
+                <label class="sr-only" for="machineAnswer">Odpověď</label>
+                <input id="machineAnswer" type="number" inputmode="decimal" placeholder="Výsledek">
+                <button class="primary-button" id="checkMachine" type="button">Zkontrolovat</button>
+              </div>
+              <p class="feedback" id="machineFeedback" aria-live="polite"></p>
+            </div>
+          </div>
+
+          <div class="checkpoint" data-checkpoint="start">
+            <div><strong>Kontrolní bod</strong><p>Rozumím, že jeden vstup smí mít právě jeden výstup.</p></div>
+            <button class="checkpoint-button" type="button">Označit jako pochopené</button>
+          </div>
+        </section>
+
+        <section class="lesson-section" id="domain" data-track-section>
+          <p class="chapter">2 · Kde funkce existuje</p>
+          <h2>Definiční obor není formalita</h2>
+          <p class="lead">Definiční obor <span class="math">D(f)</span> obsahuje všechny vstupy, pro které má předpis smysl. Nejčastěji musíme hlídat jmenovatel a odmocninu.</p>
+
+          <div class="rule-grid">
+            <article class="rule-card"><span>Zlomek</span><strong>Jmenovatel ≠ 0</strong><p>U funkce 1/(x−2) nesmí být x = 2.</p></article>
+            <article class="rule-card"><span>Sudá odmocnina</span><strong>Výraz pod odmocninou ≥ 0</strong><p>U √(x−3) musí být x ≥ 3.</p></article>
+            <article class="rule-card"><span>Polynom</span><strong>Všechna reálná čísla</strong><p>Lineární i kvadratická funkce mají D(f) = ℝ.</p></article>
+          </div>
+
+          <div class="lab" aria-labelledby="relationTitle">
+            <div class="lab-head">
+              <div><small>Interaktivní laboratoř 2</small><h3 id="relationTitle">Je toto přiřazení funkcí?</h3></div>
+              <span class="score-chip"><span id="relationScore">0</span> / <span id="relationTotal">0</span></span>
+            </div>
+            <div class="relation-stage">
+              <p id="relationPrompt">Rozhodněte, zda každý vstup má právě jeden výstup.</p>
+              <div class="relation-pairs" id="relationPairs" aria-label="Dvojice vstupů a výstupů"></div>
+              <div class="choice-row">
+                <button class="choice-button" data-relation-answer="true" type="button">Je to funkce</button>
+                <button class="choice-button" data-relation-answer="false" type="button">Není to funkce</button>
+              </div>
+              <p class="feedback" id="relationFeedback" aria-live="polite"></p>
+              <button class="outline-button" id="nextRelation" type="button" disabled>Další přiřazení</button>
+            </div>
+          </div>
+
+          <div class="checkpoint" data-checkpoint="domain">
+            <div><strong>Kontrolní bod</strong><p>Umím poznat zakázané vstupy a rozlišit funkci od obecného přiřazení.</p></div>
+            <button class="checkpoint-button" type="button">Označit jako pochopené</button>
+          </div>
+        </section>
+
+        <section class="lesson-section wide-section" id="graph-lab" data-track-section>
+          <p class="chapter">3 · Hlavní laboratoř</p>
+          <h2>Měňte předpis a sledujte celý graf</h2>
+          <p class="lead">Vyberte rodinu funkcí a upravujte parametry. Graf, důležité body i vlastnosti se přepočítají okamžitě.</p>
+
+          <div class="lab graph-lab" aria-labelledby="graphLabTitle">
+            <div class="lab-head">
+              <div><small>Interaktivní laboratoř 3</small><h3 id="graphLabTitle">Průzkumník funkcí</h3></div>
+              <span class="live-indicator">tažením po grafu odečtěte souřadnice</span>
+            </div>
+            <div class="graph-workspace">
+              <aside class="graph-controls">
+                <label class="field-label" for="familySelect">Rodina funkcí</label>
+                <select id="familySelect">
+                  <option value="linear">Lineární</option>
+                  <option value="quadratic" selected>Kvadratická</option>
+                  <option value="absolute">Absolutní hodnota</option>
+                  <option value="sqrt">Odmocninová</option>
+                  <option value="reciprocal">Nepřímá úměrnost</option>
+                  <option value="exponential">Exponenciální</option>
+                </select>
+                <div id="parameterControls"></div>
+                <div class="preset-row" id="presetButtons"></div>
+                <button class="outline-button full-width" id="resetGraph" type="button">Výchozí nastavení</button>
+              </aside>
+              <div class="graph-panel">
+                <div class="formula-display"><span>Aktuální předpis</span><strong id="currentFormula">f(x) = (x − 0)² + 0</strong></div>
+                <div class="canvas-shell">
+                  <canvas id="functionCanvas" width="900" height="560" aria-label="Graf zvolené funkce"></canvas>
+                  <div class="coordinate-readout" id="coordinateReadout">x = 0,00 · f(x) = 0,00</div>
+                </div>
+                <div class="property-grid" id="propertyGrid"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="insight-callout" id="graphInsight">Vrchol paraboly leží v bodě V[0; 0]. Parametr a = 1 určuje otevření směrem nahoru.</div>
+
+          <div class="checkpoint" data-checkpoint="graph-lab">
+            <div><strong>Kontrolní bod</strong><p>Umím propojit parametry předpisu s tvarem a polohou grafu.</p></div>
+            <button class="checkpoint-button" type="button">Označit jako pochopené</button>
+          </div>
+        </section>
+
+        <section class="lesson-section wide-section" id="transformations" data-track-section>
+          <p class="chapter">4 · Transformace grafu</p>
+          <h2>Sestavte cílový graf</h2>
+          <p class="lead">U tvaru <span class="math">f(x) = a·g(x−h)+k</span> posouvá parametr <strong>h</strong> graf vodorovně, <strong>k</strong> svisle a <strong>a</strong> mění orientaci i protažení.</p>
+
+          <div class="transformation-legend">
+            <span><i class="target-line"></i> cílový graf</span>
+            <span><i class="student-line"></i> váš graf</span>
+          </div>
+
+          <div class="lab" aria-labelledby="transformTitle">
+            <div class="lab-head">
+              <div><small>Interaktivní laboratoř 4</small><h3 id="transformTitle">Grafická výzva</h3></div>
+              <span class="score-chip">Úloha <span id="transformRound">1</span> / 6</span>
+            </div>
+            <div class="transform-layout">
+              <div class="transform-controls">
+                <p id="transformPrompt">Nastavte parabolu tak, aby odpovídala přerušovanému grafu.</p>
+                <div class="transform-formula" id="transformFormula">f(x) = 1·(x − 0)² + 0</div>
+                <div id="transformSliders"></div>
+                <div class="button-row">
+                  <button class="primary-button" id="checkTransform" type="button">Zkontrolovat graf</button>
+                  <button class="outline-button" id="newTransform" type="button">Nová výzva</button>
+                </div>
+                <p class="feedback" id="transformFeedback" aria-live="polite"></p>
+              </div>
+              <div class="canvas-shell transform-canvas-shell">
+                <canvas id="transformCanvas" width="820" height="500" aria-label="Porovnání cílového a nastaveného grafu"></canvas>
+              </div>
+            </div>
+          </div>
+
+          <div class="checkpoint" data-checkpoint="transformations">
+            <div><strong>Kontrolní bod</strong><p>Umím pomocí parametrů a, h a k posunout, převrátit a natáhnout základní graf.</p></div>
+            <button class="checkpoint-button" type="button">Označit jako pochopené</button>
+          </div>
+        </section>
+
+        <section class="lesson-section wide-section" id="reading" data-track-section>
+          <p class="chapter">5 · Aktivní procvičování</p>
+          <h2>Čtěte vlastnosti přímo z grafu</h2>
+          <p class="lead">V každém kole dostanete nový graf a jednu otázku. Úlohy střídají funkční hodnotu, nulové body, průsečíky, vrchol i monotonii.</p>
+
+          <div class="lab" aria-labelledby="readingTitle">
+            <div class="lab-head">
+              <div><small>Interaktivní laboratoř 5</small><h3 id="readingTitle">Trenažér čtení grafu</h3></div>
+              <span class="score-chip"><span id="readingScore">0</span> správně · série <span id="readingStreak">0</span></span>
+            </div>
+            <div class="reading-layout">
+              <div class="canvas-shell reading-canvas-shell">
+                <canvas id="readingCanvas" width="820" height="500" aria-label="Graf pro procvičovací otázku"></canvas>
+              </div>
+              <div class="question-panel">
+                <span class="practice-label" id="readingCategory">Funkční hodnota</span>
+                <h3 id="readingQuestion">Jaká je hodnota f(2)?</h3>
+                <div class="answer-options" id="readingOptions"></div>
+                <button class="hint-button" id="readingHint" type="button">Zobrazit nápovědu</button>
+                <p class="hint-text" id="readingHintText" hidden></p>
+                <p class="feedback" id="readingFeedback" aria-live="polite"></p>
+                <button class="primary-button full-width" id="nextReading" type="button" disabled>Další úloha</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="checkpoint" data-checkpoint="reading">
+            <div><strong>Kontrolní bod</strong><p>Dokážu z grafu určit hodnoty, průsečíky, extrémy a průběh funkce.</p></div>
+            <button class="checkpoint-button" type="button">Označit jako pochopené</button>
+          </div>
+        </section>
+
+        <section class="lesson-section" id="model" data-track-section>
+          <p class="chapter">6 · Funkce v praxi</p>
+          <h2>Model není jen vzorec</h2>
+          <p class="lead">Lineární funkce může popsat cenu, vzdálenost nebo spotřebu. Parametry potom mají konkrétní význam a jednotky.</p>
+
+          <div class="model-card">
+            <div>
+              <span class="practice-label">Modelová situace</span>
+              <h3>Taxi účtuje nástupní sazbu 80 Kč a 45 Kč za každý kilometr.</h3>
+              <p>Celkovou cenu popisuje funkce <strong>C(x) = 45x + 80</strong>, kde x je počet kilometrů.</p>
+            </div>
+            <div class="model-metrics">
+              <div><span>Směrnice 45</span><strong>45 Kč/km</strong><p>Cena každého dalšího kilometru.</p></div>
+              <div><span>Absolutní člen 80</span><strong>80 Kč</strong><p>Cena ještě před ujetím prvního kilometru.</p></div>
+            </div>
+          </div>
+
+          <div class="model-practice">
+            <label class="field-label" for="taxiDistance">Zvolte vzdálenost</label>
+            <input id="taxiDistance" type="range" min="0" max="30" step="1" value="8">
+            <div class="model-live"><span id="taxiDistanceOut">8 km</span><strong id="taxiPriceOut">440 Kč</strong></div>
+            <div class="mini-bars" aria-label="Rozklad ceny">
+              <div><span>Nástupní sazba</span><i id="baseFareBar"></i><strong>80 Kč</strong></div>
+              <div><span>Ujetá vzdálenost</span><i id="distanceFareBar"></i><strong id="distanceFareValue">360 Kč</strong></div>
+            </div>
+          </div>
+
+          <div class="practice-box model-question-box">
+            <div><span class="practice-label">Aplikace</span><p>Kolik kilometrů lze ujet, pokud máte rozpočet 800 Kč?</p></div>
+            <div class="answer-row">
+              <label class="sr-only" for="modelAnswer">Počet kilometrů</label>
+              <input id="modelAnswer" type="number" step="0.1" placeholder="Kilometry">
+              <button class="primary-button" id="checkModel" type="button">Zkontrolovat</button>
+            </div>
+            <p class="feedback" id="modelFeedback" aria-live="polite"></p>
+          </div>
+
+          <div class="checkpoint" data-checkpoint="model">
+            <div><strong>Kontrolní bod</strong><p>Umím vysvětlit význam parametrů funkce v konkrétním modelu.</p></div>
+            <button class="checkpoint-button" type="button">Označit jako pochopené</button>
+          </div>
+        </section>
+
+        <section class="lesson-section" id="final-test" data-track-section>
+          <p class="chapter">7 · Ověření zvládnutí</p>
+          <h2>Závěrečný test</h2>
+          <p class="lead">Dvanáct otázek prověří porozumění, nikoli pouhé zapamatování názvů. Po každé odpovědi uvidíte vysvětlení.</p>
+
+          <div class="test-shell">
+            <div class="test-topline">
+              <span id="testCounter">Otázka 1 z 12</span>
+              <span id="testScore">0 bodů</span>
+            </div>
+            <div class="test-progress"><span id="testProgressBar"></span></div>
+            <div id="testQuestionArea">
+              <span class="practice-label" id="testTopic">Základní pojem</span>
+              <h3 id="testQuestion">Co musí platit, aby přiřazení bylo funkcí?</h3>
+              <div class="answer-options test-options" id="testOptions"></div>
+              <p class="feedback explanation" id="testFeedback" aria-live="polite"></p>
+              <button class="primary-button" id="nextTestQuestion" type="button" disabled>Další otázka</button>
+            </div>
+            <div class="test-result" id="testResult" hidden>
+              <span class="result-ring" id="resultRing"><strong id="resultPercent">0 %</strong></span>
+              <div><h3 id="resultTitle">Výsledek testu</h3><p id="resultMessage"></p><div class="result-breakdown" id="resultBreakdown"></div></div>
+              <button class="primary-button" id="restartTest" type="button">Spustit nový test</button>
+            </div>
+          </div>
+
+          <div class="completion-card" id="completionCard">
+            <div><span>Průběh celé lekce</span><strong id="completionText">0 ze 7 částí dokončeno</strong></div>
+            <div class="progress-track large"><span id="completionBar"></span></div>
+          </div>
+        </section>
+      </article>
+    </div>
+  </main>
+
+  <footer>
+    <div class="shell footer-inner"><span>Interaktivní materiál · Funkce</span><a href="../../index.html">Zpět na hlavní web</a></div>
+  </footer>
+
+  <script src="app.js?v=20260727-1"></script>
+</body>
+</html>
