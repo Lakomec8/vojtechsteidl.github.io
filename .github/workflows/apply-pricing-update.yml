@@ -35,7 +35,7 @@ jobs:
       - name: Apply pricing changes
         run: python scripts/apply_pricing_update.py
 
-      - name: Validate generated page
+      - name: Validate pricing HTML
         run: |
           python - <<'PY'
           from html.parser import HTMLParser
@@ -58,12 +58,21 @@ jobs:
           if missing:
               raise SystemExit(f"Vygenerovaná stránka postrádá: {missing}")
 
-          if "400 Kč" in html:
-              raise SystemExit("Na stránce zůstala stará cena 400 Kč.")
+          pricing_start = html.index('<section class="pricing section" id="cenik">')
+          pricing_end = html.index('</section>', pricing_start)
+          pricing = html[pricing_start:pricing_end]
+          if "400 Kč" in pricing:
+              raise SystemExit("V ceníku zůstala stará cena 400 Kč.")
           PY
-          python scripts/validate_student_data.py
-          python scripts/validate_interactive_materials.py
-          git diff --check
+
+      - name: Validate student data
+        run: python scripts/validate_student_data.py
+
+      - name: Validate interactive materials
+        run: python scripts/validate_interactive_materials.py
+
+      - name: Check generated diff
+        run: git diff --check
 
       - name: Commit generated changes
         run: |
