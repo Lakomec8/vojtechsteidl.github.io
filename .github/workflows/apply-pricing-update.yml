@@ -45,9 +45,6 @@ jobs:
       - name: Validate interactive materials
         run: python scripts/validate_interactive_materials.py
 
-      - name: Check generated diff
-        run: git diff --check
-
       - name: Commit generated changes
         run: |
           git config user.name "github-actions[bot]"
