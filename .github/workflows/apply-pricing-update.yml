@@ -35,18 +35,12 @@ jobs:
       - name: Apply pricing changes
         run: python scripts/apply_pricing_update.py
 
-      - name: Validate pricing HTML
+      - name: Validate pricing content
         run: |
           python - <<'PY'
-          from html.parser import HTMLParser
           from pathlib import Path
 
-          class Parser(HTMLParser):
-              pass
-
           html = Path("index.html").read_text(encoding="utf-8")
-          Parser().feed(html)
-
           required = [
               "450 Kč",
               "Prémiový balíček",
@@ -58,10 +52,11 @@ jobs:
           if missing:
               raise SystemExit(f"Vygenerovaná stránka postrádá: {missing}")
 
-          pricing_start = html.index('<section class="pricing section" id="cenik">')
-          pricing_end = html.index('</section>', pricing_start)
-          pricing = html[pricing_start:pricing_end]
-          if "400 Kč" in pricing:
+          start = html.find('<section class="pricing section" id="cenik">')
+          end = html.find('</section>', start)
+          if start < 0 or end < 0:
+              raise SystemExit("Vygenerovaná stránka neobsahuje kompletní sekci ceníku.")
+          if "400 Kč" in html[start:end]:
               raise SystemExit("V ceníku zůstala stará cena 400 Kč.")
           PY
 
