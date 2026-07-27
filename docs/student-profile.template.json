@@ -1,0 +1,83 @@
+{
+  "studentName": "Jméno studenta",
+  "studentInitials": "JS",
+  "progress": 0,
+  "progressText": "Krátké shrnutí aktuálního stavu studenta.",
+  "priority": {
+    "title": "Nejdůležitější další krok.",
+    "text": "Co má student udělat a proč.",
+    "deadline": "Termín další hodiny zatím není uveden"
+  },
+  "readiness": {
+    "label": "Studijní postup",
+    "lessonWeight": 60,
+    "taskWeight": 40
+  },
+  "lessons": [
+    {
+      "id": "student-lesson-1",
+      "date": "2026-01-01",
+      "displayDate": "1. ledna 2026",
+      "title": "1. hodina — Téma",
+      "subject": "Matematika",
+      "subtitle": "Krátký popis lekce · dokončeno",
+      "score": 7,
+      "scoreLabel": "Dobře zvládnuto",
+      "topics": [
+        "první probíraný bod",
+        "druhý probíraný bod"
+      ],
+      "improvement": "Co je potřeba dále procvičit.",
+      "homework": "Konkrétní domácí úkol.",
+      "material": {
+        "title": "Materiál z 1. hodiny",
+        "url": "./Materials/Student/material.pdf"
+      }
+    }
+  ],
+  "materials": [
+    {
+      "title": "Materiál z 1. hodiny",
+      "meta": "PDF materiál · Matematika",
+      "badge": "PDF",
+      "badgeClass": "pdf",
+      "url": "./Materials/Student/material.pdf"
+    }
+  ],
+  "tasks": [
+    {
+      "id": "student-task-1",
+      "title": "Název úkolu",
+      "meta": "Co má student dokončit.",
+      "badge": "Aktuální úkol"
+    }
+  ],
+  "timeline": [
+    {
+      "month": "Led",
+      "day": "1",
+      "title": "První hodina dokončena",
+      "desc": "Stručný popis průběhu hodiny.",
+      "badge": "Lekce"
+    }
+  ],
+  "upcoming": [
+    {
+      "date": "2026-01-08",
+      "title": "Další hodina",
+      "meta": "8. ledna 2026 · čas bude doplněn",
+      "badge": "Lekce"
+    }
+  ],
+  "links": [
+    {
+      "title": "GeoGebra kalkulačka",
+      "url": "https://www.geogebra.org",
+      "desc": "Užitečné pro vizualizaci a kontrolu výpočtů."
+    }
+  ],
+  "deadline": {
+    "date": "2026-01-08",
+    "label": "Další hodina"
+  }
+}

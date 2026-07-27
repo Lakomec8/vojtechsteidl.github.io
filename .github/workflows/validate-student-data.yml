@@ -1,0 +1,49 @@
+name: Validate student data
+
+on:
+  pull_request:
+    paths:
+      - "students/**"
+      - "Materials/**"
+      - "*.pdf"
+      - "assets/student-portal.js"
+      - "student-portal.html"
+      - "scripts/validate_student_data.py"
+      - "docs/student-profile.template.json"
+      - ".github/workflows/validate-student-data.yml"
+  push:
+    branches:
+      - main
+    paths:
+      - "students/**"
+      - "Materials/**"
+      - "*.pdf"
+      - "assets/student-portal.js"
+      - "student-portal.html"
+      - "scripts/validate_student_data.py"
+      - "docs/student-profile.template.json"
+      - ".github/workflows/validate-student-data.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Validate student JSON and material links
+        run: python scripts/validate_student_data.py
+
+      - name: Check student portal JavaScript syntax
+        run: node --check assets/student-portal.js
+
+      - name: Check profile template JSON syntax
+        run: python -m json.tool docs/student-profile.template.json > /dev/null
