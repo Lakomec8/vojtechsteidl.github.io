@@ -58,6 +58,13 @@
   ],
   "materials": [
     {
+      "title": "Lineární rovnice a nerovnice",
+      "meta": "PDF materiál · Matematika · 1. ročník SŠ",
+      "badge": "PDF",
+      "badgeClass": "pdf",
+      "url": "./Lineární_rovnice_a_nerovnice.pdf"
+    },
+    {
       "title": "Mocniny a odmocniny — materiál z 2. hodiny",
       "meta": "PDF materiál · Matematika · poslední probírané téma",
       "badge": "Aktuální PDF",
