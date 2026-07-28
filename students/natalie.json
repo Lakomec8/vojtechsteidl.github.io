@@ -2,10 +2,10 @@
   "studentName": "Natalie",
   "studentInitials": "N",
   "progress": 0,
-  "progressText": "První hodinu zaměřenou na intervaly máš za sebou. Projdi si přiložený zápis a při dalším setkání navážeme procvičováním.",
+  "progressText": "Máš za sebou první hodinu zaměřenou na intervaly. Nově máš připravený řešený didaktický test 2026 bez geometrie, který se soustředí na standardní úlohy potřebné k úspěšnému zvládnutí testu.",
   "priority": {
-    "title": "Procvič si zápis intervalů.",
-    "text": "V materiálech najdeš zápis z první hodiny s vizuálním i matematickým zápisem intervalů a procvičením k didaktickému testu.",
+    "title": "Začni řešeným didaktickým testem.",
+    "text": "Projdi řešení standardních negeometrických úloh a potom vyřeš dva podobné příklady u každého typu. Atypické úlohy zatím vynech.",
     "deadline": "Termín další hodiny zatím není uveden"
   },
   "readiness": {
@@ -38,8 +38,8 @@
   "materials": [
     {
       "title": "Didaktický test 2026 — řešení bez geometrie",
-      "meta": "PDF materiál · Matematika · řešené standardní úlohy a procvičení",
-      "badge": "PDF",
+      "meta": "PDF materiál · Matematika · aktuální příprava k didaktickému testu",
+      "badge": "Aktuální PDF",
       "badgeClass": "pdf",
       "url": "./Didakťák_Natalie___2026.pdf"
     },
@@ -53,13 +53,20 @@
   ],
   "tasks": [
     {
-      "id": "natalie-task-1",
-      "title": "Procvičit intervaly",
-      "meta": "Projdi si zápis z první hodiny a vyřeš procvičovací příklady v PDF.",
-      "badge": "Procvičení"
+      "id": "natalie-task-2",
+      "title": "Projít didaktický test 2026",
+      "meta": "Prostuduj řešené standardní úlohy bez geometrie a zkus dva podobné příklady u každého typu.",
+      "badge": "Aktuální úkol"
     }
   ],
   "timeline": [
+    {
+      "month": "Čvc",
+      "day": "28",
+      "title": "Přidán řešený didaktický test",
+      "desc": "Do materiálů bylo doplněno řešení standardních úloh z didaktického testu 2026 bez geometrie včetně navazujícího procvičení.",
+      "badge": "Materiál"
+    },
     {
       "month": "Čvc",
       "day": "26",
