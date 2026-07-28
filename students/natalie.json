@@ -13,6 +13,13 @@
     "lessonWeight": 60,
     "taskWeight": 40
   },
+  "featuredMaterial": {
+    "title": "Didaktický test 2026 — řešení bez geometrie",
+    "meta": "PDF materiál · Matematika · aktuální příprava k didaktickému testu",
+    "badge": "Aktuální PDF",
+    "badgeClass": "pdf",
+    "url": "./Didakťák_Natalie___2026.pdf"
+  },
   "lessons": [
     {
       "id": "natalie-lesson-1",
