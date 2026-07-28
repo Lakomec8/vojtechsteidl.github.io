@@ -2,7 +2,7 @@
   "studentName": "Evelína",
   "studentInitials": "E",
   "progress": 0,
-  "progressText": "Máš za sebou dvě hodiny. Po mnohočlenech, mocninách a odmocninách nyní navazuješ lineárními rovnicemi a nerovnicemi; nový materiál je připravený v sekci Materiály.",
+  "progressText": "Máš za sebou tři hodiny. Po mnohočlenech, mocninách a odmocninách jsme navázali lineárními rovnicemi a nerovnicemi.",
   "priority": {
     "title": "Procvič si lineární rovnice a nerovnice.",
     "text": "Projdi si řešené příklady, zopakuj ekvivalentní úpravy a u nerovnic si hlídej změnu znaménka při dělení nebo násobení záporným číslem.",
@@ -21,6 +21,26 @@
     "url": "./Lineární_rovnice_a_nerovnice.pdf"
   },
   "lessons": [
+    {
+      "id": "evelina-lesson-3",
+      "date": "2026-07-28",
+      "displayDate": "28. července 2026",
+      "title": "3. hodina — Lineární rovnice a nerovnice",
+      "subject": "Matematika",
+      "subtitle": "Třetí společná lekce · dokončeno",
+      "topics": [
+        "ekvivalentní úpravy lineárních rovnic",
+        "rovnice se závorkami a zlomky",
+        "lineární nerovnice a intervalový zápis",
+        "změna znaménka při násobení nebo dělení záporným číslem"
+      ],
+      "improvement": "Procvičit úpravy výrazů před samotným řešením a pečlivě kontrolovat znaménka u nerovnic.",
+      "homework": "Projít si nový materiál, vyřešit cvičné úlohy a označit příklady, které bude potřeba dovysvětlit.",
+      "material": {
+        "title": "Lineární rovnice a nerovnice",
+        "url": "./Lineární_rovnice_a_nerovnice.pdf"
+      }
+    },
     {
       "id": "evelina-lesson-2",
       "date": "2026-07-24",
@@ -66,7 +86,7 @@
   "materials": [
     {
       "title": "Lineární rovnice a nerovnice",
-      "meta": "PDF materiál · Matematika · aktuální téma · 1. ročník SŠ",
+      "meta": "PDF materiál · Matematika · 3. hodina · dokončeno 28. července 2026",
       "badge": "Aktuální PDF",
       "badgeClass": "pdf",
       "url": "./Lineární_rovnice_a_nerovnice.pdf"
@@ -98,9 +118,9 @@
     {
       "month": "Čvc",
       "day": "28",
-      "title": "Přidán materiál k rovnicím a nerovnicím",
-      "desc": "Do studentské zóny byl doplněn přehled lineárních rovnic a nerovnic s řešenými příklady a procvičením.",
-      "badge": "Materiál"
+      "title": "Třetí hodina dokončena",
+      "desc": "Lekce byla zaměřena na lineární rovnice, nerovnice, ekvivalentní úpravy a intervalový zápis řešení.",
+      "badge": "Lekce"
     },
     {
       "month": "Čvc",
