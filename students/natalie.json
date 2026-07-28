@@ -2,7 +2,7 @@
   "studentName": "Natalie",
   "studentInitials": "N",
   "progress": 0,
-  "progressText": "Máš za sebou první hodinu zaměřenou na intervaly. Nově máš připravený řešený didaktický test 2026 bez geometrie, který se soustředí na standardní úlohy potřebné k úspěšnému zvládnutí testu.",
+  "progressText": "Máš za sebou dvě hodiny. Po intervalech jsme navázali řešením standardních úloh z didaktického testu 2026 bez geometrie.",
   "priority": {
     "title": "Začni řešeným didaktickým testem.",
     "text": "Projdi řešení standardních negeometrických úloh a potom vyřeš dva podobné příklady u každého typu. Atypické úlohy zatím vynech.",
@@ -21,6 +21,26 @@
     "url": "./Didakťák_Natalie___2026.pdf"
   },
   "lessons": [
+    {
+      "id": "natalie-lesson-2",
+      "date": "2026-07-28",
+      "displayDate": "28. července 2026",
+      "title": "2. hodina — Didaktický test 2026 bez geometrie",
+      "subject": "Matematika",
+      "subtitle": "Příprava k didaktickému testu · dokončeno",
+      "topics": [
+        "řešení standardních negeometrických úloh z didaktického testu",
+        "volba vhodného postupu a kontrola výsledku",
+        "zaměření na bodově dostupné typy úloh",
+        "navazující procvičení pomocí podobných příkladů"
+      ],
+      "improvement": "Upevnit základní postupy u standardních úloh a nejprve sbírat body v typech, které se pravidelně opakují.",
+      "homework": "Projít si řešený test a vyřešit dva podobné příklady u každého zařazeného typu úlohy.",
+      "material": {
+        "title": "Didaktický test 2026 — řešení bez geometrie",
+        "url": "./Didakťák_Natalie___2026.pdf"
+      }
+    },
     {
       "id": "natalie-lesson-1",
       "date": "2026-07-26",
@@ -45,7 +65,7 @@
   "materials": [
     {
       "title": "Didaktický test 2026 — řešení bez geometrie",
-      "meta": "PDF materiál · Matematika · aktuální příprava k didaktickému testu",
+      "meta": "PDF materiál · Matematika · 2. hodina · dokončeno 28. července 2026",
       "badge": "Aktuální PDF",
       "badgeClass": "pdf",
       "url": "./Didakťák_Natalie___2026.pdf"
@@ -70,9 +90,9 @@
     {
       "month": "Čvc",
       "day": "28",
-      "title": "Přidán řešený didaktický test",
-      "desc": "Do materiálů bylo doplněno řešení standardních úloh z didaktického testu 2026 bez geometrie včetně navazujícího procvičení.",
-      "badge": "Materiál"
+      "title": "Druhá hodina dokončena",
+      "desc": "Lekce byla zaměřena na standardní negeometrické úlohy z didaktického testu 2026 a strategii získávání bodů.",
+      "badge": "Lekce"
     },
     {
       "month": "Čvc",
