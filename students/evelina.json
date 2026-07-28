@@ -2,11 +2,11 @@
   "studentName": "Evelína",
   "studentInitials": "E",
   "progress": 0,
-  "progressText": "Máš za sebou dvě hodiny. Po mnohočlenech jsme navázali mocninami a odmocninami; aktuální materiál najdeš u druhé hodiny i v sekci Materiály.",
+  "progressText": "Máš za sebou dvě hodiny. Po mnohočlenech, mocninách a odmocninách nyní navazuješ lineárními rovnicemi a nerovnicemi; nový materiál je připravený v sekci Materiály.",
   "priority": {
-    "title": "Procvič si mocniny a odmocniny.",
-    "text": "Projdi si poslední materiál, zopakuj pravidla pro práci s mocninami a označ příklady, které bude potřeba dovysvětlit.",
-    "deadline": "Termín další hodiny zatím není uveden"
+    "title": "Procvič si lineární rovnice a nerovnice.",
+    "text": "Projdi si řešené příklady, zopakuj ekvivalentní úpravy a u nerovnic si hlídej změnu znaménka při dělení nebo násobení záporným číslem.",
+    "deadline": "Finální test: 21. srpna 2026"
   },
   "readiness": {
     "label": "Studijní postup",
@@ -59,15 +59,15 @@
   "materials": [
     {
       "title": "Lineární rovnice a nerovnice",
-      "meta": "PDF materiál · Matematika · 1. ročník SŠ",
-      "badge": "PDF",
+      "meta": "PDF materiál · Matematika · aktuální téma · 1. ročník SŠ",
+      "badge": "Aktuální PDF",
       "badgeClass": "pdf",
       "url": "./Lineární_rovnice_a_nerovnice.pdf"
     },
     {
       "title": "Mocniny a odmocniny — materiál z 2. hodiny",
-      "meta": "PDF materiál · Matematika · poslední probírané téma",
-      "badge": "Aktuální PDF",
+      "meta": "PDF materiál · Matematika · předchozí probírané téma",
+      "badge": "PDF",
       "badgeClass": "pdf",
       "url": "./Mocniny_úvod.pdf"
     },
@@ -81,13 +81,20 @@
   ],
   "tasks": [
     {
-      "id": "evelina-task-2",
-      "title": "Procvičit mocniny a odmocniny",
-      "meta": "Projdi si poslední PDF a označ příklady, které chceš na další hodině dovysvětlit.",
+      "id": "evelina-task-3",
+      "title": "Procvičit lineární rovnice a nerovnice",
+      "meta": "Projdi si řešené příklady v novém PDF a označ úlohy, které chceš na další hodině dovysvětlit.",
       "badge": "Aktuální úkol"
     }
   ],
   "timeline": [
+    {
+      "month": "Čvc",
+      "day": "28",
+      "title": "Přidán materiál k rovnicím a nerovnicím",
+      "desc": "Do studentské zóny byl doplněn přehled lineárních rovnic a nerovnic s řešenými příklady a procvičením.",
+      "badge": "Materiál"
+    },
     {
       "month": "Čvc",
       "day": "24",
