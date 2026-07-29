@@ -7,9 +7,11 @@ on:
       - "Materials/**"
       - "*.pdf"
       - "assets/student-portal.js"
+      - "assets/student-dashboard-featured.js"
       - "student-portal.html"
       - "scripts/validate_student_data.py"
       - "docs/student-profile.template.json"
+      - "docs/STUDENT_DATA.md"
       - ".github/workflows/validate-student-data.yml"
   push:
     branches:
@@ -19,9 +21,11 @@ on:
       - "Materials/**"
       - "*.pdf"
       - "assets/student-portal.js"
+      - "assets/student-dashboard-featured.js"
       - "student-portal.html"
       - "scripts/validate_student_data.py"
       - "docs/student-profile.template.json"
+      - "docs/STUDENT_DATA.md"
       - ".github/workflows/validate-student-data.yml"
 
 permissions:
@@ -43,7 +47,9 @@ jobs:
         run: python scripts/validate_student_data.py
 
       - name: Check student portal JavaScript syntax
-        run: node --check assets/student-portal.js
+        run: |
+          node --check assets/student-portal.js
+          node --check assets/student-dashboard-featured.js
 
       - name: Check profile template JSON syntax
         run: python -m json.tool docs/student-profile.template.json > /dev/null
