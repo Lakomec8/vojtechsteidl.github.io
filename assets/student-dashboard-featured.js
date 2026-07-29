@@ -21,7 +21,12 @@
 
       const data = await response.json();
       const materials = Array.isArray(data.materials) ? data.materials : [];
-      const material = data.featuredMaterial || materials[0] || null;
+
+      // Pole materials je jediný zdroj pravdy. První platná položka je
+      // automaticky aktuálním materiálem na nástěnce. featuredMaterial
+      // zůstává pouze jako dočasná zpětně kompatibilní záloha.
+      const material =
+        materials.find((item) => item?.url) || data.featuredMaterial || null;
       if (!material?.url) return;
 
       const target = document.getElementById("lastLesson");
@@ -32,13 +37,13 @@
         <div class="item">
           <div class="item-main">
             <h3>${escapeHtml(material.title || "Aktuální materiál")}</h3>
-            <p>${escapeHtml(material.meta || "PDF materiál")}</p>
+            <p>${escapeHtml(material.meta || "Studijní materiál")}</p>
           </div>
-          <span class="badge">${escapeHtml(material.badge || "PDF")}</span>
+          <span class="badge">${escapeHtml(material.badge || "Soubor")}</span>
         </div>
         <div class="actions">
           <a class="secondary" href="${url}" target="_blank" rel="noopener">Otevřít</a>
-          <a class="download" href="${url}" download>Stáhnout PDF</a>
+          <a class="download" href="${url}" download>Stáhnout</a>
         </div>
       `;
 
@@ -57,6 +62,7 @@
     }
   };
 
+  let attempts = 0;
   const waitForPortal = () => {
     const app = document.getElementById("app");
     const target = document.getElementById("lastLesson");
@@ -64,7 +70,9 @@
       renderFeaturedMaterial();
       return;
     }
-    window.setTimeout(waitForPortal, 100);
+
+    attempts += 1;
+    if (attempts < 100) window.setTimeout(waitForPortal, 100);
   };
 
   waitForPortal();
