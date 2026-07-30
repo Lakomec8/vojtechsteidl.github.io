@@ -1,5 +1,6 @@
 name: Polish premium pricing label
 
+# One-time workflow: applies the CSS fix and removes itself.
 on:
   push:
     branches:
