@@ -1,0 +1,144 @@
+lass="tcolorbox tipbox" id="tcolobox-61">
+<div class="tcolorbox-content"><p class="noindent"><span class="ec-lmbx-10x-x-109">Pozor: </span>Průměr není prostý průměr dvou uvedených průměrů; skupiny mají různý počet
+jablek.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="tcolorbox taskbox" id="tcolobox-66">
+<div class="tcolorbox-title">
+<p class="noindent"><span class="ec-lmbx-10x-x-109">Úloha 15   max. 3 body</span> </p><div class="tcolorbox taskbox" id="tcolobox-67">
+<div class="tcolorbox-content"><span class="ec-lmr-8">Procenta a úrok</span>
+</div>
+</div>
+</div>
+<div class="tcolorbox-content"><p class="noindent"><span class="ec-lmbx-10x-x-109">Zkrácené zadání. </span>Dluhopis stál 200 tisíc Kč. Po splatnosti bylo vyplaceno 234 tisíc Kč včetně
+úroku po 15% zdanění. Rozhodněte tři tvrzení.
+</p><p class="noindent"><span class="ec-lmbx-10x-x-109">Postup.</span>
+</p><p class="noindent">Čistý úrok je </p><div class="mathjax-block">\[ 234-200=34\ \text {tisíc Kč}. \]</div> <span class="ec-lmbx-10x-x-109">15.1 </span>Relativní zvýšení je <div class="mathjax-block">\[ \frac {34}{200}=0{,}17=17\ \%. \]</div> Tvrzení je pravdivé.
+<p class="noindent"><span class="ec-lmbx-10x-x-109">15.2 </span>Označme hrubý úrok <span class="mathjax-inline">\(u\)</span>. Po zdanění zůstává 85 %: </p><div class="mathjax-block">\[ 0{,}85u=34 \Rightarrow u=40. \]</div> Daň je <span class="mathjax-inline">\(40-34=6\)</span> tisíc Kč. Tvrzení je pravdivé.
+<p class="noindent"><span class="ec-lmbx-10x-x-109">15.3 </span>Hrubý úrok je proti čistému vyšší o </p><div class="mathjax-block">\[ \frac {40-34}{34}\approx 17{,}65\ \%, \]</div> nikoli o 15 %. Tvrzení je nepravdivé. <div class="tcolorbox resultbox" id="tcolobox-65">
+<div class="tcolorbox-content"><p class="noindent"><span class="ec-lmbx-10x-x-109">Výsledek: </span><span class="mathjax-inline">\(\boxed {15.1\ \mathrm {A},\quad 15.2\ \mathrm {A},\quad 15.3\ \mathrm {N}}\)</span></p>
+</div>
+</div>
+</div>
+</div>
+<div class="tcolorbox taskbox" id="tcolobox-70">
+<div class="tcolorbox-title">
+<p class="noindent"><span class="ec-lmbx-10x-x-109">Úloha 16   2 body</span> </p><div class="tcolorbox taskbox" id="tcolobox-71">
+<div class="tcolorbox-content"><span class="ec-lmr-8">Procentní úloha</span>
+</div>
+</div>
+</div>
+<div class="tcolorbox-content"><p class="noindent"><span class="ec-lmbx-10x-x-109">Zkrácené zadání. </span>Ráno tvoří leváci 10 % dětí, odpoledne 25 %. Všichni leváci zůstali a část
+praváků odešla. Kolik procent praváků odešlo?
+</p><p class="noindent"><span class="ec-lmbx-10x-x-109">Postup.</span>
+</p><p class="noindent">Zvolme ráno 100 dětí: 10 leváků a 90 praváků. Odpoledne zůstává 10 leváků, kteří tvoří 25 %
+přítomných. Celkový počet odpoledne je tedy </p><div class="mathjax-block">\[ \frac {10}{0{,}25}=40. \]</div> Praváků zůstalo <span class="mathjax-inline">\(40-10=30\)</span>. Odešlo tedy <span class="mathjax-inline">\(90-30=60\)</span> praváků z původních 90: <div class="mathjax-block">\[ \frac {60}{90}=\frac 23\approx 66{,}7\ \%. \]</div>
+<div class="tcolorbox resultbox" id="tcolobox-69">
+<div class="tcolorbox-content"><p class="noindent"><span class="ec-lmbx-10x-x-109">Výsledek: </span><span class="mathjax-inline">\(\boxed {\text {E) více než }60\ \%}\)</span></p>
+</div>
+</div>
+</div>
+</div>
+<div class="tcolorbox taskbox" id="tcolobox-74">
+<div class="tcolorbox-title">
+<p class="noindent"><span class="ec-lmbx-10x-x-109">Úloha 17   2 body</span> </p><div class="tcolorbox taskbox" id="tcolobox-75">
+<div class="tcolorbox-content"><span class="ec-lmr-8">Kvadratická nerovnice</span>
+</div>
+</div>
+</div>
+<div class="tcolorbox-content"><p class="noindent"><span class="ec-lmbx-10x-x-109">Zkrácené zadání. </span>Vyberte kvadratickou nerovnici, jejíž množinou řešení je interval <span class="mathjax-inline">\((2,3)\)</span>.
+</p><p class="noindent"><span class="ec-lmbx-10x-x-109">Postup.</span>
+</p><p class="noindent">Parabola s kladným koeficientem u <span class="mathjax-inline">\(x^2\)</span> je záporná mezi svými kořeny. Potřebujeme kořeny 2 a 3: </p><div class="mathjax-block">\[ (x-2)(x-3)&lt;0. \]</div> Po
+roznásobení: <div class="mathjax-block">\[ x^2-5x+6&lt;0. \]</div> <div class="tcolorbox resultbox" id="tcolobox-73">
+<div class="tcolorbox-content"><p class="noindent"><span class="ec-lmbx-10x-x-109">Výsledek: </span><span class="mathjax-inline">\(\boxed {\text {D) }x^2-5x+6&lt;0}\)</span></p>
+</div>
+</div>
+</div>
+</div>
+<div class="tcolorbox taskbox" id="tcolobox-78">
+<div class="tcolorbox-title">
+<p class="noindent"><span class="ec-lmbx-10x-x-109">Úloha 18   2 body</span> </p><div class="tcolorbox taskbox" id="tcolobox-79">
+<div class="tcolorbox-content"><span class="ec-lmr-8">Přímky v rovině</span>
+</div>
+</div>
+</div>
+<div class="tcolorbox-content"><p class="noindent"><span class="ec-lmbx-10x-x-109">Zkrácené zadání. </span>Porovnejte přímku <span class="mathjax-inline">\(p: x=3t,\ y=1-t\)</span> a přímku <span class="mathjax-inline">\(q:x+3y-6=0\)</span>.
+</p><p class="noindent"><span class="ec-lmbx-10x-x-109">Postup.</span>
+</p><p class="noindent">Z parametrického vyjádření <span class="mathjax-inline">\(p\)</span> plyne <span class="mathjax-inline">\(t=\frac {x}{3}\)</span> a </p><div class="mathjax-block">\[ y=1-\frac {x}{3}\quad \Rightarrow \quad x+3y-3=0. \]</div> Přímky tedy mají stejný normálový vektor <span class="mathjax-inline">\((1,3)\)</span>, ale jinou
+konstantu: <div class="mathjax-block">\[ p:x+3y-3=0,\qquad q:x+3y-6=0. \]</div> Jsou rovnoběžné a různé. Jejich vzdálenost je <div class="mathjax-block">\[ \frac {|{-6}-(-3)|}{\sqrt {1^2+3^2}}=\frac {3}{\sqrt {10}}, \]</div> nikoli 3. Žádné tvrzení A-D není pravdivé. <div class="tcolorbox resultbox" id="tcolobox-77">
+<div class="tcolorbox-content"><p class="noindent"><span class="ec-lmbx-10x-x-109">Výsledek: </span><span class="mathjax-inline">\(\boxed {\text {E}}\)</span></p>
+</div>
+</div>
+</div>
+</div>
+<div class="tcolorbox taskbox" id="tcolobox-82">
+<div class="tcolorbox-title">
+<p class="noindent"><span class="ec-lmbx-10x-x-109">Úloha 19   2 body</span> </p><div class="tcolorbox taskbox" id="tcolobox-83">
+<div class="tcolorbox-content"><span class="ec-lmr-8">Planimetrie</span>
+</div>
+</div>
+</div>
+<div class="tcolorbox-content"><p class="noindent"><span class="ec-lmbx-10x-x-109">Zkrácené zadání. </span>Lichoběžník je složen z pěti shodných rovnoramenných trojúhelníků. Má
+obsah <span class="mathjax-inline">\(600\,\mathrm {cm^2}\)</span> a výšku 15 cm. Určete rozdíl základen.
+</p><p class="noindent"><span class="ec-lmbx-10x-x-109">Postup.</span>
+</p><p class="noindent">Každý z pěti trojúhelníků má obsah </p><div class="mathjax-block">\[ \frac {600}{5}=120\ \mathrm {cm^2}. \]</div> Jejich společná výška je 15 cm. Pro vodorovnou základnu
+délky <span class="mathjax-inline">\(a\)</span>: <div class="mathjax-block">\[ 120=\frac {a\cdot 15}{2}\quad \Rightarrow \quad a=16\ \mathrm {cm}. \]</div> Dolní základna lichoběžníku se skládá ze tří těchto základen, horní ze dvou. Rozdíl je
+právě <span class="mathjax-inline">\(a=16\)</span> cm.
+<div class="center">
+<p class="noindent"><div class="diagram"><strong>Geometrický náčrt:</strong> obdélník ABCD se stranami 3a a 2a, rozdělený podle zadání pro výpočet délek a obvodu.</div></p></div>
+<div class="tcolorbox resultbox" id="tcolobox-81">
+<div class="tcolorbox-content"><p class="noindent"><span class="ec-lmbx-10x-x-109">Výsledek: </span><span class="mathjax-inline">\(\boxed {\text {A) }16\ \mathrm {cm}}\)</span></p>
+</div>
+</div>
+</div>
+</div>
+<div class="tcolorbox taskbox" id="tcolobox-86">
+<div class="tcolorbox-title">
+<p class="noindent"><span class="ec-lmbx-10x-x-109">Úloha 20   2 body</span> </p><div class="tcolorbox taskbox" id="tcolobox-87">
+<div class="tcolorbox-content"><span class="ec-lmr-8">Pythagorova věta</span>
+</div>
+</div>
+</div>
+<div class="tcolorbox-content"><p class="noindent"><span class="ec-lmbx-10x-x-109">Zkrácené zadání. </span>Pro stejný lichoběžník určete obvod.
+</p><p class="noindent"><span class="ec-lmbx-10x-x-109">Postup.</span>
+</p><p class="noindent">Z předchozí úlohy <span class="mathjax-inline">\(a=16\)</span> cm. Rameno každého rovnoramenného trojúhelníku vypočteme
+z poloviny základny a výšky: </p><div class="mathjax-block">\[ l=\sqrt {\left (\frac {16}{2}\right )^2+15^2} =\sqrt {8^2+15^2} =\sqrt {289}=17\ \mathrm {cm}. \]</div> Základny lichoběžníku jsou <span class="mathjax-inline">\(3a=48\)</span> cm a <span class="mathjax-inline">\(2a=32\)</span> cm. Obvod: <div class="mathjax-block">\[ o=48+32+2\cdot 17=114\ \mathrm {cm}. \]</div> <div class="tcolorbox resultbox" id="tcolobox-85">
+<div class="tcolorbox-content"><p class="noindent"><span class="ec-lmbx-10x-x-109">Výsledek: </span><span class="mathjax-inline">\(\boxed {\text {E) }114\ \mathrm {cm}}\)</span></p>
+</div>
+</div>
+</div>
+</div>
+<div class="tcolorbox taskbox" id="tcolobox-90">
+<div class="tcolorbox-title">
+<p class="noindent"><span class="ec-lmbx-10x-x-109">Úloha 21   2 body</span> </p><div class="tcolorbox taskbox" id="tcolobox-91">
+<div class="tcolorbox-content"><span class="ec-lmr-8">Trigonometrie</span>
+</div>
+</div>
+</div>
+<div class="tcolorbox-content"><p class="noindent"><span class="ec-lmbx-10x-x-109">Zkrácené zadání. </span>V lichoběžníku je dolní základna 20 m a ostré úhly mají velikost <span class="mathjax-inline">\(64^\circ \)</span> a <span class="mathjax-inline">\(77^\circ \)</span>.
+Vyjádřete délku ramene <span class="mathjax-inline">\(x\)</span>.
+</p><p class="noindent"><span class="ec-lmbx-10x-x-109">Postup.</span>
+</p><p class="noindent">Z  levého  pravoúhlého  trojúhelníku  je  výška  </p><div class="mathjax-block">\[ v=20\tan 64^\circ . \]</div>  V  pravém  pravoúhlém  trojúhelníku  je  výška
+protilehlou odvěsnou k úhlu <span class="mathjax-inline">\(77^\circ \)</span>, tedy <div class="mathjax-block">\[ \sin 77^\circ =\frac {v}{x}\quad \Rightarrow \quad x=\frac {v}{\sin 77^\circ }. \]</div> Po dosazení: <div class="mathjax-block">\[ x=20\cdot \frac {\tan 64^\circ }{\sin 77^\circ }. \]</div>
+<div class="center">
+<p class="noindent"><div class="diagram"><strong>Trigonometrický náčrt:</strong> trojúhelník s úhly 67° a 47° a známou délkou 20 m; třetí úhel je 66°.</div></p></div>
+<div class="tcolorbox resultbox" id="tcolobox-89">
+<div class="tcolorbox-content"><p class="noindent"><span class="ec-lmbx-10x-x-109">Výsledek: </span><span class="mathjax-inline">\(\boxed {\text {B) }x=20\cdot \dfrac {\tan 64^\circ }{\sin 77^\circ }}\)</span></p>
+</div>
+</div>
+</div>
+</div>
+<div class="tcolorbox taskbox" id="tcolobox-94">
+<div class="tcolorbox-title">
+<p class="noindent"><span class="ec-lmbx-10x-x-109">Úloha 22   2 body</span> </p><div class="tcolorbox taskbox" id="tcolobox-95">
+<div class="tcolorbox-content"><span class="ec-lmr-8">Kombinatorika</span>
+</div>
+</div>
+</div>
+<div class="tcolorbox-content"><p class="noindent"><span class="ec-lmbx-10x-x-109">Zkrácené zadání. </span><span class="mathjax-inline">\(n\)</span> rodin si navzájem pošle po jedné pohlednici z letní a po jedné ze zimní
+dovolené. Celkem bylo odesláno 420 pohlednic. Určete <span class="mathjax-inline">\(n\)</span>.
+</p><p class="noindent"><span class="ec-lmbx-10x-x-109">Postup.</span>
+</p><p class="noindent">Každá rodina posílá každé jiné rodině dvě pohlednice. Počet odeslání je tedy
+</p><div class="mathjax-block">\[ 2n(n-1)=420. \]</div> Po vydělení dvěma: <div class="mathjax-block">\[ n(n-1)=210. \]</div> Řešíme <span class="mathjax-inline">\(n^2-n-210=0\)</span>: <div clas
