@@ -1,5 +1,6 @@
 name: Deploy GitHub Pages
 
+# Publishes the current main branch after Pages is configured to use GitHub Actions.
 on:
   push:
     branches:
