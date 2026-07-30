@@ -6,6 +6,7 @@ on:
       - main
     paths:
       - ".github/workflows/finalize-premium-label.yml"
+  workflow_dispatch:
 
 permissions:
   contents: write
@@ -28,24 +29,29 @@ jobs:
 
           path = Path("index.html")
           content = path.read_text(encoding="utf-8")
+          i8 = " " * 8
+          i12 = " " * 12
 
-          material_with_padding = '''        .material-offer {
-              position: relative;
-              overflow: hidden;
-              padding-top: 3.75rem;
-              min-height: 430px;'''
-          material_without_padding = '''        .material-offer {
-              position: relative;
-              overflow: hidden;
-              min-height: 430px;'''
-
-          premium_without_padding = '''        .premium-plan {
-              overflow: hidden;
-              border: 1px solid #d2a448 !important;'''
-          premium_with_padding = '''        .premium-plan {
-              overflow: hidden;
-              padding-top: 3.75rem;
-              border: 1px solid #d2a448 !important;'''
+          material_with_padding = (
+              f"{i8}.material-offer {{\n"
+              f"{i12}position: relative;\n"
+              f"{i12}overflow: hidden;\n"
+              f"{i12}padding-top: 3.75rem;\n"
+          )
+          material_without_padding = (
+              f"{i8}.material-offer {{\n"
+              f"{i12}position: relative;\n"
+              f"{i12}overflow: hidden;\n"
+          )
+          premium_without_padding = (
+              f"{i8}.premium-plan {{\n"
+              f"{i12}overflow: hidden;\n"
+          )
+          premium_with_padding = (
+              f"{i8}.premium-plan {{\n"
+              f"{i12}overflow: hidden;\n"
+              f"{i12}padding-top: 3.75rem;\n"
+          )
 
           if material_with_padding not in content:
               raise SystemExit("Material card block with accidental padding was not found.")
@@ -55,7 +61,6 @@ jobs:
           content = content.replace(material_with_padding, material_without_padding, 1)
           content = content.replace(premium_without_padding, premium_with_padding, 1)
           path.write_text(content, encoding="utf-8")
-
           Path(".github/workflows/finalize-premium-label.yml").unlink()
           PY
 
