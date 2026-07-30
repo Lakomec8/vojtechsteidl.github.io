@@ -227,12 +227,69 @@
         .portal-panel strong { display: block; margin-bottom: 9px; color: var(--navy); font-size: .62rem; }
         .portal-line { height: 5px; margin: 6px 0; border-radius: 99px; background: #e2e8f0; }
         .portal-line.short { width: 66%; }
+        .pricing-grid.three-plans {
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            max-width: 1040px;
+            margin: 0 auto;
+            gap: 1.35rem;
+        }
+        .premium-plan {
+            overflow: hidden;
+            border: 1px solid #d2a448 !important;
+            background: linear-gradient(145deg, #fffdf8 0%, #fff7e8 100%);
+            box-shadow: 0 20px 44px rgba(125, 83, 16, .16) !important;
+        }
+        .premium-plan::before {
+            position: absolute;
+            top: 0;
+            right: 0;
+            left: 0;
+            height: 5px;
+            background: linear-gradient(90deg, #8a5a12, #d6aa50, #8a5a12);
+            content: "";
+        }
+        .premium-plan .recommended {
+            background: linear-gradient(135deg, #8a5a12, #c99837);
+            box-shadow: 0 7px 18px rgba(125, 83, 16, .22);
+            color: #fffaf0;
+        }
+        .premium-plan .price { color: #805313; }
+        .premium-plan .pricing-features li::before { color: #b7791f; }
+        .premium-plan .card-button {
+            border-color: #8a5a12;
+            background: #8a5a12;
+            color: #fff;
+        }
+        .premium-plan .card-button:hover,
+        .premium-plan .card-button:focus-visible {
+            background: #68400b;
+            color: #fff;
+        }
+        .payment-options {
+            display: flex;
+            align-items: flex-start;
+            gap: .8rem;
+            max-width: 850px;
+            margin: 1.5rem auto 0;
+            padding: 1rem 1.15rem;
+            border: 1px solid #dbe4ee;
+            border-radius: 12px;
+            background: #f8fafc;
+            color: var(--muted);
+            font-size: .88rem;
+            text-align: left;
+        }
+        .payment-options i { margin-top: .25rem; color: var(--blue); }
+        .payment-options strong { color: var(--navy); }
         @media (max-width: 1050px) {
             .expectations-grid { grid-template-columns: repeat(2,1fr); }
             .student-zone-layout { grid-template-columns: 1fr; }
             .portal-preview-shell { max-width: 780px; }
         }
-        @media (max-width: 900px) { .materials-offers { grid-template-columns: 1fr; } }
+        @media (max-width: 900px) {
+            .materials-offers { grid-template-columns: 1fr; }
+            .pricing-grid.three-plans { grid-template-columns: 1fr; max-width: 620px; }
+        }
         @media (max-width: 760px) {
             .nav-links .nav-student { margin-left: 0; }
             .expectations-grid { grid-template-columns: 1fr; }
@@ -263,7 +320,7 @@
         "email": "vojtasteidl@seznam.cz",
         "address": {"@type":"PostalAddress","addressLocality":"Jihlava","postalCode":"58601","addressCountry":"CZ"},
         "url": "https://vojtechsteidl.eu/",
-        "priceRange": "0–3400 Kč"
+        "priceRange": "0–2490 Kč"
     }
     </script>
 </head>
@@ -313,57 +370,44 @@
         <section class="testimonials section" id="reference"><div class="section-heading"><p class="eyebrow">Zkušenosti studentů</p><h2>Co říkají studenti a rodiče</h2><p>Reference z reálné spolupráce.</p></div><div class="testimonials-grid"><article class="testimonial-card"><div class="rating" aria-label="5 z 5 hvězdiček"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div><p class="testimonial-text">„Vojta je hrozně fajn učitel. S fyzikou jsem bojoval v prvním ročníku na gymplu a díky Vojtovi jsem to rychle dohnal. Jeho vysvětlování je opravdu jasné a snadno pochopitelné.“</p><p class="testimonial-author">Petr S.</p><p class="testimonial-role">Student střední školy</p></article><article class="testimonial-card"><div class="rating" aria-label="5 z 5 hvězdiček"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div><p class="testimonial-text">„Doporučuji každému, kdo potřebuje matematiku opravdu pochopit, a ne se ji jen mechanicky učit.“</p><p class="testimonial-author">Kateřina N.</p><p class="testimonial-role">Příprava na přijímačky</p></article><article class="testimonial-card"><div class="rating" aria-label="5 z 5 hvězdiček"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div><p class="testimonial-text">„Online lekce byly velmi efektivní. Potřebovala jsem dohnat matice a soustavy rovnic a během hodiny jsem konečně pochopila, jak na to.“</p><p class="testimonial-author">Milada B.</p><p class="testimonial-role">Rodič studentky</p></article></div></section>
         <section class="pricing section" id="cenik">
             <div class="section-heading">
-                <p class="eyebrow">Transparentní cena</p>
+                <p class="eyebrow">Jednoduché a transparentní</p>
                 <h2>Ceník doučování</h2>
-                <p>Jednorázová pomoc, zvýhodněné balíčky i rozšířená spolupráce s interaktivními materiály.</p>
+                <p>Tři jasné možnosti bez skrytých poplatků — od úvodního seznámení po systematickou spolupráci s materiály na míru.</p>
             </div>
-            <div class="pricing-grid five-plans">
+            <div class="pricing-grid three-plans">
                 <article class="pricing-card free-trial">
                     <h3>Úvodní konzultace</h3>
                     <p class="price free">Zdarma</p>
                     <p class="price-period">30 minut</p>
-                    <p>Seznámení, ujasnění cíle a doporučení dalšího postupu.</p>
+                    <p>Seznámení, ujasnění cíle a doporučení nejvhodnějšího dalšího postupu.</p>
                     <a href="#kontakt" class="card-button">Domluvit konzultaci</a>
                 </article>
                 <article class="pricing-card">
-                    <h3>Jedna lekce</h3>
+                    <h3>Individuální lekce</h3>
                     <p class="price">450 Kč</p>
                     <p class="price-period">60 minut</p>
-                    <p>Vhodné pro jednorázovou pomoc, konkrétní test nebo vyzkoušení spolupráce.</p>
-                    <a href="#kontakt" class="card-button">Mám zájem</a>
-                </article>
-                <article class="pricing-card">
-                    <h3>Balíček 5 lekcí</h3>
-                    <p class="price">1 800 Kč</p>
-                    <p class="price-period">5 × 60 minut</p>
-                    <p>Pro pravidelnější výuku, základní materiály a průběžnou návaznost.</p>
-                    <a href="#kontakt" class="card-button">Vybrat balíček</a>
-                </article>
-                <article class="pricing-card">
-                    <h3>Balíček 10 lekcí</h3>
-                    <p class="price">3 400 Kč</p>
-                    <p class="price-period">10 × 60 minut</p>
-                    <p>Pro dlouhodobější spolupráci a systematickou přípravu.</p>
-                    <a href="#kontakt" class="card-button">Vybrat balíček</a>
+                    <p>Jednorázová pomoc, příprava na test nebo běžná lekce podle aktuálních potřeb studenta.</p>
+                    <a href="#kontakt" class="card-button">Domluvit lekci</a>
                 </article>
                 <article class="pricing-card featured premium-plan">
-                    <p class="recommended">Studium Plus</p>
-                    <h3>Prémiový balíček</h3>
-                    <p class="price">2 390 Kč</p>
-                    <p class="price-period">5 × 60 minut + 30 dní přístupu</p>
+                    <p class="recommended">Prémiová volba</p>
+                    <h3>Studium Plus</h3>
+                    <p class="price">2 490 Kč</p>
+                    <p class="price-period">5 × 60 minut</p>
                     <ul class="pricing-features">
-                        <li>osobní studentská zóna</li>
-                        <li>dostupné interaktivní zápisy</li>
-                        <li>úkoly a doporučený další krok</li>
-                        <li>průběžná návaznost mezi lekcemi</li>
+                        <li>pět individuálních lekcí</li>
+                        <li>jeden interaktivní zápis na míru k probíranému tématu</li>
+                        <li>osobní studentská zóna s materiály a úkoly</li>
+                        <li>jasný plán a návaznost mezi lekcemi</li>
                     </ul>
                     <a href="#kontakt" class="card-button">Chci Studium Plus</a>
                 </article>
             </div>
-            <p class="pricing-note">Interaktivní zápisy jsou nyní dostupné k vybraným tématům a knihovna se průběžně rozšiřuje.</p>
+            <div class="payment-options"><i class="fas fa-credit-card" aria-hidden="true"></i><p><strong>Platba:</strong> bankovním převodem nebo QR kódem. Jednotlivá lekce se hradí po jejím uskutečnění, balíček Studium Plus před první lekcí.</p></div>
+            <p class="pricing-note">Interaktivní zápis vzniká k jednomu z probíraných témat podle dohody a zůstává studentovi dostupný i po skončení balíčku.</p>
         </section>
         <section class="about section" id="o-mne"><div class="about-content"><div class="about-image"><img src="foto.jpg" alt="Vojtěch Steidl, lektor matematiky a fyziky"></div><div class="about-text"><p class="eyebrow">Kdo vás bude doučovat</p><h2>O mně</h2><p>K matematice a fyzice jsem si nenašel cestu hned. Právě proto rozumím studentům, kterým byly tyto předměty vysvětleny příliš rychle nebo bez souvislostí.</p><p>Vystudoval jsem aplikovanou fyziku v Brně a složitější témata převádím do srozumitelné podoby.</p><p>Materiály a studentská zóna vznikají ze stejného principu: méně chaosu, jasnější návaznost a více aktivního pochopení.</p><a href="#kontakt" class="text-link">Napsat mi <i class="fas fa-arrow-right"></i></a></div></div></section>
-        <section class="faq section" id="faq"><div class="section-heading"><p class="eyebrow">Praktické informace</p><h2>Časté otázky</h2></div><div class="faq-list"><article class="faq-item"><button class="faq-question" type="button" aria-expanded="false">Je studentská zóna součástí doučování?<i class="fas fa-chevron-down"></i></button><div class="faq-answer"><p>Ano, u pravidelné spolupráce může student získat osobní přístup k historii hodin, materiálům, úkolům, termínům a studijnímu postupu.</p></div></article><article class="faq-item"><button class="faq-question" type="button" aria-expanded="false">Jsou vlastní materiály součástí každé lekce?<i class="fas fa-chevron-down"></i></button><div class="faq-answer"><p>Materiály vybírám podle tématu a potřeb studenta. Základní podklady mohou být součástí lekce, rozsáhlejší interaktivní produkty jsou dostupné samostatně.</p></div></article><article class="faq-item"><button class="faq-question" type="button" aria-expanded="false">Co obsahuje prémiový balíček Studium Plus?<i class="fas fa-chevron-down"></i></button><div class="faq-answer"><p>Balíček obsahuje pět individuálních lekcí, osobní studentskou zónu, přístup k dostupným interaktivním zápisům, úkoly a doporučený další postup. Interaktivní knihovna je zatím v pilotním režimu a průběžně se rozšiřuje o další témata.</p></div></article><article class="faq-item"><button class="faq-question" type="button" aria-expanded="false">Je možné využívat doučování jen nárazově?<i class="fas fa-chevron-down"></i></button><div class="faq-answer"><p>Ano. Někteří studenti chodí pravidelně, jiní využívají pomoc jen před testem, přijímačkami, maturitou nebo zkouškou.</p></div></article><article class="faq-item"><button class="faq-question" type="button" aria-expanded="false">Probíhá výuka online nebo osobně?<i class="fas fa-chevron-down"></i></button><div class="faq-answer"><p>Obě možnosti jsou možné. Většina výuky probíhá online, osobní lekce jsou po domluvě v Jihlavě.</p></div></article></div></section>
+        <section class="faq section" id="faq"><div class="section-heading"><p class="eyebrow">Praktické informace</p><h2>Časté otázky</h2></div><div class="faq-list"><article class="faq-item"><button class="faq-question" type="button" aria-expanded="false">Je studentská zóna součástí doučování?<i class="fas fa-chevron-down"></i></button><div class="faq-answer"><p>Ano, u pravidelné spolupráce může student získat osobní přístup k historii hodin, materiálům, úkolům, termínům a studijnímu postupu.</p></div></article><article class="faq-item"><button class="faq-question" type="button" aria-expanded="false">Jsou vlastní materiály součástí každé lekce?<i class="fas fa-chevron-down"></i></button><div class="faq-answer"><p>Základní podklady vybírám podle tématu a potřeb studenta. Jeden interaktivní zápis na míru je výslovně součástí balíčku Studium Plus; další rozsáhlejší interaktivní materiály lze domluvit samostatně.</p></div></article><article class="faq-item"><button class="faq-question" type="button" aria-expanded="false">Co obsahuje prémiový balíček Studium Plus?<i class="fas fa-chevron-down"></i></button><div class="faq-answer"><p>Balíček obsahuje pět individuálních lekcí, jeden interaktivní zápis na míru k probíranému tématu, osobní studentskou zónu, materiály, úkoly a doporučený další postup.</p></div></article><article class="faq-item"><button class="faq-question" type="button" aria-expanded="false">Jak probíhá platba?<i class="fas fa-chevron-down"></i></button><div class="faq-answer"><p>Platbu lze provést bankovním převodem nebo QR kódem. Jednotlivá lekce se hradí po jejím uskutečnění, balíček Studium Plus před první lekcí.</p></div></article><article class="faq-item"><button class="faq-question" type="button" aria-expanded="false">Je možné využívat doučování jen nárazově?<i class="fas fa-chevron-down"></i></button><div class="faq-answer"><p>Ano. Někteří studenti chodí pravidelně, jiní využívají pomoc jen před testem, přijímačkami, maturitou nebo zkouškou.</p></div></article><article class="faq-item"><button class="faq-question" type="button" aria-expanded="false">Probíhá výuka online nebo osobně?<i class="fas fa-chevron-down"></i></button><div class="faq-answer"><p>Obě možnosti jsou možné. Většina výuky probíhá online, osobní lekce jsou po domluvě v Jihlavě.</p></div></article></div></section>
         <section class="contact section" id="kontakt"><div class="section-heading"><p class="eyebrow">První krok</p><h2>Domluvme úvodní konzultaci</h2><p>Napište mi stručně, s čím student potřebuje pomoci. Ozvu se vám zpravidla do 24 hodin.</p></div><div class="contact-wrapper"><form class="contact-form" id="contactForm"><div class="form-group"><label for="name">Jméno</label><input type="text" id="name" name="name" autocomplete="name" required></div><div class="form-group"><label for="email">E-mail</label><input type="email" id="email" name="email" autocomplete="email" required></div><div class="form-group"><label for="grade">Ročník studenta</label><select id="grade" name="grade" required><option value="" selected disabled>Vyberte ročník</option><option value="1-stupen-zs">1. stupeň ZŠ</option><option value="2-stupen-zs">2. stupeň ZŠ</option><option value="stredni-skola">Střední škola</option><option value="vysoka-skola">Vysoká škola</option><option value="jine">Jiné / neuvedeno</option></select></div><div class="form-group"><label for="service">S čím potřebujete pomoci?</label><select id="service" name="service" required><option value="" selected disabled>Vyberte možnost</option><option value="prubezne-doucovani">Průběžné doučování</option><option value="test">Příprava na test</option><option value="prijimacky">Příprava na přijímačky</option><option value="maturita">Příprava na maturitu</option><option value="fyzika">Doučování fyziky</option><option value="vysoka-skola">Pomoc s vysokoškolskou látkou</option><option value="materialy">Vlastní výukové materiály</option><option value="studium-plus">Prémiový balíček Studium Plus</option></select></div><div class="form-group"><label for="message">Zpráva</label><textarea id="message" name="message" placeholder="Napište prosím téma, cíl a zda preferujete online nebo osobní lekci." required></textarea></div><label class="consent"><input type="checkbox" id="consent" required><span>Souhlasím se zpracováním údajů za účelem vyřízení mé poptávky.</span></label><button type="submit" class="submit-button">Poslat nezávaznou poptávku</button><p class="form-status" id="formStatus" aria-live="polite"></p></form><div class="contact-info"><div class="contact-item"><i class="fas fa-phone"></i><div><h3>Telefon</h3><a href="tel:+420728345633">+420 728 345 633</a><p>Pondělí až pátek přibližně 14:00–20:00</p></div></div><div class="contact-item"><i class="fas fa-envelope"></i><div><h3>E-mail</h3><a href="mailto:vojtasteidl@seznam.cz">vojtasteidl@seznam.cz</a><p>Odpovídám zpravidla do 24 hodin.</p></div></div><div class="contact-item"><i class="fas fa-location-dot"></i><div><h3>Lokalita</h3><p>Jihlava, Česká republika</p><p>Osobní lekce po domluvě, online výuka po celé ČR.</p></div></div><div class="student-zone-link"><i class="fas fa-user-lock"></i><div><h3>Studentská zóna</h3><p>Osobní přístup k hodinám, materiálům, úkolům a termínům.</p><a href="student-portal.html">Vstoupit do studentské zóny <i class="fas fa-arrow-right"></i></a></div></div></div></div></section>
     </main>
     <footer><p>© 2026 Vojtěch Steidl · Doučování matematiky a fyziky v Jihlavě i online</p><div class="footer-divider"></div><div class="footer-links"><a href="https://www.linkedin.com/in/vojt%C4%9Bch-steidl-ba64b5158/" target="_blank" rel="noopener noreferrer">LinkedIn</a><a href="https://www.superprof.cz/jako-absolvent-aplikovane-fyziky-muni-vam-pomuzu-zvladnout-slozite-matematicke-fyzikalni-koncepty-jednoduse.html" target="_blank" rel="noopener noreferrer">Superprof</a><a href="https://www.doucuji.eu/507905-doucovani-doucovani-matematiky-a-fyzika-osobne-ci-online" target="_blank" rel="noopener noreferrer">Doučuji.eu</a><a href="mailto:vojtasteidl@seznam.cz">E-mail</a></div></footer>
