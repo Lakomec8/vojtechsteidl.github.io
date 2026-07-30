@@ -1,0 +1,64 @@
+{
+  "studentName": "Vojta",
+  "studentInitials": "V",
+  "progress": 0,
+  "progressText": "Vítej ve studentské zóně. Začínáme trojúhelníky a planimetrií pro 2. ročník SŠ; nejprve upevníme základní pojmy, náčrt a základní výpočty.",
+  "priority": {
+    "title": "Začni úvodem k trojúhelníkům a planimetrii.",
+    "text": "Projdi značení trojúhelníku, jeho druhy, součet vnitřních úhlů, výšky, těžnice, osy, obvod a obsah. U každého pojmu vytvoř vlastní označený náčrt a nakonec vyřeš vstupní diagnostiku.",
+    "deadline": "Cíl první etapy: jistota v pojmech, náčrtu a základních výpočtech"
+  },
+  "readiness": {
+    "label": "Studijní postup",
+    "lessonWeight": 60,
+    "taskWeight": 40
+  },
+  "lessons": [],
+  "materials": [
+    {
+      "title": "Trojúhelníky a planimetrie — úvod",
+      "meta": "Webový studijní materiál · Matematika · 2. ročník SŠ · základní přehled a diagnostika",
+      "badge": "Aktuální materiál",
+      "badgeClass": "pdf",
+      "url": "./Materials/vojta/2026-07-30__matematika__trojuhelniky-a-planimetrie__uvodni-material.html",
+      "date": "2026-07-30",
+      "source": "manual-sync"
+    }
+  ],
+  "tasks": [
+    {
+      "id": "vojta-task-1",
+      "title": "Projít úvod k trojúhelníkům",
+      "meta": "Zopakuj druhy trojúhelníků, součet úhlů, výšky, těžnice, obvod a obsah. U každého pojmu vytvoř vlastní náčrt a vyřeš všech pět diagnostických úloh.",
+      "badge": "Aktuální úkol"
+    }
+  ],
+  "timeline": [
+    {
+      "month": "Čvc",
+      "day": "30",
+      "title": "Založena studentská zóna",
+      "desc": "Připraven úvodní plán a studijní materiál pro trojúhelníky a planimetrii ve 2. ročníku SŠ.",
+      "badge": "Start"
+    }
+  ],
+  "upcoming": [
+    {
+      "title": "První lekce — diagnostika planimetrie",
+      "meta": "Trojúhelníky, úhly, výšky, těžnice, obvod a obsah",
+      "badge": "Co nás čeká"
+    },
+    {
+      "title": "Navazující téma — podobnost a Pythagorova věta",
+      "meta": "Po zvládnutí základních vlastností trojúhelníku",
+      "badge": "Další krok"
+    }
+  ],
+  "links": [
+    {
+      "title": "GeoGebra geometrie",
+      "url": "https://www.geogebra.org/geometry",
+      "desc": "Konstrukce, kontrola náčrtů a zkoumání vlastností trojúhelníků."
+    }
+  ]
+}
