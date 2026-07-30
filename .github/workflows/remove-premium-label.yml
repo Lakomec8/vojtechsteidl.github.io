@@ -1,0 +1,64 @@
+name: Remove duplicate premium label
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - ".github/workflows/remove-premium-label.yml"
+
+permissions:
+  contents: write
+
+jobs:
+  remove-label:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Remove duplicate label and spacing
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import re
+
+          path = Path("index.html")
+          content = path.read_text(encoding="utf-8")
+
+          content, label_count = re.subn(
+              r'^[ \t]*<p class="recommended">Prémiová volba</p>\r?\n',
+              '',
+              content,
+              count=1,
+              flags=re.MULTILINE,
+          )
+
+          content, spacing_count = re.subn(
+              r'(\.premium-plan\s*\{\s*overflow:\s*hidden;\s*)padding-top:\s*3\.75rem;\s*',
+              r'\1',
+              content,
+              count=1,
+          )
+
+          if label_count != 1:
+              raise SystemExit("Premium label was not found exactly once.")
+          if spacing_count != 1:
+              raise SystemExit("Premium card spacing was not found exactly once.")
+
+          path.write_text(content, encoding="utf-8")
+          Path(".github/workflows/remove-premium-label.yml").unlink()
+          PY
+
+      - name: Commit clean premium card
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html .github/workflows/remove-premium-label.yml
+          git commit -m "Odstranit štítek Prémiová volba"
+          git pull --rebase origin main
+          git push origin HEAD:main
