@@ -1,0 +1,67 @@
+name: Polish premium pricing label
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - ".github/workflows/polish-premium-label.yml"
+
+permissions:
+  contents: write
+
+jobs:
+  polish-label:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Move premium label inside the card
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          path = Path("index.html")
+          content = path.read_text(encoding="utf-8")
+
+          old_card = '''        .premium-plan {
+              overflow: hidden;
+              border: 1px solid #d2a448 !important;'''
+          new_card = '''        .premium-plan {
+              overflow: hidden;
+              padding-top: 3.75rem;
+              border: 1px solid #d2a448 !important;'''
+
+          old_badge = '''        .premium-plan .recommended {
+              background: linear-gradient(135deg, #8a5a12, #c99837);'''
+          new_badge = '''        .premium-plan .recommended {
+              top: 1rem;
+              min-width: max-content;
+              white-space: nowrap;
+              background: linear-gradient(135deg, #8a5a12, #c99837);'''
+
+          if old_card not in content:
+              raise SystemExit("Premium card CSS block was not found.")
+          if old_badge not in content:
+              raise SystemExit("Premium badge CSS block was not found.")
+
+          content = content.replace(old_card, new_card, 1)
+          content = content.replace(old_badge, new_badge, 1)
+          path.write_text(content, encoding="utf-8")
+
+          Path(".github/workflows/polish-premium-label.yml").unlink()
+          PY
+
+      - name: Commit polished pricing card
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html .github/workflows/polish-premium-label.yml
+          git commit -m "Doladit štítek prémiového balíčku"
+          git pull --rebase origin main
+          git push origin HEAD:main
