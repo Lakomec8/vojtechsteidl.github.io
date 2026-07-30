@@ -1,6 +1,7 @@
 name: Sync student materials
 
 on:
+  workflow_dispatch:
   push:
     paths:
       - "Materials/**/*.pdf"
