@@ -1,0 +1,53 @@
+name: Sync student materials
+
+on:
+  push:
+    paths:
+      - "Materials/**/*.pdf"
+      - "*.pdf"
+      - "scripts/sync_student_materials.py"
+      - ".github/workflows/sync-student-materials.yml"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: sync-student-materials-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Synchronize PDF files with student profiles
+        run: python scripts/sync_student_materials.py
+
+      - name: Validate student data and material links
+        run: python scripts/validate_student_data.py
+
+      - name: Commit generated changes
+        run: |
+          if git diff --quiet; then
+            echo "No generated changes."
+            exit 0
+          fi
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "Sync student materials"
+          git pull --rebase origin "${GITHUB_REF_NAME}"
+          git push origin "HEAD:${GITHUB_REF_NAME}"

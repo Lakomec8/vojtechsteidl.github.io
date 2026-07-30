@@ -7,10 +7,14 @@ on:
       - "Materials/**"
       - "*.pdf"
       - "assets/student-portal.js"
+      - "assets/student-dashboard-featured.js"
       - "student-portal.html"
       - "scripts/validate_student_data.py"
+      - "scripts/sync_student_materials.py"
       - "docs/student-profile.template.json"
+      - "docs/STUDENT_DATA.md"
       - ".github/workflows/validate-student-data.yml"
+      - ".github/workflows/sync-student-materials.yml"
   push:
     branches:
       - main
@@ -19,10 +23,14 @@ on:
       - "Materials/**"
       - "*.pdf"
       - "assets/student-portal.js"
+      - "assets/student-dashboard-featured.js"
       - "student-portal.html"
       - "scripts/validate_student_data.py"
+      - "scripts/sync_student_materials.py"
       - "docs/student-profile.template.json"
+      - "docs/STUDENT_DATA.md"
       - ".github/workflows/validate-student-data.yml"
+      - ".github/workflows/sync-student-materials.yml"
 
 permissions:
   contents: read
@@ -42,8 +50,13 @@ jobs:
       - name: Validate student JSON and material links
         run: python scripts/validate_student_data.py
 
+      - name: Check Python script syntax
+        run: python -m py_compile scripts/sync_student_materials.py
+
       - name: Check student portal JavaScript syntax
-        run: node --check assets/student-portal.js
+        run: |
+          node --check assets/student-portal.js
+          node --check assets/student-dashboard-featured.js
 
       - name: Check profile template JSON syntax
         run: python -m json.tool docs/student-profile.template.json > /dev/null

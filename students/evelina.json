@@ -13,13 +13,6 @@
     "lessonWeight": 60,
     "taskWeight": 40
   },
-  "featuredMaterial": {
-    "title": "Lineární rovnice a nerovnice",
-    "meta": "PDF materiál · Matematika · aktuální téma · 1. ročník SŠ",
-    "badge": "Aktuální PDF",
-    "badgeClass": "pdf",
-    "url": "./Lineární_rovnice_a_nerovnice.pdf"
-  },
   "lessons": [
     {
       "id": "evelina-lesson-3",
