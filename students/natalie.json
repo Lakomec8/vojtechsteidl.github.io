@@ -2,11 +2,11 @@
   "studentName": "Natalie",
   "studentInitials": "N",
   "progress": 0,
-  "progressText": "Máš za sebou dvě hodiny. Po intervalech jsme navázali řešením standardních úloh z didaktického testu 2026 bez geometrie.",
+  "progressText": "Máš za sebou dvě hodiny. Aktuálně upevňujeme standardní úlohy z didaktického testu 2026; cílem je dosáhnout 24 bodů v cvičném didaktickém testu.",
   "priority": {
-    "title": "Začni kompletním řešením podzimního testu 2025.",
-    "text": "Projdi nejprve rychlý klíč a potom postupy u úloh, které jsi nedokázala sama začít. Chyby rozděl podle témat a vrať se k doporučeným základním úlohám.",
-    "deadline": "Termín další hodiny zatím není uveden"
+    "title": "Cíl: 24 bodů v cvičném didaktickém testu.",
+    "text": "Pracuj nyní s řešením didaktického testu 2026 bez geometrie. U každého typu nejprve zkus vlastní postup, potom porovnej řešení a zapiš si chybu, která se opakuje.",
+    "deadline": "Cílový výsledek: 24 bodů"
   },
   "readiness": {
     "label": "Studijní postup",
@@ -57,22 +57,22 @@
   ],
   "materials": [
     {
-      "title": "Didaktický test — podzim 2025, kompletní řešení",
-      "meta": "Webový studijní materiál · Matematika · všech 25 úloh včetně geometrie · přidáno 30. července 2026",
-      "badge": "Aktuální řešení",
-      "badgeClass": "pdf",
-      "url": "./Materials/natalie/2026-07-30__matematika__didakticky-test-podzim-2025-kompletni-reseni__reseni.html",
-      "date": "2026-07-30",
-      "source": "manual-sync"
-    },
-    {
       "title": "Didaktický test 2026 — řešení bez geometrie",
-      "meta": "PDF materiál · Matematika · 2. hodina · dokončeno 28. července 2026",
-      "badge": "PDF",
+      "meta": "PDF materiál · Matematika · aktivní příprava na cvičný didaktický test",
+      "badge": "Aktuální PDF",
       "badgeClass": "pdf",
       "url": "./Materials/natalie/2026-07-28__didakticky-test-2026-reseni-bez-geometrie.pdf",
       "date": "2026-07-28",
       "source": "filename-sync"
+    },
+    {
+      "title": "Didaktický test — podzim 2025, kompletní řešení",
+      "meta": "Webový studijní materiál · Matematika · navazující cvičný test se všemi 25 úlohami",
+      "badge": "Připraveno",
+      "badgeClass": "pdf",
+      "url": "./Materials/natalie/2026-07-30__matematika__didakticky-test-podzim-2025-kompletni-reseni__reseni.html",
+      "date": "2026-07-30",
+      "source": "manual-sync"
     },
     {
       "title": "Intervaly — zápis z 1. hodiny",
@@ -87,8 +87,8 @@
   "tasks": [
     {
       "id": "natalie-task-3",
-      "title": "Projít podzimní didaktický test 2025",
-      "meta": "Nejprve zkus vybrané úlohy samostatně, potom porovnej postup a zapiš opakující se chyby podle témat.",
+      "title": "Procvičit didaktický test 2026",
+      "meta": "Projdi standardní negeometrické úlohy, u každé nejprve zkus vlastní postup a potom porovnej řešení. Směřujeme k výsledku 24 bodů.",
       "badge": "Aktuální úkol"
     }
   ],
@@ -115,7 +115,13 @@
       "badge": "Lekce"
     }
   ],
-  "upcoming": [],
+  "upcoming": [
+    {
+      "title": "Cvičný didaktický test — podzim 2025",
+      "meta": "Co nás čeká po dokončení aktivního materiálu 2026 · cílový výsledek 24 bodů",
+      "badge": "Cvičný test"
+    }
+  ],
   "links": [
     {
       "title": "GeoGebra kalkulačka",
