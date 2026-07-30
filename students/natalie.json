@@ -31,7 +31,7 @@
       "homework": "Projít si řešený test a vyřešit dva podobné příklady u každého zařazeného typu úlohy.",
       "material": {
         "title": "Didaktický test 2026 — řešení bez geometrie",
-        "url": "./Didakťák_Natalie___2026.pdf"
+        "url": "./Materials/natalie/2026-07-28__didakticky-test-2026-reseni-bez-geometrie.pdf"
       }
     },
     {
@@ -51,7 +51,7 @@
       "homework": "Projít si zápis z hodiny a vyřešit procvičovací příklady v přiloženém materiálu.",
       "material": {
         "title": "Intervaly — zápis z 1. hodiny",
-        "url": "./Natalie___Intervaly.pdf"
+        "url": "./Materials/natalie/2026-07-26__intervaly-zapis-z-1-hodiny.pdf"
       }
     }
   ],
@@ -61,14 +61,18 @@
       "meta": "PDF materiál · Matematika · 2. hodina · dokončeno 28. července 2026",
       "badge": "Aktuální PDF",
       "badgeClass": "pdf",
-      "url": "./Didakťák_Natalie___2026.pdf"
+      "url": "./Materials/natalie/2026-07-28__didakticky-test-2026-reseni-bez-geometrie.pdf",
+      "date": "2026-07-28",
+      "source": "filename-sync"
     },
     {
       "title": "Intervaly — zápis z 1. hodiny",
       "meta": "PDF materiál · Matematika · příprava k didaktickému testu",
       "badge": "PDF",
       "badgeClass": "pdf",
-      "url": "./Natalie___Intervaly.pdf"
+      "url": "./Materials/natalie/2026-07-26__intervaly-zapis-z-1-hodiny.pdf",
+      "date": "2026-07-26",
+      "source": "filename-sync"
     }
   ],
   "tasks": [

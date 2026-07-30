@@ -31,7 +31,7 @@
       "homework": "Projít si nový materiál, vyřešit cvičné úlohy a označit příklady, které bude potřeba dovysvětlit.",
       "material": {
         "title": "Lineární rovnice a nerovnice",
-        "url": "./Lineární_rovnice_a_nerovnice.pdf"
+        "url": "./Materials/evelina/2026-07-28__linearni-rovnice-a-nerovnice.pdf"
       }
     },
     {
@@ -51,7 +51,7 @@
       "homework": "Projít si materiál k mocninám a odmocninám a označit nejasné příklady.",
       "material": {
         "title": "Mocniny a odmocniny — materiál z 2. hodiny",
-        "url": "./Mocniny_úvod.pdf"
+        "url": "./Materials/evelina/2026-07-24__mocniny-a-odmocniny-material-z-2-hodiny.pdf"
       }
     },
     {
@@ -72,7 +72,7 @@
       "homework": "Dokončit pracovní list a označit příklady, které bude potřeba znovu vysvětlit.",
       "material": {
         "title": "Pracovní list z první hodiny — mnohočleny a algebraické úpravy",
-        "url": "./Materials/Evelin/Evelína___1__hodina__Mnohočleny_a_úpravy.pdf"
+        "url": "./Materials/evelina/2026-07-20__1-hodina-mnohocleny-a-upravy.pdf"
       }
     }
   ],
@@ -82,21 +82,27 @@
       "meta": "PDF materiál · Matematika · 3. hodina · dokončeno 28. července 2026",
       "badge": "Aktuální PDF",
       "badgeClass": "pdf",
-      "url": "./Lineární_rovnice_a_nerovnice.pdf"
+      "url": "./Materials/evelina/2026-07-28__linearni-rovnice-a-nerovnice.pdf",
+      "date": "2026-07-28",
+      "source": "filename-sync"
     },
     {
       "title": "Mocniny a odmocniny — materiál z 2. hodiny",
       "meta": "PDF materiál · Matematika · předchozí probírané téma",
       "badge": "PDF",
       "badgeClass": "pdf",
-      "url": "./Mocniny_úvod.pdf"
+      "url": "./Materials/evelina/2026-07-24__mocniny-a-odmocniny-material-z-2-hodiny.pdf",
+      "date": "2026-07-24",
+      "source": "filename-sync"
     },
     {
       "title": "1. hodina — Mnohočleny a úpravy",
       "meta": "PDF materiál · Matematika · dokončeno 20. července 2026",
       "badge": "PDF",
       "badgeClass": "pdf",
-      "url": "./Materials/Evelin/Evelína___1__hodina__Mnohočleny_a_úpravy.pdf"
+      "url": "./Materials/evelina/2026-07-20__1-hodina-mnohocleny-a-upravy.pdf",
+      "date": "2026-07-20",
+      "source": "filename-sync"
     }
   ],
   "tasks": [
