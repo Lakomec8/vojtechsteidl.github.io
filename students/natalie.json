@@ -4,8 +4,8 @@
   "progress": 0,
   "progressText": "Máš za sebou dvě hodiny. Po intervalech jsme navázali řešením standardních úloh z didaktického testu 2026 bez geometrie.",
   "priority": {
-    "title": "Začni řešeným didaktickým testem.",
-    "text": "Projdi řešení standardních negeometrických úloh a potom vyřeš dva podobné příklady u každého typu. Atypické úlohy zatím vynech.",
+    "title": "Začni kompletním řešením podzimního testu 2025.",
+    "text": "Projdi nejprve rychlý klíč a potom postupy u úloh, které jsi nedokázala sama začít. Chyby rozděl podle témat a vrať se k doporučeným základním úlohám.",
     "deadline": "Termín další hodiny zatím není uveden"
   },
   "readiness": {
@@ -57,9 +57,18 @@
   ],
   "materials": [
     {
+      "title": "Didaktický test — podzim 2025, kompletní řešení",
+      "meta": "Webový studijní materiál · Matematika · všech 25 úloh včetně geometrie · přidáno 30. července 2026",
+      "badge": "Aktuální řešení",
+      "badgeClass": "pdf",
+      "url": "./Materials/natalie/2026-07-30__matematika__didakticky-test-podzim-2025-kompletni-reseni__reseni.html",
+      "date": "2026-07-30",
+      "source": "manual-sync"
+    },
+    {
       "title": "Didaktický test 2026 — řešení bez geometrie",
       "meta": "PDF materiál · Matematika · 2. hodina · dokončeno 28. července 2026",
-      "badge": "Aktuální PDF",
+      "badge": "PDF",
       "badgeClass": "pdf",
       "url": "./Materials/natalie/2026-07-28__didakticky-test-2026-reseni-bez-geometrie.pdf",
       "date": "2026-07-28",
@@ -77,13 +86,20 @@
   ],
   "tasks": [
     {
-      "id": "natalie-task-2",
-      "title": "Projít didaktický test 2026",
-      "meta": "Prostuduj řešené standardní úlohy bez geometrie a zkus dva podobné příklady u každého typu.",
+      "id": "natalie-task-3",
+      "title": "Projít podzimní didaktický test 2025",
+      "meta": "Nejprve zkus vybrané úlohy samostatně, potom porovnej postup a zapiš opakující se chyby podle témat.",
       "badge": "Aktuální úkol"
     }
   ],
   "timeline": [
+    {
+      "month": "Čvc",
+      "day": "30",
+      "title": "Přidáno kompletní řešení testu 2025",
+      "desc": "Materiál obsahuje všech 25 úloh podzimního didaktického testu, podrobné postupy, rychlý klíč a tematický bodový souhrn.",
+      "badge": "Materiál"
+    },
     {
       "month": "Čvc",
       "day": "28",
