@@ -1,0 +1,69 @@
+name: Finalize premium pricing label
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - ".github/workflows/finalize-premium-label.yml"
+
+permissions:
+  contents: write
+
+jobs:
+  finalize-label:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Correct card spacing
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          path = Path("index.html")
+          content = path.read_text(encoding="utf-8")
+
+          material_with_padding = '''        .material-offer {
+              position: relative;
+              overflow: hidden;
+              padding-top: 3.75rem;
+              min-height: 430px;'''
+          material_without_padding = '''        .material-offer {
+              position: relative;
+              overflow: hidden;
+              min-height: 430px;'''
+
+          premium_without_padding = '''        .premium-plan {
+              overflow: hidden;
+              border: 1px solid #d2a448 !important;'''
+          premium_with_padding = '''        .premium-plan {
+              overflow: hidden;
+              padding-top: 3.75rem;
+              border: 1px solid #d2a448 !important;'''
+
+          if material_with_padding not in content:
+              raise SystemExit("Material card block with accidental padding was not found.")
+          if premium_without_padding not in content:
+              raise SystemExit("Premium card block without padding was not found.")
+
+          content = content.replace(material_with_padding, material_without_padding, 1)
+          content = content.replace(premium_without_padding, premium_with_padding, 1)
+          path.write_text(content, encoding="utf-8")
+
+          Path(".github/workflows/finalize-premium-label.yml").unlink()
+          PY
+
+      - name: Commit final card spacing
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html .github/workflows/finalize-premium-label.yml
+          git commit -m "Dokončit rozložení prémiového štítku"
+          git pull --rebase origin main
+          git push origin HEAD:main
