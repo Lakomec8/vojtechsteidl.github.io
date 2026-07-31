@@ -2,10 +2,10 @@
   "studentName": "Evelína",
   "studentInitials": "E",
   "progress": 0,
-  "progressText": "Máš za sebou tři hodiny. Po mnohočlenech, mocninách a odmocninách jsme navázali lineárními rovnicemi a nerovnicemi.",
+  "progressText": "Máš za sebou čtyři hodiny. Po lineárních rovnicích a nerovnicích jsme navázali soustavami rovnic se dvěma a třemi neznámými.",
   "priority": {
-    "title": "Procvič si lineární rovnice a nerovnice.",
-    "text": "Projdi si řešené příklady, zopakuj ekvivalentní úpravy a u nerovnic si hlídej změnu znaménka při dělení nebo násobení záporným číslem.",
+    "title": "Procvič si eliminační metodu u soustav rovnic.",
+    "text": "Při sčítání a odečítání rovnic upravuj vždy celý řádek včetně pravé strany. U tří neznámých nejprve odstraň stejnou neznámou ze dvou řádků a potom řeš vzniklou soustavu se dvěma neznámými.",
     "deadline": "Finální test: 21. srpna 2026"
   },
   "readiness": {
@@ -14,6 +14,27 @@
     "taskWeight": 40
   },
   "lessons": [
+    {
+      "id": "evelina-lesson-4",
+      "date": "2026-07-31",
+      "displayDate": "31. července 2026",
+      "title": "4. hodina — Soustavy lineárních rovnic",
+      "subject": "Matematika",
+      "subtitle": "Čtvrtá společná lekce · dokončeno",
+      "topics": [
+        "soustavy rovnic se dvěma neznámými",
+        "eliminační metoda pomocí sčítání a odečítání celých řádků",
+        "soustavy rovnic se třemi neznámými",
+        "Gaussova eliminační metoda pomocí rozšířené matice",
+        "zpětné dosazování a kontrola řešení"
+      ],
+      "improvement": "Procvičit především odečítání násobků řádků a pečlivě hlídat znaménka u každého koeficientu i na pravé straně.",
+      "homework": "Projít nový zápis, vyřešit procvičovací soustavy a u alespoň jedné soustavy se třemi neznámými zapsat celý postup také pomocí rozšířené matice.",
+      "material": {
+        "title": "Soustavy rovnic — 2 a 3 neznámé a maticová metoda",
+        "url": "./Materials/evelina/2026-07-31__soustavy-rovnic-2-a-3-nezname-a-matice.html"
+      }
+    },
     {
       "id": "evelina-lesson-3",
       "date": "2026-07-28",
@@ -78,9 +99,18 @@
   ],
   "materials": [
     {
+      "title": "Soustavy rovnic — 2 a 3 neznámé a maticová metoda",
+      "meta": "Interaktivní zápis · Matematika · 4. hodina · dokončeno 31. července 2026",
+      "badge": "Aktuální materiál",
+      "badgeClass": "pdf",
+      "url": "./Materials/evelina/2026-07-31__soustavy-rovnic-2-a-3-nezname-a-matice.html",
+      "date": "2026-07-31",
+      "source": "manual"
+    },
+    {
       "title": "Lineární rovnice a nerovnice",
       "meta": "PDF materiál · Matematika · 3. hodina · dokončeno 28. července 2026",
-      "badge": "Aktuální PDF",
+      "badge": "PDF",
       "badgeClass": "pdf",
       "url": "./Materials/evelina/2026-07-28__linearni-rovnice-a-nerovnice.pdf",
       "date": "2026-07-28",
@@ -107,13 +137,20 @@
   ],
   "tasks": [
     {
-      "id": "evelina-task-3",
-      "title": "Procvičit lineární rovnice a nerovnice",
-      "meta": "Projdi si řešené příklady v novém PDF a označ úlohy, které chceš na další hodině dovysvětlit.",
+      "id": "evelina-task-4",
+      "title": "Procvičit soustavy rovnic a řádkové operace",
+      "meta": "Vyřeš úlohy v novém zápisu. U soustavy se třemi neznámými napiš vedle každého kroku použitou operaci, například R₂ ← R₂ − 2R₁.",
       "badge": "Aktuální úkol"
     }
   ],
   "timeline": [
+    {
+      "month": "Čvc",
+      "day": "31",
+      "title": "Čtvrtá hodina dokončena",
+      "desc": "Lekce byla zaměřena na soustavy se dvěma a třemi neznámými, eliminační metodu, sčítání a odečítání řádků a řešení pomocí rozšířené matice.",
+      "badge": "Lekce"
+    },
     {
       "month": "Čvc",
       "day": "28",
