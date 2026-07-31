@@ -32,7 +32,7 @@
       "homework": "Projít nový zápis, vyřešit procvičovací soustavy a u alespoň jedné soustavy se třemi neznámými zapsat celý postup také pomocí rozšířené matice.",
       "material": {
         "title": "Soustavy rovnic — 2 a 3 neznámé a maticová metoda",
-        "url": "./Materials/evelina/2026-07-31__soustavy-rovnic-2-a-3-nezname-a-matice.html"
+        "url": "./Materials/evelina/2026-07-31__soustavy-rovnic-2-a-3-nezname-a-matice.pdf"
       }
     },
     {
@@ -99,13 +99,13 @@
   ],
   "materials": [
     {
-      "title": "Soustavy rovnic — 2 a 3 neznámé a maticová metoda",
-      "meta": "Interaktivní zápis · Matematika · 4. hodina · dokončeno 31. července 2026",
-      "badge": "Aktuální materiál",
+      "title": "Soustavy rovnic 2 a 3 nezname a matice",
+      "meta": "PDF materiál · Matematika · přidáno 31. července 2026",
+      "badge": "Aktuální PDF",
       "badgeClass": "pdf",
-      "url": "./Materials/evelina/2026-07-31__soustavy-rovnic-2-a-3-nezname-a-matice.html",
+      "url": "./Materials/evelina/2026-07-31__soustavy-rovnic-2-a-3-nezname-a-matice.pdf",
       "date": "2026-07-31",
-      "source": "manual"
+      "source": "filename-sync"
     },
     {
       "title": "Lineární rovnice a nerovnice",
