@@ -1,19 +1,42 @@
 {
   "studentName": "Evelína",
   "studentInitials": "E",
-  "progress": 0,
-  "progressText": "Máš za sebou čtyři hodiny. Po lineárních rovnicích a nerovnicích jsme navázali soustavami rovnic se dvěma a třemi neznámými.",
+  "progress": 80,
+  "progressText": "V cvičné písemce jsi získala 32 z 40 bodů, tedy 80 %. Základní látku máš převážně zvládnutou a k finálnímu testu jsi nyní téměř připravená. Zbývající tři hodiny využijeme hlavně k dalším testům, kontrole samostatnosti a odstranění posledních opakujících se chyb.",
   "priority": {
-    "title": "Procvič si eliminační metodu u soustav rovnic.",
-    "text": "Při sčítání a odečítání rovnic upravuj vždy celý řádek včetně pravé strany. U tří neznámých nejprve odstraň stejnou neznámou ze dvou řádků a potom řeš vzniklou soustavu se dvěma neznámými.",
+    "title": "Udržet výkon a ověřit dovednosti v dalších testech.",
+    "text": "Novou látku už nebudeme zbytečně rozšiřovat. V posledních třech hodinách budeme střídat kratší testy, úlohy na čas a opravu chyb. Zaměříme se hlavně na přesnost, znaménka, zápis celého postupu a samostatnou volbu metody.",
     "deadline": "Finální test: 21. srpna 2026"
   },
   "readiness": {
-    "label": "Studijní postup",
-    "lessonWeight": 60,
-    "taskWeight": 40
+    "label": "Připravenost k finálnímu testu",
+    "lessonWeight": 80,
+    "taskWeight": 20
   },
   "lessons": [
+    {
+      "id": "evelina-assessment-1",
+      "date": "2026-08-04",
+      "displayDate": "4. srpna 2026",
+      "title": "Cvičná písemka — diagnostika připravenosti",
+      "subject": "Matematika",
+      "subtitle": "Průběžné ověření · výsledek 32/40",
+      "score": 32,
+      "scoreLabel": "80 % — téměř připravena",
+      "topics": [
+        "mnohočleny a algebraické úpravy",
+        "mocniny a odmocniny",
+        "lineární rovnice a nerovnice",
+        "soustavy rovnic se dvěma a třemi neznámými",
+        "samostatná volba postupu a kontrola výsledku"
+      ],
+      "improvement": "Výsledek potvrzuje, že základní dovednosti jsou převážně zvládnuté. Další příprava se zaměří na stabilitu výkonu, přesnost výpočtů a odstranění chyb, které se opakují pod časovým tlakem.",
+      "homework": "Projít chyby z cvičné písemky, každou opravit celým postupem a ke každému chybnému typu vyřešit alespoň jeden podobný příklad.",
+      "material": {
+        "title": "Cvičná písemka z matematiky — úroveň 1 a 2",
+        "url": "./Materials/evelina/2026-08-04__cvicna-pisemka-matematika-uroven-1-a-2.pdf"
+      }
+    },
     {
       "id": "evelina-lesson-4",
       "date": "2026-07-31",
@@ -99,9 +122,18 @@
   ],
   "materials": [
     {
+      "title": "Cvičná písemka z matematiky — úroveň 1 a 2",
+      "meta": "PDF materiál · Diagnostický test · výsledek 32/40 · 80 %",
+      "badge": "32/40",
+      "badgeClass": "pdf",
+      "url": "./Materials/evelina/2026-08-04__cvicna-pisemka-matematika-uroven-1-a-2.pdf",
+      "date": "2026-08-04",
+      "source": "manual"
+    },
+    {
       "title": "Soustavy rovnic 2 a 3 nezname a matice",
       "meta": "PDF materiál · Matematika · přidáno 31. července 2026",
-      "badge": "Aktuální PDF",
+      "badge": "PDF",
       "badgeClass": "pdf",
       "url": "./Materials/evelina/2026-07-31__soustavy-rovnic-2-a-3-nezname-a-matice.pdf",
       "date": "2026-07-31",
@@ -137,13 +169,20 @@
   ],
   "tasks": [
     {
-      "id": "evelina-task-4",
-      "title": "Procvičit soustavy rovnic a řádkové operace",
-      "meta": "Vyřeš úlohy v novém zápisu. U soustavy se třemi neznámými napiš vedle každého kroku použitou operaci, například R₂ ← R₂ − 2R₁.",
-      "badge": "Aktuální úkol"
+      "id": "evelina-task-final-preparation",
+      "title": "Opravit chyby z písemky a pokračovat v testování",
+      "meta": "Projdi všech 8 ztracených bodů, oprav řešení celým postupem a označ chyby podle typu. V dalších třech hodinách budeme ověřovat stejné dovednosti na nových zadáních a pod časovým limitem.",
+      "badge": "Poslední 3 hodiny"
     }
   ],
   "timeline": [
+    {
+      "month": "Srp",
+      "day": "04",
+      "title": "Cvičná písemka — 32/40 bodů",
+      "desc": "Evelína získala 80 % bodů. Výsledek ukazuje, že je k finálnímu testu převážně připravená. Poslední tři hodiny budou zaměřeny na další testování, přesnost, práci pod časovým tlakem a odstranění opakujících se chyb.",
+      "badge": "80 %"
+    },
     {
       "month": "Čvc",
       "day": "31",
@@ -181,6 +220,11 @@
     }
   ],
   "upcoming": [
+    {
+      "title": "Tři kontrolní lekce před finálem",
+      "meta": "Krátké testy, úlohy na čas, oprava chyb a kontrola samostatnosti",
+      "badge": "3 hodiny"
+    },
     {
       "date": "2026-08-21",
       "title": "Finální test",
