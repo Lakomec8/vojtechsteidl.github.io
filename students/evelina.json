@@ -21,8 +21,8 @@
       "title": "Cvičná písemka — diagnostika připravenosti",
       "subject": "Matematika",
       "subtitle": "Průběžné ověření · výsledek 32/40",
-      "score": 32,
-      "scoreLabel": "80 % — téměř připravena",
+      "score": 8,
+      "scoreLabel": "8/10 · 32/40 bodů · 80 %",
       "topics": [
         "mnohočleny a algebraické úpravy",
         "mocniny a odmocniny",
@@ -105,8 +105,7 @@
       "title": "1. hodina — Mnohočleny a algebraické úpravy",
       "subject": "Matematika",
       "subtitle": "První společná lekce · dokončeno",
-      "score": 7,
-      "scoreLabel": "Dobře zvládnuto",
+      "scoreLabel": "Orientačně 7/10 · dobře zvládnuto",
       "topics": [
         "sčítání a odčítání mnohočlenů",
         "roznásobování závorek",
@@ -181,7 +180,7 @@
       "day": "04",
       "title": "Cvičná písemka — 32/40 bodů",
       "desc": "Evelína získala 80 % bodů. Výsledek ukazuje, že je k finálnímu testu převážně připravená. Poslední tři hodiny budou zaměřeny na další testování, přesnost, práci pod časovým tlakem a odstranění opakujících se chyb.",
-      "badge": "80 %"
+      "badge": "8/10"
     },
     {
       "month": "Čvc",
@@ -208,7 +207,7 @@
       "month": "Čvc",
       "day": "20",
       "title": "První hodina dokončena",
-      "desc": "Proběhla lekce zaměřená na mnohočleny a algebraické úpravy. Celkové zvládnutí bylo ohodnoceno 7/10.",
+      "desc": "Proběhla lekce zaměřená na mnohočleny a algebraické úpravy. Celkové zvládnutí bylo orientačně hodnoceno 7/10.",
       "badge": "7/10"
     },
     {
