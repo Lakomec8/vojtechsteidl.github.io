@@ -2,10 +2,10 @@
   "studentName": "Natalie",
   "studentInitials": "N",
   "progress": 0,
-  "progressText": "Máš za sebou dvě hodiny. Aktuálně upevňujeme standardní úlohy z didaktického testu 2026; cílem je dosáhnout 24 bodů v cvičném didaktickém testu.",
+  "progressText": "Máš za sebou dvě hodiny. Aktuálně upevňujeme standardní úlohy z didaktických testů; cílem je dosáhnout 24 bodů v cvičném didaktickém testu.",
   "priority": {
     "title": "Cíl: 24 bodů v cvičném didaktickém testu.",
-    "text": "Pracuj nyní s řešením didaktického testu 2026 bez geometrie. U každého typu nejprve zkus vlastní postup, potom porovnej řešení a zapiš si chybu, která se opakuje.",
+    "text": "Pracuj nyní s kompletně zpracovaným jarním testem 2025 a s interaktivním procvičováním funkcí. U každého typu nejprve zkus vlastní postup, potom porovnej řešení a zapiš si chybu, která se opakuje.",
     "deadline": "Cíl: 24 bodů"
   },
   "readiness": {
@@ -57,9 +57,27 @@
   ],
   "materials": [
     {
+      "title": "Didaktický test — jaro 2025, kompletní řešení",
+      "meta": "PDF materiál · Matematika · kompletní rozbor všech 25 úloh",
+      "badge": "Nové PDF",
+      "badgeClass": "pdf",
+      "url": "./Materials/natalie/2026-08-04__matematika__didakticky-test-jaro-2025-kompletni-reseni.pdf",
+      "date": "2026-08-04",
+      "source": "manual-sync"
+    },
+    {
+      "title": "Interaktivní procvičování funkcí",
+      "meta": "Interaktivní materiál · lineární a kvadratická funkce · graf, parametry, průsečíky a vrchol",
+      "badge": "Interaktivní",
+      "badgeClass": "pdf",
+      "url": "./Materials/natalie/2026-08-04__matematika__interaktivni-funkce.html",
+      "date": "2026-08-04",
+      "source": "manual-sync"
+    },
+    {
       "title": "Didaktický test 2026 — řešení bez geometrie",
       "meta": "PDF materiál · Matematika · aktivní příprava na cvičný didaktický test",
-      "badge": "Aktuální PDF",
+      "badge": "PDF",
       "badgeClass": "pdf",
       "url": "./Materials/natalie/2026-07-28__didakticky-test-2026-reseni-bez-geometrie.pdf",
       "date": "2026-07-28",
@@ -86,13 +104,20 @@
   ],
   "tasks": [
     {
-      "id": "natalie-task-3",
-      "title": "Procvičit didaktický test 2026",
-      "meta": "Projdi standardní negeometrické úlohy, u každé nejprve zkus vlastní postup a potom porovnej řešení. Směřujeme k výsledku 24 bodů.",
+      "id": "natalie-task-4",
+      "title": "Projít jarní test 2025 a procvičit funkce",
+      "meta": "Vyřeš nejprve bodově dostupné úlohy z jarního testu 2025. Potom v interaktivním materiálu měň parametry lineární a kvadratické funkce a procvič průsečíky, růst nebo klesání a vrchol paraboly.",
       "badge": "Aktuální úkol"
     }
   ],
   "timeline": [
+    {
+      "month": "Srp",
+      "day": "04",
+      "title": "Přidán jarní didaktický test 2025",
+      "desc": "Do materiálů bylo přidáno kompletní řešení jarního didaktického testu 2025 a samostatné interaktivní procvičování lineární a kvadratické funkce.",
+      "badge": "2 materiály"
+    },
     {
       "month": "Čvc",
       "day": "30",
@@ -117,8 +142,8 @@
   ],
   "upcoming": [
     {
-      "title": "Cvičný didaktický test — podzim 2025",
-      "meta": "Co nás čeká po dokončení aktivního materiálu 2026 · cílový výsledek 24 bodů",
+      "title": "Cvičný didaktický test — jaro 2025",
+      "meta": "Kompletní test, následná oprava a vyhodnocení bodově dostupných úloh · cílový výsledek 24 bodů",
       "badge": "Cvičný test"
     }
   ],
