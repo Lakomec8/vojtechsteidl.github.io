@@ -35,6 +35,10 @@
             background: #dbeafe;
             color: var(--navy);
         }
+        .nav-links .nav-schools {
+            color: var(--blue-dark);
+            font-weight: 800;
+        }
         .expectations { padding-bottom: 3rem; }
         .expectations-grid {
             display: grid;
@@ -227,6 +231,31 @@
         .portal-panel strong { display: block; margin-bottom: 9px; color: var(--navy); font-size: .62rem; }
         .portal-line { height: 5px; margin: 6px 0; border-radius: 99px; background: #e2e8f0; }
         .portal-line.short { width: 66%; }
+        .school-promo-section {
+            padding: 4.8rem max(1.25rem, calc((100% - 1180px) / 2));
+            background: #f8fafc;
+        }
+        .school-promo {
+            display: grid;
+            grid-template-columns: 1.1fr .9fr;
+            gap: 2rem;
+            align-items: center;
+            padding: clamp(2rem,4vw,3.2rem);
+            border: 1px solid #dbe6f2;
+            border-radius: 24px;
+            background: #fff;
+            box-shadow: 0 18px 48px rgba(15,23,42,.08);
+        }
+        .school-promo .eyebrow { margin-bottom: .65rem; }
+        .school-promo h2 { margin-bottom: .8rem; color: var(--navy); font-size: clamp(1.9rem,4vw,2.8rem); letter-spacing: -.04em; line-height: 1.1; }
+        .school-promo p { color: var(--muted); line-height: 1.7; }
+        .school-promo-points { display: grid; gap: .75rem; }
+        .school-promo-point { display: flex; gap: .7rem; align-items: flex-start; color: #334e68; }
+        .school-promo-point i { margin-top: .25rem; color: var(--blue); }
+        .school-promo-actions { display: flex; gap: .8rem; flex-wrap: wrap; margin-top: 1.4rem; }
+        .school-promo-button { display: inline-flex; align-items: center; gap: .55rem; padding: .85rem 1.1rem; border-radius: 10px; background: var(--navy); color: #fff; font-weight: 800; text-decoration: none; }
+        .school-promo-button:hover,.school-promo-button:focus-visible { background: var(--blue-dark); color: #fff; }
+        .school-promo-note { margin-top: .8rem; font-size: .82rem; color: #7b8794; }
         .pricing-grid.three-plans {
             grid-template-columns: repeat(3, minmax(0, 1fr));
             max-width: 1040px;
@@ -288,6 +317,7 @@
             .expectations-grid { grid-template-columns: repeat(2,1fr); }
             .student-zone-layout { grid-template-columns: 1fr; }
             .portal-preview-shell { max-width: 780px; }
+            .school-promo { grid-template-columns: 1fr; }
         }
         @media (max-width: 900px) {
             .materials-offers { grid-template-columns: 1fr; }
@@ -310,6 +340,7 @@
             .portal-metrics { grid-template-columns: repeat(2,1fr); }
             .portal-bottom { grid-template-columns: 1fr; }
             .portal-panel:last-child { display: none; }
+            .school-promo-section { padding: 3.5rem 1rem; }
         }
     </style>
     <script type="application/ld+json">
@@ -321,6 +352,7 @@
         "description": "Individuální doučování matematiky a fyziky online nebo osobně v Jihlavě, doplněné o vlastní materiály a osobní studentskou zónu.",
         "telephone": "+420728345633",
         "email": "vojtasteidl@seznam.cz",
+        "identifier": "IČO 29857368",
         "address": {"@type":"PostalAddress","addressLocality":"Jihlava","postalCode":"58601","addressCountry":"CZ"},
         "url": "https://vojtechsteidl.eu/",
         "priceRange": "0–2490 Kč"
@@ -337,6 +369,7 @@
                 <li><a href="#studentska-zona">Součást služby</a></li>
                 <li><a href="#reference">Reference</a></li>
                 <li><a href="#cenik">Ceník</a></li>
+                <li><a href="/pro-skoly/" class="nav-schools"><i class="fas fa-school"></i> Pro školy</a></li>
                 <li><a href="student-portal.html" class="nav-student"><i class="fas fa-user-lock"></i> Studentská zóna</a></li>
                 <li><a href="#kontakt" class="nav-contact">Kontakt</a></li>
             </ul>
@@ -368,6 +401,23 @@
                     <a href="student-portal.html" class="zone-button"><i class="fas fa-user-lock"></i> Vstoupit do studentské zóny</a><span class="zone-note">Přístup je chráněný osobním heslem. Náhled vedle neobsahuje skutečná studentská data.</span>
                 </div>
                 <div class="portal-preview-shell" aria-label="Anonymní náhled studentského portálu"><div class="portal-preview-bar"><span></span><span></span><span></span></div><div class="portal-preview"><aside class="portal-side"><div class="portal-brand">Studentský portál<small>Matematika a fyzika</small></div><div class="portal-nav-demo"><span class="active">Nástěnka</span><span>Historie hodin</span><span>Materiály</span><span>Úkoly</span><span>Termíny</span><span>Odkazy</span></div></aside><div class="portal-main-demo"><div class="portal-demo-top"><div class="portal-search"></div><div class="portal-avatar"></div></div><div class="portal-hero-demo"><div><span class="portal-kicker">STUDIJNÍ PLÁN</span><h3>Vše důležité pro výuku na jednom místě.</h3><p>Aktuální priorita, návaznost na poslední hodinu a doporučený další krok.</p></div><div class="portal-progress"><span>Studijní postup</span><strong>68 %</strong><div class="portal-track"><div class="portal-fill"></div></div></div></div><div class="portal-metrics"><div class="portal-metric"><span>Absolvované hodiny</span><strong>8</strong></div><div class="portal-metric"><span>Celkové zvládnutí</span><strong>72 %</strong></div><div class="portal-metric"><span>Aktivní úkoly</span><strong>3</strong></div><div class="portal-metric"><span>Další termín</span><strong>St 17:00</strong></div></div><div class="portal-bottom"><div class="portal-panel"><strong>Poslední hodina</strong><div class="portal-line"></div><div class="portal-line short"></div><div class="portal-line"></div></div><div class="portal-panel"><strong>Doporučený další krok</strong><div class="portal-line"></div><div class="portal-line"></div><div class="portal-line short"></div></div></div></div></div></div>
+            </div>
+        </section>
+        <section class="school-promo-section" id="pro-skoly">
+            <div class="school-promo">
+                <div>
+                    <p class="eyebrow">Spolupráce se školami</p>
+                    <h2>Externí podpora studentů pro školy a školské instituce</h2>
+                    <p>Individuální doučování, malé skupiny, diagnostika znalostí a cílené programy pro studenty, kteří potřebují doplnit mezery, připravit se na reparát, maturitu nebo znovu navázat na školní výuku.</p>
+                    <div class="school-promo-actions"><a class="school-promo-button" href="/pro-skoly/">Zjistit možnosti spolupráce <i class="fas fa-arrow-right"></i></a></div>
+                    <p class="school-promo-note">Vojtěch Steidl · IČO 29857368</p>
+                </div>
+                <div class="school-promo-points">
+                    <div class="school-promo-point"><i class="fas fa-user-graduate"></i><span>Podpora jednotlivých doporučených studentů bez složité administrativy pro školu.</span></div>
+                    <div class="school-promo-point"><i class="fas fa-users"></i><span>Skupinové lekce pro studenty se stejným tématem nebo cílem.</span></div>
+                    <div class="school-promo-point"><i class="fas fa-clipboard-check"></i><span>Diagnostika, strukturovaný plán a navazující materiály mezi lekcemi.</span></div>
+                    <div class="school-promo-point"><i class="fas fa-laptop"></i><span>Možnost využít studentskou zónu s historií hodin, úkoly a doporučeným dalším krokem.</span></div>
+                </div>
             </div>
         </section>
         <section class="testimonials section" id="reference"><div class="section-heading"><p class="eyebrow">Zkušenosti studentů</p><h2>Co říkají studenti a rodiče</h2><p>Reference z reálné spolupráce.</p></div><div class="testimonials-grid"><article class="testimonial-card"><div class="rating" aria-label="5 z 5 hvězdiček"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div><p class="testimonial-text">„Vojta je hrozně fajn učitel. S fyzikou jsem bojoval v prvním ročníku na gymplu a díky Vojtovi jsem to rychle dohnal. Jeho vysvětlování je opravdu jasné a snadno pochopitelné.“</p><p class="testimonial-author">Petr S.</p><p class="testimonial-role">Student střední školy</p></article><article class="testimonial-card"><div class="rating" aria-label="5 z 5 hvězdiček"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div><p class="testimonial-text">„Doporučuji každému, kdo potřebuje matematiku opravdu pochopit, a ne se ji jen mechanicky učit.“</p><p class="testimonial-author">Kateřina N.</p><p class="testimonial-role">Příprava na přijímačky</p></article><article class="testimonial-card"><div class="rating" aria-label="5 z 5 hvězdiček"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div><p class="testimonial-text">„Online lekce byly velmi efektivní. Potřebovala jsem dohnat matice a soustavy rovnic a během hodiny jsem konečně pochopila, jak na to.“</p><p class="testimonial-author">Milada B.</p><p class="testimonial-role">Rodič studentky</p></article></div></section>
@@ -410,9 +460,9 @@
         </section>
         <section class="about section" id="o-mne"><div class="about-content"><div class="about-image"><img src="foto.jpg" alt="Vojtěch Steidl, lektor matematiky a fyziky"></div><div class="about-text"><p class="eyebrow">Kdo vás bude doučovat</p><h2>O mně</h2><p>K matematice a fyzice jsem si nenašel cestu hned. Právě proto rozumím studentům, kterým byly tyto předměty vysvětleny příliš rychle nebo bez souvislostí.</p><p>Vystudoval jsem aplikovanou fyziku v Brně a složitější témata převádím do srozumitelné podoby.</p><p>Materiály a studentská zóna vznikají ze stejného principu: méně chaosu, jasnější návaznost a více aktivního pochopení.</p><a href="#kontakt" class="text-link">Napsat mi <i class="fas fa-arrow-right"></i></a></div></div></section>
         <section class="faq section" id="faq"><div class="section-heading"><p class="eyebrow">Praktické informace</p><h2>Časté otázky</h2></div><div class="faq-list"><article class="faq-item"><button class="faq-question" type="button" aria-expanded="false">Je studentská zóna součástí doučování?<i class="fas fa-chevron-down"></i></button><div class="faq-answer"><p>Ano, u pravidelné spolupráce může student získat osobní přístup k historii hodin, materiálům, úkolům, termínům a studijnímu postupu.</p></div></article><article class="faq-item"><button class="faq-question" type="button" aria-expanded="false">Jsou vlastní materiály součástí každé lekce?<i class="fas fa-chevron-down"></i></button><div class="faq-answer"><p>Základní podklady vybírám podle tématu a potřeb studenta. Jeden interaktivní zápis na míru je výslovně součástí balíčku Studium Plus; další rozsáhlejší interaktivní materiály lze domluvit samostatně.</p></div></article><article class="faq-item"><button class="faq-question" type="button" aria-expanded="false">Co obsahuje prémiový balíček Studium Plus?<i class="fas fa-chevron-down"></i></button><div class="faq-answer"><p>Balíček obsahuje pět individuálních lekcí, jeden interaktivní zápis na míru k probíranému tématu, osobní studentskou zónu, materiály, úkoly a doporučený další postup.</p></div></article><article class="faq-item"><button class="faq-question" type="button" aria-expanded="false">Jak probíhá platba?<i class="fas fa-chevron-down"></i></button><div class="faq-answer"><p>Platbu lze provést bankovním převodem nebo QR kódem. Jednotlivá lekce se hradí po jejím uskutečnění, balíček Studium Plus před první lekcí.</p></div></article><article class="faq-item"><button class="faq-question" type="button" aria-expanded="false">Je možné využívat doučování jen nárazově?<i class="fas fa-chevron-down"></i></button><div class="faq-answer"><p>Ano. Někteří studenti chodí pravidelně, jiní využívají pomoc jen před testem, přijímačkami, maturitou nebo zkouškou.</p></div></article><article class="faq-item"><button class="faq-question" type="button" aria-expanded="false">Probíhá výuka online nebo osobně?<i class="fas fa-chevron-down"></i></button><div class="faq-answer"><p>Obě možnosti jsou možné. Většina výuky probíhá online, osobní lekce jsou po domluvě v Jihlavě.</p></div></article></div></section>
-        <section class="contact section" id="kontakt"><div class="section-heading"><p class="eyebrow">První krok</p><h2>Domluvme úvodní konzultaci</h2><p>Napište mi stručně, s čím student potřebuje pomoci. Ozvu se vám zpravidla do 24 hodin.</p></div><div class="contact-wrapper"><form class="contact-form" id="contactForm"><div class="form-group"><label for="name">Jméno</label><input type="text" id="name" name="name" autocomplete="name" required></div><div class="form-group"><label for="email">E-mail</label><input type="email" id="email" name="email" autocomplete="email" required></div><div class="form-group"><label for="grade">Ročník studenta</label><select id="grade" name="grade" required><option value="" selected disabled>Vyberte ročník</option><option value="1-stupen-zs">1. stupeň ZŠ</option><option value="2-stupen-zs">2. stupeň ZŠ</option><option value="stredni-skola">Střední škola</option><option value="vysoka-skola">Vysoká škola</option><option value="jine">Jiné / neuvedeno</option></select></div><div class="form-group"><label for="service">S čím potřebujete pomoci?</label><select id="service" name="service" required><option value="" selected disabled>Vyberte možnost</option><option value="prubezne-doucovani">Průběžné doučování</option><option value="test">Příprava na test</option><option value="prijimacky">Příprava na přijímačky</option><option value="maturita">Příprava na maturitu</option><option value="fyzika">Doučování fyziky</option><option value="vysoka-skola">Pomoc s vysokoškolskou látkou</option><option value="materialy">Vlastní výukové materiály</option><option value="studium-plus">Prémiový balíček Studium Plus</option></select></div><div class="form-group"><label for="message">Zpráva</label><textarea id="message" name="message" placeholder="Napište prosím téma, cíl a zda preferujete online nebo osobní lekci." required></textarea></div><label class="consent"><input type="checkbox" id="consent" required><span>Souhlasím se zpracováním údajů za účelem vyřízení mé poptávky.</span></label><button type="submit" class="submit-button">Poslat nezávaznou poptávku</button><p class="form-status" id="formStatus" aria-live="polite"></p></form><div class="contact-info"><div class="contact-item"><i class="fas fa-phone"></i><div><h3>Telefon</h3><a href="tel:+420728345633">+420 728 345 633</a><p>Pondělí až pátek přibližně 14:00–20:00</p></div></div><div class="contact-item"><i class="fas fa-envelope"></i><div><h3>E-mail</h3><a href="mailto:vojtasteidl@seznam.cz">vojtasteidl@seznam.cz</a><p>Odpovídám zpravidla do 24 hodin.</p></div></div><div class="contact-item"><i class="fas fa-location-dot"></i><div><h3>Lokalita</h3><p>Jihlava, Česká republika</p><p>Osobní lekce po domluvě, online výuka po celé ČR.</p></div></div><div class="student-zone-link"><i class="fas fa-user-lock"></i><div><h3>Studentská zóna</h3><p>Osobní přístup k hodinám, materiálům, úkolům a termínům.</p><a href="student-portal.html">Vstoupit do studentské zóny <i class="fas fa-arrow-right"></i></a></div></div></div></div></section>
+        <section class="contact section" id="kontakt"><div class="section-heading"><p class="eyebrow">První krok</p><h2>Domluvme úvodní konzultaci</h2><p>Napište mi stručně, s čím student potřebuje pomoci. Ozvu se vám zpravidla do 24 hodin.</p></div><div class="contact-wrapper"><form class="contact-form" id="contactForm"><div class="form-group"><label for="name">Jméno</label><input type="text" id="name" name="name" autocomplete="name" required></div><div class="form-group"><label for="email">E-mail</label><input type="email" id="email" name="email" autocomplete="email" required></div><div class="form-group"><label for="grade">Ročník studenta</label><select id="grade" name="grade" required><option value="" selected disabled>Vyberte ročník</option><option value="1-stupen-zs">1. stupeň ZŠ</option><option value="2-stupen-zs">2. stupeň ZŠ</option><option value="stredni-skola">Střední škola</option><option value="vysoka-skola">Vysoká škola</option><option value="jine">Jiné / neuvedeno</option></select></div><div class="form-group"><label for="service">S čím potřebujete pomoci?</label><select id="service" name="service" required><option value="" selected disabled>Vyberte možnost</option><option value="prubezne-doucovani">Průběžné doučování</option><option value="test">Příprava na test</option><option value="prijimacky">Příprava na přijímačky</option><option value="maturita">Příprava na maturitu</option><option value="fyzika">Doučování fyziky</option><option value="vysoka-skola">Pomoc s vysokoškolskou látkou</option><option value="materialy">Vlastní výukové materiály</option><option value="studium-plus">Prémiový balíček Studium Plus</option><option value="spoluprace-skoly">Spolupráce se školou / institucí</option></select></div><div class="form-group"><label for="message">Zpráva</label><textarea id="message" name="message" placeholder="Napište prosím téma, cíl a zda preferujete online nebo osobní lekci." required></textarea></div><label class="consent"><input type="checkbox" id="consent" required><span>Souhlasím se zpracováním údajů za účelem vyřízení mé poptávky.</span></label><button type="submit" class="submit-button">Poslat nezávaznou poptávku</button><p class="form-status" id="formStatus" aria-live="polite"></p></form><div class="contact-info"><div class="contact-item"><i class="fas fa-phone"></i><div><h3>Telefon</h3><a href="tel:+420728345633">+420 728 345 633</a><p>Pondělí až pátek přibližně 14:00–20:00</p></div></div><div class="contact-item"><i class="fas fa-envelope"></i><div><h3>E-mail</h3><a href="mailto:vojtasteidl@seznam.cz">vojtasteidl@seznam.cz</a><p>Odpovídám zpravidla do 24 hodin.</p></div></div><div class="contact-item"><i class="fas fa-location-dot"></i><div><h3>Lokalita</h3><p>Jihlava, Česká republika</p><p>Osobní lekce po domluvě, online výuka po celé ČR.</p></div></div><div class="student-zone-link"><i class="fas fa-user-lock"></i><div><h3>Studentská zóna</h3><p>Osobní přístup k hodinám, materiálům, úkolům a termínům.</p><a href="student-portal.html">Vstoupit do studentské zóny <i class="fas fa-arrow-right"></i></a></div></div></div></div></section>
     </main>
-    <footer><p>© 2026 Vojtěch Steidl · Doučování matematiky a fyziky v Jihlavě i online</p><div class="footer-divider"></div><div class="footer-links"><a href="https://www.linkedin.com/in/vojt%C4%9Bch-steidl-ba64b5158/" target="_blank" rel="noopener noreferrer">LinkedIn</a><a href="https://www.superprof.cz/jako-absolvent-aplikovane-fyziky-muni-vam-pomuzu-zvladnout-slozite-matematicke-fyzikalni-koncepty-jednoduse.html" target="_blank" rel="noopener noreferrer">Superprof</a><a href="https://www.doucuji.eu/507905-doucovani-doucovani-matematiky-a-fyzika-osobne-ci-online" target="_blank" rel="noopener noreferrer">Doučuji.eu</a><a href="mailto:vojtasteidl@seznam.cz">E-mail</a></div></footer>
+    <footer><p>© 2026 Vojtěch Steidl · Doučování matematiky a fyziky v Jihlavě i online · IČO 29857368</p><div class="footer-divider"></div><div class="footer-links"><a href="/pro-skoly/">Pro školy</a><a href="https://www.linkedin.com/in/vojt%C4%9Bch-steidl-ba64b5158/" target="_blank" rel="noopener noreferrer">LinkedIn</a><a href="https://www.superprof.cz/jako-absolvent-aplikovane-fyziky-muni-vam-pomuzu-zvladnout-slozite-matematicke-fyzikalni-koncepty-jednoduse.html" target="_blank" rel="noopener noreferrer">Superprof</a><a href="https://www.doucuji.eu/507905-doucovani-doucovani-matematiky-a-fyzika-osobne-ci-online" target="_blank" rel="noopener noreferrer">Doučuji.eu</a><a href="mailto:vojtasteidl@seznam.cz">E-mail</a></div></footer>
     <div id="passwordModal" class="modal-overlay" aria-hidden="true"><div class="modal-card"><button class="modal-close" id="closeModalBtn" aria-label="Zavřít">&times;</button><h3>Vstup do studentské zóny</h3><p>Pro přístup k materiálům zadejte osobní heslo studenta.</p><form id="passwordForm"><div class="form-group"><input type="password" id="studentPassword" placeholder="Zadejte heslo studenta" required autocomplete="current-password"></div><button type="submit" class="submit-button">Vstoupit do zóny</button><p id="passwordError" class="form-status error" style="display:none;margin-top:.8rem;text-align:center;"></p></form></div></div>
     <script>
         const hamburger=document.getElementById("hamburger"),navLinks=document.getElementById("navLinks");hamburger.addEventListener("click",()=>{const isOpen=navLinks.classList.toggle("active");hamburger.classList.toggle("active",isOpen);hamburger.setAttribute("aria-expanded",isOpen?"true":"false")});navLinks.querySelectorAll("a").forEach(link=>link.addEventListener("click",()=>{navLinks.classList.remove("active");hamburger.classList.remove("active");hamburger.setAttribute("aria-expanded","false")}));document.querySelectorAll(".faq-question").forEach(button=>button.addEventListener("click",()=>{const faqItem=button.closest(".faq-item"),isOpen=faqItem.classList.toggle("open");button.setAttribute("aria-expanded",isOpen?"true":"false")}));
