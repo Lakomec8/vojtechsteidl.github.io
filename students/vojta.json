@@ -2,18 +2,61 @@
   "studentName": "Vojta",
   "studentInitials": "V",
   "progress": 0,
-  "progressText": "Vítej ve studentské zóně. Začínáme trojúhelníky a planimetrií pro 2. ročník SŠ; nejprve upevníme základní pojmy, náčrt a základní výpočty.",
+  "progressText": "Máš za sebou dvě hodiny. Prošli jsme základy trojúhelníků a planimetrie a následně lineární a kvadratické rovnice s přesahem do lineárních a kvadratických funkcí. Teď je cílem oba bloky procvičit a upevnit.",
   "priority": {
-    "title": "Začni úvodem k trojúhelníkům a planimetrii.",
-    "text": "Projdi značení trojúhelníku, jeho druhy, součet vnitřních úhlů, výšky, těžnice, osy, obvod a obsah. U každého pojmu vytvoř vlastní označený náčrt a nakonec vyřeš vstupní diagnostiku.",
-    "deadline": "Cíl první etapy: jistota v pojmech, náčrtu a základních výpočtech"
+    "title": "Procvič rovnice a upevni jejich souvislost s funkcemi.",
+    "text": "Projdi nový materiál k lineárním a kvadratickým rovnicím a interaktivní procvičování funkcí. Zaměř se na správnou volbu postupu u rovnic a na vztah mezi předpisem funkce, grafem, průsečíky a vrcholem paraboly.",
+    "deadline": "Aktuální cíl: jistota v lineárních a kvadratických rovnicích a základních vlastnostech funkcí"
   },
   "readiness": {
     "label": "Studijní postup",
     "lessonWeight": 60,
     "taskWeight": 40
   },
-  "lessons": [],
+  "lessons": [
+    {
+      "id": "vojta-lesson-2",
+      "date": "2026-08-09",
+      "displayDate": "9. srpna 2026",
+      "title": "2. hodina — Lineární a kvadratické rovnice a funkce",
+      "subject": "Matematika",
+      "subtitle": "Rovnice s přesahem do funkcí · dokončeno",
+      "topics": [
+        "řešení lineárních rovnic a ekvivalentní úpravy",
+        "kvadratické rovnice a volba vhodné metody řešení",
+        "diskriminant a počet řešení kvadratické rovnice",
+        "souvislost rovnic s lineární a kvadratickou funkcí",
+        "graf, průsečíky, růst a klesání a vrchol paraboly"
+      ],
+      "improvement": "Procvičit volbu nejjednodušší metody řešení a upevnit propojení mezi algebraickým řešením rovnice a grafem příslušné funkce.",
+      "homework": "Projít interaktivní procvičování funkcí a vyřešit cvičení z materiálu k lineárním a kvadratickým rovnicím.",
+      "material": {
+        "title": "Lineární a kvadratické rovnice — souhrn a cvičení",
+        "url": "./Materials/vojta/2026_08_09__matematika__linearni_a_kvadraticke_rovnice.pdf"
+      }
+    },
+    {
+      "id": "vojta-lesson-1",
+      "date": "2026-07-30",
+      "displayDate": "30. července 2026",
+      "title": "1. hodina — Trojúhelníky a planimetrie",
+      "subject": "Matematika",
+      "subtitle": "Základy planimetrie · dokončeno",
+      "topics": [
+        "značení a základní druhy trojúhelníků",
+        "součet vnitřních úhlů trojúhelníku",
+        "výšky, těžnice a osy trojúhelníku",
+        "obvod a obsah trojúhelníku",
+        "základní náčrt a orientace v geometrickém zadání"
+      ],
+      "improvement": "Upevnit jistotu v náčrtu, správném značení a rozpoznání, které údaje jsou pro výpočet potřeba.",
+      "homework": "Projít úvodní materiál, zopakovat základní pojmy a dokončit diagnostické úlohy.",
+      "material": {
+        "title": "Trojúhelníky a planimetrie — úvod",
+        "url": "./Materials/vojta/2026-07-30__matematika__trojuhelniky-a-planimetrie__uvodni-material.html"
+      }
+    }
+  ],
   "materials": [
     {
       "title": "Lineární a kvadratické rovnice — souhrn a cvičení",
@@ -67,6 +110,13 @@
     {
       "month": "Srp",
       "day": "09",
+      "title": "Druhá hodina — rovnice a funkce",
+      "desc": "Hodina byla zaměřena na lineární a kvadratické rovnice a jejich návaznost na lineární a kvadratické funkce, grafy, průsečíky a vrchol paraboly.",
+      "badge": "Lekce"
+    },
+    {
+      "month": "Srp",
+      "day": "09",
       "title": "Přidán materiál k lineárním a kvadratickým rovnicím",
       "desc": "Na nástěnku byl přidán krátký souhrn lineárních a kvadratických rovnic s vysvětlením, řešenými příklady a sadou cvičení.",
       "badge": "Nové PDF"
@@ -81,6 +131,13 @@
     {
       "month": "Čvc",
       "day": "30",
+      "title": "První hodina — trojúhelníky a planimetrie",
+      "desc": "První hodina byla zaměřena na značení a druhy trojúhelníků, úhly, výšky, těžnice, osy, obvod, obsah a základní geometrický náčrt.",
+      "badge": "Lekce"
+    },
+    {
+      "month": "Čvc",
+      "day": "30",
       "title": "Založena studentská zóna",
       "desc": "Připraven úvodní plán a studijní materiál pro trojúhelníky a planimetrii ve 2. ročníku SŠ.",
       "badge": "Start"
@@ -88,14 +145,14 @@
   ],
   "upcoming": [
     {
-      "title": "První lekce — diagnostika planimetrie",
-      "meta": "Trojúhelníky, úhly, výšky, těžnice, obvod a obsah",
-      "badge": "Co nás čeká"
+      "title": "Navazující procvičení — rovnice a funkce",
+      "meta": "Kontrola domácího procvičení, upevnění kvadratických rovnic a práce s grafem funkce",
+      "badge": "Další krok"
     },
     {
-      "title": "Navazující téma — podobnost a Pythagorova věta",
-      "meta": "Po zvládnutí základních vlastností trojúhelníku",
-      "badge": "Další krok"
+      "title": "Navazující geometrie — podobnost a Pythagorova věta",
+      "meta": "Po upevnění základních vlastností trojúhelníku",
+      "badge": "Další téma"
     }
   ],
   "links": [
