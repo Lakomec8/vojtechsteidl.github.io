@@ -16,6 +16,15 @@
   "lessons": [],
   "materials": [
     {
+      "title": "Lineární a kvadratické rovnice — souhrn a cvičení",
+      "meta": "PDF materiál · Matematika · stručné vysvětlení, řešené příklady a procvičování lineárních a kvadratických rovnic",
+      "badge": "Nové PDF",
+      "badgeClass": "pdf",
+      "url": "./Materials/vojta/2026_08_09__matematika__linearni_a_kvadraticke_rovnice.pdf",
+      "date": "2026-08-09",
+      "source": "manual-sync"
+    },
+    {
       "title": "Interaktivní procvičování funkcí",
       "meta": "Interaktivní materiál · lineární a kvadratická funkce · graf, parametry, průsečíky a vrchol",
       "badge": "Interaktivní",
@@ -43,6 +52,13 @@
     }
   ],
   "timeline": [
+    {
+      "month": "Srp",
+      "day": "09",
+      "title": "Přidán materiál k lineárním a kvadratickým rovnicím",
+      "desc": "Na nástěnku byl přidán krátký souhrn lineárních a kvadratických rovnic s vysvětlením, řešenými příklady a sadou cvičení.",
+      "badge": "Nové PDF"
+    },
     {
       "month": "Srp",
       "day": "09",
