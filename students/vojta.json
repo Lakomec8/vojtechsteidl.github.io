@@ -45,6 +45,18 @@
   ],
   "tasks": [
     {
+      "id": "vojta-task-2",
+      "title": "Projít interaktivní procvičování funkcí",
+      "meta": "Vyzkoušej lineární i kvadratickou funkci. Měň parametry, sleduj změnu grafu a procvič průsečíky, růst nebo klesání a vrchol paraboly.",
+      "badge": "Aktuální úkol"
+    },
+    {
+      "id": "vojta-task-3",
+      "title": "Procvičit lineární a kvadratické rovnice",
+      "meta": "Projdi krátký souhrn v novém PDF a vyřeš cvičení na lineární i kvadratické rovnice. Zaměř se na správnou volbu postupu a kontrolu výsledku.",
+      "badge": "Aktuální úkol"
+    },
+    {
       "id": "vojta-task-1",
       "title": "Projít úvod k trojúhelníkům",
       "meta": "Zopakuj druhy trojúhelníků, součet úhlů, výšky, těžnice, obvod a obsah. U každého pojmu vytvoř vlastní náčrt a vyřeš všech pět diagnostických úloh.",
