@@ -2,14 +2,21 @@
     const MEASUREMENT_ID = 'G-G3ZD7VC099';
     const STORAGE_KEY = 'vs_analytics_consent_v1';
 
+    let savedChoice = null;
+    try {
+        savedChoice = window.localStorage.getItem(STORAGE_KEY);
+    } catch (_) {
+        savedChoice = null;
+    }
+
     window.dataLayer = window.dataLayer || [];
     window.gtag = window.gtag || function () {
         window.dataLayer.push(arguments);
     };
 
-    // Consent Mode v2 defaults: no analytics or advertising storage before consent.
+    // Consent Mode v2: analytics storage is denied until the visitor consents.
     window.gtag('consent', 'default', {
-        analytics_storage: 'denied',
+        analytics_storage: savedChoice === 'granted' ? 'granted' : 'denied',
         ad_storage: 'denied',
         ad_user_data: 'denied',
         ad_personalization: 'denied',
@@ -17,27 +24,15 @@
         security_storage: 'granted'
     });
 
-    let analyticsLoaded = false;
+    // Load the Google tag so Google can detect the installation. With analytics_storage
+    // denied it does not set Analytics cookies before the visitor grants consent.
+    window.gtag('js', new Date());
+    window.gtag('config', MEASUREMENT_ID);
 
-    function loadAnalytics() {
-        if (analyticsLoaded) return;
-        analyticsLoaded = true;
-
-        window.gtag('consent', 'update', {
-            analytics_storage: 'granted',
-            ad_storage: 'denied',
-            ad_user_data: 'denied',
-            ad_personalization: 'denied'
-        });
-
-        window.gtag('js', new Date());
-        window.gtag('config', MEASUREMENT_ID);
-
-        const script = document.createElement('script');
-        script.async = true;
-        script.src = `https://www.googletagmanager.com/gtag/js?id=${encodeURIComponent(MEASUREMENT_ID)}`;
-        document.head.appendChild(script);
-    }
+    const googleTag = document.createElement('script');
+    googleTag.async = true;
+    googleTag.src = `https://www.googletagmanager.com/gtag/js?id=${encodeURIComponent(MEASUREMENT_ID)}`;
+    document.head.appendChild(googleTag);
 
     function removeBanner() {
         document.getElementById('analytics-consent-banner')?.remove();
@@ -169,31 +164,18 @@
             const choice = button.dataset.consent;
             saveChoice(choice);
 
-            if (choice === 'granted') {
-                loadAnalytics();
-            } else {
-                window.gtag('consent', 'update', {
-                    analytics_storage: 'denied',
-                    ad_storage: 'denied',
-                    ad_user_data: 'denied',
-                    ad_personalization: 'denied'
-                });
-            }
+            window.gtag('consent', 'update', {
+                analytics_storage: choice === 'granted' ? 'granted' : 'denied',
+                ad_storage: 'denied',
+                ad_user_data: 'denied',
+                ad_personalization: 'denied'
+            });
 
             removeBanner();
         });
     }
 
-    let savedChoice = null;
-    try {
-        savedChoice = window.localStorage.getItem(STORAGE_KEY);
-    } catch (_) {
-        savedChoice = null;
-    }
-
-    if (savedChoice === 'granted') {
-        loadAnalytics();
-    } else if (savedChoice !== 'denied') {
+    if (savedChoice !== 'granted' && savedChoice !== 'denied') {
         if (document.readyState === 'loading') {
             document.addEventListener('DOMContentLoaded', showBanner, { once: true });
         } else {
