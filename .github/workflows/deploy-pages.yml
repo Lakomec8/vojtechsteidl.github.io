@@ -27,6 +27,9 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      - name: Inject Google Analytics on public pages
+        run: python scripts/inject_analytics.py
+
       - name: Configure GitHub Pages
         uses: actions/configure-pages@v5
 
