@@ -1,0 +1,57 @@
+name: Regenerate Evelina matrix PDF
+
+on:
+  push:
+    paths:
+      - "scripts/generate_evelina_matrix_pdf.py"
+      - ".github/workflows/regenerate-evelina-matrix.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  actions: write
+
+jobs:
+  build:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install PDF dependency
+        run: pip install reportlab
+
+      - name: Generate styled PDF
+        run: python scripts/generate_evelina_matrix_pdf.py
+
+      - name: Validate student data
+        run: python scripts/validate_student_data.py
+
+      - name: Commit regenerated PDF
+        shell: bash
+        run: |
+          set -euo pipefail
+          if git diff --quiet; then
+            echo "No PDF changes."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add Materials/evelina/2026-08-12__matematika__soustavy-rovnic-3-nezname-matice.pdf
+          git commit -m "Restyle Evelina matrix PDF"
+          git pull --rebase origin "${GITHUB_REF_NAME}"
+          git push origin "HEAD:${GITHUB_REF_NAME}"
+
+      - name: Deploy updated site
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh workflow run deploy-pages.yml --ref "${GITHUB_REF_NAME}"
