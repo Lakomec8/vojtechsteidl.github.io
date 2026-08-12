@@ -275,6 +275,18 @@ def synchronize_profile(student_id: str, profile_path: Path) -> bool:
         profile["materials"] = new_items + materials
         materials = profile["materials"]
         changed = True
+
+        if profile.get("incrementLessonCountOnMaterialAdd") is True:
+            current_count = profile.get("completedLessonsCount", len(profile.get("lessons", [])))
+            try:
+                current_count = int(current_count)
+            except (TypeError, ValueError):
+                current_count = len(profile.get("lessons", []))
+            profile["completedLessonsCount"] = max(
+                current_count,
+                len(profile.get("lessons", [])),
+            ) + len(new_items)
+
         for item in new_items:
             print(f"Přidán materiál: {profile_path.name} -> {item['url']}")
 
