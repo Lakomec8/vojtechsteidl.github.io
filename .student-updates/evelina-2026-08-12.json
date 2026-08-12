@@ -1,0 +1,23 @@
+{
+  "studentId": "evelina",
+  "set": {
+    "/progressText": "V cvičné písemce jsi získala 32 z 40 bodů, tedy 80 %. Základní látku máš převážně zvládnutou a k finálnímu testu jsi nyní téměř připravená. Máš za sebou 6 hodin; zbývající dvě hodiny využijeme hlavně k dalším testům, kontrole samostatnosti a odstranění posledních opakujících se chyb.",
+    "/priority/text": "Novou látku už nebudeme zbytečně rozšiřovat. V posledních dvou hodinách budeme střídat kratší testy, úlohy na čas a opravu chyb. Zaměříme se hlavně na přesnost, znaménka, zápis celého postupu a samostatnou volbu metody.",
+    "/tasks/0/meta": "Projdi nový materiál k soustavám tří rovnic pomocí matice a vrať se také k 8 ztraceným bodům z cvičné písemky. V dalších dvou hodinách budeme stejné dovednosti ověřovat na nových zadáních a pod časovým limitem.",
+    "/tasks/0/badge": "Poslední 2 hodiny",
+    "/upcoming/0/title": "Dvě kontrolní lekce před finálem",
+    "/upcoming/0/badge": "2 hodiny"
+  },
+  "prepend": [
+    {
+      "path": "/timeline",
+      "value": {
+        "month": "Srp",
+        "day": "12",
+        "title": "Šestá hodina — soustavy tří rovnic pomocí matice",
+        "desc": "Přidán nový souhrnný materiál k řešení soustav o třech neznámých pomocí rozšířené matice a Gaussovy eliminace. Součástí jsou vzorové postupy, řádkové operace, speciální případy a cvičné úlohy.",
+        "badge": "Lekce"
+      }
+    }
+  ]
+}
