@@ -1,0 +1,64 @@
+name: Apply student dashboard update
+
+on:
+  push:
+    paths:
+      - ".student-updates/*.json"
+
+permissions:
+  contents: write
+  actions: write
+
+concurrency:
+  group: student-dashboard-update-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  apply:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Apply queued dashboard updates
+        shell: bash
+        run: |
+          set -euo pipefail
+          shopt -s nullglob
+          updates=(.student-updates/*.json)
+          if [ ${#updates[@]} -eq 0 ]; then
+            echo "No dashboard updates found."
+            exit 0
+          fi
+          for update in "${updates[@]}"; do
+            python scripts/apply_student_update.py "$update"
+            rm -f "$update"
+          done
+
+      - name: Validate student data
+        run: python scripts/validate_student_data.py
+
+      - name: Commit dashboard updates
+        shell: bash
+        run: |
+          set -euo pipefail
+          if git diff --quiet && [ -z "$(git status --porcelain)" ]; then
+            echo "No changes to commit."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "Update student dashboard"
+          git pull --rebase origin "${GITHUB_REF_NAME}"
+          git push origin "HEAD:${GITHUB_REF_NAME}"
+
+      - name: Deploy updated dashboard
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh workflow run deploy-pages.yml --ref "${GITHUB_REF_NAME}"
