@@ -108,6 +108,9 @@
           (parseDate(second.date)?.getTime() || 0) -
           (parseDate(first.date)?.getTime() || 0),
       );
+    const completedLessonsCount = Number.isFinite(Number(data.completedLessonsCount))
+      ? Math.max(0, Math.round(Number(data.completedLessonsCount)))
+      : lessons.length;
     const materials = Array.isArray(data.materials) ? data.materials : [];
     const tasks = Array.isArray(data.tasks) ? data.tasks : [];
     const timeline = Array.isArray(data.timeline) ? data.timeline : [];
@@ -326,7 +329,7 @@
       `;
     };
 
-    $("lessonCount").textContent = lessons.length;
+    $("lessonCount").textContent = completedLessonsCount;
     const lastLesson = lessons[0] || null;
     $("lastLessonDate").textContent = lastLesson
       ? `Poslední: ${lastLesson.displayDate || formatShortDate(lastLesson.date)}`
@@ -337,7 +340,7 @@
         : "–";
     $("overallScoreCopy").textContent = assessedLessonsCopy(
       scoredLessons.length,
-      lessons.length,
+      completedLessonsCount,
     );
 
     const deadline = data.deadline || {};
