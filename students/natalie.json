@@ -1,8 +1,10 @@
 {
   "studentName": "Natalie",
   "studentInitials": "N",
+  "completedLessonsCount": 7,
+  "incrementLessonCountOnMaterialAdd": true,
   "progress": 27,
-  "progressText": "Máš za sebou tři hodiny. Aktuálně se soustředíme na rychlé a bodově dostupné úlohy z úvodu didaktického testu; dlouhodobým cílem zůstává 24 bodů v cvičném didaktickém testu.",
+  "progressText": "Máš za sebou sedm hodin. Aktuálně se soustředíme na rychlé a bodově dostupné úlohy z úvodu didaktického testu; dlouhodobým cílem zůstává 24 bodů v cvičném didaktickém testu.",
   "priority": {
     "title": "Cíl: 24 bodů v cvičném didaktickém testu.",
     "text": "Nejdříve chceme bezpečně získávat jednoduché body. Pracuj s novým materiálem Rychlé body z matematiky: projdi stručnou teorii a vzorové příklady, potom řeš cvičení bez nápovědy a nakonec závěrečný trénink. U každé chyby si poznamenej, zda šlo o neznalost postupu, znaménko, podmínku nebo špatně přečtené zadání.",
