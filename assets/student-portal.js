@@ -152,11 +152,6 @@
     const readinessConfig = data.readiness || {};
 
     const calculateReadiness = () => {
-      const fixedValue = Number(readinessConfig.value);
-      if (Number.isFinite(fixedValue)) {
-        return Math.max(0, Math.min(100, Math.round(fixedValue)));
-      }
-
       const completedCount = tasks.filter((task) => completed[task.id]).length;
       const taskRatio = tasks.length ? completedCount / tasks.length : 0;
       let value;
@@ -224,48 +219,111 @@
           ? `${activeCount} zbývá dokončit`
           : "Všechny úkoly dokončeny"
         : "Žádný aktivní úkol";
+
       renderNextAction();
     };
 
     const materialButtons = (material) => {
       const url = escapeAttribute(material.url || "#");
-      return `<div class="actions"><a class="secondary" href="${url}" target="_blank" rel="noopener">Otevřít</a><a class="download" href="${url}" download>Stáhnout PDF</a></div>`;
+      return `
+        <div class="actions">
+          <a class="secondary" href="${url}" target="_blank" rel="noopener">Otevřít</a>
+          <a class="download" href="${url}" download>Stáhnout PDF</a>
+        </div>
+      `;
     };
 
     const renderLesson = (lesson) => {
       const topics = Array.isArray(lesson.topics) ? lesson.topics : [];
       const material = lesson.material || {};
-      const score = Number.isFinite(Number(lesson.score)) ? Number(lesson.score) : null;
-      const searchText = [
+      const score = Number.isFinite(Number(lesson.score))
+        ? Number(lesson.score)
+        : null;
+      const searchable = [
         lesson.title,
         lesson.subject,
         lesson.summary,
         lesson.improvement,
         lesson.homework,
         ...topics,
-      ].join(" ").toLocaleLowerCase("cs");
+      ]
+        .join(" ")
+        .toLocaleLowerCase("cs");
 
-      return `<div data-searchable="${escapeAttribute(searchText)}">
-        <div class="lesson-summary">
-          <div class="lesson-date">${escapeHtml(lesson.displayDate || formatDate(lesson.date))}</div>
-          <div>
-            <div class="lesson-title">${escapeHtml(lesson.title || "Výuková hodina")}</div>
-            <div class="lesson-date">${escapeHtml([lesson.subject, lesson.subtitle].filter(Boolean).join(" · "))}</div>
+      return `
+        <div data-searchable="${escapeAttribute(searchable)}">
+          <div class="lesson-summary">
+            <div class="lesson-date">${escapeHtml(
+              lesson.displayDate || formatDate(lesson.date),
+            )}</div>
+            <div>
+              <div class="lesson-title">${escapeHtml(
+                lesson.title || "Výuková hodina",
+              )}</div>
+              <div class="lesson-date">${escapeHtml(
+                [lesson.subject, lesson.subtitle].filter(Boolean).join(" · "),
+              )}</div>
+            </div>
+            ${
+              score !== null
+                ? `
+                  <div class="lesson-score">
+                    <strong>${score}/10</strong>
+                    <small>${escapeHtml(
+                      lesson.scoreLabel || "Hodnocení",
+                    )}</small>
+                  </div>
+                `
+                : ""
+            }
           </div>
-          ${score !== null ? `<div class="lesson-score"><strong>${score}/10</strong><small>${escapeHtml(lesson.scoreLabel || "Hodnocení")}</small></div>` : ""}
+          <details class="lesson-detail">
+            <summary>Zobrazit detail hodiny</summary>
+            <div class="lesson-body">
+              <div>
+                <h3>Co se probíralo</h3>
+                ${
+                  topics.length
+                    ? `<ul>${topics
+                        .map((topic) => `<li>${escapeHtml(topic)}</li>`)
+                        .join("")}</ul>`
+                    : `<p>${escapeHtml(
+                        lesson.summary || "Záznam není doplněn.",
+                      )}</p>`
+                }
+              </div>
+              <div>
+                <h3>Hodnocení</h3>
+                <div class="note">
+                  <strong>${
+                    score !== null ? `${score}/10 — ` : ""
+                  }${escapeHtml(
+                    lesson.scoreLabel || "Průběžné hodnocení",
+                  )}</strong><br>
+                  ${escapeHtml(
+                    lesson.improvement || "Bez dalšího doporučení.",
+                  )}
+                </div>
+              </div>
+            </div>
+            <div class="lesson-body">
+              <div>
+                <h3>Domácí úkol</h3>
+                <p>${escapeHtml(
+                  lesson.homework || "Bez domácího úkolu.",
+                )}</p>
+              </div>
+              <div>
+                <h3>Materiál k hodině</h3>
+                <p>${escapeHtml(
+                  material.title || "Materiál není přiložen.",
+                )}</p>
+                ${material.url ? materialButtons(material) : ""}
+              </div>
+            </div>
+          </details>
         </div>
-        <details class="lesson-detail">
-          <summary>Zobrazit detail hodiny</summary>
-          <div class="lesson-body">
-            <div><h3>Co se probíralo</h3>${topics.length ? `<ul>${topics.map((topic) => `<li>${escapeHtml(topic)}</li>`).join("")}</ul>` : `<p>${escapeHtml(lesson.summary || "Záznam není doplněn.")}</p>`}</div>
-            <div><h3>Hodnocení</h3><div class="note"><strong>${score !== null ? `${score}/10 — ` : ""}${escapeHtml(lesson.scoreLabel || "Průběžné hodnocení")}</strong><br>${escapeHtml(lesson.improvement || "Bez dalšího doporučení.")}</div></div>
-          </div>
-          <div class="lesson-body">
-            <div><h3>Domácí úkol</h3><p>${escapeHtml(lesson.homework || "Bez domácího úkolu.")}</p></div>
-            <div><h3>Materiál k hodině</h3><p>${escapeHtml(material.title || "Materiál není přiložen.")}</p>${material.url ? materialButtons(material) : ""}</div>
-          </div>
-        </details>
-      </div>`;
+      `;
     };
 
     $("lessonCount").textContent = lessons.length;
@@ -273,21 +331,26 @@
     $("lastLessonDate").textContent = lastLesson
       ? `Poslední: ${lastLesson.displayDate || formatShortDate(lastLesson.date)}`
       : "Zatím bez záznamu";
-    $("overallScore").textContent = averageScore !== null
-      ? `${averageScore.toFixed(1).replace(".0", "")}/10`
-      : "–";
-    $("overallScoreCopy").textContent = assessedLessonsCopy(scoredLessons.length, lessons.length);
+    $("overallScore").textContent =
+      averageScore !== null
+        ? `${averageScore.toFixed(1).replace(".0", "")}/10`
+        : "–";
+    $("overallScoreCopy").textContent = assessedLessonsCopy(
+      scoredLessons.length,
+      lessons.length,
+    );
 
     const deadline = data.deadline || {};
     const nextEvent = upcoming[0] || null;
+    const nextLessonDate = parseDate(data.nextLesson?.dateISO);
+    const deadlineDate = parseDate(deadline.date);
     const nextDate =
       nextEvent?.date ||
-      ((parseDate(data.nextLesson?.dateISO)?.getTime() || 0) >= today.getTime()
+      (nextLessonDate?.getTime() >= today.getTime()
         ? data.nextLesson.dateISO
         : null) ||
-      ((parseDate(deadline.date)?.getTime() || 0) >= today.getTime()
-        ? deadline.date
-        : null);
+      (deadlineDate?.getTime() >= today.getTime() ? deadline.date : null);
+
     $("nextDate").textContent = formatShortDate(nextDate);
     $("nextDateCopy").textContent =
       nextEvent?.title ||
@@ -296,16 +359,26 @@
       "Termín není uveden";
 
     $("materialsList").innerHTML = materials.length
-      ? materials.map((material) => `
-          <div class="item" data-searchable="${escapeAttribute([material.title, material.meta, material.badge].join(" ").toLocaleLowerCase("cs"))}">
-            <div class="item-main">
-              <h3>${escapeHtml(material.title)}</h3>
-              <p>${escapeHtml(material.meta)}</p>
-              ${materialButtons(material)}
-            </div>
-            <span class="badge">${escapeHtml(material.badge || "Soubor")}</span>
-          </div>
-        `).join("")
+      ? materials
+          .map(
+            (material) => `
+              <div class="item" data-searchable="${escapeAttribute(
+                [material.title, material.meta, material.badge]
+                  .join(" ")
+                  .toLocaleLowerCase("cs"),
+              )}">
+                <div class="item-main">
+                  <h3>${escapeHtml(material.title)}</h3>
+                  <p>${escapeHtml(material.meta)}</p>
+                  ${materialButtons(material)}
+                </div>
+                <span class="badge">${escapeHtml(
+                  material.badge || "Soubor",
+                )}</span>
+              </div>
+            `,
+          )
+          .join("")
       : emptyState("Zatím tu nejsou žádné materiály.");
 
     $("historyList").innerHTML = lessons.length
@@ -313,40 +386,84 @@
       : emptyState("Zatím tu není žádná absolvovaná hodina.");
 
     if (lastLesson) {
-      const material = lastLesson.material || {};
+      const lastMaterial = lastLesson.material || {};
       $("lastLesson").innerHTML = `
         <div class="item">
           <div class="item-main">
             <h3>${escapeHtml(lastLesson.title)}</h3>
-            <p>${escapeHtml((lastLesson.displayDate || formatDate(lastLesson.date)) + (lastLesson.score != null ? ` · zvládnutí ${lastLesson.score}/10` : "") + (lastLesson.improvement ? ` · ${lastLesson.improvement}` : ""))}</p>
+            <p>${escapeHtml(
+              (lastLesson.displayDate || formatDate(lastLesson.date)) +
+                (lastLesson.score != null
+                  ? ` · zvládnutí ${lastLesson.score}/10`
+                  : "") +
+                (lastLesson.improvement
+                  ? ` · ${lastLesson.improvement}`
+                  : ""),
+            )}</p>
           </div>
-          ${lastLesson.score != null ? `<span class="badge good">${escapeHtml(lastLesson.score)}/10</span>` : ""}
+          ${
+            lastLesson.score != null
+              ? `<span class="badge good">${escapeHtml(
+                  lastLesson.score,
+                )}/10</span>`
+              : ""
+          }
         </div>
         <div class="actions">
           <button class="primary" data-open="history">Detail hodiny</button>
-          ${material.url ? `<a class="download" href="${escapeAttribute(material.url)}" download>Stáhnout PDF</a>` : ""}
+          ${
+            lastMaterial.url
+              ? `<a class="download" href="${escapeAttribute(
+                  lastMaterial.url,
+                )}" download>Stáhnout PDF</a>`
+              : ""
+          }
         </div>
       `;
     } else {
-      $("lastLesson").innerHTML = emptyState("Zatím tu není žádná absolvovaná hodina.");
+      $("lastLesson").innerHTML = emptyState(
+        "Zatím tu není žádná absolvovaná hodina.",
+      );
     }
 
     const renderTasks = () => {
       $("tasksList").innerHTML = tasks.length
-        ? tasks.map((task) => `
-            <div class="item task ${completed[task.id] ? "done" : ""}" data-task="${escapeAttribute(task.id)}" data-searchable="${escapeAttribute([task.title, task.meta].join(" ").toLocaleLowerCase("cs"))}" role="button" tabindex="0" aria-pressed="${String(Boolean(completed[task.id]))}">
-              <span class="check">✓</span>
-              <div class="item-main"><h3>${escapeHtml(task.title)}</h3><p>${escapeHtml(task.meta)}</p></div>
-              <span class="badge">${escapeHtml(task.badge || "Úkol")}</span>
-            </div>
-          `).join("")
+        ? tasks
+            .map(
+              (task) => `
+                <div
+                  class="item task ${completed[task.id] ? "done" : ""}"
+                  data-task="${escapeAttribute(task.id)}"
+                  data-searchable="${escapeAttribute(
+                    [task.title, task.meta]
+                      .join(" ")
+                      .toLocaleLowerCase("cs"),
+                  )}"
+                  role="button"
+                  tabindex="0"
+                  aria-pressed="${String(Boolean(completed[task.id]))}"
+                >
+                  <span class="check">✓</span>
+                  <div class="item-main">
+                    <h3>${escapeHtml(task.title)}</h3>
+                    <p>${escapeHtml(task.meta)}</p>
+                  </div>
+                  <span class="badge">${escapeHtml(
+                    task.badge || "Úkol",
+                  )}</span>
+                </div>
+              `,
+            )
+            .join("")
         : emptyState("Zatím tu nejsou žádné úkoly.");
     };
+
     renderTasks();
 
     $("tasksList").addEventListener("click", (event) => {
       const task = event.target.closest("[data-task]");
       if (!task) return;
+
       completed[task.dataset.task] = !completed[task.dataset.task];
       localStorage.setItem(`${storageKey}tasks`, JSON.stringify(completed));
       renderTasks();
@@ -356,54 +473,121 @@
     $("tasksList").addEventListener("keydown", (event) => {
       if (event.key !== "Enter" && event.key !== " ") return;
       const task = event.target.closest("[data-task]");
-      if (task) {
-        event.preventDefault();
-        task.click();
-      }
+      if (!task) return;
+
+      event.preventDefault();
+      task.click();
     });
 
-    if (averageScore !== null && tasks.length && !Number.isFinite(Number(readinessConfig.value))) {
+    if (averageScore !== null && tasks.length) {
       const formula = $("formula");
       formula.hidden = false;
-      formula.innerHTML = `<strong>Jak se počítá připravenost:</strong> hodnocení hodin tvoří ${Number(readinessConfig.lessonWeight ?? 60)} % výsledku a dokončení úkolů ${Number(readinessConfig.taskWeight ?? 40)} %.`;
+      formula.innerHTML = `
+        <strong>Jak se počítá připravenost:</strong>
+        hodnocení hodin tvoří ${Number(
+          readinessConfig.lessonWeight ?? 60,
+        )} % výsledku a dokončení úkolů ${Number(
+          readinessConfig.taskWeight ?? 40,
+        )} %.
+      `;
     }
 
     $("upcomingList").innerHTML = upcoming.length
-      ? upcoming.map((row) => `
-          <div class="item" data-searchable="${escapeAttribute([row.title, row.meta].join(" ").toLocaleLowerCase("cs"))}">
-            <div class="item-main"><h3>${escapeHtml(row.title)}</h3><p>${escapeHtml(row.meta)}</p></div>
-            <span class="badge">${escapeHtml(row.badge || "Termín")}</span>
-          </div>
-        `).join("")
+      ? upcoming
+          .map(
+            (row) => `
+              <div class="item" data-searchable="${escapeAttribute(
+                [row.title, row.meta].join(" ").toLocaleLowerCase("cs"),
+              )}">
+                <div class="item-main">
+                  <h3>${escapeHtml(row.title)}</h3>
+                  <p>${escapeHtml(row.meta)}</p>
+                </div>
+                <span class="badge">${escapeHtml(
+                  row.badge || "Termín",
+                )}</span>
+              </div>
+            `,
+          )
+          .join("")
       : emptyState("Zatím nejsou žádné další termíny.");
 
     $("timelineList").innerHTML = timeline.length
-      ? timeline.map((row) => `
-          <div class="item" data-searchable="${escapeAttribute([row.title, row.desc, row.month, row.day].join(" ").toLocaleLowerCase("cs"))}">
-            <div class="item-main"><h3>${escapeHtml(row.title)}</h3><p>${escapeHtml(row.desc)}</p></div>
-            <span class="badge">${escapeHtml(row.badge || "Záznam")}</span>
-          </div>
-        `).join("")
-      : emptyState("Zatím tu není žádný záznam.");
+      ? timeline
+          .map(
+            (row) => `
+              <div class="item" data-searchable="${escapeAttribute(
+                [row.title, row.desc, row.month, row.day]
+                  .join(" ")
+                  .toLocaleLowerCase("cs"),
+              )}">
+                <div class="item-main">
+                  <h3>${escapeHtml(
+                    [row.month, row.day, row.title]
+                      .filter(Boolean)
+                      .join(" · "),
+                  )}</h3>
+                  <p>${escapeHtml(row.desc)}</p>
+                </div>
+                <span class="badge">${escapeHtml(
+                  row.badge || "Historie",
+                )}</span>
+              </div>
+            `,
+          )
+          .join("")
+      : emptyState("Zatím tu není žádná historie.");
 
     $("linksList").innerHTML = links.length
-      ? links.map((link) => `
-          <div class="item">
-            <div class="item-main"><h3>${escapeHtml(link.title)}</h3><p>${escapeHtml(link.desc)}</p></div>
-            <a class="secondary" href="${escapeAttribute(link.url)}" target="_blank" rel="noopener">Otevřít</a>
-          </div>
-        `).join("")
-      : emptyState("Zatím tu nejsou žádné užitečné odkazy.");
+      ? links
+          .map(
+            (link) => `
+              <div class="item" data-searchable="${escapeAttribute(
+                [link.title, link.desc].join(" ").toLocaleLowerCase("cs"),
+              )}">
+                <div class="item-main">
+                  <h3>${escapeHtml(link.title)}</h3>
+                  <p>${escapeHtml(link.desc)}</p>
+                  <div class="actions">
+                    <a
+                      class="secondary"
+                      href="${escapeAttribute(link.url || "#")}"
+                      target="_blank"
+                      rel="noopener"
+                    >Otevřít odkaz</a>
+                  </div>
+                </div>
+              </div>
+            `,
+          )
+          .join("")
+      : emptyState("Zatím tu nejsou žádné odkazy.");
+
+    document.querySelectorAll("[data-view]").forEach((button) => {
+      button.addEventListener("click", () => openView(button.dataset.view));
+    });
 
     document.querySelectorAll("[data-open]").forEach((button) => {
       button.addEventListener("click", () => openView(button.dataset.open));
     });
 
+    $("search").addEventListener("input", (event) => {
+      const query = event.target.value.trim().toLocaleLowerCase("cs");
+      document.querySelectorAll("[data-searchable]").forEach((row) => {
+        row.hidden = Boolean(query) && !row.dataset.searchable.includes(query);
+      });
+    });
+
+    $("logout").addEventListener("click", () => {
+      sessionStorage.removeItem("student_token");
+      window.location.href = "index.html";
+    });
+
     updateSummary();
-    loader.hidden = true;
     app.hidden = false;
   } catch (error) {
-    console.error(error);
-    showError(error.message || "Neznámá chyba.");
+    showError(error.message || "Došlo k neočekávané chybě.");
+  } finally {
+    loader.classList.add("hidden");
   }
 })();
