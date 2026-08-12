@@ -20,6 +20,31 @@ Materials/jan-01/
 - Lokální odkazy na materiály se zapisují relativně ke kořeni webu.
 - Součet `lessonWeight` a `taskWeight` musí být 100.
 
+## Počet absolvovaných hodin
+
+Standardně se počet absolvovaných hodin na nástěnce odvozuje z počtu položek v poli `lessons`.
+
+Pokud má student evidovaný skutečný počet hodin odděleně od detailní historie, lze použít:
+
+```json
+{
+  "completedLessonsCount": 7
+}
+```
+
+Portál pak na kartě absolvovaných hodin zobrazí tuto hodnotu, zatímco pole `lessons` může obsahovat pouze hodiny, ke kterým existuje detailní zápis.
+
+U studentů, u kterých každý nový studijní materiál reprezentuje nově absolvovanou hodinu, lze navíc zapnout:
+
+```json
+{
+  "completedLessonsCount": 7,
+  "incrementLessonCountOnMaterialAdd": true
+}
+```
+
+Při automatickém přidání nového PDF materiálu se potom `completedLessonsCount` zvýší o počet nově přidaných materiálů. Toto pravidlo se používá pouze u profilů, které mají `incrementLessonCountOnMaterialAdd` nastaveno na `true`.
+
 ## Automatické přidání PDF
 
 Nový materiál se už ručně nepřidává do studentského JSONu. Stačí nahrát PDF do složky odpovídající ID studenta.
@@ -50,6 +75,7 @@ Po nahrání GitHub Action automaticky:
 - vloží nový materiál na první místo,
 - označí jej jako `Aktuální PDF`,
 - zobrazí jej v sekci Materiály i na nástěnce,
+- pokud má profil `incrementLessonCountOnMaterialAdd: true`, zvýší `completedLessonsCount` o 1 za každý nový materiál,
 - zabrání vytvoření duplicitního záznamu podle URL.
 
 Příklad vytvořeného záznamu:
