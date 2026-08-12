@@ -1,8 +1,8 @@
 {
   "studentName": "Natalie",
   "studentInitials": "N",
-  "progress": 0,
-  "progressText": "Máš za sebou dvě hodiny. Aktuálně se soustředíme na rychlé a bodově dostupné úlohy z úvodu didaktického testu; dlouhodobým cílem zůstává 24 bodů v cvičném didaktickém testu.",
+  "progress": 27,
+  "progressText": "Máš za sebou tři hodiny. Aktuálně se soustředíme na rychlé a bodově dostupné úlohy z úvodu didaktického testu; dlouhodobým cílem zůstává 24 bodů v cvičném didaktickém testu.",
   "priority": {
     "title": "Cíl: 24 bodů v cvičném didaktickém testu.",
     "text": "Nejdříve chceme bezpečně získávat jednoduché body. Pracuj s novým materiálem Rychlé body z matematiky: projdi stručnou teorii a vzorové příklady, potom řeš cvičení bez nápovědy a nakonec závěrečný trénink. U každé chyby si poznamenej, zda šlo o neznalost postupu, znaménko, podmínku nebo špatně přečtené zadání.",
@@ -10,10 +10,31 @@
   },
   "readiness": {
     "label": "Studijní postup",
+    "value": 27,
     "lessonWeight": 60,
     "taskWeight": 40
   },
   "lessons": [
+    {
+      "id": "natalie-lesson-3",
+      "date": "2026-08-07",
+      "displayDate": "7. srpna 2026",
+      "title": "3. hodina — Soustavy rovnic a nerovnic + didaktický test",
+      "subject": "Matematika",
+      "subtitle": "Příprava k didaktickému testu · dokončeno",
+      "topics": [
+        "soustavy rovnic a jejich řešení",
+        "nerovnice a zápis řešení",
+        "procvičení typických postupů potřebných v didaktickém testu",
+        "navazující práce s novým didaktickým testem"
+      ],
+      "improvement": "Upevnit rychlou volbu postupu u rovnic a nerovnic a dále zvyšovat jistotu u bodově dostupných úloh.",
+      "homework": "Procvičit soustavy rovnic a nerovnice a pokračovat v řešení bodově dostupných úloh z didaktických testů.",
+      "material": {
+        "title": "Didaktický test — jaro 2025, kompletní řešení",
+        "url": "./Materials/natalie/2026-08-04__matematika__didakticky-test-jaro-2025-kompletni-reseni.pdf"
+      }
+    },
     {
       "id": "natalie-lesson-2",
       "date": "2026-07-28",
@@ -126,6 +147,13 @@
       "title": "Přidán materiál Rychlé body z matematiky",
       "desc": "Nový studijní materiál shrnuje typické jednoduché jednobodové úlohy z úvodu didaktického testu. Obsahuje stručnou teorii, vzorové postupy, cvičení a závěrečný trénink.",
       "badge": "Aktuální materiál"
+    },
+    {
+      "month": "Srp",
+      "day": "07",
+      "title": "Třetí hodina dokončena",
+      "desc": "Lekce byla zaměřena na soustavy rovnic a nerovnice a následně na práci s didaktickým testem.",
+      "badge": "Lekce"
     },
     {
       "month": "Srp",
