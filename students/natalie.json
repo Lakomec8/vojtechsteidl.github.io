@@ -10,7 +10,6 @@
   },
   "readiness": {
     "label": "Studijní postup",
-    "value": 27,
     "lessonWeight": 60,
     "taskWeight": 40
   },
@@ -132,14 +131,7 @@
       "source": "filename-sync"
     }
   ],
-  "tasks": [
-    {
-      "id": "natalie-task-5",
-      "title": "Procvičit rychlé jednobodové úlohy",
-      "meta": "Projdi materiál Rychlé body z matematiky. U každého tématu si nejprve připomeň vzorový postup, potom vyřeš cvičení bez nápovědy. Nakonec udělej závěrečný trénink 15 úloh v kuse a označ si typy, ve kterých ztrácíš body.",
-      "badge": "Aktuální úkol"
-    }
-  ],
+  "tasks": [],
   "timeline": [
     {
       "month": "Srp",
@@ -185,6 +177,11 @@
     }
   ],
   "upcoming": [
+    {
+      "title": "Aktuální úkol — rychlé jednobodové úlohy",
+      "meta": "Projdi materiál Rychlé body z matematiky, vyřeš cvičení bez nápovědy a nakonec závěrečný trénink 15 úloh. Označ si typy, ve kterých ztrácíš body.",
+      "badge": "Aktuální úkol"
+    },
     {
       "title": "Cvičný didaktický test — jaro 2025",
       "meta": "Po procvičení rychlých jednobodových úloh naváže kompletní test, jeho oprava a vyhodnocení bodově dostupných typů · cílový výsledek 24 bodů",
