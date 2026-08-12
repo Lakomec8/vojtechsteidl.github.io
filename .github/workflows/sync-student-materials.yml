@@ -4,9 +4,8 @@ on:
   workflow_dispatch:
   push:
     paths:
-      - "Materials/**/*.pdf"
-      - "*.pdf"
-      - "scripts/sync_student_materials.py"
+      - "Materials/*/*.pdf"
+      - "scripts/register_generated_material.py"
       - ".github/workflows/sync-student-materials.yml"
 
 permissions:
@@ -33,15 +32,45 @@ jobs:
         with:
           python-version: "3.12"
 
-      - name: Synchronize PDF files with student profiles
-        run: python scripts/sync_student_materials.py
+      - name: Register changed PDF files only
+        if: github.event_name == 'push'
+        shell: bash
+        run: |
+          set -euo pipefail
+          before="${{ github.event.before }}"
+          after="${{ github.sha }}"
+
+          if [ -z "$before" ] || [ "$before" = "0000000000000000000000000000000000000000" ]; then
+            before="$(git rev-parse HEAD^ 2>/dev/null || true)"
+          fi
+
+          if [ -z "$before" ]; then
+            echo "No parent commit available; nothing to register."
+            exit 0
+          fi
+
+          mapfile -t pdfs < <(
+            git diff --name-only --diff-filter=AM "$before" "$after" -- 'Materials/*/*.pdf'
+          )
+
+          if [ ${#pdfs[@]} -eq 0 ]; then
+            echo "No added or modified student PDFs in this push."
+            exit 0
+          fi
+
+          for pdf in "${pdfs[@]}"; do
+            echo "Registering $pdf"
+            python scripts/register_generated_material.py "$pdf"
+          done
 
       - name: Validate student data and material links
         run: python scripts/validate_student_data.py
 
       - name: Commit generated changes
+        shell: bash
         run: |
-          if git diff --quiet; then
+          set -euo pipefail
+          if git diff --quiet && [ -z "$(git status --porcelain)" ]; then
             echo "No generated changes."
             exit 0
           fi
