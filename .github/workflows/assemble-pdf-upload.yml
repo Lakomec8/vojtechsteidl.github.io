@@ -24,7 +24,7 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Assemble queued PDFs
+      - name: Assemble and register queued PDFs
         shell: bash
         run: |
           set -euo pipefail
@@ -45,29 +45,23 @@ jobs:
               exit 1
             fi
 
-            student_id="$(echo "$target" | cut -d/ -f2)"
-            profile="students/${student_id}.json"
-            if [ ! -f "$profile" ]; then
-              echo "Missing student profile: $profile" >&2
-              exit 1
-            fi
-
             mkdir -p "$(dirname "$target")"
             cat "$upload_dir"/part-*.b64 | base64 --decode > "$target"
 
-            python -c 'import json,sys; from pathlib import Path; p=Path(sys.argv[1]); d=json.loads(p.read_text(encoding="utf-8")); lessons=d.get("lessons", []); d.setdefault("completedLessonsCount", len(lessons)); d["incrementLessonCountOnMaterialAdd"]=True; p.write_text(json.dumps(d, ensure_ascii=False, indent=2)+"\n", encoding="utf-8")' "$profile"
+            if [ "$(head -c 5 "$target")" != "%PDF-" ]; then
+              echo "Assembled file is not a PDF: $target" >&2
+              exit 1
+            fi
 
+            python scripts/register_generated_material.py "$target"
             rm -rf "$upload_dir"
-            echo "Assembled $target"
+            echo "Assembled and registered $target"
           done
-
-      - name: Synchronize materials and lesson counts
-        run: python scripts/sync_student_materials.py
 
       - name: Validate student data
         run: python scripts/validate_student_data.py
 
-      - name: Commit assembled PDF and generated dashboard updates
+      - name: Commit assembled PDF and dashboard updates
         shell: bash
         run: |
           set -euo pipefail
