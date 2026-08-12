@@ -121,6 +121,15 @@
   ],
   "materials": [
     {
+      "title": "Soustavy rovnic 3 nezname matice",
+      "meta": "PDF materiál · Matematika · přidáno 12. srpna 2026",
+      "badge": "Aktuální PDF",
+      "badgeClass": "pdf",
+      "url": "./Materials/evelina/2026-08-12__matematika__soustavy-rovnic-3-nezname-matice.pdf",
+      "date": "2026-08-12",
+      "source": "generated-upload"
+    },
+    {
       "title": "Cvičná písemka z matematiky — úroveň 1 a 2",
       "meta": "PDF materiál · Diagnostický test · výsledek 32/40 · 80 %",
       "badge": "32/40",
@@ -241,5 +250,7 @@
   "deadline": {
     "date": "2026-08-21",
     "label": "Finální test"
-  }
+  },
+  "incrementLessonCountOnMaterialAdd": true,
+  "completedLessonsCount": 6
 }
