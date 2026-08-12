@@ -2,10 +2,10 @@
   "studentName": "Natalie",
   "studentInitials": "N",
   "progress": 0,
-  "progressText": "Máš za sebou dvě hodiny. Aktuálně upevňujeme standardní úlohy z didaktických testů; cílem je dosáhnout 24 bodů v cvičném didaktickém testu.",
+  "progressText": "Máš za sebou dvě hodiny. Aktuálně se soustředíme na rychlé a bodově dostupné úlohy z úvodu didaktického testu; dlouhodobým cílem zůstává 24 bodů v cvičném didaktickém testu.",
   "priority": {
     "title": "Cíl: 24 bodů v cvičném didaktickém testu.",
-    "text": "Pracuj nyní s kompletně zpracovaným jarním testem 2025 a s interaktivním procvičováním funkcí. U každého typu nejprve zkus vlastní postup, potom porovnej řešení a zapiš si chybu, která se opakuje.",
+    "text": "Nejdříve chceme bezpečně získávat jednoduché body. Pracuj s novým materiálem Rychlé body z matematiky: projdi stručnou teorii a vzorové příklady, potom řeš cvičení bez nápovědy a nakonec závěrečný trénink. U každé chyby si poznamenej, zda šlo o neznalost postupu, znaménko, podmínku nebo špatně přečtené zadání.",
     "deadline": "Cíl: 24 bodů"
   },
   "readiness": {
@@ -57,9 +57,18 @@
   ],
   "materials": [
     {
+      "title": "Rychlé body z matematiky — jednobodové úlohy",
+      "meta": "PDF materiál · Matematika · typické jednobodové úlohy, vzorové postupy, cvičení a závěrečný trénink",
+      "badge": "Aktuální PDF",
+      "badgeClass": "pdf",
+      "url": "./Materials/natalie/01_rychle_body_maturita.pdf",
+      "date": "2026-08-12",
+      "source": "manual-sync"
+    },
+    {
       "title": "Didaktický test — jaro 2025, kompletní řešení",
       "meta": "PDF materiál · Matematika · kompletní rozbor všech 25 úloh",
-      "badge": "Nové PDF",
+      "badge": "PDF",
       "badgeClass": "pdf",
       "url": "./Materials/natalie/2026-08-04__matematika__didakticky-test-jaro-2025-kompletni-reseni.pdf",
       "date": "2026-08-04",
@@ -76,7 +85,7 @@
     },
     {
       "title": "Didaktický test 2026 — řešení bez geometrie",
-      "meta": "PDF materiál · Matematika · aktivní příprava na cvičný didaktický test",
+      "meta": "PDF materiál · Matematika · příprava na cvičný didaktický test",
       "badge": "PDF",
       "badgeClass": "pdf",
       "url": "./Materials/natalie/2026-07-28__didakticky-test-2026-reseni-bez-geometrie.pdf",
@@ -85,7 +94,7 @@
     },
     {
       "title": "Didaktický test — podzim 2025, kompletní řešení",
-      "meta": "Webový studijní materiál · Matematika · navazující cvičný test se všemi 25 úlohami",
+      "meta": "Webový studijní materiál · Matematika · cvičný test se všemi 25 úlohami",
       "badge": "Připraveno",
       "badgeClass": "pdf",
       "url": "./Materials/natalie/2026-07-30__matematika__didakticky-test-podzim-2025-kompletni-reseni__reseni.html",
@@ -104,13 +113,20 @@
   ],
   "tasks": [
     {
-      "id": "natalie-task-4",
-      "title": "Projít jarní test 2025 a procvičit funkce",
-      "meta": "Vyřeš nejprve bodově dostupné úlohy z jarního testu 2025. Potom v interaktivním materiálu měň parametry lineární a kvadratické funkce a procvič průsečíky, růst nebo klesání a vrchol paraboly.",
+      "id": "natalie-task-5",
+      "title": "Procvičit rychlé jednobodové úlohy",
+      "meta": "Projdi materiál Rychlé body z matematiky. U každého tématu si nejprve připomeň vzorový postup, potom vyřeš cvičení bez nápovědy. Nakonec udělej závěrečný trénink 15 úloh v kuse a označ si typy, ve kterých ztrácíš body.",
       "badge": "Aktuální úkol"
     }
   ],
   "timeline": [
+    {
+      "month": "Srp",
+      "day": "12",
+      "title": "Přidán materiál Rychlé body z matematiky",
+      "desc": "Nový studijní materiál shrnuje typické jednoduché jednobodové úlohy z úvodu didaktického testu. Obsahuje stručnou teorii, vzorové postupy, cvičení a závěrečný trénink.",
+      "badge": "Aktuální materiál"
+    },
     {
       "month": "Srp",
       "day": "04",
@@ -143,8 +159,8 @@
   "upcoming": [
     {
       "title": "Cvičný didaktický test — jaro 2025",
-      "meta": "Kompletní test, následná oprava a vyhodnocení bodově dostupných úloh · cílový výsledek 24 bodů",
-      "badge": "Cvičný test"
+      "meta": "Po procvičení rychlých jednobodových úloh naváže kompletní test, jeho oprava a vyhodnocení bodově dostupných typů · cílový výsledek 24 bodů",
+      "badge": "Další krok"
     }
   ],
   "links": [
