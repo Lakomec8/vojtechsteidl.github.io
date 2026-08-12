@@ -2,7 +2,10 @@ from pathlib import Path
 import re
 
 ROOT = Path(__file__).resolve().parents[1]
-SCRIPT_TAG = '    <!-- Google Analytics: public pages only; consent handled before tracking -->\n    <script defer src="/assets/analytics-consent.js"></script>\n'
+SCRIPT_TAG = '''    <!-- Cloudflare Web Analytics -->
+    <script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "5d7ce159e6704ad99fa0489215995648"}'></script>
+    <!-- End Cloudflare Web Analytics -->
+'''
 
 SKIP_DIRS = {
     '.git',
@@ -31,14 +34,14 @@ def inject(path: Path) -> bool:
         return False
 
     text = path.read_text(encoding='utf-8')
-    if '/assets/analytics-consent.js' in text:
+    if 'static.cloudflareinsights.com/beacon.min.js' in text:
         return False
 
-    match = re.search(r'<head\b[^>]*>', text, flags=re.IGNORECASE)
+    match = re.search(r'</body\s*>', text, flags=re.IGNORECASE)
     if not match:
         return False
 
-    updated = text[:match.end()] + '\n' + SCRIPT_TAG + text[match.end():]
+    updated = text[:match.start()] + SCRIPT_TAG + text[match.start():]
     path.write_text(updated, encoding='utf-8')
     return True
 
@@ -49,7 +52,7 @@ def main() -> None:
         if inject(path):
             changed.append(str(path.relative_to(ROOT)))
 
-    print(f'Injected analytics consent loader into {len(changed)} public HTML files.')
+    print(f'Injected Cloudflare Web Analytics into {len(changed)} public HTML files.')
     for item in changed:
         print(f'  - {item}')
 
