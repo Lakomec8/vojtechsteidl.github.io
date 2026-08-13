@@ -34,16 +34,13 @@ Pokud má student evidovaný skutečný počet hodin odděleně od detailní his
 
 Portál pak na kartě absolvovaných hodin zobrazí tuto hodnotu, zatímco pole `lessons` může obsahovat pouze hodiny, ke kterým existuje detailní zápis.
 
-U studentů, u kterých každý nový studijní materiál reprezentuje nově absolvovanou hodinu, lze navíc zapnout:
+### Globální pravidlo pro nové materiály
 
-```json
-{
-  "completedLessonsCount": 7,
-  "incrementLessonCountOnMaterialAdd": true
-}
-```
+**Každý nový studijní PDF materiál reprezentuje jednu nově absolvovanou hodinu.** Toto pravidlo platí pro všechny studenty bez výjimky.
 
-Při automatickém přidání nového PDF materiálu se potom `completedLessonsCount` zvýší o počet nově přidaných materiálů. Toto pravidlo se používá pouze u profilů, které mají `incrementLessonCountOnMaterialAdd` nastaveno na `true`.
+Při automatickém přidání nového PDF materiálu synchronizace vždy zvýší `completedLessonsCount` o počet nově přidaných materiálů. Není potřeba zapínat žádný přepínač v konkrétním studentském profilu.
+
+Pokud je materiál přidán ručně mimo automatickou synchronizaci, musí se současně odpovídajícím způsobem zvýšit `completedLessonsCount`.
 
 ## Automatické přidání PDF
 
@@ -75,7 +72,7 @@ Po nahrání GitHub Action automaticky:
 - vloží nový materiál na první místo,
 - označí jej jako `Aktuální PDF`,
 - zobrazí jej v sekci Materiály i na nástěnce,
-- pokud má profil `incrementLessonCountOnMaterialAdd: true`, zvýší `completedLessonsCount` o 1 za každý nový materiál,
+- zvýší `completedLessonsCount` o 1 za každý nový materiál,
 - zabrání vytvoření duplicitního záznamu podle URL.
 
 Příklad vytvořeného záznamu:
@@ -98,7 +95,7 @@ Samostatné pole `featuredMaterial` se nepoužívá. První platná položka v `
 
 - Přejmenovaný PDF soubor se vyhodnotí jako nový materiál.
 - Starý automaticky spravovaný záznam se odstraní, pokud jeho soubor už neexistuje.
-- Materiály připojené přímo ke konkrétní hodině v `lessons[].material` se automaticky nepřiřazují k nové hodině; automatizace řeší sekci Materiály a nástěnku.
+- Materiály připojené přímo ke konkrétní hodině v `lessons[].material` se automaticky nepřiřazují k nové hodině; automatizace řeší sekci Materiály, nástěnku a počet absolvovaných hodin.
 
 ## Kontrola před publikováním
 
