@@ -2,11 +2,11 @@
   "studentName": "Vojta",
   "studentInitials": "V",
   "progress": 0,
-  "progressText": "Máš za sebou dvě hodiny. Prošli jsme základy trojúhelníků a planimetrie a následně lineární a kvadratické rovnice s přesahem do lineárních a kvadratických funkcí. Teď je cílem oba bloky procvičit a upevnit.",
+  "progressText": "Máš za sebou dvě hodiny. Prošli jsme základy trojúhelníků a planimetrie a následně lineární a kvadratické rovnice s přesahem do lineárních a kvadratických funkcí. Nově máš k dispozici souhrn exponenciální, logaritmické a lomené funkce; cílem je navázat na dosavadní práci s grafy a upevnit definiční obor, obor hodnot a asymptoty.",
   "priority": {
-    "title": "Procvič rovnice a upevni jejich souvislost s funkcemi.",
-    "text": "Projdi nový materiál k lineárním a kvadratickým rovnicím a interaktivní procvičování funkcí. Zaměř se na správnou volbu postupu u rovnic a na vztah mezi předpisem funkce, grafem, průsečíky a vrcholem paraboly.",
-    "deadline": "Aktuální cíl: jistota v lineárních a kvadratických rovnicích a základních vlastnostech funkcí"
+    "title": "Navazuj na funkce: exponenciální, logaritmická a lomená.",
+    "text": "Projdi nový PDF materiál a u každého typu funkce se zaměř na definiční obor, obor hodnot, tvar grafu, růst nebo klesání a asymptoty. U logaritmické a lomené funkce hlídej podmínky, za kterých je výraz definovaný.",
+    "deadline": "Aktuální cíl: bezpečně rozlišit jednotlivé typy funkcí a umět určit jejich základní vlastnosti"
   },
   "readiness": {
     "label": "Studijní postup",
@@ -59,6 +59,15 @@
   ],
   "materials": [
     {
+      "title": "Exponenciální, logaritmická a lomená funkce",
+      "meta": "PDF materiál · Matematika · definice, vlastnosti, grafy, asymptoty, rovnice a typické chyby",
+      "badge": "Aktuální PDF",
+      "badgeClass": "pdf",
+      "url": "./Materials/vojta/funkce_03_exponencialni_logaritmicka_lomena.pdf",
+      "date": "2026-08-13",
+      "source": "manual-sync"
+    },
+    {
       "title": "Lineární a kvadratické rovnice — souhrn a cvičení",
       "meta": "PDF materiál · Matematika · stručné vysvětlení, řešené příklady a procvičování lineárních a kvadratických rovnic",
       "badge": "Nové PDF",
@@ -88,6 +97,12 @@
   ],
   "tasks": [
     {
+      "id": "vojta-task-4",
+      "title": "Projít exponenciální, logaritmickou a lomenou funkci",
+      "meta": "U každé funkce si zapiš definiční obor, obor hodnot, asymptoty a základní tvar grafu. Procvič také převod mezi exponenciálním a logaritmickým zápisem a podmínky u logaritmů a lomených výrazů.",
+      "badge": "Aktuální úkol"
+    },
+    {
       "id": "vojta-task-2",
       "title": "Projít interaktivní procvičování funkcí",
       "meta": "Vyzkoušej lineární i kvadratickou funkci. Měň parametry, sleduj změnu grafu a procvič průsečíky, růst nebo klesání a vrchol paraboly.",
@@ -107,6 +122,13 @@
     }
   ],
   "timeline": [
+    {
+      "month": "Srp",
+      "day": "13",
+      "title": "Přidán souhrn dalších typů funkcí",
+      "desc": "Na nástěnku byl přidán nový PDF materiál k exponenciální, logaritmické a lomené funkci se základními vlastnostmi, grafy, asymptotami, rovnicemi a typickými chybami.",
+      "badge": "Nové PDF"
+    },
     {
       "month": "Srp",
       "day": "09",
@@ -145,13 +167,13 @@
   ],
   "upcoming": [
     {
-      "title": "Navazující procvičení — rovnice a funkce",
-      "meta": "Kontrola domácího procvičení, upevnění kvadratických rovnic a práce s grafem funkce",
+      "title": "Navazující procvičení — exponenciální, logaritmická a lomená funkce",
+      "meta": "Kontrola definičních oborů, oborů hodnot, asymptot a základních rovnic; propojení předpisu s grafem",
       "badge": "Další krok"
     },
     {
       "title": "Navazující geometrie — podobnost a Pythagorova věta",
-      "meta": "Po upevnění základních vlastností trojúhelníku",
+      "meta": "Po upevnění základních vlastností funkcí",
       "badge": "Další téma"
     }
   ],
