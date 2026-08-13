@@ -1,8 +1,9 @@
 {
   "studentName": "Vojta",
   "studentInitials": "V",
+  "completedLessonsCount": 3,
   "progress": 0,
-  "progressText": "Máš za sebou dvě hodiny. Prošli jsme základy trojúhelníků a planimetrie a následně lineární a kvadratické rovnice s přesahem do lineárních a kvadratických funkcí. Nově máš k dispozici souhrn exponenciální, logaritmické a lomené funkce; cílem je navázat na dosavadní práci s grafy a upevnit definiční obor, obor hodnot a asymptoty.",
+  "progressText": "Máš za sebou tři hodiny. Prošli jsme základy trojúhelníků a planimetrie, lineární a kvadratické rovnice s přesahem do lineárních a kvadratických funkcí a nově exponenciální, logaritmickou a lomenou funkci. Teď je cílem navázat na dosavadní práci s grafy a upevnit definiční obor, obor hodnot a asymptoty.",
   "priority": {
     "title": "Navazuj na funkce: exponenciální, logaritmická a lomená.",
     "text": "Projdi nový PDF materiál a u každého typu funkce se zaměř na definiční obor, obor hodnot, tvar grafu, růst nebo klesání a asymptoty. U logaritmické a lomené funkce hlídej podmínky, za kterých je výraz definovaný.",
