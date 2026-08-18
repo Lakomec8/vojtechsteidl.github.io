@@ -1,10 +1,10 @@
 {
   "studentName": "Natalie",
   "studentInitials": "N",
-  "completedLessonsCount": 7,
+  "completedLessonsCount": 8,
   "incrementLessonCountOnMaterialAdd": true,
   "progress": 27,
-  "progressText": "Máš za sebou sedm hodin. Aktuálně se soustředíme na rychlé a bodově dostupné úlohy z úvodu didaktického testu; dlouhodobým cílem zůstává 24 bodů v cvičném didaktickém testu.",
+  "progressText": "Máš za sebou osm hodin. Aktuálně se soustředíme na rychlé a bodově dostupné úlohy z úvodu didaktického testu; dlouhodobým cílem zůstává 24 bodů v cvičném didaktickém testu.",
   "priority": {
     "title": "Cíl: 24 bodů v cvičném didaktickém testu.",
     "text": "Nejdříve chceme bezpečně získávat jednoduché body. Pracuj s novým materiálem Rychlé body z matematiky: projdi stručnou teorii a vzorové příklady, potom řeš cvičení bez nápovědy a nakonec závěrečný trénink. U každé chyby si poznamenej, zda šlo o neznalost postupu, znaménko, podmínku nebo špatně přečtené zadání.",
@@ -137,6 +137,13 @@
   "timeline": [
     {
       "month": "Srp",
+      "day": "18",
+      "title": "Osmá hodina dokončena",
+      "desc": "Proběhla další hodinová lekce matematiky v rámci přípravy k didaktickému testu.",
+      "badge": "Lekce"
+    },
+    {
+      "month": "Srp",
       "day": "12",
       "title": "Přidán materiál Rychlé body z matematiky",
       "desc": "Nový studijní materiál shrnuje typické jednoduché jednobodové úlohy z úvodu didaktického testu. Obsahuje stručnou teorii, vzorové postupy, cvičení a závěrečný trénink.",
@@ -195,6 +202,16 @@
       "title": "GeoGebra kalkulačka",
       "url": "https://www.geogebra.org",
       "desc": "Užitečné pro vizualizaci a kontrolu výpočtů."
+    }
+  ],
+  "externalLessons": [
+    {
+      "id": "gcal-6qev5qvnha736rsmr8f8sgccgf",
+      "date": "2026-08-18",
+      "source": "google-calendar",
+      "calendarEventId": "6qev5qvnha736rsmr8f8sgccgf",
+      "durationHours": 1,
+      "counted": true
     }
   ]
 }
