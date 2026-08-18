@@ -1,0 +1,32 @@
+{
+  "studentId": "evelina",
+  "set": {
+    "/completedLessonsCount": 7,
+    "/progressText": "V cvičné písemce jsi získala 32 z 40 bodů, tedy 80 %. Základní látku máš převážně zvládnutou a k finálnímu testu jsi nyní téměř připravená. Máš za sebou 7 hodin; zbývající jednu hodinu využijeme hlavně k dalšímu testu, kontrole samostatnosti a odstranění posledních opakujících se chyb.",
+    "/upcoming/0/title": "Poslední kontrolní lekce před finálem",
+    "/upcoming/0/meta": "Krátký test, úlohy na čas, oprava chyb a kontrola samostatnosti",
+    "/upcoming/0/badge": "1 hodina",
+    "/externalLessons": [
+      {
+        "id": "gcal-7ffa16qgu0f0af67n1dh1lpvkl",
+        "date": "2026-08-18",
+        "source": "google-calendar",
+        "calendarEventId": "7ffa16qgu0f0af67n1dh1lpvkl",
+        "durationHours": 1,
+        "counted": true
+      }
+    ]
+  },
+  "prepend": [
+    {
+      "path": "/timeline",
+      "value": {
+        "month": "Srp",
+        "day": "18",
+        "title": "Sedmá hodina dokončena",
+        "desc": "Proběhla další hodinová lekce matematiky. Podrobný obsah lze doplnit podle materiálu nebo poznámek z lekce.",
+        "badge": "Lekce"
+      }
+    }
+  ]
+}
