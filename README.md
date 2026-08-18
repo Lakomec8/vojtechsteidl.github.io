@@ -23,3 +23,7 @@ Kontrola profilů a odkazovaných materiálů:
 python scripts/validate_student_data.py
 node --check assets/student-portal.js
 ```
+
+## Provozní model
+
+Rozdělení autoritativních zdrojů mezi GitHub, Google Calendar, Gmail, Google Drive a Tutoring OS je popsáno v [`docs/AI_OPERATING_MODEL.md`](docs/AI_OPERATING_MODEL.md). Cílem je, aby každý typ informace měl právě jeden source of truth a nevznikaly paralelní ručně udržované kopie.
