@@ -1,5 +1,5 @@
 import { readFile, writeFile } from "node:fs/promises";
-import { dirname, join, resolve } from "node:path";
+import { dirname, isAbsolute, join, relative, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const appRoot = resolve(dirname(fileURLToPath(import.meta.url)), "..");
@@ -31,7 +31,12 @@ for (const entry of mapping.students) {
   }
 
   const profilePath = resolve(repoRoot, source);
-  if (!profilePath.startsWith(`${repoRoot}/`) && profilePath !== repoRoot) {
+  const relativePath = relative(repoRoot, profilePath);
+  if (
+    relativePath === "" ||
+    relativePath.startsWith("..") ||
+    isAbsolute(relativePath)
+  ) {
     throw new Error(`Refusing source outside repository: ${source}`);
   }
 
