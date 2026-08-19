@@ -1,0 +1,34 @@
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  "name": "vojtechsteidl-portal",
+  "main": "src/index.ts",
+  "compatibility_date": "2026-08-19",
+  "compatibility_flags": ["nodejs_compat"],
+  "observability": {
+    "enabled": true,
+    "head_sampling_rate": 1
+  },
+  "vars": {
+    "TEAM_DOMAIN": "https://REPLACE-ME.cloudflareaccess.com",
+    "POLICY_AUD": "REPLACE_AFTER_ACCESS_CREATE"
+  },
+  "assets": {
+    "directory": "./dist",
+    "binding": "ASSETS",
+    "run_worker_first": [
+      "/student-portal.html",
+      "/assets/student-*",
+      "/Materials/*",
+      "/materials/*",
+      "/students/*",
+      "/api/*"
+    ]
+  },
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "vojtechsteidl-portal",
+      "database_id": "REPLACE_AFTER_D1_CREATE"
+    }
+  ]
+}
