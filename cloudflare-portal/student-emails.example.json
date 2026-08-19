@@ -1,0 +1,10 @@
+{
+  "students": [
+    {
+      "id": "natalie",
+      "email": "student@example.com",
+      "source": "students/natalie.json",
+      "materialPath": "natalie"
+    }
+  ]
+}
