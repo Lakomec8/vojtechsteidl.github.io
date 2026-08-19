@@ -45,7 +45,7 @@ function plain(message: string, status: number): Response {
   return new Response(message, { status, headers });
 }
 
-function validateAccessConfig(env: Cloudflare.Env): void {
+function validateAccessConfig(env: Env): void {
   if (
     !env.TEAM_DOMAIN?.startsWith("https://") ||
     env.TEAM_DOMAIN.includes("REPLACE-ME") ||
@@ -58,7 +58,7 @@ function validateAccessConfig(env: Cloudflare.Env): void {
 
 async function authenticatedEmail(
   request: Request,
-  env: Cloudflare.Env,
+  env: Env,
 ): Promise<string> {
   validateAccessConfig(env);
 
@@ -89,7 +89,7 @@ async function authenticatedEmail(
 
 async function studentForEmail(
   email: string,
-  env: Cloudflare.Env,
+  env: Env,
 ): Promise<StudentRow> {
   const student = await env.DB.prepare(
     `SELECT id, display_name, material_path
@@ -110,7 +110,7 @@ async function studentForEmail(
 
 async function authenticatedStudent(
   request: Request,
-  env: Cloudflare.Env,
+  env: Env,
 ): Promise<StudentRow> {
   const email = await authenticatedEmail(request, env);
   return studentForEmail(email, env);
@@ -118,7 +118,7 @@ async function authenticatedStudent(
 
 async function profileResponse(
   request: Request,
-  env: Cloudflare.Env,
+  env: Env,
 ): Promise<Response> {
   const student = await authenticatedStudent(request, env);
   const row = await env.DB.prepare(
@@ -146,8 +146,7 @@ async function profileResponse(
 
 async function protectedAsset(
   request: Request,
-  env: Cloudflare.Env,
-  student: StudentRow,
+  env: Env,
 ): Promise<Response> {
   const response = await env.ASSETS.fetch(request);
   const headers = privateHeaders(new Headers(response.headers));
@@ -160,7 +159,7 @@ async function protectedAsset(
 
 async function materialResponse(
   request: Request,
-  env: Cloudflare.Env,
+  env: Env,
 ): Promise<Response> {
   const student = await authenticatedStudent(request, env);
   const pathname = new URL(request.url).pathname;
@@ -175,7 +174,7 @@ async function materialResponse(
     throw new RequestError(403, "This material belongs to another account.");
   }
 
-  return protectedAsset(request, env, student);
+  return protectedAsset(request, env);
 }
 
 export default {
@@ -207,8 +206,8 @@ export default {
         url.pathname === "/student-portal.html" ||
         url.pathname.startsWith("/assets/student-")
       ) {
-        const student = await authenticatedStudent(request, env);
-        return protectedAsset(request, env, student);
+        await authenticatedStudent(request, env);
+        return protectedAsset(request, env);
       }
 
       return env.ASSETS.fetch(request);
@@ -221,7 +220,10 @@ export default {
             path: url.pathname,
           }),
         );
-        return plain(error.status >= 500 ? "Service unavailable" : error.message, error.status);
+        return plain(
+          error.status >= 500 ? "Service unavailable" : error.message,
+          error.status,
+        );
       }
 
       console.error(
@@ -233,4 +235,4 @@ export default {
       return plain("Internal server error", 500);
     }
   },
-} satisfies ExportedHandler<Cloudflare.Env>;
+} satisfies ExportedHandler<Env>;
