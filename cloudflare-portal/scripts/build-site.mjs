@@ -11,6 +11,7 @@ import { fileURLToPath } from "node:url";
 const appRoot = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const repoRoot = resolve(appRoot, "..");
 const dist = join(appRoot, "dist");
+const portalUrl = "https://portal.vojtechsteidl.eu/student-portal.html";
 
 const rootFiles = [
   "index.html",
@@ -63,12 +64,14 @@ for (const directory of publicDirectories) {
   await copyRequired(join(repoRoot, directory), join(dist, directory));
 }
 
-// The secure deployment links directly to the Access-protected portal.
+// The public website links to a separate Access-protected hostname. This
+// creates an explicit security boundary between public marketing pages and
+// authenticated student content.
 const indexPath = join(dist, "index.html");
 let indexHtml = await readFile(indexPath, "utf8");
 indexHtml = indexHtml.replaceAll(
   'href="student-portal.html"',
-  'href="/student-portal.html"',
+  `href="${portalUrl}"`,
 );
 
 // Remove the old hard-coded student aliases from the deployed HTML.
