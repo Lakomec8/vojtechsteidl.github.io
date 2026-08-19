@@ -1,14 +1,14 @@
 {
   "studentName": "Natalie",
   "studentInitials": "N",
-  "completedLessonsCount": 8,
+  "completedLessonsCount": 9,
   "incrementLessonCountOnMaterialAdd": true,
   "progress": 27,
-  "progressText": "Máš za sebou osm hodin. Aktuálně se soustředíme na rychlé a bodově dostupné úlohy z úvodu didaktického testu; dlouhodobým cílem zůstává 24 bodů v cvičném didaktickém testu.",
+  "progressText": "Máš za sebou devět hodin. Aktuálně se soustředíme na geometrii k maturitě: rozpoznání pravoúhlého trojúhelníku, Pythagorovu větu, sinus a sinovou větu; dlouhodobým cílem zůstává 24 bodů v cvičném didaktickém testu.",
   "priority": {
-    "title": "Cíl: 24 bodů v cvičném didaktickém testu.",
-    "text": "Nejdříve chceme bezpečně získávat jednoduché body. Pracuj s novým materiálem Rychlé body z matematiky: projdi stručnou teorii a vzorové příklady, potom řeš cvičení bez nápovědy a nakonec závěrečný trénink. U každé chyby si poznamenej, zda šlo o neznalost postupu, znaménko, podmínku nebo špatně přečtené zadání.",
-    "deadline": "Cíl: 24 bodů"
+    "title": "Aktuálně: geometrie k maturitě",
+    "text": "Projdi nový materiál Geometrie k maturitě bez přemíry vzorců. Zaměř se na rozpoznání pravoúhlého trojúhelníku, správný náčrt, Pythagorovu větu a sinusovou větu. Potom vyřeš samostatné procvičení a označ úlohy, u kterých nebylo jasné, jaký vztah použít.",
+    "deadline": "Cíl: jisté body z geometrie"
   },
   "readiness": {
     "label": "Studijní postup",
@@ -79,6 +79,15 @@
   ],
   "materials": [
     {
+      "title": "Geometrie k maturitě bez přemíry vzorců",
+      "meta": "PDF materiál · Matematika · Pythagorova věta, sinus, sinová věta, rovinná a prostorová geometrie, maturitní příklady",
+      "badge": "Aktuální PDF",
+      "badgeClass": "pdf",
+      "url": "./Materials/natalie/2026-08-19__matematika__geometrie-k-maturite.pdf",
+      "date": "2026-08-19",
+      "source": "manual-sync"
+    },
+    {
       "title": "Rychlé body z matematiky — jednobodové úlohy",
       "meta": "PDF materiál · Matematika · typické jednobodové úlohy, vzorové postupy, cvičení a závěrečný trénink",
       "badge": "Aktuální PDF",
@@ -137,6 +146,13 @@
   "timeline": [
     {
       "month": "Srp",
+      "day": "19",
+      "title": "Přidán materiál Geometrie k maturitě",
+      "desc": "Nový materiál omezuje memorování vzorců na minimum a procvičuje Pythagorovu větu, sinus, sinovou větu, podobnost, tělesa a typické maturitní geometrické úlohy.",
+      "badge": "Aktuální materiál"
+    },
+    {
+      "month": "Srp",
       "day": "18",
       "title": "Osmá hodina dokončena",
       "desc": "Proběhla další hodinová lekce matematiky v rámci přípravy k didaktickému testu.",
@@ -186,6 +202,11 @@
     }
   ],
   "upcoming": [
+    {
+      "title": "Aktuální úkol — geometrie k maturitě",
+      "meta": "Projdi vzorové úlohy a poté samostatně vyřeš závěrečné procvičení. U každé úlohy nejprve nakresli obrázek, označ známé údaje a hledej pravoúhlý trojúhelník.",
+      "badge": "Aktuální úkol"
+    },
     {
       "title": "Aktuální úkol — rychlé jednobodové úlohy",
       "meta": "Projdi materiál Rychlé body z matematiky, vyřeš cvičení bez nápovědy a nakonec závěrečný trénink 15 úloh. Označ si typy, ve kterých ztrácíš body.",
