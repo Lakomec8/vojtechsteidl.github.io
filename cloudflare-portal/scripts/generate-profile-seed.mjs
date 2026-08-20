@@ -12,7 +12,7 @@ const profiles = [
 ];
 
 const sqlString = (value) => `'${String(value).replaceAll("'", "''")}'`;
-const statements = ["BEGIN TRANSACTION;"];
+const statements = [];
 
 for (const profile of profiles) {
   const sourcePath = resolve(repoRoot, profile.source);
@@ -25,6 +25,5 @@ for (const profile of profiles) {
   );
 }
 
-statements.push("COMMIT;");
 await writeFile(outputPath, `${statements.join("\n")}\n`, { mode: 0o600 });
 console.log(`Prepared D1 profile seed for ${profiles.length} students.`);
