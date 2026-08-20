@@ -21,15 +21,7 @@
   "assets": {
     "directory": "./dist",
     "binding": "ASSETS",
-    "run_worker_first": [
-      "/",
-      "/student-portal.html",
-      "/assets/student-*",
-      "/Materials/*",
-      "/materials/*",
-      "/students/*",
-      "/api/*"
-    ]
+    "run_worker_first": true
   },
   "d1_databases": [
     {
