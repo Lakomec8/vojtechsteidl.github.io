@@ -10,7 +10,7 @@
   },
   "vars": {
     "TEAM_DOMAIN": "https://REPLACE-ME.cloudflareaccess.com",
-    "POLICY_AUD": "REPLACE_AFTER_ACCESS_CREATE"
+    "POLICY_AUD": "1ae1ec315a2e4277a52a1d7e5a3030d2f3ad5f0058f5c02ba71ac9ec07955783"
   },
   "assets": {
     "directory": "./dist",
