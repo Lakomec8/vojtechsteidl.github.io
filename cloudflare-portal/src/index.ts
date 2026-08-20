@@ -19,6 +19,10 @@ class RequestError extends Error {
   }
 }
 
+const MAIN_HOSTS = new Set(["vojtechsteidl.eu", "www.vojtechsteidl.eu"]);
+const PORTAL_HOST = "portal.vojtechsteidl.eu";
+const PORTAL_PREFIX = "/student-portal";
+
 function securityHeaders(headers = new Headers()): Headers {
   headers.set("X-Content-Type-Options", "nosniff");
   headers.set("Referrer-Policy", "strict-origin-when-cross-origin");
@@ -144,11 +148,18 @@ async function profileResponse(
   return json({ ...profile, studentId: student.id });
 }
 
+function requestForAsset(request: Request, pathname: string): Request {
+  const assetUrl = new URL(request.url);
+  assetUrl.pathname = pathname;
+  return new Request(assetUrl.toString(), request);
+}
+
 async function protectedAsset(
   request: Request,
   env: Env,
+  pathname = new URL(request.url).pathname,
 ): Promise<Response> {
-  const response = await env.ASSETS.fetch(request);
+  const response = await env.ASSETS.fetch(requestForAsset(request, pathname));
   const headers = privateHeaders(new Headers(response.headers));
   return new Response(response.body, {
     status: response.status,
@@ -160,10 +171,14 @@ async function protectedAsset(
 async function materialResponse(
   request: Request,
   env: Env,
+  portalPrefixed: boolean,
 ): Promise<Response> {
   const student = await authenticatedStudent(request, env);
   const pathname = new URL(request.url).pathname;
-  const match = pathname.match(/^\/Materials\/([^/]+)\//i);
+  const materialPath = portalPrefixed
+    ? pathname.slice(PORTAL_PREFIX.length)
+    : pathname;
+  const match = materialPath.match(/^\/Materials\/([^/]+)\//i);
 
   if (!match) {
     throw new RequestError(404, "Material was not found.");
@@ -174,7 +189,87 @@ async function materialResponse(
     throw new RequestError(403, "This material belongs to another account.");
   }
 
-  return protectedAsset(request, env);
+  return protectedAsset(request, env, materialPath);
+}
+
+async function mainDomainPortal(
+  request: Request,
+  env: Env,
+  url: URL,
+): Promise<Response> {
+  if (url.pathname === "/student-portal.html") {
+    return Response.redirect("https://vojtechsteidl.eu/student-portal/", 302);
+  }
+
+  if (url.pathname === PORTAL_PREFIX) {
+    return Response.redirect("https://vojtechsteidl.eu/student-portal/", 302);
+  }
+
+  if (url.pathname === `${PORTAL_PREFIX}/`) {
+    await authenticatedStudent(request, env);
+    return protectedAsset(request, env, "/student-portal.html");
+  }
+
+  if (url.pathname === `${PORTAL_PREFIX}/api/profile`) {
+    if (request.method !== "GET") return plain("Method not allowed", 405);
+    return profileResponse(request, env);
+  }
+
+  if (url.pathname.startsWith(`${PORTAL_PREFIX}/api/`)) {
+    return plain("Not found", 404);
+  }
+
+  if (new RegExp(`^${PORTAL_PREFIX}/Materials/`, "i").test(url.pathname)) {
+    if (request.method !== "GET" && request.method !== "HEAD") {
+      return plain("Method not allowed", 405);
+    }
+    return materialResponse(request, env, true);
+  }
+
+  if (url.pathname.startsWith(`${PORTAL_PREFIX}/assets/student-`)) {
+    await authenticatedStudent(request, env);
+    const assetPath = url.pathname.slice(PORTAL_PREFIX.length);
+    return protectedAsset(request, env, assetPath);
+  }
+
+  return plain("Not found", 404);
+}
+
+async function legacyPortalHost(
+  request: Request,
+  env: Env,
+  url: URL,
+): Promise<Response> {
+  if (url.pathname === "/" || url.pathname === "/student-portal.html") {
+    return Response.redirect("https://vojtechsteidl.eu/student-portal/", 302);
+  }
+
+  if (url.pathname.startsWith("/students/")) {
+    return plain("Not found", 404);
+  }
+
+  if (url.pathname === "/api/profile") {
+    if (request.method !== "GET") return plain("Method not allowed", 405);
+    return profileResponse(request, env);
+  }
+
+  if (url.pathname.startsWith("/api/")) {
+    return plain("Not found", 404);
+  }
+
+  if (/^\/Materials\//i.test(url.pathname)) {
+    if (request.method !== "GET" && request.method !== "HEAD") {
+      return plain("Method not allowed", 405);
+    }
+    return materialResponse(request, env, false);
+  }
+
+  if (url.pathname.startsWith("/assets/student-")) {
+    await authenticatedStudent(request, env);
+    return protectedAsset(request, env);
+  }
+
+  return plain("Not found", 404);
 }
 
 export default {
@@ -182,47 +277,15 @@ export default {
     const url = new URL(request.url);
 
     try {
-      const isPublicHost =
-        url.hostname === "vojtechsteidl.eu" ||
-        url.hostname === "www.vojtechsteidl.eu";
-
-      if (isPublicHost && url.pathname === "/student-portal.html") {
-        return Response.redirect("https://portal.vojtechsteidl.eu", 302);
+      if (MAIN_HOSTS.has(url.hostname) && url.pathname.startsWith(PORTAL_PREFIX)) {
+        return mainDomainPortal(request, env, url);
       }
 
-      if (url.hostname === "portal.vojtechsteidl.eu" && url.pathname === "/") {
-        return Response.redirect(`${url.origin}/student-portal.html`, 302);
+      if (url.hostname === PORTAL_HOST) {
+        return legacyPortalHost(request, env, url);
       }
 
-      if (url.pathname.startsWith("/students/")) {
-        return plain("Not found", 404);
-      }
-
-      if (url.pathname === "/api/profile") {
-        if (request.method !== "GET") return plain("Method not allowed", 405);
-        return profileResponse(request, env);
-      }
-
-      if (url.pathname.startsWith("/api/")) {
-        return plain("Not found", 404);
-      }
-
-      if (/^\/Materials\//i.test(url.pathname)) {
-        if (request.method !== "GET" && request.method !== "HEAD") {
-          return plain("Method not allowed", 405);
-        }
-        return materialResponse(request, env);
-      }
-
-      if (
-        url.pathname === "/student-portal.html" ||
-        url.pathname.startsWith("/assets/student-")
-      ) {
-        await authenticatedStudent(request, env);
-        return protectedAsset(request, env);
-      }
-
-      return env.ASSETS.fetch(request);
+      return plain("Not found", 404);
     } catch (error) {
       if (error instanceof RequestError) {
         console.warn(
