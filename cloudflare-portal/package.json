@@ -8,6 +8,7 @@
     "typecheck": "wrangler types && tsc --noEmit",
     "dev": "npm run build && wrangler dev",
     "deploy": "npm run build && npm run typecheck && wrangler deploy",
+    "deploy:migration": "npm run build && node scripts/generate-profile-seed.mjs && npx wrangler d1 execute DB --remote --file=./profile-seed.sql --yes && npm run typecheck && wrangler deploy",
     "db:migrate:local": "wrangler d1 migrations apply DB --local",
     "db:migrate:remote": "wrangler d1 migrations apply DB --remote",
     "db:seed": "node scripts/generate-seed.mjs"
