@@ -186,12 +186,6 @@ export default {
         return plain("Not found", 404);
       }
 
-      if (url.pathname === "/api/whoami") {
-        if (request.method !== "GET") return plain("Method not allowed", 405);
-        const email = await authenticatedEmail(request, env);
-        return json({ email });
-      }
-
       if (url.pathname === "/api/profile") {
         if (request.method !== "GET") return plain("Method not allowed", 405);
         return profileResponse(request, env);
