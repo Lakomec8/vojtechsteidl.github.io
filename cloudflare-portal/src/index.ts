@@ -158,9 +158,9 @@ async function authenticatedPrincipal(
   const email = await authenticatedEmail(request, env);
   const student = await studentForEmailOrNull(email, env);
 
-  // Cloudflare Access is default-deny. The application currently allows only
-  // explicit student identities and Cloudflare account members. Therefore an
-  // authenticated identity that is not mapped to a student is an administrator.
+  // The path-based Access application allows only explicit student identities
+  // and the explicit administrator identity. An authenticated non-student is
+  // therefore the administrator.
   return { email, student, isAdmin: student === null };
 }
 
@@ -279,6 +279,15 @@ function withAdminStudentCookie(response: Response, studentId: string): Response
   });
 }
 
+function adminStudentRedirect(studentId: string): Response {
+  const headers = privateHeaders();
+  headers.set("Location", `${PORTAL_PREFIX}/`);
+  return withAdminStudentCookie(
+    new Response(null, { status: 302, headers }),
+    studentId,
+  );
+}
+
 async function materialResponse(
   request: Request,
   env: Env,
@@ -344,7 +353,7 @@ async function adminLandingResponse(
 
   const cards = students.length
     ? students.map((student) => `
-        <a class="student-card" href="${PORTAL_PREFIX}/?student=${encodeURIComponent(student.id)}">
+        <a class="student-card" href="${PORTAL_PREFIX}/admin/view/${encodeURIComponent(student.id)}">
           <strong>${escapeHtml(student.display_name)}</strong>
           <span>Otevřít studentskou zónu</span>
         </a>
@@ -401,20 +410,33 @@ async function mainDomainPortal(
     return adminLandingResponse(request, env);
   }
 
+  const adminViewMatch = url.pathname.match(
+    new RegExp(`^${PORTAL_PREFIX}/admin/view/([^/]+)$`),
+  );
+  if (adminViewMatch) {
+    const principal = await authenticatedPrincipal(request, env);
+    if (!principal.isAdmin) {
+      throw new RequestError(403, "Administrator access is required.");
+    }
+
+    const studentId = decodeURIComponent(adminViewMatch[1]);
+    const student = await studentForId(studentId, env);
+    return adminStudentRedirect(student.id);
+  }
+
   if (url.pathname === `${PORTAL_PREFIX}/`) {
     const principal = await authenticatedPrincipal(request, env);
     if (principal.student) {
       return protectedAsset(request, env, "/student-portal.html");
     }
 
-    const selectedId = url.searchParams.get("student");
+    const selectedId = cookieValue(request, ADMIN_STUDENT_COOKIE);
     if (!selectedId) {
       return adminLandingResponse(request, env);
     }
 
-    const student = await studentForId(selectedId, env);
-    const response = await protectedAsset(request, env, "/student-portal.html");
-    return withAdminStudentCookie(response, student.id);
+    await studentForId(selectedId, env);
+    return protectedAsset(request, env, "/student-portal.html");
   }
 
   if (url.pathname === `${PORTAL_PREFIX}/api/profile`) {
