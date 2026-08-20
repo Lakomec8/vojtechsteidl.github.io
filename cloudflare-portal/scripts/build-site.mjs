@@ -11,7 +11,7 @@ import { fileURLToPath } from "node:url";
 const appRoot = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const repoRoot = resolve(appRoot, "..");
 const dist = join(appRoot, "dist");
-const portalUrl = "https://portal.vojtechsteidl.eu/student-portal.html";
+const portalUrl = "https://vojtechsteidl.eu/student-portal/";
 
 const rootFiles = [
   "index.html",
@@ -38,7 +38,7 @@ const publicDirectories = [
   "interactive-notes",
   "materialy-zdarma",
   // Student materials are included in the private deployment artifact,
-  // but every /Materials/* request is authorized by the Worker first.
+  // but every portal material request is authorized by the Worker first.
   "Materials",
 ];
 
@@ -64,25 +64,28 @@ for (const directory of publicDirectories) {
   await copyRequired(join(repoRoot, directory), join(dist, directory));
 }
 
-// The public website links to a separate Access-protected hostname. This
-// creates an explicit security boundary between public marketing pages and
-// authenticated student content.
+// Public entry points target the Access-protected path on the main domain.
 const indexPath = join(dist, "index.html");
 let indexHtml = await readFile(indexPath, "utf8");
 indexHtml = indexHtml.replaceAll(
   'href="student-portal.html"',
   `href="${portalUrl}"`,
 );
+indexHtml = indexHtml.replaceAll(
+  'href="https://portal.vojtechsteidl.eu"',
+  `href="${portalUrl}"`,
+);
 
-// Remove the old hard-coded student aliases from the deployed HTML.
+// Remove the old hard-coded student aliases from the deployed HTML if they
+// are still present on the source branch.
 indexHtml = indexHtml.replace(
   'const studentAliases={demo:"demo123",evelin:"evelina",evelin123:"evelina"},studentKey=studentAliases[enteredPassword]||enteredPassword,targetJson="students/"+encodeURIComponent(studentKey)+".json";',
-  'const studentKey="cloudflare-access",targetJson="/api/profile";',
+  'const studentKey="cloudflare-access",targetJson="./api/profile";',
 );
 await writeFile(indexPath, indexHtml);
 
-// Keep the existing dashboard UI but replace filename-based access with
-// the authenticated API endpoint. The source file stays unchanged until cutover.
+// Keep the dashboard UI but replace filename-based access with the
+// authenticated API endpoint below /student-portal/.
 const portalJsPath = join(dist, "assets", "student-portal.js");
 let portalJs = await readFile(portalJsPath, "utf8");
 portalJs = replaceOrFail(
@@ -94,7 +97,7 @@ portalJs = replaceOrFail(
 portalJs = replaceOrFail(
   portalJs,
   '    const response = await fetch(\n      `students/${encodeURIComponent(token)}.json?ts=${Date.now()}`,\n      { cache: "no-store" },\n    );',
-  '    const response = await fetch("/api/profile", {\n      cache: "no-store",\n      credentials: "same-origin",\n    });',
+  '    const response = await fetch("./api/profile", {\n      cache: "no-store",\n      credentials: "same-origin",\n    });',
   "route profile reads through authenticated API",
 );
 portalJs = replaceOrFail(
@@ -111,7 +114,6 @@ portalJs = replaceOrFail(
 );
 await writeFile(portalJsPath, portalJs);
 
-// Headers for assets served directly without Worker execution.
 await writeFile(
   join(dist, "_headers"),
   `/*\n  X-Content-Type-Options: nosniff\n  Referrer-Policy: strict-origin-when-cross-origin\n  Permissions-Policy: camera=(), microphone=(), geolocation=()\n`,
