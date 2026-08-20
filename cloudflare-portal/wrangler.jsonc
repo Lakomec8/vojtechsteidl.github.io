@@ -10,7 +10,7 @@
   },
   "vars": {
     "TEAM_DOMAIN": "https://broad-cherry-72ff.cloudflareaccess.com",
-    "POLICY_AUD": "1ae1ec315a2e4277a52a1d7e5a3030d2f3ad5f0058f5c02ba71ac9ec07955783"
+    "POLICY_AUD": "89190bdbddce22e6d1bc3c2d2e42ae790ec5aedfb00adbe8eb0ce6d0c71225d2"
   },
   "routes": [
     {
