@@ -12,6 +12,12 @@
     "TEAM_DOMAIN": "https://broad-cherry-72ff.cloudflareaccess.com",
     "POLICY_AUD": "1ae1ec315a2e4277a52a1d7e5a3030d2f3ad5f0058f5c02ba71ac9ec07955783"
   },
+  "routes": [
+    {
+      "pattern": "portal.vojtechsteidl.eu",
+      "custom_domain": true
+    }
+  ],
   "assets": {
     "directory": "./dist",
     "binding": "ASSETS",
