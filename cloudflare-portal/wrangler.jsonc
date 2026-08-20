@@ -16,6 +16,14 @@
     {
       "pattern": "portal.vojtechsteidl.eu",
       "custom_domain": true
+    },
+    {
+      "pattern": "vojtechsteidl.eu/student-portal*",
+      "zone_name": "vojtechsteidl.eu"
+    },
+    {
+      "pattern": "www.vojtechsteidl.eu/student-portal*",
+      "zone_name": "vojtechsteidl.eu"
     }
   ],
   "assets": {
