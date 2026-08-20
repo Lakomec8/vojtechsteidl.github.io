@@ -16,30 +16,6 @@
     {
       "pattern": "portal.vojtechsteidl.eu",
       "custom_domain": true
-    },
-    {
-      "pattern": "vojtechsteidl.eu/student-portal.html*",
-      "zone_name": "vojtechsteidl.eu"
-    },
-    {
-      "pattern": "www.vojtechsteidl.eu/student-portal.html*",
-      "zone_name": "vojtechsteidl.eu"
-    },
-    {
-      "pattern": "vojtechsteidl.eu/students/*",
-      "zone_name": "vojtechsteidl.eu"
-    },
-    {
-      "pattern": "www.vojtechsteidl.eu/students/*",
-      "zone_name": "vojtechsteidl.eu"
-    },
-    {
-      "pattern": "vojtechsteidl.eu/Materials/*",
-      "zone_name": "vojtechsteidl.eu"
-    },
-    {
-      "pattern": "www.vojtechsteidl.eu/Materials/*",
-      "zone_name": "vojtechsteidl.eu"
     }
   ],
   "assets": {
