@@ -182,6 +182,10 @@ export default {
     const url = new URL(request.url);
 
     try {
+      if (url.hostname === "portal.vojtechsteidl.eu" && url.pathname === "/") {
+        return Response.redirect(`${url.origin}/student-portal.html`, 302);
+      }
+
       if (url.pathname.startsWith("/students/")) {
         return plain("Not found", 404);
       }
