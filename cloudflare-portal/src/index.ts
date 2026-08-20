@@ -182,6 +182,14 @@ export default {
     const url = new URL(request.url);
 
     try {
+      const isPublicHost =
+        url.hostname === "vojtechsteidl.eu" ||
+        url.hostname === "www.vojtechsteidl.eu";
+
+      if (isPublicHost && url.pathname === "/student-portal.html") {
+        return Response.redirect("https://portal.vojtechsteidl.eu", 302);
+      }
+
       if (url.hostname === "portal.vojtechsteidl.eu" && url.pathname === "/") {
         return Response.redirect(`${url.origin}/student-portal.html`, 302);
       }
