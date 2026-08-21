@@ -5,6 +5,12 @@ const PORTAL_ROOT = "/student-portal/";
 const ADMIN_STUDENT_COOKIE = "portal_admin_student";
 const ADMIN_VIEW_COOKIE = "portal_admin_view_once";
 
+type WorkerRequest = Parameters<typeof worker.fetch>[0];
+
+function callWorker(request: Request, env: Env): Promise<Response> {
+  return worker.fetch(request as WorkerRequest, env);
+}
+
 function cookieValue(request: Request, name: string): string | null {
   const cookie = request.headers.get("Cookie") || "";
   for (const part of cookie.split(";")) {
@@ -60,7 +66,7 @@ export default {
     const url = new URL(request.url);
 
     if (!MAIN_HOSTS.has(url.hostname)) {
-      return worker.fetch(request, env);
+      return callWorker(request, env);
     }
 
     // Cloudflare Access may occasionally preserve the wildcard literally in a
@@ -71,7 +77,7 @@ export default {
 
     const adminViewPath = /^\/student-portal\/admin\/view\/[^/]+$/;
     if (adminViewPath.test(url.pathname)) {
-      return withOneTimeAdminView(await worker.fetch(request, env));
+      return withOneTimeAdminView(await callWorker(request, env));
     }
 
     if (url.pathname === PORTAL_ROOT) {
@@ -85,10 +91,10 @@ export default {
         return redirectToPortal(true);
       }
 
-      const response = await worker.fetch(request, env);
+      const response = await callWorker(request, env);
       return oneTimeAdminView ? clearOneTimeAdminView(response) : response;
     }
 
-    return worker.fetch(request, env);
+    return callWorker(request, env);
   },
 } satisfies ExportedHandler<Env>;
