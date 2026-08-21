@@ -70,9 +70,9 @@ def patch_public_entrypoint() -> None:
     index_path = DIST / "index.html"
     html = index_path.read_text(encoding="utf-8")
 
-    # One canonical student-login entry point avoids unnecessary cross-host
-    # Access cookie redirects. The portal subdomain remains available as an
-    # implementation detail/backward-compatible hostname.
+    # Use one canonical student login entry point. This avoids unnecessary
+    # cross-host Access cookie redirects and keeps the recovery instructions
+    # identical for every student account.
     html = html.replace("https://portal.vojtechsteidl.eu", PORTAL_URL)
 
     old_note = (
@@ -82,8 +82,9 @@ def patch_public_entrypoint() -> None:
     )
     new_note = (
         "Přístup je chráněný ověřením e-mailu a jednorázovým kódem. "
-        "Pokud Cloudflare oznámí, že kód už byl použit, vyžádejte nový kód "
-        "a z e-mailu pouze opište PIN; neotevírejte přihlašovací odkaz v e-mailu. "
+        "Vyžádejte vždy jen jeden kód a použijte pouze nejnovější e-mail; nový požadavek "
+        "předchozí PIN zneplatní. Pokud Cloudflare oznámí, že kód už byl použit, "
+        "vyžádejte nový a z e-mailu pouze opište PIN; neotevírejte přihlašovací odkaz v e-mailu. "
         "Přihlášení na zařízení zůstává aktivní až 30 dní. "
         "Náhled vedle neobsahuje skutečná studentská data."
     )
@@ -99,7 +100,6 @@ def assert_public_artifact() -> None:
     if leaked:
         raise RuntimeError(f"Forbidden paths leaked into public artifact: {', '.join(leaked)}")
 
-    # Personal tutoring PDFs must never appear at the public artifact root.
     root_pdfs = sorted(path.name for path in DIST.glob("*.pdf"))
     if root_pdfs:
         raise RuntimeError(f"Unexpected root PDFs in public artifact: {', '.join(root_pdfs)}")
