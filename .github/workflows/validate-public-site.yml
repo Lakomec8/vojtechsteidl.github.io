@@ -1,0 +1,54 @@
+name: Validate public site boundary
+
+on:
+  pull_request:
+    paths:
+      - "index.html"
+      - "style.css"
+      - "assets/**"
+      - "doucovani-fyziky/**"
+      - "doucovani-matematiky/**"
+      - "priprava-na-maturitu-z-matematiky/**"
+      - "pro-skoly/**"
+      - "interactive-notes/**"
+      - "materialy-zdarma/**"
+      - "scripts/build_public_site.py"
+      - ".github/workflows/deploy-pages.yml"
+      - ".github/workflows/validate-public-site.yml"
+  push:
+    branches:
+      - main
+    paths:
+      - "scripts/build_public_site.py"
+      - ".github/workflows/deploy-pages.yml"
+      - ".github/workflows/validate-public-site.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Build explicit public allowlist
+        run: python scripts/build_public_site.py
+
+      - name: Assert private tutoring data is not published
+        shell: bash
+        run: |
+          set -euo pipefail
+          forbidden=(Materials students .uploads .student-updates cloudflare-portal docs scripts .github)
+          for path in "${forbidden[@]}"; do
+            if [ -e ".public-site/$path" ]; then
+              echo "Forbidden path in public artifact: $path" >&2
+              exit 1
+            fi
+          done
+          if find .public-site -maxdepth 1 -type f -iname '*.pdf' | grep -q .; then
+            echo "Unexpected root PDF in public artifact" >&2
+            exit 1
+          fi
