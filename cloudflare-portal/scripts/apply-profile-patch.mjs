@@ -76,6 +76,71 @@ function setValue(root, pointer, value) {
   else parent[last] = value;
 }
 
+function normalizedDate(value) {
+  const date = String(value || "").trim();
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(date)) throw new Error("lessonEvent.date must be YYYY-MM-DD");
+  return date;
+}
+
+function applyLessonEvent(profile, rawEvent) {
+  const eventId = String(rawEvent?.eventId || "").trim();
+  if (!eventId || eventId.length > 220) throw new Error("lessonEvent.eventId is required");
+  const date = normalizedDate(rawEvent?.date);
+  const durationHours = Number(rawEvent?.durationHours);
+  if (!Number.isFinite(durationHours) || durationHours <= 0 || durationHours > 12) {
+    throw new Error("lessonEvent.durationHours must be between 0 and 12");
+  }
+
+  const externalLessons = Array.isArray(profile.externalLessons)
+    ? profile.externalLessons
+    : [];
+  const key = eventId.startsWith("gcal-") ? eventId : `gcal-${eventId}`;
+  if (externalLessons.some((item) => item?.id === key)) {
+    console.log(`Lesson ${key} already exists; no D1 change required.`);
+    return;
+  }
+
+  const sameDayExternal = externalLessons.filter((item) => item?.date === date);
+  if (sameDayExternal.length > 0) {
+    throw new Error(
+      `Another external lesson already exists for ${date}; refusing an ambiguous automatic count update.`,
+    );
+  }
+
+  const materials = Array.isArray(profile.materials) ? profile.materials : [];
+  const lessons = Array.isArray(profile.lessons) ? profile.lessons : [];
+  const representedByMaterial = materials.some((item) => item?.date === date);
+  const representedByDetailedLesson = lessons.some((item) => item?.date === date);
+  const counted = !representedByMaterial && !representedByDetailedLesson;
+
+  externalLessons.unshift({
+    id: key,
+    date,
+    source: "google-calendar",
+    durationHours,
+    counted,
+  });
+  profile.externalLessons = externalLessons;
+
+  if (counted) {
+    const current = Number(profile.completedLessonsCount ?? lessons.length);
+    profile.completedLessonsCount = Math.max(Number.isFinite(current) ? current : 0, lessons.length) + 1;
+  }
+
+  const timeline = Array.isArray(profile.timeline) ? profile.timeline : [];
+  const timelineHasDate = timeline.some((item) => item?.date === date || item?.isoDate === date);
+  if (!timelineHasDate) {
+    timeline.unshift({
+      date,
+      title: "Dokončená lekce",
+      desc: `${durationHours} h doučování`,
+      badge: "LEKCE",
+      source: "google-calendar",
+    });
+    profile.timeline = timeline;
+  }
+}
+
 if (process.argv.length !== 3) {
   fail("Usage: node scripts/apply-profile-patch.mjs <patch.json>");
 }
@@ -96,6 +161,10 @@ const row = resultRows(select)[0];
 if (!row?.payload_json) fail(`D1 profile not found for student: ${studentId}`);
 
 const profile = JSON.parse(row.payload_json);
+
+if (patch.lessonEvent) {
+  applyLessonEvent(profile, patch.lessonEvent);
+}
 
 for (const [pointer, value] of Object.entries(patch.set || {})) {
   setValue(profile, pointer, value);
