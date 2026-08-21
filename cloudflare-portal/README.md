@@ -13,6 +13,14 @@ This directory is a staging scaffold for moving `vojtechsteidl.eu` away from a p
 - `/Materials/<student>/...` is served only when the authenticated student's configured `material_path` matches the requested path.
 - Legacy `/students/*` URLs always return 404.
 
+## Controlled end-to-end test account
+
+Use student id `vojta2` as the permanent smoke-test identity for the complete login path. The repository contains only a non-sensitive minimal profile fixture at `fixtures/vojta2.profile.json`; the real test email must exist only in Cloudflare Access/D1 and must never be committed.
+
+The test passes only when the tester can authenticate through the same Access application as normal students and sees the `Vojta2` D1-backed dashboard. This verifies OTP/IdP authentication, Access policy evaluation, JWT validation, email-to-student mapping and D1 profile loading in one flow.
+
+To bootstrap the account manually in the Cloudflare D1 dashboard, use `sql/vojta2-test.sql.template`, replace `__VOJTA2_EMAIL__` only in the Cloudflare console, execute it against `vojtechsteidl-portal`, and add the same address to the application's explicit Email allow policy.
+
 ## Required Cloudflare values before deployment
 
 The checked-in `wrangler.jsonc` intentionally contains invalid placeholders so it cannot be deployed accidentally.
