@@ -1,0 +1,57 @@
+name: Deploy secure student portal
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "cloudflare-portal/**"
+      - ".github/workflows/deploy-cloudflare-portal.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: cloudflare-student-portal-production
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Verify Cloudflare credentials
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -n "$CLOUDFLARE_API_TOKEN" || { echo "Missing CLOUDFLARE_API_TOKEN secret"; exit 1; }
+          test -n "$CLOUDFLARE_ACCOUNT_ID" || { echo "Missing CLOUDFLARE_ACCOUNT_ID secret"; exit 1; }
+
+      - name: Install dependencies
+        working-directory: cloudflare-portal
+        run: npm install --no-audit --no-fund
+
+      - name: Build secure portal
+        working-directory: cloudflare-portal
+        run: npm run build
+
+      - name: Typecheck Worker and bindings
+        working-directory: cloudflare-portal
+        run: npm run typecheck
+
+      - name: Deploy production Worker
+        working-directory: cloudflare-portal
+        run: npx wrangler deploy
