@@ -28,6 +28,9 @@ jobs:
       - name: Install portal dependencies
         run: npm install --no-audit --no-fund
 
+      - name: Validate controlled test fixture
+        run: npm run test:fixtures
+
       - name: Build private portal artifact
         run: npm run build
 
