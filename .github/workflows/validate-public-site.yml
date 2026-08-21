@@ -52,6 +52,3 @@ jobs:
             echo "Unexpected root PDF in public artifact" >&2
             exit 1
           fi
-
-      - name: Show public artifact top level
-        run: find .public-site -maxdepth 2 -type f | sort | head -200
