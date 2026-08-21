@@ -2,9 +2,18 @@ name: Migrate student materials to R2
 
 on:
   workflow_dispatch:
+  push:
+    branches:
+      - security/cloudflare-private-portal
+    paths:
+      - ".ops/r2-migrate-trigger"
 
 permissions:
   contents: read
+
+concurrency:
+  group: migrate-student-materials-to-r2
+  cancel-in-progress: false
 
 jobs:
   migrate:
