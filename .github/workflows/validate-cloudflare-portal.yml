@@ -1,0 +1,35 @@
+name: Validate Cloudflare portal
+
+on:
+  pull_request:
+    paths:
+      - "cloudflare-portal/**"
+      - ".github/workflows/validate-cloudflare-portal.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: cloudflare-portal
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Install portal dependencies
+        run: npm install --no-audit --no-fund
+
+      - name: Build private portal artifact
+        run: npm run build
+
+      - name: Typecheck Worker and bindings
+        run: npm run typecheck
