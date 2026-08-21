@@ -17,9 +17,9 @@ This directory is a staging scaffold for moving `vojtechsteidl.eu` away from a p
 
 Use student id `vojta2` as the permanent smoke-test identity for the complete login path. The repository contains only a non-sensitive minimal profile fixture at `fixtures/vojta2.profile.json`; the real test email must exist only in Cloudflare Access/D1 and must never be committed.
 
-The test passes only when the tester can authenticate through the same Access application as normal students and sees the `Vojta2` D1-backed dashboard. This verifies OTP/IdP authentication, Access policy evaluation, JWT validation, email-to-student mapping and D1 profile loading in one flow.
+The test passes only when the tester opens the normal production student entry point, authenticates through the same Access application as normal students, and sees the D1-backed `Vojta2` dashboard with the priority title `Testovací účet je aktivní`. This verifies OTP/IdP authentication, Access policy evaluation, JWT validation, email-to-student mapping and D1 profile loading in one flow.
 
-To bootstrap the account manually in the Cloudflare D1 dashboard, use `sql/vojta2-test.sql.template`, replace `__VOJTA2_EMAIL__` only in the Cloudflare console, execute it against `vojtechsteidl-portal`, and add the same address to the application's explicit Email allow policy.
+To bootstrap the account manually in the Cloudflare D1 dashboard, use `sql/vojta2-test.sql.template`, replace `__VOJTA2_EMAIL__` only in the Cloudflare console, execute it against `vojtechsteidl-portal`, and add the same address to the application's explicit Email allow policy. Use `sql/verify-vojta2.sql` afterwards to verify the D1 rows.
 
 ## Required Cloudflare values before deployment
 
