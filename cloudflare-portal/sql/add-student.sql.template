@@ -1,0 +1,48 @@
+-- Replace every __...__ placeholder before running this in the production D1 console.
+-- Do not commit the filled-in version because it contains the student's email.
+
+INSERT INTO students (id, email, display_name, material_path, enabled)
+VALUES (
+  '__STUDENT_ID__',
+  '__STUDENT_EMAIL__',
+  '__DISPLAY_NAME__',
+  '__MATERIAL_PATH__',
+  1
+)
+ON CONFLICT(id) DO UPDATE SET
+  email = excluded.email,
+  display_name = excluded.display_name,
+  material_path = excluded.material_path,
+  enabled = 1,
+  updated_at = CURRENT_TIMESTAMP;
+
+INSERT INTO student_profiles (student_id, payload_json)
+VALUES (
+  '__STUDENT_ID__',
+  json_object(
+    'studentName', '__DISPLAY_NAME__',
+    'studentInitials', '__INITIALS__',
+    'completedLessonsCount', 0,
+    'progress', 0,
+    'progressText', 'Studijní profil byl vytvořen.',
+    'priority', json_object(
+      'title', 'Začínáme',
+      'text', 'Po první hodině zde bude aktuální priorita.',
+      'deadline', 'Bez termínu'
+    ),
+    'readiness', json_object(
+      'label', 'Studijní postup',
+      'lessonWeight', 60,
+      'taskWeight', 40
+    ),
+    'lessons', json('[]'),
+    'materials', json('[]'),
+    'tasks', json('[]'),
+    'timeline', json('[]'),
+    'upcoming', json('[]'),
+    'links', json('[]'),
+    'externalLessons', json('[]'),
+    'incrementLessonCountOnMaterialAdd', json('true')
+  )
+)
+ON CONFLICT(student_id) DO NOTHING;
