@@ -47,8 +47,17 @@ jobs:
         with:
           python-version: "3.12"
 
-      - name: Validate student JSON and material links
-        run: python scripts/validate_student_data.py
+      - name: Validate legacy student JSON and material links when present
+        shell: bash
+        run: |
+          set -euo pipefail
+          shopt -s nullglob
+          profiles=(students/*.json)
+          if [ ${#profiles[@]} -eq 0 ]; then
+            echo "No legacy student JSON profiles: D1-backed portal migration mode."
+          else
+            python scripts/validate_student_data.py
+          fi
 
       - name: Check Python script syntax
         run: python -m py_compile scripts/sync_student_materials.py
