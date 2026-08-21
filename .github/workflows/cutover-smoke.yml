@@ -1,0 +1,68 @@
+name: Production cutover smoke
+
+on:
+  pull_request:
+    paths:
+      - ".ops/cutover-smoke-trigger"
+      - ".github/workflows/cutover-smoke.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  smoke:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+      R2_BUCKET: vojtechsteidl-student-materials
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Verify repository secrets are present
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -n "$CLOUDFLARE_API_TOKEN" || { echo "Missing CLOUDFLARE_API_TOKEN"; exit 1; }
+          test -n "$CLOUDFLARE_ACCOUNT_ID" || { echo "Missing CLOUDFLARE_ACCOUNT_ID"; exit 1; }
+
+      - name: Install portal dependencies
+        working-directory: cloudflare-portal
+        run: npm install --no-audit --no-fund
+
+      - name: Ensure private R2 bucket exists
+        working-directory: cloudflare-portal
+        shell: bash
+        run: |
+          set -euo pipefail
+          if npx wrangler r2 bucket list | grep -Fq "$R2_BUCKET"; then
+            echo "R2 bucket is present."
+          else
+            npx wrangler r2 bucket create "$R2_BUCKET"
+          fi
+
+      - name: Migrate current materials to R2
+        run: node cloudflare-portal/scripts/migrate-materials-to-r2.mjs
+
+      - name: Verify production D1 canary
+        working-directory: cloudflare-portal
+        shell: bash
+        run: |
+          set -euo pipefail
+          result="$(npx wrangler d1 execute DB --remote --json --command "SELECT id FROM students WHERE id='vojta2' AND enabled=1 LIMIT 1;")"
+          printf '%s' "$result" | grep -Fq 'vojta2' || { echo "D1 canary not found"; exit 1; }
+          echo "Production D1 canary is reachable."
+
+      - name: Verify R2 bucket remains private and reachable
+        working-directory: cloudflare-portal
+        shell: bash
+        run: npx wrangler r2 bucket list | grep -F "$R2_BUCKET"
