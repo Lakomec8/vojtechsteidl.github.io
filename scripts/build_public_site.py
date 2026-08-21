@@ -82,8 +82,9 @@ def patch_public_entrypoint() -> None:
     )
     new_note = (
         "Přístup je chráněný ověřením e-mailu a jednorázovým kódem. "
-        "Pokud Cloudflare oznámí, že kód už byl použit, vyžádejte nový kód "
-        "a z e-mailu pouze opište PIN; neotevírejte přihlašovací odkaz v e-mailu. "
+        "Vyžádejte vždy jen jeden kód a použijte pouze nejnovější e-mail; nový požadavek "
+        "předchozí PIN zneplatní. Pokud Cloudflare oznámí, že kód už byl použit, "
+        "vyžádejte nový a z e-mailu pouze opište PIN; neotevírejte přihlašovací odkaz v e-mailu. "
         "Přihlášení na zařízení zůstává aktivní až 30 dní. "
         "Náhled vedle neobsahuje skutečná studentská data."
     )
