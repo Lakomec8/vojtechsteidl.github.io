@@ -1,0 +1,24 @@
+-- Controlled test identity for the Cloudflare student portal.
+-- Replace __VOJTA2_EMAIL__ only in Cloudflare D1; do not commit a real email address.
+
+BEGIN TRANSACTION;
+
+INSERT INTO students (id, email, display_name, material_path, enabled)
+VALUES ('vojta2', '__VOJTA2_EMAIL__', 'Vojta2', 'vojta2', 1)
+ON CONFLICT(id) DO UPDATE SET
+  email = excluded.email,
+  display_name = excluded.display_name,
+  material_path = excluded.material_path,
+  enabled = 1,
+  updated_at = CURRENT_TIMESTAMP;
+
+INSERT INTO student_profiles (student_id, payload_json)
+VALUES (
+  'vojta2',
+  '{"studentName":"Vojta2","studentInitials":"V2","completedLessonsCount":0,"progress":5,"progressText":"Toto je kontrolní studentský profil určený pouze k ověření přihlášení a načtení dat z Cloudflare D1.","priority":{"title":"Testovací účet je aktivní","text":"Pokud vidíš tuto nástěnku po přihlášení přes Cloudflare Access, funguje OTP, ověření identity i načtení správného profilu z D1.","deadline":"Bez studijního termínu"},"readiness":{"label":"Test portálu","lessonWeight":60,"taskWeight":40},"lessons":[],"materials":[],"tasks":[],"timeline":[{"month":"Srp","day":"21","title":"Kontrolní profil vytvořen","desc":"Profil Vojta2 slouží k end-to-end testu zabezpečené studentské zóny.","badge":"TEST"}],"upcoming":[],"links":[{"title":"Hlavní web","url":"https://vojtechsteidl.eu/","desc":"Návrat na veřejnou část webu."}]}'
+)
+ON CONFLICT(student_id) DO UPDATE SET
+  payload_json = excluded.payload_json,
+  updated_at = CURRENT_TIMESTAMP;
+
+COMMIT;
