@@ -1,6 +1,6 @@
 name: Deploy GitHub Pages
 
-# Publishes the current main branch after Pages is configured to use GitHub Actions.
+# Publishes only the explicit public-site allowlist from main.
 on:
   push:
     branches:
@@ -30,13 +30,29 @@ jobs:
       - name: Inject Cloudflare Web Analytics on public pages
         run: python scripts/inject_analytics.py
 
+      - name: Build hardened public artifact
+        run: python scripts/build_public_site.py
+
+      - name: Verify private student paths are absent
+        shell: bash
+        run: |
+          set -euo pipefail
+          test ! -e .public-site/Materials
+          test ! -e .public-site/students
+          test ! -e .public-site/.uploads
+          test ! -e .public-site/cloudflare-portal
+          if find .public-site -maxdepth 1 -type f -iname '*.pdf' | grep -q .; then
+            echo 'Unexpected PDF exposed at public artifact root.' >&2
+            exit 1
+          fi
+
       - name: Configure GitHub Pages
         uses: actions/configure-pages@v5
 
       - name: Upload site artifact
         uses: actions/upload-pages-artifact@v4
         with:
-          path: .
+          path: .public-site
 
       - name: Deploy to GitHub Pages
         id: deployment
