@@ -7,7 +7,6 @@ on:
 
 permissions:
   contents: write
-  actions: write
 
 concurrency:
   group: student-dashboard-update-${{ github.ref }}
@@ -18,6 +17,9 @@ jobs:
     if: github.actor != 'github-actions[bot]'
     runs-on: ubuntu-latest
     timeout-minutes: 10
+    env:
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
 
     steps:
       - name: Checkout repository
@@ -25,7 +27,23 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Apply queued dashboard updates
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Verify Cloudflare credentials
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -n "$CLOUDFLARE_API_TOKEN" || { echo "Missing CLOUDFLARE_API_TOKEN secret"; exit 1; }
+          test -n "$CLOUDFLARE_ACCOUNT_ID" || { echo "Missing CLOUDFLARE_ACCOUNT_ID secret"; exit 1; }
+
+      - name: Install Cloudflare portal dependencies
+        working-directory: cloudflare-portal
+        run: npm install --no-audit --no-fund
+
+      - name: Apply queued updates directly to production D1
         shell: bash
         run: |
           set -euo pipefail
@@ -36,29 +54,21 @@ jobs:
             exit 0
           fi
           for update in "${updates[@]}"; do
-            python scripts/apply_student_update.py "$update"
+            node cloudflare-portal/scripts/apply-profile-patch.mjs "$update"
             rm -f "$update"
           done
 
-      - name: Validate student data
-        run: python scripts/validate_student_data.py
-
-      - name: Commit dashboard updates
+      - name: Commit consumed queue entries
         shell: bash
         run: |
           set -euo pipefail
           if git diff --quiet && [ -z "$(git status --porcelain)" ]; then
-            echo "No changes to commit."
+            echo "No queue cleanup to commit."
             exit 0
           fi
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add -A
-          git commit -m "Update student dashboard"
+          git add -A .student-updates
+          git commit -m "Consume student D1 updates"
           git pull --rebase origin "${GITHUB_REF_NAME}"
           git push origin "HEAD:${GITHUB_REF_NAME}"
-
-      - name: Deploy updated dashboard
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: gh workflow run deploy-pages.yml --ref "${GITHUB_REF_NAME}"
