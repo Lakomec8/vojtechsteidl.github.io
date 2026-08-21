@@ -158,10 +158,25 @@ async function authenticatedPrincipal(
   const email = await authenticatedEmail(request, env);
   const student = await studentForEmailOrNull(email, env);
 
-  // The path-based Access application allows only explicit student identities
-  // and the explicit administrator identity. An authenticated non-student is
-  // therefore the administrator.
-  return { email, student, isAdmin: student === null };
+  if (student) {
+    return { email, student, isAdmin: false };
+  }
+
+  const administrator = await env.DB.prepare(
+    `SELECT email
+       FROM portal_admins
+      WHERE email = ?1 COLLATE NOCASE
+        AND enabled = 1
+      LIMIT 1`,
+  )
+    .bind(email)
+    .first<{ email: string }>();
+
+  if (!administrator) {
+    throw new RequestError(403, "This account is not authorized for the student portal.");
+  }
+
+  return { email, student: null, isAdmin: true };
 }
 
 async function authenticatedStudent(
