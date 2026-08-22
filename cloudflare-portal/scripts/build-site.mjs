@@ -26,7 +26,6 @@ const rootFiles = [
   "site.webmanifest",
   "robots.txt",
   "sitemap.xml",
-  "student-portal.html",
 ];
 
 const publicDirectories = [
@@ -56,6 +55,11 @@ await mkdir(dist, { recursive: true });
 for (const file of rootFiles) {
   await copyRequired(join(repoRoot, file), join(dist, file));
 }
+
+await copyRequired(
+  join(appRoot, "static", "student-portal.html"),
+  join(dist, "student-portal.html"),
+);
 
 for (const directory of publicDirectories) {
   await copyRequired(join(repoRoot, directory), join(dist, directory));
@@ -110,6 +114,21 @@ portalJs = replaceOrFail(
   "use Cloudflare Access logout",
 );
 await writeFile(portalJsPath, portalJs);
+
+const portalHtmlPath = join(dist, "student-portal.html");
+const portalHtml = await readFile(portalHtmlPath, "utf8");
+const portalTemplateIsValid =
+  portalHtml.includes('id="loader"') &&
+  portalHtml.includes('id="app"') &&
+  portalHtml.includes("assets/student-portal.js") &&
+  !portalHtml.includes('window.location.replace("/student-portal/")') &&
+  !/http-equiv=["']refresh["']/i.test(portalHtml);
+
+if (!portalTemplateIsValid) {
+  throw new Error(
+    "Private portal template is missing required UI or redirects to itself.",
+  );
+}
 
 await writeFile(
   join(dist, "_headers"),
