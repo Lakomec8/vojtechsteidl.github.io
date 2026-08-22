@@ -39,19 +39,26 @@ jobs:
         working-directory: cloudflare-portal
         run: npm install --no-audit --no-fund
 
-      - name: Ensure private R2 bucket exists
+      - name: Verify private R2 bucket and migrated object
         working-directory: cloudflare-portal
         shell: bash
         run: |
           set -euo pipefail
-          if npx wrangler r2 bucket list | grep -Fq "$R2_BUCKET"; then
-            echo "R2 bucket is present."
-          else
-            npx wrangler r2 bucket create "$R2_BUCKET"
-          fi
+          npx wrangler r2 bucket list | grep -F "$R2_BUCKET"
+          npx wrangler r2 object get "$R2_BUCKET/vojta/funkce_03_exponencialni_logaritmicka_lomena.pdf" --remote --file /tmp/r2-smoke.pdf
+          test -s /tmp/r2-smoke.pdf
 
-      - name: Migrate current materials to R2
-        run: node cloudflare-portal/scripts/migrate-materials-to-r2.mjs
+      - name: Verify R2 public access is disabled
+        shell: bash
+        run: |
+          set -euo pipefail
+          api="https://api.cloudflare.com/client/v4/accounts/$CLOUDFLARE_ACCOUNT_ID/r2/buckets/$R2_BUCKET/domains"
+          managed="$(curl --fail-with-body --silent --show-error             -H "Authorization: Bearer $CLOUDFLARE_API_TOKEN"             "$api/managed")"
+          printf '%s' "$managed" | jq -e '.success == true and .result.enabled == false' >/dev/null
+
+          custom="$(curl --fail-with-body --silent --show-error             -H "Authorization: Bearer $CLOUDFLARE_API_TOKEN"             "$api/custom")"
+          printf '%s' "$custom" | jq -e '.success == true and ([.result.domains[]? | select(.enabled == true)] | length == 0)' >/dev/null
+          echo "R2 has no enabled public domain."
 
       - name: Verify production D1 canary
         working-directory: cloudflare-portal
@@ -61,8 +68,3 @@ jobs:
           result="$(npx wrangler d1 execute DB --remote --json --command "SELECT id FROM students WHERE id='vojta2' AND enabled=1 LIMIT 1;")"
           printf '%s' "$result" | grep -Fq 'vojta2' || { echo "D1 canary not found"; exit 1; }
           echo "Production D1 canary is reachable."
-
-      - name: Verify R2 bucket remains private and reachable
-        working-directory: cloudflare-portal
-        shell: bash
-        run: npx wrangler r2 bucket list | grep -F "$R2_BUCKET"
