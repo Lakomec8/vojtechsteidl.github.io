@@ -37,9 +37,6 @@ const publicDirectories = [
   "pro-skoly",
   "interactive-notes",
   "materialy-zdarma",
-  // Student materials are included in the private deployment artifact,
-  // but every portal material request is authorized by the Worker first.
-  "Materials",
 ];
 
 async function copyRequired(source, destination) {
@@ -116,7 +113,11 @@ await writeFile(portalJsPath, portalJs);
 
 await writeFile(
   join(dist, "_headers"),
-  `/*\n  X-Content-Type-Options: nosniff\n  Referrer-Policy: strict-origin-when-cross-origin\n  Permissions-Policy: camera=(), microphone=(), geolocation=()\n`,
+  `/*
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+  Permissions-Policy: camera=(), microphone=(), geolocation=()
+`,
 );
 
 console.log(`Built allowlisted deployment artifact at ${dist}`);
