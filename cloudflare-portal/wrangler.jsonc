@@ -38,5 +38,11 @@
       "database_name": "vojtechsteidl-portal",
       "database_id": "34173dc8-5cb4-4e2a-9fb6-3de6d9e72de1"
     }
+  ],
+  "r2_buckets": [
+    {
+      "binding": "MATERIALS",
+      "bucket_name": "vojtechsteidl-student-materials"
+    }
   ]
 }
