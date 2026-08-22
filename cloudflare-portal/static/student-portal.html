@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Studentský portál pro doučování matematiky a fyziky.">
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
+  <title>Studentský portál | Vojtěch Steidl</title>
+  <link rel="stylesheet" href="assets/student-portal.css?v=20260725-2">
+</head>
+<body>
+  <div id="loader"><div class="spinner"></div><div>Načítám studentský portál…</div></div>
+  <div id="app" class="app" hidden>
+    <aside class="side">
+      <div class="brand">Studentský portál<small>Doučování matematiky a fyziky</small></div>
+      <nav class="nav" aria-label="Navigace">
+        <button class="active" data-view="dashboard">Nástěnka</button>
+        <button data-view="history">Historie hodin</button>
+        <button data-view="materials">Materiály</button>
+        <button data-view="tasks">Úkoly</button>
+        <button data-view="schedule">Termíny</button>
+        <button data-view="links">Odkazy</button>
+      </nav>
+      <button class="logout" id="logout" type="button">Odhlásit se</button>
+    </aside>
+    <main class="main">
+      <div class="top">
+        <input class="search" id="search" type="search" placeholder="Hledat v hodinách, materiálech a úkolech…">
+        <div class="student"><div class="avatar" id="initials">S</div><span id="name">Načítání…</span></div>
+      </div>
+
+      <section class="view active" id="dashboard">
+        <div class="hero">
+          <div>
+            <small>TVŮJ STUDIJNÍ PLÁN</small>
+            <h1 id="priorityTitle">Vše důležité pro výuku na jednom místě.</h1>
+            <p id="priorityText"></p>
+            <div class="next"><button class="primary" data-open="tasks">Pokračovat v úkolu</button><button class="secondary" data-open="history">Zobrazit poslední hodinu</button><small id="priorityDeadline"></small></div>
+          </div>
+          <div class="focus">
+            <span id="readinessLabel">Studijní postup</span>
+            <strong id="readinessValue">0 %</strong>
+            <div class="track"><div class="fill" id="readinessFill"></div></div>
+            <p id="readinessCopy"></p>
+          </div>
+        </div>
+        <div class="metrics">
+          <div class="metric"><span>Absolvované hodiny</span><strong id="lessonCount">0</strong><small id="lastLessonDate">Zatím bez záznamu</small></div>
+          <div class="metric"><span>Průměr hodnocení</span><strong id="overallScore">–</strong><small id="overallScoreCopy">Zatím bez hodnocení</small></div>
+          <div class="metric"><span>Aktivní úkoly</span><strong id="activeCount">0</strong><small id="taskMetricCopy">Žádný aktivní úkol</small></div>
+          <div class="metric"><span>Další termín</span><strong id="nextDate">–</strong><small id="nextDateCopy">Termín není uveden</small></div>
+        </div>
+        <div class="grid">
+          <section class="card"><h2>Poslední hodina</h2><div id="lastLesson"></div></section>
+          <section class="card"><h2>Doporučený další krok</h2><div id="nextAction"></div></section>
+        </div>
+      </section>
+
+      <section class="view" id="history"><section class="card"><h2>Historie hodin</h2><p class="card-intro">Přehled probírané látky, hodnocení, doporučení a materiálů ke každé hodině.</p><div class="list" id="historyList"></div></section></section>
+      <section class="view" id="materials"><section class="card"><h2>Materiály</h2><div class="list" id="materialsList"></div></section></section>
+      <section class="view" id="tasks"><section class="card"><h2>Úkoly</h2><div class="list" id="tasksList"></div><div class="formula" id="formula" hidden></div></section></section>
+      <section class="view" id="schedule"><div class="grid"><section class="card"><h2>Nejbližší termíny</h2><div class="list" id="upcomingList"></div></section><section class="card"><h2>Časová osa</h2><div class="list" id="timelineList"></div></section></div></section>
+      <section class="view" id="links"><section class="card"><h2>Užitečné odkazy</h2><div class="list" id="linksList"></div></section></section>
+    </main>
+  </div>
+
+  <script src="assets/student-portal.js?v=20260728-1"></script>
+  <script src="assets/student-dashboard-featured.js?v=20260729-1"></script>
+</body>
+</html>
