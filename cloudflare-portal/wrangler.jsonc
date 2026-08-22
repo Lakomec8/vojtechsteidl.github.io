@@ -1,0 +1,48 @@
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  "name": "vojtechsteidl-secure-portal",
+  "main": "src/entry.ts",
+  "compatibility_date": "2026-08-19",
+  "compatibility_flags": ["nodejs_compat"],
+  "observability": {
+    "enabled": true,
+    "head_sampling_rate": 1
+  },
+  "vars": {
+    "TEAM_DOMAIN": "https://broad-cherry-72ff.cloudflareaccess.com",
+    "POLICY_AUD": "89190bdbddce22e6d1bc3c2d2e42ae790ec5aedfb00adbe8eb0ce6d0c71225d2"
+  },
+  "routes": [
+    {
+      "pattern": "portal.vojtechsteidl.eu",
+      "custom_domain": true
+    },
+    {
+      "pattern": "vojtechsteidl.eu/student-portal*",
+      "zone_name": "vojtechsteidl.eu"
+    },
+    {
+      "pattern": "www.vojtechsteidl.eu/student-portal*",
+      "zone_name": "vojtechsteidl.eu"
+    }
+  ],
+  "assets": {
+    "directory": "./dist",
+    "binding": "ASSETS",
+    "run_worker_first": true,
+    "html_handling": "none"
+  },
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "vojtechsteidl-portal",
+      "database_id": "34173dc8-5cb4-4e2a-9fb6-3de6d9e72de1"
+    }
+  ],
+  "r2_buckets": [
+    {
+      "binding": "MATERIALS",
+      "bucket_name": "vojtechsteidl-student-materials"
+    }
+  ]
+}

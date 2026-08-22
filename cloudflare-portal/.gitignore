@@ -1,0 +1,7 @@
+node_modules/
+dist/
+.wrangler/
+worker-configuration.d.ts
+student-emails.json
+seed.private.sql
+.dev.vars

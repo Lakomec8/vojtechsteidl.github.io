@@ -1,0 +1,7 @@
+{
+  "name": "vojtechsteidl-build-shim",
+  "private": true,
+  "scripts": {
+    "build": "npm --prefix cloudflare-portal install && npm --prefix cloudflare-portal run build"
+  }
+}

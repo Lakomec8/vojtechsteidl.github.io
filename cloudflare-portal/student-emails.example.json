@@ -1,0 +1,16 @@
+{
+  "students": [
+    {
+      "id": "natalie",
+      "email": "student@example.com",
+      "source": "students/natalie.json",
+      "materialPath": "natalie"
+    },
+    {
+      "id": "vojta2",
+      "email": "replace-in-private-config@example.com",
+      "source": "cloudflare-portal/fixtures/vojta2.profile.json",
+      "materialPath": "vojta2"
+    }
+  ]
+}

@@ -1,0 +1,24 @@
+{
+  "name": "vojtechsteidl-secure-portal",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "node scripts/build-site.mjs",
+    "cf:types": "wrangler types",
+    "typecheck": "wrangler types && tsc --noEmit",
+    "test:fixtures": "node scripts/validate-test-fixtures.mjs",
+    "dev": "npm run build && wrangler dev",
+    "deploy": "npm run build && npm run typecheck && wrangler deploy",
+    "db:migrate:local": "wrangler d1 migrations apply DB --local",
+    "db:migrate:remote": "wrangler d1 migrations apply DB --remote",
+    "db:seed": "node scripts/generate-seed.mjs"
+  },
+  "dependencies": {
+    "jose": "^6.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^24.0.0",
+    "typescript": "^5.8.0",
+    "wrangler": "^4.20.0"
+  }
+}

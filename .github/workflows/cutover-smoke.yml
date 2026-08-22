@@ -1,0 +1,70 @@
+name: Production cutover smoke
+
+on:
+  pull_request:
+    paths:
+      - ".ops/cutover-smoke-trigger"
+      - ".github/workflows/cutover-smoke.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  smoke:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+      R2_BUCKET: vojtechsteidl-student-materials
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Verify repository secrets are present
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -n "$CLOUDFLARE_API_TOKEN" || { echo "Missing CLOUDFLARE_API_TOKEN"; exit 1; }
+          test -n "$CLOUDFLARE_ACCOUNT_ID" || { echo "Missing CLOUDFLARE_ACCOUNT_ID"; exit 1; }
+
+      - name: Install portal dependencies
+        working-directory: cloudflare-portal
+        run: npm install --no-audit --no-fund
+
+      - name: Verify private R2 bucket and migrated object
+        working-directory: cloudflare-portal
+        shell: bash
+        run: |
+          set -euo pipefail
+          npx wrangler r2 bucket list | grep -F "$R2_BUCKET"
+          npx wrangler r2 object get "$R2_BUCKET/vojta/funkce_03_exponencialni_logaritmicka_lomena.pdf" --remote --file /tmp/r2-smoke.pdf
+          test -s /tmp/r2-smoke.pdf
+
+      - name: Verify R2 public access is disabled
+        shell: bash
+        run: |
+          set -euo pipefail
+          api="https://api.cloudflare.com/client/v4/accounts/$CLOUDFLARE_ACCOUNT_ID/r2/buckets/$R2_BUCKET/domains"
+          managed="$(curl --fail-with-body --silent --show-error             -H "Authorization: Bearer $CLOUDFLARE_API_TOKEN"             "$api/managed")"
+          printf '%s' "$managed" | jq -e '.success == true and .result.enabled == false' >/dev/null
+
+          custom="$(curl --fail-with-body --silent --show-error             -H "Authorization: Bearer $CLOUDFLARE_API_TOKEN"             "$api/custom")"
+          printf '%s' "$custom" | jq -e '.success == true and ([.result.domains[]? | select(.enabled == true)] | length == 0)' >/dev/null
+          echo "R2 has no enabled public domain."
+
+      - name: Verify production D1 canary
+        working-directory: cloudflare-portal
+        shell: bash
+        run: |
+          set -euo pipefail
+          result="$(npx wrangler d1 execute DB --remote --json --command "SELECT id FROM students WHERE id='vojta2' AND enabled=1 LIMIT 1;")"
+          printf '%s' "$result" | grep -Fq 'vojta2' || { echo "D1 canary not found"; exit 1; }
+          echo "Production D1 canary is reachable."

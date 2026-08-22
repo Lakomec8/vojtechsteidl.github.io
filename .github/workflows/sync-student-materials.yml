@@ -1,83 +1,49 @@
-name: Sync student materials
+name: Guard private student materials
 
 on:
-  workflow_dispatch:
+  pull_request:
+    paths:
+      - "Materials/**"
   push:
     paths:
-      - "Materials/*/*.pdf"
-      - "scripts/register_generated_material.py"
-      - ".github/workflows/sync-student-materials.yml"
+      - "Materials/**"
 
 permissions:
-  contents: write
-
-concurrency:
-  group: sync-student-materials-${{ github.ref }}
-  cancel-in-progress: false
+  contents: read
 
 jobs:
-  sync:
-    if: github.actor != 'github-actions[bot]'
+  guard:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
-
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0
+          fetch-depth: 2
 
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: "3.12"
-
-      - name: Register changed PDF files only
-        if: github.event_name == 'push'
+      - name: Reject added or modified public student materials
         shell: bash
         run: |
           set -euo pipefail
           before="${{ github.event.before }}"
           after="${{ github.sha }}"
 
-          if [ -z "$before" ] || [ "$before" = "0000000000000000000000000000000000000000" ]; then
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            before="${{ github.event.pull_request.base.sha }}"
+            after="${{ github.event.pull_request.head.sha }}"
+          elif [ -z "$before" ] || [ "$before" = "0000000000000000000000000000000000000000" ]; then
             before="$(git rev-parse HEAD^ 2>/dev/null || true)"
           fi
 
           if [ -z "$before" ]; then
-            echo "No parent commit available; nothing to register."
+            echo "No parent commit available."
             exit 0
           fi
 
-          mapfile -t pdfs < <(
-            git diff --name-only --diff-filter=AM "$before" "$after" -- 'Materials/*/*.pdf'
-          )
-
-          if [ ${#pdfs[@]} -eq 0 ]; then
-            echo "No added or modified student PDFs in this push."
-            exit 0
+          mapfile -t changed < <(git diff --name-only --diff-filter=AM "$before" "$after" -- 'Materials/**')
+          if [ ${#changed[@]} -gt 0 ]; then
+            printf 'Public student material upload is disabled. Use the authenticated admin portal / Cloudflare R2 instead.\nFiles:\n'
+            printf ' - %s\n' "${changed[@]}"
+            exit 1
           fi
 
-          for pdf in "${pdfs[@]}"; do
-            echo "Registering $pdf"
-            python scripts/register_generated_material.py "$pdf"
-          done
-
-      - name: Validate student data and material links
-        run: python scripts/validate_student_data.py
-
-      - name: Commit generated changes
-        shell: bash
-        run: |
-          set -euo pipefail
-          if git diff --quiet && [ -z "$(git status --porcelain)" ]; then
-            echo "No generated changes."
-            exit 0
-          fi
-
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add -A
-          git commit -m "Sync student materials"
-          git pull --rebase origin "${GITHUB_REF_NAME}"
-          git push origin "HEAD:${GITHUB_REF_NAME}"
+          echo "No new or modified public student material files detected."
