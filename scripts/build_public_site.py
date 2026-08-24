@@ -36,6 +36,7 @@ PUBLIC_DIRECTORIES = (
     "assets",
     "doucovani-fyziky",
     "doucovani-matematiky",
+    "skupinove-doucovani-matematiky",
     "priprava-na-maturitu-z-matematiky",
     "pro-skoly",
     "interactive-notes",
@@ -66,6 +67,12 @@ def copy_required(relative: str) -> None:
         shutil.copy2(source, target)
 
 
+def replace_required(html: str, old: str, new: str, label: str) -> str:
+    if old not in html:
+        raise RuntimeError(f"Expected homepage fragment was not found: {label}")
+    return html.replace(old, new, 1)
+
+
 def patch_public_entrypoint() -> None:
     index_path = DIST / "index.html"
     html = index_path.read_text(encoding="utf-8")
@@ -74,6 +81,59 @@ def patch_public_entrypoint() -> None:
     # cross-host Access cookie redirects and keeps the recovery instructions
     # identical for every student account.
     html = html.replace("https://portal.vojtechsteidl.eu", PORTAL_URL)
+
+    # Surface group tutoring as a first-class product on the deployed homepage
+    # without changing the existing individual tutoring flow.
+    html = replace_required(
+        html,
+        '<meta name="description" content="Individuální doučování matematiky a fyziky v Jihlavě i online. Součástí výuky jsou vlastní materiály a osobní studentská zóna.">',
+        '<meta name="description" content="Individuální i skupinové doučování matematiky a fyziky v Jihlavě i online. Skupinové lekce matematiky od 300 Kč na osobu, vlastní materiály a studentská zóna.">',
+        "group tutoring meta description",
+    )
+    html = replace_required(
+        html,
+        '<li><a href="#cenik">Ceník</a></li>',
+        '<li><a href="/skupinove-doucovani-matematiky/">Skupinové lekce</a></li><li><a href="#cenik">Ceník</a></li>',
+        "group tutoring navigation link",
+    )
+    html = replace_required(
+        html,
+        '<p>Individuální výuka doplněná o přehledné zápisy, interaktivní materiály a osobní studentskou zónu, kde má student návaznost mezi jednotlivými hodinami.</p>',
+        '<p>Individuální výuka i malé skupinové lekce matematiky doplněné o přehledné zápisy, vlastní materiály a studentskou zónu, kde má student návaznost mezi jednotlivými hodinami.</p>',
+        "group tutoring hero copy",
+    )
+    html = replace_required(
+        html,
+        '<div class="hero-actions"><a href="#kontakt" class="cta-button">Domluvit úvodní konzultaci zdarma <i class="fas fa-arrow-right"></i></a><a href="https://vojtechsteidl.eu/student-portal/" class="cta-button cta-button-secondary"><i class="fas fa-user-lock"></i> Vstoupit do studentské zóny</a></div>',
+        '<div class="hero-actions"><a href="#kontakt" class="cta-button">Domluvit úvodní konzultaci zdarma <i class="fas fa-arrow-right"></i></a><a href="/skupinove-doucovani-matematiky/" class="cta-button cta-button-secondary"><i class="fas fa-users"></i> Skupinové lekce od 300 Kč</a><a href="https://vojtechsteidl.eu/student-portal/" class="cta-button cta-button-secondary"><i class="fas fa-user-lock"></i> Studentská zóna</a></div>',
+        "group tutoring hero action",
+    )
+
+    group_section = '''
+        <section class="school-promo-section" id="skupinove-lekce">
+            <div class="school-promo">
+                <div>
+                    <p class="eyebrow">Nově · malé skupiny 3–5 studentů</p>
+                    <h2>Skupinové lekce matematiky za 300 Kč na osobu</h2>
+                    <p>Pro studenty se stejným cílem sestavuji malé skupiny pro přijímačky na SŠ, maturitu a průběžnou středoškolskou matematiku. Nejdřív sbírám zájemce podle úrovně a časových možností; teprve potom navrhnu společný termín.</p>
+                    <div class="school-promo-actions"><a class="school-promo-button" href="/skupinove-doucovani-matematiky/">Zjistit více a přidat se mezi zájemce <i class="fas fa-arrow-right"></i></a></div>
+                    <p class="school-promo-note">300 Kč / osoba / 60 minut · online nebo po domluvě v Jihlavě · vyplnění zájmu je nezávazné</p>
+                </div>
+                <div class="school-promo-points">
+                    <div class="school-promo-point"><i class="fas fa-school"></i><span><strong>Přijímačky na SŠ</strong> — typové úlohy, strategie a práce s testem.</span></div>
+                    <div class="school-promo-point"><i class="fas fa-graduation-cap"></i><span><strong>Maturita z matematiky</strong> — didaktické testy, bodová strategie a slabá témata.</span></div>
+                    <div class="school-promo-point"><i class="fas fa-square-root-variable"></i><span><strong>Středoškolská matematika</strong> — průběžné zvládnutí látky v podobném ročníku.</span></div>
+                    <div class="school-promo-point"><i class="fas fa-list-check"></i><span><strong>VŠ a další témata</strong> — zájem sbírám a skupinu otevřu, pokud se potká stejný předmět nebo syllabus.</span></div>
+                </div>
+            </div>
+        </section>
+'''
+    html = replace_required(
+        html,
+        '<section class="school-promo-section" id="pro-skoly">',
+        group_section + '<section class="school-promo-section" id="pro-skoly">',
+        "group tutoring homepage section",
+    )
 
     old_note = (
         "Přístup je chráněný ověřením e-mailu a jednorázovým kódem. "
@@ -103,6 +163,14 @@ def assert_public_artifact() -> None:
     root_pdfs = sorted(path.name for path in DIST.glob("*.pdf"))
     if root_pdfs:
         raise RuntimeError(f"Unexpected root PDFs in public artifact: {', '.join(root_pdfs)}")
+
+    group_page = DIST / "skupinove-doucovani-matematiky" / "index.html"
+    if not group_page.exists():
+        raise RuntimeError("Group tutoring landing page is missing from public artifact")
+
+    homepage = (DIST / "index.html").read_text(encoding="utf-8")
+    if "/skupinove-doucovani-matematiky/" not in homepage:
+        raise RuntimeError("Group tutoring link is missing from deployed homepage")
 
 
 if DIST.exists():

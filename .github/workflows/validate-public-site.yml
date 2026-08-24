@@ -8,6 +8,7 @@ on:
       - "assets/**"
       - "doucovani-fyziky/**"
       - "doucovani-matematiky/**"
+      - "skupinove-doucovani-matematiky/**"
       - "priprava-na-maturitu-z-matematiky/**"
       - "pro-skoly/**"
       - "interactive-notes/**"
@@ -19,6 +20,16 @@ on:
     branches:
       - main
     paths:
+      - "index.html"
+      - "style.css"
+      - "assets/**"
+      - "doucovani-fyziky/**"
+      - "doucovani-matematiky/**"
+      - "skupinove-doucovani-matematiky/**"
+      - "priprava-na-maturitu-z-matematiky/**"
+      - "pro-skoly/**"
+      - "interactive-notes/**"
+      - "materialy-zdarma/**"
       - "scripts/build_public_site.py"
       - ".github/workflows/deploy-pages.yml"
       - ".github/workflows/validate-public-site.yml"
@@ -52,3 +63,5 @@ jobs:
             echo "Unexpected root PDF in public artifact" >&2
             exit 1
           fi
+          test -f .public-site/skupinove-doucovani-matematiky/index.html
+          grep -q 'skupinove-doucovani-matematiky' .public-site/index.html
