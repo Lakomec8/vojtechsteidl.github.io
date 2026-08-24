@@ -111,7 +111,13 @@
     const completedLessonsCount = Number.isFinite(Number(data.completedLessonsCount))
       ? Math.max(0, Math.round(Number(data.completedLessonsCount)))
       : lessons.length;
-    const materials = Array.isArray(data.materials) ? data.materials : [];
+    const materials = (Array.isArray(data.materials) ? data.materials : [])
+      .slice()
+      .sort(
+        (first, second) =>
+          (parseDate(second.date)?.getTime() || 0) -
+          (parseDate(first.date)?.getTime() || 0),
+      );
     const tasks = Array.isArray(data.tasks) ? data.tasks : [];
     const timeline = Array.isArray(data.timeline) ? data.timeline : [];
     const links = Array.isArray(data.links) ? data.links : [];

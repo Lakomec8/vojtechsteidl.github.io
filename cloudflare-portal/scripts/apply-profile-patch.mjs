@@ -120,6 +120,9 @@ function applyLessonEvent(profile, rawEvent) {
     durationHours,
     counted,
   });
+  externalLessons.sort((first, second) =>
+    String(second?.date || "").localeCompare(String(first?.date || "")),
+  );
   profile.externalLessons = externalLessons;
 
   if (counted) {
