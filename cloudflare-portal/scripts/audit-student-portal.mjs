@@ -83,11 +83,7 @@ const audit = [];
 for (const row of rows) {
   const anomalies = [];
   if (!row.payload_json) {
-    audit.push({
-      id: row.id,
-      displayName: row.display_name,
-      anomalies: ["missing-profile"],
-    });
+    audit.push({ id: row.id, displayName: row.display_name, anomalies: ["missing-profile"] });
     continue;
   }
 
@@ -95,11 +91,7 @@ for (const row of rows) {
   try {
     profile = JSON.parse(row.payload_json);
   } catch {
-    audit.push({
-      id: row.id,
-      displayName: row.display_name,
-      anomalies: ["invalid-profile-json"],
-    });
+    audit.push({ id: row.id, displayName: row.display_name, anomalies: ["invalid-profile-json"] });
     continue;
   }
 
@@ -108,17 +100,19 @@ for (const row of rows) {
   const externalLessons = arr(profile.externalLessons);
   const timeline = arr(profile.timeline);
 
-  const completed = Number(profile.completedLessonsCount ?? lessons.length);
-  const knownDates = new Set(
-    [...lessons, ...materials, ...externalLessons]
-      .map(dateOf)
-      .filter(Boolean),
-  );
+  const calendarDates = new Set(externalLessons.map(dateOf).filter(Boolean));
+  const expectedCompleted = calendarDates.size;
+  const completed = Number(profile.completedLessonsCount ?? expectedCompleted);
 
   if (!Number.isFinite(completed) || completed < 0) anomalies.push("invalid-completed-count");
-  if (Number.isFinite(completed) && completed < knownDates.size) anomalies.push("completed-count-below-known-dates");
+  if (Number.isFinite(completed) && completed !== expectedCompleted) {
+    anomalies.push(`completed-count-does-not-match-calendar-${completed}-vs-${expectedCompleted}`);
+  }
+  if (profile.incrementLessonCountOnMaterialAdd === true) {
+    anomalies.push("material-upload-still-configured-to-count-lessons");
+  }
   if (!isDescending(materials)) anomalies.push("materials-not-chronological");
-  if (!isDescending(timeline)) anomalies.push("timeline-not-chronological");
+  if (!isDescending(externalLessons)) anomalies.push("calendar-lessons-not-chronological");
 
   const latestMaterialDate = latestDate(materials);
   const firstMaterialDate = dateOf(materials[0]);
@@ -134,38 +128,18 @@ for (const row of rows) {
     anomalies.push("current-material-badge-is-not-latest-date");
   }
 
-  const sourceDates = new Map();
-  for (const [source, items] of [
-    ["lesson", lessons],
-    ["material", materials],
-    ["calendar", externalLessons],
-  ]) {
-    for (const item of items) {
-      const date = dateOf(item);
-      if (!date) continue;
-      const sources = sourceDates.get(date) || [];
-      sources.push(source);
-      sourceDates.set(date, sources);
-    }
-  }
-
   audit.push({
     id: row.id,
     displayName: row.display_name,
     materialPath: row.material_path,
     updatedAt: row.updated_at,
     completedLessonsCount: Number.isFinite(completed) ? completed : profile.completedLessonsCount,
-    knownUniqueLessonDates: knownDates.size,
-    unrepresentedHistoricalCount: Number.isFinite(completed) ? Math.max(0, completed - knownDates.size) : null,
-    latestActivityDate: latestDate(lessons, materials, externalLessons),
+    expectedCalendarLessonCount: expectedCompleted,
+    latestCalendarLessonDate: latestDate(externalLessons),
     latestMaterialDate,
     latestDetailedLessonDate: latestDate(lessons),
-    latestCalendarLessonDate: latestDate(externalLessons),
     materialsChronological: isDescending(materials),
-    timelineChronological: isDescending(timeline),
-    sourceOverlapByDate: Object.fromEntries(
-      [...sourceDates.entries()].filter(([, sources]) => sources.length > 1),
-    ),
+    calendarLessonsChronological: isDescending(externalLessons),
     lessons: compactItems(lessons, ["title", "subject", "score"]),
     materials: compactItems(materials, ["title", "badge", "source"]),
     externalLessons: compactItems(externalLessons, ["source", "counted", "durationHours"]),
@@ -178,6 +152,6 @@ console.log("STUDENT_PORTAL_AUDIT_BEGIN");
 console.log(JSON.stringify(audit, null, 2));
 console.log("STUDENT_PORTAL_AUDIT_END");
 
-if (audit.some((row) => row.anomalies?.some((item) => item === "missing-profile" || item === "invalid-profile-json" || item === "invalid-completed-count"))) {
+if (audit.some((row) => row.anomalies?.length)) {
   process.exitCode = 2;
 }
