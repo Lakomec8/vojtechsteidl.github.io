@@ -6,6 +6,9 @@ on:
       - main
     paths:
       - "cloudflare-portal/**"
+      - "assets/student-portal.js"
+      - "assets/student-portal.css"
+      - "assets/student-dashboard-featured.js"
       - ".github/workflows/deploy-cloudflare-portal.yml"
   workflow_dispatch:
 

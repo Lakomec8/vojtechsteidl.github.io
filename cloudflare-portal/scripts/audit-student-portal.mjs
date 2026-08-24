@@ -102,10 +102,18 @@ for (const row of rows) {
 
   const expectedCompleted = externalLessons.length;
   const completed = Number(profile.completedLessonsCount ?? expectedCompleted);
+  const historicalOffsetRaw = Number(profile.historicalLessonCountOffset ?? 0);
+  const historicalOffset = Number.isFinite(historicalOffsetRaw)
+    ? Math.max(0, Math.round(historicalOffsetRaw))
+    : 0;
+  const effectiveCompleted = historicalOffset + expectedCompleted;
 
   if (!Number.isFinite(completed) || completed < 0) anomalies.push("invalid-completed-count");
   if (Number.isFinite(completed) && completed !== expectedCompleted) {
     anomalies.push(`completed-count-does-not-match-calendar-${completed}-vs-${expectedCompleted}`);
+  }
+  if (!Number.isFinite(historicalOffsetRaw) || historicalOffsetRaw < 0) {
+    anomalies.push("invalid-historical-lesson-offset");
   }
   if (profile.incrementLessonCountOnMaterialAdd === true) {
     anomalies.push("material-upload-still-configured-to-count-lessons");
@@ -133,6 +141,8 @@ for (const row of rows) {
     materialPath: row.material_path,
     updatedAt: row.updated_at,
     completedLessonsCount: Number.isFinite(completed) ? completed : profile.completedLessonsCount,
+    historicalLessonCountOffset: historicalOffset,
+    effectiveCompletedLessonsCount: effectiveCompleted,
     expectedCalendarLessonCount: expectedCompleted,
     latestCalendarLessonDate: latestDate(externalLessons),
     latestMaterialDate,
