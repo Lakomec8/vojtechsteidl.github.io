@@ -122,9 +122,14 @@
           (parseDate(second.date)?.getTime() || 0) -
           (parseDate(first.date)?.getTime() || 0),
       );
-    // Jediný zdroj pravdy pro počet absolvovaných hodin je Google Calendar.
-    // Každá synchronizovaná proběhlá kalendářní událost = jedna absolvovaná hodina.
-    const completedLessonsCount = externalLessons.length;
+    // Nové absolvované hodiny se počítají výhradně z Google Calendar.
+    // historicalLessonCountOffset slouží jen jako jednorázový historický základ
+    // pro studenty, jejichž starší lekce nechceme zpětně doplňovat do kalendáře.
+    const historicalLessonCountOffsetRaw = Number(data.historicalLessonCountOffset);
+    const historicalLessonCountOffset = Number.isFinite(historicalLessonCountOffsetRaw)
+      ? Math.max(0, Math.round(historicalLessonCountOffsetRaw))
+      : 0;
+    const completedLessonsCount = historicalLessonCountOffset + externalLessons.length;
 
     // Historie seskupuje pedagogické záznamy a materiály podle data pouze pro
     // zobrazení. Počet absolvovaných hodin se z historie nikdy neodvozuje.
