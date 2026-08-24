@@ -1,0 +1,57 @@
+name: Apply historical lesson offsets
+
+on:
+  push:
+    branches:
+      - ops/apply-historical-lesson-offsets
+    paths:
+      - ".ops/apply-historical-lesson-offsets"
+
+permissions:
+  contents: read
+
+jobs:
+  apply:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ops/apply-historical-lesson-offsets
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Verify Cloudflare credentials
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -n "$CLOUDFLARE_API_TOKEN"
+          test -n "$CLOUDFLARE_ACCOUNT_ID"
+      - name: Install portal dependencies
+        working-directory: cloudflare-portal
+        run: npm install --no-audit --no-fund
+      - name: Apply explicit historical offsets
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p .tmp-offsets
+          cat > .tmp-offsets/natalie.json <<'JSON'
+          {"studentId":"natalie","set":{"/historicalLessonCountOffset":7}}
+          JSON
+          cat > .tmp-offsets/vojta.json <<'JSON'
+          {"studentId":"vojta","set":{"/historicalLessonCountOffset":3}}
+          JSON
+          cat > .tmp-offsets/evelina.json <<'JSON'
+          {"studentId":"evelina","set":{"/historicalLessonCountOffset":7}}
+          JSON
+          node cloudflare-portal/scripts/apply-profile-patch.mjs .tmp-offsets/natalie.json
+          node cloudflare-portal/scripts/apply-profile-patch.mjs .tmp-offsets/vojta.json
+          node cloudflare-portal/scripts/apply-profile-patch.mjs .tmp-offsets/evelina.json
+          rm -rf .tmp-offsets
+      - name: Verify effective totals
+        shell: bash
+        run: node cloudflare-portal/scripts/audit-student-portal.mjs
