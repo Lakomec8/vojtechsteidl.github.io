@@ -1,112 +1,85 @@
 # Studentská data
 
-Nový profil založte z `docs/student-profile.template.json` a uložte jej do složky `students/` pod jednoduchým jednoznačným ID bez mezer, například `students/jan-01.json`.
-
-Stejné ID se používá pro složku materiálů:
-
-```text
-students/jan-01.json
-Materials/jan-01/
-```
-
-Číselná přípona řeší studenty se stejným jménem, například `evelina-01` a `evelina-02`.
+Produkční studentský portál běží přes Cloudflare Worker. Profily jsou uložené v D1 a soukromé PDF materiály v R2. GitHub je zdroj pravdy pro aplikační logiku, validační skripty a deployment.
 
 ## Povinná pravidla
 
-- Každá reálná hodina musí mít unikátní `id` a datum `date` ve formátu `YYYY-MM-DD`.
-- Pole `lessons`, `materials`, `tasks`, `timeline`, `upcoming` a `links` musí být vždy přítomná, i když jsou prázdná.
+- Každá skutečně absolvovaná hodina se eviduje z Google Calendaru.
+- Synchronizované kalendářní hodiny jsou v profilu v poli `externalLessons`.
+- Datum hodiny používá formát `YYYY-MM-DD`.
+- Pole `lessons`, `materials`, `tasks`, `timeline`, `upcoming`, `links` a `externalLessons` mají být pole, i když jsou prázdná.
 - Každý úkol musí mít unikátní `id`.
 - Hodnocení `score` je volitelné; pokud je uvedené, musí být v rozsahu 0 až 10.
-- Lokální odkazy na materiály se zapisují relativně ke kořeni webu.
 - Součet `lessonWeight` a `taskWeight` musí být 100.
 
 ## Počet absolvovaných hodin
 
-Standardně se počet absolvovaných hodin na nástěnce odvozuje z počtu položek v poli `lessons`.
+**Jediným zdrojem pravdy pro počet absolvovaných hodin je Google Calendar.**
 
-Pokud má student evidovaný skutečný počet hodin odděleně od detailní historie, lze použít:
+Počet na studentské nástěnce se počítá jako počet unikátních dat v `externalLessons`, tedy ze synchronizovaných proběhlých kalendářních událostí.
 
-```json
-{
-  "completedLessonsCount": 7
-}
-```
+`completedLessonsCount` je pouze odvozená/cache hodnota a při každé normalizaci profilu se musí přepočítat z `externalLessons`.
 
-Portál pak na kartě absolvovaných hodin zobrazí tuto hodnotu, zatímco pole `lessons` může obsahovat pouze hodiny, ke kterým existuje detailní zápis.
+Platí zejména:
 
-### Globální pravidlo pro nové materiály
+- nahrání PDF = **0 nových hodin**,
+- přidání detailního záznamu do `lessons` = **0 nových hodin**,
+- přidání položky do `timeline` = **0 nových hodin**,
+- pouze nová proběhlá událost synchronizovaná z Google Calendaru může zvýšit počet absolvovaných hodin,
+- jedna kalendářní hodina se stejným datem se počítá pouze jednou.
 
-**Každý nový studijní PDF materiál reprezentuje jednu nově absolvovanou hodinu.** Toto pravidlo platí pro všechny studenty bez výjimky.
+Toto pravidlo platí pro všechny studenty bez výjimky.
 
-Při automatickém přidání nového PDF materiálu synchronizace vždy zvýší `completedLessonsCount` o počet nově přidaných materiálů. Není potřeba zapínat žádný přepínač v konkrétním studentském profilu.
+## Materiály
 
-Pokud je materiál přidán ručně mimo automatickou synchronizaci, musí se současně odpovídajícím způsobem zvýšit `completedLessonsCount`.
+Materiály jsou na počtu hodin nezávislé.
 
-## Automatické přidání PDF
-
-Nový materiál se už ručně nepřidává do studentského JSONu. Stačí nahrát PDF do složky odpovídající ID studenta.
-
-Minimální formát názvu:
+Soukromé PDF se v aktuálním portálu nahrává přes administraci:
 
 ```text
-Materials/evelina/2026-08-05__soustavy-linearnich-rovnic.pdf
+/student-portal/admin/materials
 ```
 
-Rozšířený formát:
+Upload:
 
-```text
-Materials/evelina/2026-08-05__matematika__soustavy-linearnich-rovnic__pracovni-list.pdf
-```
+- uloží PDF do Cloudflare R2,
+- přidá záznam do `materials`,
+- seřadí materiály chronologicky podle data,
+- označí nejnovější platný dokument jako `Aktuální PDF`,
+- zobrazí jej studentovi v sekci Materiály a jako aktuální materiál na nástěnce,
+- **nesmí změnit počet absolvovaných hodin**.
 
-Jednotlivé části jsou oddělené dvojitým podtržítkem `__`:
+Dodatečné nahrání staršího dokumentu nesmí přebít novější aktuální materiál.
 
-1. datum ve formátu `YYYY-MM-DD`,
-2. volitelně předmět,
-3. název materiálu,
-4. volitelně typ materiálu.
+## Poslední hodina vs. aktuální materiál
 
-Po nahrání GitHub Action automaticky:
+Jde o dvě různé věci:
 
-- najde profil podle názvu složky,
-- vytvoří položku v poli `materials`,
-- vloží nový materiál na první místo,
-- označí jej jako `Aktuální PDF`,
-- zobrazí jej v sekci Materiály i na nástěnce,
-- zvýší `completedLessonsCount` o 1 za každý nový materiál,
-- zabrání vytvoření duplicitního záznamu podle URL.
+- **Poslední hodina** = nejnovější proběhlá kalendářní lekce z `externalLessons`.
+- **Aktuální materiál** = nejnovější materiál podle data v `materials`.
 
-Příklad vytvořeného záznamu:
+Datum materiálu proto nesmí měnit údaj o poslední absolvované hodině.
 
-```json
-{
-  "title": "Soustavy linearnich rovnic",
-  "meta": "PDF materiál · Matematika · Pracovni list · přidáno 5. srpna 2026",
-  "badge": "Aktuální PDF",
-  "badgeClass": "pdf",
-  "url": "./Materials/evelina/2026-08-05__matematika__soustavy-linearnich-rovnic__pracovni-list.pdf",
-  "date": "2026-08-05",
-  "source": "filename-sync"
-}
-```
+## Detailní historie
 
-Samostatné pole `featuredMaterial` se nepoužívá. První platná položka v `materials` je automaticky aktuálním materiálem na nástěnce.
+Pole `lessons` může obsahovat detailnější pedagogické záznamy: témata, hodnocení, domácí úkol nebo materiál ke konkrétní hodině. Tyto záznamy slouží k obsahu historie, nikoli k výpočtu počtu hodin.
 
-## Přejmenování a odstranění
-
-- Přejmenovaný PDF soubor se vyhodnotí jako nový materiál.
-- Starý automaticky spravovaný záznam se odstraní, pokud jeho soubor už neexistuje.
-- Materiály připojené přímo ke konkrétní hodině v `lessons[].material` se automaticky nepřiřazují k nové hodině; automatizace řeší sekci Materiály, nástěnku a počet absolvovaných hodin.
+Pokud existuje detailní záznam i kalendářní událost pro stejné datum, jde stále o jednu hodinu.
 
 ## Kontrola před publikováním
 
-Z kořene repozitáře spusťte:
+Z kořene repozitáře se používají zejména:
 
 ```bash
-python scripts/sync_student_materials.py
 python scripts/validate_student_data.py
-python -m py_compile scripts/sync_student_materials.py
 node --check assets/student-portal.js
 node --check assets/student-dashboard-featured.js
 ```
 
-Stejné kontroly automaticky spouští GitHub Actions při změně studentských dat, portálu nebo PDF materiálů.
+Cloudflare portal navíc prochází buildem a typecheckem. Read-only produkční audit `cloudflare-portal/scripts/audit-student-portal.mjs` kontroluje mimo jiné invariant:
+
+```text
+completedLessonsCount == počet unikátních kalendářních lekcí
+```
+
+Pokud se tyto hodnoty liší, audit má skončit chybou.
