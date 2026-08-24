@@ -6,6 +6,7 @@ Produkční studentský portál běží přes Cloudflare Worker. Profily jsou ul
 
 - Každá skutečně absolvovaná hodina se eviduje z Google Calendaru.
 - Synchronizované kalendářní hodiny jsou v profilu v poli `externalLessons`.
+- Každá položka v `externalLessons` odpovídá jedné proběhlé kalendářní události a má unikátní ID události.
 - Datum hodiny používá formát `YYYY-MM-DD`.
 - Pole `lessons`, `materials`, `tasks`, `timeline`, `upcoming`, `links` a `externalLessons` mají být pole, i když jsou prázdná.
 - Každý úkol musí mít unikátní `id`.
@@ -16,7 +17,7 @@ Produkční studentský portál běží přes Cloudflare Worker. Profily jsou ul
 
 **Jediným zdrojem pravdy pro počet absolvovaných hodin je Google Calendar.**
 
-Počet na studentské nástěnce se počítá jako počet unikátních dat v `externalLessons`, tedy ze synchronizovaných proběhlých kalendářních událostí.
+Počet na studentské nástěnce se počítá jako počet synchronizovaných proběhlých kalendářních událostí v `externalLessons`.
 
 `completedLessonsCount` je pouze odvozená/cache hodnota a při každé normalizaci profilu se musí přepočítat z `externalLessons`.
 
@@ -26,7 +27,8 @@ Platí zejména:
 - přidání detailního záznamu do `lessons` = **0 nových hodin**,
 - přidání položky do `timeline` = **0 nových hodin**,
 - pouze nová proběhlá událost synchronizovaná z Google Calendaru může zvýšit počet absolvovaných hodin,
-- jedna kalendářní hodina se stejným datem se počítá pouze jednou.
+- duplicitní synchronizace stejné kalendářní události se nesmí započítat dvakrát,
+- dvě různé kalendářní události ve stejný den jsou dvě absolvované hodiny.
 
 Toto pravidlo platí pro všechny studenty bez výjimky.
 
@@ -64,7 +66,7 @@ Datum materiálu proto nesmí měnit údaj o poslední absolvované hodině.
 
 Pole `lessons` může obsahovat detailnější pedagogické záznamy: témata, hodnocení, domácí úkol nebo materiál ke konkrétní hodině. Tyto záznamy slouží k obsahu historie, nikoli k výpočtu počtu hodin.
 
-Pokud existuje detailní záznam i kalendářní událost pro stejné datum, jde stále o jednu hodinu.
+Pokud existuje detailní záznam i kalendářní událost pro stejný termín, jde stále o tutéž kalendářní lekci; počet určuje kalendář, ne počet datových záznamů.
 
 ## Kontrola před publikováním
 
@@ -79,7 +81,7 @@ node --check assets/student-dashboard-featured.js
 Cloudflare portal navíc prochází buildem a typecheckem. Read-only produkční audit `cloudflare-portal/scripts/audit-student-portal.mjs` kontroluje mimo jiné invariant:
 
 ```text
-completedLessonsCount == počet unikátních kalendářních lekcí
+completedLessonsCount == počet synchronizovaných proběhlých kalendářních událostí
 ```
 
 Pokud se tyto hodnoty liší, audit má skončit chybou.
