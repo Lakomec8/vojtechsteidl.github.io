@@ -74,14 +74,6 @@
       const cardTitle = target.closest(".card")?.querySelector("h2");
       if (cardTitle) cardTitle.textContent = "Aktuální materiál";
 
-      const lastLessonDate = document.getElementById("lastLessonDate");
-      if (lastLessonDate) {
-        const displayDate = formatShortDate(material.date);
-        lastLessonDate.textContent = displayDate
-          ? `Poslední materiál: ${displayDate}`
-          : "Poslední materiál je aktuální";
-      }
-
       const historyButton = document.querySelector(
         '#dashboard .hero button[data-open="history"]',
       );
