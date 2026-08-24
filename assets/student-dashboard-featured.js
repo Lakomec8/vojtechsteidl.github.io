@@ -9,22 +9,34 @@
     })[character]);
 
   const token = sessionStorage.getItem("student_token");
-  if (!token) return;
+
+  const formatShortDate = (value) => {
+    if (!value) return "";
+    const date = new Date(`${value}T00:00:00`);
+    if (Number.isNaN(date.getTime())) return String(value);
+    return new Intl.DateTimeFormat("cs-CZ", {
+      day: "numeric",
+      month: "numeric",
+    }).format(date);
+  };
 
   const renderFeaturedMaterial = async () => {
     try {
-      const response = await fetch(
-        `students/${encodeURIComponent(token)}.json?featured=${Date.now()}`,
-        { cache: "no-store" },
-      );
+      const profileUrl = token
+        ? `students/${encodeURIComponent(token)}.json?featured=${Date.now()}`
+        : "./api/profile";
+      const response = await fetch(profileUrl, {
+        cache: "no-store",
+        ...(token ? {} : { credentials: "same-origin" }),
+      });
       if (!response.ok) return;
 
       const data = await response.json();
       const materials = Array.isArray(data.materials) ? data.materials : [];
 
-      // Pole materials je jediný zdroj pravdy. První platná položka je
-      // automaticky aktuálním materiálem na nástěnce. featuredMaterial
-      // zůstává pouze jako dočasná zpětně kompatibilní záloha.
+      // Pole materials je jediný zdroj pravdy pro aktuální dokument.
+      // Admin upload vkládá nový materiál na první pozici, takže první platná
+      // položka je vždy dokument, který má být vidět na nástěnce.
       const material =
         materials.find((item) => item?.url) || data.featuredMaterial || null;
       if (!material?.url) return;
@@ -49,6 +61,14 @@
 
       const cardTitle = target.closest(".card")?.querySelector("h2");
       if (cardTitle) cardTitle.textContent = "Aktuální materiál";
+
+      const lastLessonDate = document.getElementById("lastLessonDate");
+      if (lastLessonDate) {
+        const displayDate = formatShortDate(material.date);
+        lastLessonDate.textContent = displayDate
+          ? `Poslední materiál: ${displayDate}`
+          : "Poslední materiál je aktuální";
+      }
 
       const historyButton = document.querySelector(
         '#dashboard .hero button[data-open="history"]',
