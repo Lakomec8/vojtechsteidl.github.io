@@ -280,6 +280,47 @@ function cleanPdfName(name: string): string {
   return cleaned.slice(0, 180);
 }
 
+function portalToday(): string {
+  const parts = new Intl.DateTimeFormat("en-GB", {
+    timeZone: "Europe/Prague",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  }).formatToParts(new Date());
+  const value = Object.fromEntries(parts.map((part) => [part.type, part.value]));
+  return `${value.year}-${value.month}-${value.day}`;
+}
+
+function materialDate(item: Record<string, unknown>): string {
+  const value = String(item?.date || "").trim();
+  return /^\d{4}-\d{2}-\d{2}$/.test(value) ? value : "";
+}
+
+function normalizeMaterials(
+  materials: Array<Record<string, unknown>>,
+): Array<Record<string, unknown>> {
+  const sorted = materials
+    .map((material, index) => ({ material, index }))
+    .sort((first, second) => {
+      const byDate = materialDate(second.material).localeCompare(materialDate(first.material));
+      return byDate || first.index - second.index;
+    })
+    .map(({ material }) => material);
+
+  const transientBadges = new Set(["Aktuální PDF", "Aktuální materiál", "Nové PDF"]);
+  for (const material of sorted) {
+    if (transientBadges.has(String(material.badge || ""))) material.badge = "PDF";
+  }
+
+  const latest = sorted.find((material) => material?.url);
+  if (latest) {
+    const url = String(latest.url || "").toLowerCase();
+    latest.badge = url.includes(".pdf") ? "Aktuální PDF" : "Aktuální materiál";
+  }
+
+  return sorted;
+}
+
 async function profileRow(studentId: string, env: Env): Promise<Record<string, unknown>> {
   const row = await env.DB.prepare(
     `SELECT payload_json FROM student_profiles WHERE student_id = ?1 LIMIT 1`,
@@ -293,7 +334,7 @@ async function profileRow(studentId: string, env: Env): Promise<Record<string, u
 }
 
 function uploadForm(student: PortalStudent, message = ""): Response {
-  const today = new Date().toISOString().slice(0, 10);
+  const today = portalToday();
   const notice = message ? `<p style="padding:12px;background:#ecfdf5;border-radius:10px">${escapeHtml(message)}</p>` : "";
   return html(`<!doctype html>
 <html lang="cs"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
@@ -350,22 +391,23 @@ async function adminUpload(
     r2Key: key,
   };
 
-  for (const material of materials) {
-    if (material.badge === "Aktuální PDF") material.badge = "PDF";
-  }
   if (existingIndex >= 0) materials.splice(existingIndex, 1);
-  profile.materials = [item, ...materials];
+  profile.materials = normalizeMaterials([item, ...materials]);
   profile.incrementLessonCountOnMaterialAdd = true;
 
+  const lessons = Array.isArray(profile.lessons) ? profile.lessons : [];
+  const detailedLessonAlreadyExists = lessons.some((lesson) => lesson?.date === date);
   const externalLessons = Array.isArray(profile.externalLessons)
     ? profile.externalLessons as Array<Record<string, unknown>>
     : [];
-  const calendarAlreadyCounted = externalLessons.some(
-    (lesson) => lesson?.date === date && lesson?.counted === true,
-  );
+  const calendarAlreadyExists = externalLessons.some((lesson) => lesson?.date === date);
 
-  if (isNew && !sameDateAlreadyExists && !calendarAlreadyCounted) {
-    const lessons = Array.isArray(profile.lessons) ? profile.lessons : [];
+  if (
+    isNew &&
+    !sameDateAlreadyExists &&
+    !detailedLessonAlreadyExists &&
+    !calendarAlreadyExists
+  ) {
     const current = Number(profile.completedLessonsCount ?? lessons.length);
     profile.completedLessonsCount = Math.max(Number.isFinite(current) ? current : 0, lessons.length) + 1;
   }

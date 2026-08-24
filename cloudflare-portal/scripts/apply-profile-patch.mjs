@@ -82,6 +82,42 @@ function normalizedDate(value) {
   return date;
 }
 
+function sortableDate(value) {
+  const date = String(value || "").trim();
+  return /^\d{4}-\d{2}-\d{2}$/.test(date) ? date : "";
+}
+
+function normalizeProfileChronology(profile) {
+  if (Array.isArray(profile.materials)) {
+    profile.materials = profile.materials
+      .map((material, index) => ({ material, index }))
+      .sort((first, second) => {
+        const byDate = sortableDate(second.material?.date).localeCompare(
+          sortableDate(first.material?.date),
+        );
+        return byDate || first.index - second.index;
+      })
+      .map(({ material }) => material);
+
+    const transientBadges = new Set(["Aktuální PDF", "Aktuální materiál", "Nové PDF"]);
+    for (const material of profile.materials) {
+      if (transientBadges.has(String(material?.badge || ""))) material.badge = "PDF";
+    }
+
+    const latest = profile.materials.find((material) => material?.url);
+    if (latest) {
+      const url = String(latest.url || "").toLowerCase();
+      latest.badge = url.includes(".pdf") ? "Aktuální PDF" : "Aktuální materiál";
+    }
+  }
+
+  if (Array.isArray(profile.externalLessons)) {
+    profile.externalLessons.sort((first, second) =>
+      sortableDate(second?.date).localeCompare(sortableDate(first?.date)),
+    );
+  }
+}
+
 function applyLessonEvent(profile, rawEvent) {
   const eventId = String(rawEvent?.eventId || "").trim();
   if (!eventId || eventId.length > 220) throw new Error("lessonEvent.eventId is required");
@@ -120,6 +156,9 @@ function applyLessonEvent(profile, rawEvent) {
     durationHours,
     counted,
   });
+  externalLessons.sort((first, second) =>
+    String(second?.date || "").localeCompare(String(first?.date || "")),
+  );
   profile.externalLessons = externalLessons;
 
   if (counted) {
@@ -179,6 +218,8 @@ for (const operation of patch.prepend || []) {
     target.unshift(operation.value);
   }
 }
+
+normalizeProfileChronology(profile);
 
 const payload = JSON.stringify(profile);
 runD1(

@@ -9,22 +9,46 @@
     })[character]);
 
   const token = sessionStorage.getItem("student_token");
-  if (!token) return;
+
+  const parseDate = (value) => {
+    if (!value) return null;
+    const date = new Date(`${value}T00:00:00`);
+    return Number.isNaN(date.getTime()) ? null : date;
+  };
+
+  const formatShortDate = (value) => {
+    const date = parseDate(value);
+    if (!date) return value ? String(value) : "";
+    return new Intl.DateTimeFormat("cs-CZ", {
+      day: "numeric",
+      month: "numeric",
+    }).format(date);
+  };
 
   const renderFeaturedMaterial = async () => {
     try {
-      const response = await fetch(
-        `students/${encodeURIComponent(token)}.json?featured=${Date.now()}`,
-        { cache: "no-store" },
-      );
+      const profileUrl = token
+        ? `students/${encodeURIComponent(token)}.json?featured=${Date.now()}`
+        : "./api/profile";
+      const response = await fetch(profileUrl, {
+        cache: "no-store",
+        ...(token ? {} : { credentials: "same-origin" }),
+      });
       if (!response.ok) return;
 
       const data = await response.json();
-      const materials = Array.isArray(data.materials) ? data.materials : [];
+      const materials = (Array.isArray(data.materials) ? data.materials : [])
+        .map((material, index) => ({ material, index }))
+        .sort((first, second) => {
+          const byDate =
+            (parseDate(second.material?.date)?.getTime() || 0) -
+            (parseDate(first.material?.date)?.getTime() || 0);
+          return byDate || first.index - second.index;
+        })
+        .map(({ material }) => material);
 
-      // Pole materials je jediný zdroj pravdy. První platná položka je
-      // automaticky aktuálním materiálem na nástěnce. featuredMaterial
-      // zůstává pouze jako dočasná zpětně kompatibilní záloha.
+      // Datum hodiny je zdroj pravdy pro to, co je aktuální. Tím zůstane
+      // nástěnka správná i při dodatečném nahrání staršího dokumentu.
       const material =
         materials.find((item) => item?.url) || data.featuredMaterial || null;
       if (!material?.url) return;

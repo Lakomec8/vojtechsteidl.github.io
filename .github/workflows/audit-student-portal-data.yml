@@ -1,0 +1,46 @@
+name: Audit student portal data
+
+on:
+  push:
+    branches:
+      - fix/latest-material-dashboard
+    paths:
+      - ".ops/student-portal-audit-trigger"
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Verify Cloudflare credentials
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -n "$CLOUDFLARE_API_TOKEN"
+          test -n "$CLOUDFLARE_ACCOUNT_ID"
+
+      - name: Install portal dependencies
+        working-directory: cloudflare-portal
+        run: npm install --no-audit --no-fund
+
+      - name: Audit production D1 student profiles
+        run: node cloudflare-portal/scripts/audit-student-portal.mjs
