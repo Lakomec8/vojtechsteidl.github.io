@@ -30,6 +30,7 @@ jobs:
         run: |
           python scripts/apply_chronology_code_fix.py
           python scripts/patch_profile_chronology_normalizer.py
+          python scripts/patch_history_logic.py
 
       - name: Commit code changes
         shell: bash
@@ -37,11 +38,11 @@ jobs:
           set -euo pipefail
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add -- assets/student-portal.js cloudflare-portal/src/entry.ts cloudflare-portal/scripts/apply-profile-patch.mjs
+          git add -- assets/student-portal.js assets/student-dashboard-featured.js cloudflare-portal/src/entry.ts cloudflare-portal/scripts/apply-profile-patch.mjs
           if git diff --cached --quiet; then
             echo "Chronology code is already normalized."
             exit 0
           fi
-          git commit -m "Normalize portal lesson chronology"
+          git commit -m "Unify student lesson chronology"
           git pull --rebase origin fix/latest-material-dashboard
           git push origin HEAD:fix/latest-material-dashboard
