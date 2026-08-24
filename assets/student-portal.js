@@ -126,8 +126,8 @@
     // Každá synchronizovaná proběhlá kalendářní událost = jedna absolvovaná hodina.
     const completedLessonsCount = externalLessons.length;
 
-    // Historie používá jeden chronologický pohled napříč detailními hodinami,
-    // kalendářem a materiály. Jedno datum = jedna absolvovaná hodina.
+    // Historie seskupuje pedagogické záznamy a materiály podle data pouze pro
+    // zobrazení. Počet absolvovaných hodin se z historie nikdy neodvozuje.
     const historyByDate = new Map();
     for (const lesson of lessons) {
       if (lesson?.date) historyByDate.set(lesson.date, { ...lesson });
@@ -203,8 +203,13 @@
       data.priority?.text || data.progressText || "";
     $("priorityDeadline").textContent = data.priority?.deadline || "";
 
-    const scoredLessons = lessons.filter((lesson) =>
-      Number.isFinite(Number(lesson.score)),
+    const calendarLessonDateSet = new Set(
+      externalLessons.map((lesson) => lesson?.date).filter(Boolean),
+    );
+    const scoredLessons = lessons.filter(
+      (lesson) =>
+        Number.isFinite(Number(lesson.score)) &&
+        calendarLessonDateSet.has(lesson?.date),
     );
     const averageScore = scoredLessons.length
       ? scoredLessons.reduce(
