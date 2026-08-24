@@ -164,6 +164,26 @@ def assert_public_artifact() -> None:
     if root_pdfs:
         raise RuntimeError(f"Unexpected root PDFs in public artifact: {', '.join(root_pdfs)}")
 
+    required_material_files = (
+        "materialy-zdarma/index.html",
+        "materialy-zdarma/ukazky-pdf/posloupnosti-ukazka.pdf",
+        "materialy-zdarma/ukazky-pdf/linearni-rovnice-a-nerovnice-ukazka.pdf",
+        "materialy-zdarma/ukazky-pdf/maturita-jednobodove-ulohy-ukazka.pdf",
+        "materialy-zdarma/previews/posloupnosti-1.jpg",
+        "materialy-zdarma/previews/posloupnosti-2.jpg",
+        "materialy-zdarma/previews/linearni-rovnice-a-nerovnice-01.jpg",
+        "materialy-zdarma/previews/linearni-rovnice-a-nerovnice-02.jpg",
+        "materialy-zdarma/previews/maturita-jednobodove-ulohy-01.jpg",
+        "materialy-zdarma/previews/maturita-jednobodove-ulohy-02.jpg",
+    )
+    missing_material_files = [
+        relative for relative in required_material_files if not (DIST / relative).is_file()
+    ]
+    if missing_material_files:
+        raise RuntimeError(
+            "Free PDF gallery is incomplete: " + ", ".join(missing_material_files)
+        )
+
     group_page = DIST / "skupinove-doucovani-matematiky" / "index.html"
     if not group_page.exists():
         raise RuntimeError("Group tutoring landing page is missing from public artifact")

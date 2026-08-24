@@ -140,7 +140,11 @@
             background: #f8fafc;
             box-shadow: 0 -8px 28px rgba(15, 23, 42, .08);
         }
-        .static-page { width: 72%; height: 210px; margin: 18px auto 0; padding: 18px; border: 1px solid #dbe3ec; border-radius: 8px 8px 0 0; background: #fff; transform: rotate(-2deg); }
+        .static-preview-stack { position: relative; display: flex; justify-content: center; gap: 8px; height: 100%; padding: 18px 28px 0; }
+        .static-thumb { width: 33%; max-width: 142px; height: auto; align-self: flex-start; border: 1px solid #d5dee8; border-radius: 5px 5px 0 0; background: #fff; box-shadow: 0 10px 22px rgba(15,23,42,.14); }
+        .static-thumb:first-child { transform: translateY(10px) rotate(-5deg); }
+        .static-thumb:nth-child(2) { z-index: 1; transform: translateY(2px); }
+        .static-thumb:last-child { transform: translateY(10px) rotate(5deg); }
         .preview-title,.preview-line,.preview-formula { border-radius: 99px; background: #dce4ee; }
         .preview-title { width: 55%; height: 12px; margin-bottom: 15px; background: var(--navy); }
         .preview-line { width: 100%; height: 7px; margin: 8px 0; }
@@ -388,7 +392,7 @@
         <section class="materials-block" id="materialy">
             <div class="materials-intro"><p class="eyebrow">Učení i po skončení lekce</p><h2>Vlastní materiály ke konkrétním tématům</h2><p>Bezplatný zápis slouží jako rychlý přehled; interaktivní verze umožňuje látku skutečně zkoumat a měnit její parametry.</p></div>
             <div class="materials-offers">
-                <a class="material-offer" href="/materialy-zdarma/" aria-label="Otevřít bezplatný náhled statického zápisu"><div class="material-offer-copy"><div class="offer-head"><span class="offer-badge">Zdarma</span><span class="offer-price">0 Kč</span></div><h3>Statický zápis a PDF</h3><p>Stručný přehled látky, vzorce, řešený příklad a úloha k procvičení.</p><span class="offer-link">Otevřít bezplatný náhled <i class="fas fa-arrow-right"></i></span></div><div class="offer-preview" aria-hidden="true"><div class="static-page"><div class="preview-title"></div><div class="preview-line"></div><div class="preview-line short"></div><div class="preview-formula"></div><div class="preview-line"></div><div class="preview-line short"></div></div></div></a>
+                <a class="material-offer" href="/materialy-zdarma/" aria-label="Otevřít galerii bezplatných PDF materiálů"><div class="material-offer-copy"><div class="offer-head"><span class="offer-badge">Zdarma</span><span class="offer-price">3 PDF</span></div><h3>Statické zápisy a PDF</h3><p>Skutečné ukázky k posloupnostem, rovnicím a maturitě. U každého materiálu jsou vidět první dvě strany.</p><span class="offer-link">Prohlédnout PDF materiály <i class="fas fa-arrow-right"></i></span></div><div class="offer-preview" aria-hidden="true"><div class="static-preview-stack"><img class="static-thumb" src="/materialy-zdarma/previews/posloupnosti-1.jpg" alt="" loading="lazy" decoding="async"><img class="static-thumb" src="/materialy-zdarma/previews/linearni-rovnice-a-nerovnice-01.jpg" alt="" loading="lazy" decoding="async"><img class="static-thumb" src="/materialy-zdarma/previews/maturita-jednobodove-ulohy-01.jpg" alt="" loading="lazy" decoding="async"></div></div></a>
                 <a class="material-offer premium" href="/interactive-notes/" aria-label="Otevřít náhled placeného interaktivního zápisu"><div class="material-offer-copy"><div class="offer-head"><span class="offer-badge">Interaktivní</span><span class="offer-price">od 199 Kč</span></div><h3>Animovaný zápis</h3><p>Výklad, živá vizualizace, změna parametrů, experiment a ověření pochopení.</p><span class="offer-link">Vyzkoušet interaktivní ukázku <i class="fas fa-arrow-right"></i></span></div><div class="offer-preview" aria-hidden="true"><div class="interactive-preview"><div class="preview-copy-box"><div class="preview-title"></div><div class="preview-line"></div><div class="preview-line short"></div><div class="preview-formula"></div><div class="preview-control"></div></div><div class="preview-graph"></div></div></div></a>
             </div>
             <p class="materials-footnote">Obě varianty jsou otevřené jako náhled. Placená verze je zatím v pilotním režimu předobjednávky.</p>
