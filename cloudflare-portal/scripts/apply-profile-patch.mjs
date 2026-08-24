@@ -123,6 +123,9 @@ function applyLessonEvent(profile, rawEvent) {
   externalLessons.sort((first, second) =>
     String(second?.date || "").localeCompare(String(first?.date || "")),
   );
+  externalLessons.sort((first, second) =>
+    String(second?.date || "").localeCompare(String(first?.date || "")),
+  );
   profile.externalLessons = externalLessons;
 
   if (counted) {
