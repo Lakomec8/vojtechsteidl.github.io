@@ -26,8 +26,10 @@ jobs:
           ref: fix/latest-material-dashboard
           fetch-depth: 0
 
-      - name: Apply code patch
-        run: python scripts/apply_chronology_code_fix.py
+      - name: Apply code patches
+        run: |
+          python scripts/apply_chronology_code_fix.py
+          python scripts/patch_profile_chronology_normalizer.py
 
       - name: Commit code changes
         shell: bash
