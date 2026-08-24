@@ -108,9 +108,6 @@
           (parseDate(second.date)?.getTime() || 0) -
           (parseDate(first.date)?.getTime() || 0),
       );
-    const completedLessonsCount = Number.isFinite(Number(data.completedLessonsCount))
-      ? Math.max(0, Math.round(Number(data.completedLessonsCount)))
-      : lessons.length;
     const materials = (Array.isArray(data.materials) ? data.materials : [])
       .slice()
       .sort(
@@ -125,6 +122,11 @@
           (parseDate(second.date)?.getTime() || 0) -
           (parseDate(first.date)?.getTime() || 0),
       );
+    // Jediný zdroj pravdy pro počet absolvovaných hodin je Google Calendar.
+    const calendarLessonDates = new Set(
+      externalLessons.map((lesson) => lesson?.date).filter(Boolean),
+    );
+    const completedLessonsCount = calendarLessonDates.size;
 
     // Historie používá jeden chronologický pohled napříč detailními hodinami,
     // kalendářem a materiály. Jedno datum = jedna absolvovaná hodina.
@@ -390,7 +392,7 @@
     };
 
     $("lessonCount").textContent = completedLessonsCount;
-    const lastLesson = historyEntries[0] || null;
+    const lastLesson = externalLessons[0] || null;
     $("lastLessonDate").textContent = lastLesson
       ? `Poslední hodina: ${lastLesson.displayDate || formatShortDate(lastLesson.date)}`
       : "Zatím bez záznamu";
