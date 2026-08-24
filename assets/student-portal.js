@@ -172,60 +172,6 @@
       completedLessonsCount - historyEntries.length,
     );
 
-    const externalLessons = (Array.isArray(data.externalLessons) ? data.externalLessons : [])
-      .slice()
-      .sort(
-        (first, second) =>
-          (parseDate(second.date)?.getTime() || 0) -
-          (parseDate(first.date)?.getTime() || 0),
-      );
-
-    // Historie používá jeden chronologický pohled napříč detailními hodinami,
-    // kalendářem a materiály. Jedno datum = jedna absolvovaná hodina.
-    const historyByDate = new Map();
-    for (const lesson of lessons) {
-      if (lesson?.date) historyByDate.set(lesson.date, { ...lesson });
-    }
-    for (const externalLesson of externalLessons) {
-      const date = externalLesson?.date;
-      if (!date || historyByDate.has(date)) continue;
-      const duration = Number(externalLesson.durationHours);
-      historyByDate.set(date, {
-        date,
-        title: "Doučování",
-        subject: "",
-        summary: Number.isFinite(duration) ? `${duration} h doučování` : "Proběhlá lekce",
-        topics: [],
-      });
-    }
-    for (const material of materials) {
-      const date = material?.date;
-      if (!date) continue;
-      const existing = historyByDate.get(date);
-      if (existing) {
-        if (!existing.material?.url && material?.url) existing.material = material;
-        if (existing.title === "Doučování" && material?.title) existing.title = material.title;
-        continue;
-      }
-      historyByDate.set(date, {
-        date,
-        title: material.title || "Výuková hodina",
-        subject: "",
-        summary: "Materiál přidaný k hodině.",
-        topics: [],
-        material,
-      });
-    }
-    const historyEntries = [...historyByDate.values()].sort(
-      (first, second) =>
-        (parseDate(second.date)?.getTime() || 0) -
-        (parseDate(first.date)?.getTime() || 0),
-    );
-    const unrepresentedHistoryCount = Math.max(
-      0,
-      completedLessonsCount - historyEntries.length,
-    );
-
     const tasks = Array.isArray(data.tasks) ? data.tasks : [];
     const timeline = Array.isArray(data.timeline) ? data.timeline : [];
     const links = Array.isArray(data.links) ? data.links : [];
