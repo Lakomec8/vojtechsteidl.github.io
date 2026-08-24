@@ -400,9 +400,7 @@ async function adminUpload(
   const externalLessons = Array.isArray(profile.externalLessons)
     ? profile.externalLessons as Array<Record<string, unknown>>
     : [];
-  profile.completedLessonsCount = new Set(
-    externalLessons.map((lesson) => String(lesson?.date || "")).filter(Boolean),
-  ).size;
+  profile.completedLessonsCount = externalLessons.length;
 
   await bucket.put(key, file.stream(), {
     httpMetadata: { contentType: "application/pdf" },

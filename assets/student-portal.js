@@ -123,10 +123,8 @@
           (parseDate(first.date)?.getTime() || 0),
       );
     // Jediný zdroj pravdy pro počet absolvovaných hodin je Google Calendar.
-    const calendarLessonDates = new Set(
-      externalLessons.map((lesson) => lesson?.date).filter(Boolean),
-    );
-    const completedLessonsCount = calendarLessonDates.size;
+    // Každá synchronizovaná proběhlá kalendářní událost = jedna absolvovaná hodina.
+    const completedLessonsCount = externalLessons.length;
 
     // Historie používá jeden chronologický pohled napříč detailními hodinami,
     // kalendářem a materiály. Jedno datum = jedna absolvovaná hodina.

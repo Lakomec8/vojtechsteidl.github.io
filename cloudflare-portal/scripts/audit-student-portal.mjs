@@ -100,8 +100,7 @@ for (const row of rows) {
   const externalLessons = arr(profile.externalLessons);
   const timeline = arr(profile.timeline);
 
-  const calendarDates = new Set(externalLessons.map(dateOf).filter(Boolean));
-  const expectedCompleted = calendarDates.size;
+  const expectedCompleted = externalLessons.length;
   const completed = Number(profile.completedLessonsCount ?? expectedCompleted);
 
   if (!Number.isFinite(completed) || completed < 0) anomalies.push("invalid-completed-count");

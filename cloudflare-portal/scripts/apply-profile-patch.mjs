@@ -115,9 +115,7 @@ function normalizeProfileChronology(profile) {
     profile.externalLessons.sort((first, second) =>
       sortableDate(second?.date).localeCompare(sortableDate(first?.date)),
     );
-    profile.completedLessonsCount = new Set(
-      profile.externalLessons.map((lesson) => sortableDate(lesson?.date)).filter(Boolean),
-    ).size;
+    profile.completedLessonsCount = profile.externalLessons.length;
   } else {
     profile.completedLessonsCount = 0;
   }
@@ -142,13 +140,6 @@ function applyLessonEvent(profile, rawEvent) {
     return;
   }
 
-  const sameDayExternal = externalLessons.filter((item) => item?.date === date);
-  if (sameDayExternal.length > 0) {
-    throw new Error(
-      `Another external lesson already exists for ${date}; refusing an ambiguous automatic count update.`,
-    );
-  }
-
   externalLessons.unshift({
     id: key,
     date,
@@ -161,9 +152,7 @@ function applyLessonEvent(profile, rawEvent) {
   );
   profile.externalLessons = externalLessons;
 
-  profile.completedLessonsCount = new Set(
-    externalLessons.map((lesson) => sortableDate(lesson?.date)).filter(Boolean),
-  ).size;
+  profile.completedLessonsCount = externalLessons.length;
 
   const timeline = Array.isArray(profile.timeline) ? profile.timeline : [];
   const timelineHasDate = timeline.some((item) => item?.date === date || item?.isoDate === date);
