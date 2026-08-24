@@ -1,0 +1,42 @@
+name: Finalize chronology fix
+
+on:
+  push:
+    branches:
+      - fix/latest-material-dashboard
+    paths:
+      - ".ops/finalize-chronology-fix"
+
+permissions:
+  contents: write
+
+jobs:
+  finalize:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout feature branch
+        uses: actions/checkout@v4
+        with:
+          ref: fix/latest-material-dashboard
+          fetch-depth: 0
+
+      - name: Finalize code and remove temporary helpers
+        run: |
+          python scripts/finalize_chronology_branch.py
+          rm -f .github/workflows/finalize-chronology-fix.yml
+          rm -f .ops/finalize-chronology-fix
+          rm -f scripts/finalize_chronology_branch.py
+
+      - name: Commit final branch cleanup
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "Finalize student portal chronology fix"
+          git pull --rebase origin fix/latest-material-dashboard
+          git push origin HEAD:fix/latest-material-dashboard
