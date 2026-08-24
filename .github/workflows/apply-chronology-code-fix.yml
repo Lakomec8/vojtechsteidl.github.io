@@ -6,6 +6,9 @@ on:
       - fix/latest-material-dashboard
     paths:
       - ".ops/apply-chronology-code-fix"
+  pull_request:
+    branches:
+      - main
 
 permissions:
   contents: write
@@ -17,7 +20,7 @@ jobs:
     timeout-minutes: 10
 
     steps:
-      - name: Checkout repository
+      - name: Checkout feature branch
         uses: actions/checkout@v4
         with:
           ref: fix/latest-material-dashboard
@@ -38,6 +41,10 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add -- assets/student-portal.js cloudflare-portal/src/entry.ts cloudflare-portal/scripts/apply-profile-patch.mjs
+          if git diff --cached --quiet; then
+            echo "Chronology code is already normalized."
+            exit 0
+          fi
           git commit -m "Normalize portal lesson chronology"
           git pull --rebase origin fix/latest-material-dashboard
           git push origin HEAD:fix/latest-material-dashboard
