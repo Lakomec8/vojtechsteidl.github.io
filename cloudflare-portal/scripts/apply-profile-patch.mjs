@@ -168,6 +168,9 @@ function applyLessonEvent(profile, rawEvent) {
   externalLessons.sort((first, second) =>
     String(second?.date || "").localeCompare(String(first?.date || "")),
   );
+  externalLessons.sort((first, second) =>
+    String(second?.date || "").localeCompare(String(first?.date || "")),
+  );
   profile.externalLessons = externalLessons;
 
   if (counted) {
@@ -227,6 +230,8 @@ for (const operation of patch.prepend || []) {
     target.unshift(operation.value);
   }
 }
+
+normalizeProfileChronology(profile);
 
 normalizeProfileChronology(profile);
 
