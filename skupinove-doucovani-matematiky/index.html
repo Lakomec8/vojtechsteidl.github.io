@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Skupinové doučování matematiky | Jihlava i online | 300 Kč</title>
+  <meta name="description" content="Skupinové doučování matematiky v malých skupinách 3–5 studentů za 300 Kč na osobu. Přijímačky na SŠ, maturita a středoškolská matematika v Jihlavě i online.">
+  <meta name="keywords" content="skupinové doučování matematiky, skupinové doučování Jihlava, skupinové doučování online, příprava na přijímačky matematika, skupinová příprava na maturitu, doučování matematiky ve skupině">
+  <meta name="robots" content="index,follow">
+  <link rel="canonical" href="https://vojtechsteidl.eu/skupinove-doucovani-matematiky/">
+  <meta property="og:title" content="Skupinové doučování matematiky | 300 Kč za osobu">
+  <meta property="og:description" content="Malé skupiny 3–5 studentů se stejným cílem. Přijímačky, maturita a středoškolská matematika v Jihlavě i online.">
+  <meta property="og:url" content="https://vojtechsteidl.eu/skupinove-doucovani-matematiky/">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="https://vojtechsteidl.eu/foto.jpg">
+  <link rel="stylesheet" href="../style.css">
+  <style>
+    .group-hero{padding:6rem 1.25rem 5.25rem;background:linear-gradient(135deg,#102a43 0%,#173f6c 58%,#1d4ed8 150%);color:#fff}
+    .wrap{width:min(1080px,calc(100% - 2rem));margin:0 auto}
+    .crumbs{font-size:.9rem;color:rgba(255,255,255,.72)}.crumbs a{color:#fff}
+    .hero-grid{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(280px,.7fr);gap:3rem;align-items:center}
+    .group-hero h1{max-width:780px;margin:.8rem 0 1rem;font-size:clamp(2.5rem,6vw,4.7rem);line-height:1.03;letter-spacing:-.058em}
+    .group-hero p{max-width:760px;color:rgba(255,255,255,.88);font-size:1.08rem;line-height:1.7}
+    .hero-badges{display:flex;gap:.55rem;flex-wrap:wrap;margin:1.25rem 0}.hero-badge{padding:.42rem .7rem;border:1px solid rgba(255,255,255,.25);border-radius:999px;background:rgba(255,255,255,.08);font-size:.82rem;font-weight:700}
+    .actions{display:flex;gap:.8rem;flex-wrap:wrap;margin-top:1.5rem}.btn{display:inline-flex;align-items:center;justify-content:center;min-height:50px;padding:.85rem 1.15rem;border-radius:10px;background:#fff;color:#102a43;font-weight:800;text-decoration:none}.btn.secondary{border:1px solid rgba(255,255,255,.35);background:transparent;color:#fff}
+    .price-card{padding:2rem;border:1px solid rgba(255,255,255,.22);border-radius:22px;background:rgba(255,255,255,.1);backdrop-filter:blur(8px);box-shadow:0 24px 60px rgba(0,0,0,.18)}
+    .price-card span{display:block;color:#bfdbfe;font-size:.78rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase}.price-card strong{display:block;margin:.25rem 0;color:#fff;font-size:3rem;letter-spacing:-.06em}.price-card strong small{font-size:1rem;font-weight:700;letter-spacing:0}.price-card p{font-size:.92rem}.price-points{display:grid;gap:.65rem;margin-top:1.25rem}.price-point{display:flex;gap:.6rem;align-items:flex-start;color:rgba(255,255,255,.9);font-size:.9rem}.price-point::before{content:"✓";color:#5eead4;font-weight:900}
+    .section{padding:4.8rem 0}.section.alt{background:#fff}.section-heading{max-width:780px;margin-bottom:1.8rem}.eyebrow{margin-bottom:.4rem;color:#2563eb;font-size:.78rem;font-weight:850;letter-spacing:.09em;text-transform:uppercase}.section-heading h2{color:#102a43;font-size:clamp(2rem,4vw,3rem);letter-spacing:-.045em;line-height:1.08}.section-heading p{margin-top:.7rem;color:#64748b;line-height:1.7}
+    .tracks{display:grid;grid-template-columns:repeat(3,1fr);gap:1.15rem}.track-card{position:relative;padding:1.6rem;border:1px solid #e2e8f0;border-radius:18px;background:#fff;box-shadow:0 10px 28px rgba(15,23,42,.06)}.track-card .tag{display:inline-flex;padding:.32rem .65rem;border-radius:999px;background:#eff6ff;color:#1d4ed8;font-size:.72rem;font-weight:850;text-transform:uppercase}.track-card h3{margin:1rem 0 .55rem;color:#102a43;font-size:1.35rem}.track-card p{color:#64748b;line-height:1.65}.track-card ul{display:grid;gap:.5rem;margin:1rem 0 0;padding:0;list-style:none;color:#334155;font-size:.92rem}.track-card li::before{content:"✓";margin-right:.55rem;color:#15803d;font-weight:900}
+    .how-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;counter-reset:step}.step{padding:1.35rem;border:1px solid #e2e8f0;border-radius:15px;background:#f8fafc}.step::before{counter-increment:step;content:counter(step);display:grid;width:34px;height:34px;margin-bottom:.8rem;place-items:center;border-radius:50%;background:#2563eb;color:#fff;font-weight:850}.step strong{color:#102a43}.step p{margin-top:.4rem;color:#64748b;line-height:1.55;font-size:.91rem}
+    .benefits{display:grid;grid-template-columns:1fr 1fr;gap:1.2rem}.benefit{padding:1.45rem;border:1px solid #e2e8f0;border-radius:16px;background:#fff}.benefit h3{color:#102a43}.benefit p{margin-top:.45rem;color:#64748b;line-height:1.65}
+    .waitlist-band{padding:2.3rem;border:1px solid #bfdbfe;border-radius:22px;background:linear-gradient(135deg,#eff6ff,#fff)}.waitlist-band h2{color:#102a43;font-size:clamp(1.8rem,4vw,2.6rem);letter-spacing:-.04em}.waitlist-band p{margin-top:.6rem;color:#64748b;line-height:1.7}.waitlist-note{margin-top:1rem;padding:1rem 1.1rem;border-left:4px solid #2563eb;background:#fff;color:#475569;font-size:.92rem}
+    .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem}.form-group{display:grid;gap:.4rem}.form-group.full{grid-column:1/-1}.form-group label{color:#102a43;font-weight:750}.form-group input,.form-group select,.form-group textarea{width:100%;padding:.85rem .9rem;border:1px solid #cbd5e1;border-radius:10px;background:#fff;color:#0f172a;font:inherit}.form-group textarea{min-height:120px;resize:vertical}.form-group input:focus,.form-group select:focus,.form-group textarea:focus{outline:2px solid #bfdbfe;border-color:#2563eb}.consent{display:flex;gap:.7rem;align-items:flex-start;margin:1rem 0;color:#475569;font-size:.88rem}.consent input{margin-top:.2rem}.submit{min-height:50px;padding:.85rem 1.2rem;border:0;border-radius:10px;background:#102a43;color:#fff;font-weight:850;cursor:pointer}.submit:disabled{opacity:.65;cursor:wait}.form-status{margin-top:.8rem;font-size:.9rem}.form-status.success{color:#15803d}.form-status.error{color:#b91c1c}
+    .faq{display:grid;gap:.8rem}.faq-item{padding:1.25rem 1.4rem;border:1px solid #e2e8f0;border-radius:14px;background:#fff}.faq-item h3{color:#102a43;font-size:1.05rem}.faq-item p{margin-top:.45rem;color:#64748b;line-height:1.65}
+    .links{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem}.link-card{display:block;padding:1.2rem;border:1px solid #bfdbfe;border-radius:14px;background:#eff6ff;color:#102a43;text-decoration:none;font-weight:800}
+    footer{padding:2rem 1rem;text-align:center;color:#64748b}
+    @media(max-width:900px){.hero-grid{grid-template-columns:1fr}.price-card{max-width:520px}.tracks{grid-template-columns:1fr 1fr}.how-grid{grid-template-columns:1fr 1fr}}
+    @media(max-width:620px){.group-hero{padding-top:4.5rem}.tracks,.how-grid,.benefits,.links,.form-grid{grid-template-columns:1fr}.form-group.full{grid-column:auto}.section{padding:3.7rem 0}.waitlist-band{padding:1.5rem}}
+  </style>
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"Service",
+    "name":"Skupinové doučování matematiky",
+    "provider":{"@type":"Person","name":"Vojtěch Steidl","url":"https://vojtechsteidl.eu/"},
+    "areaServed":["Jihlava","Česká republika"],
+    "serviceType":"Skupinové doučování matematiky v malých skupinách",
+    "url":"https://vojtechsteidl.eu/skupinove-doucovani-matematiky/",
+    "offers":{"@type":"Offer","price":"300","priceCurrency":"CZK","description":"Cena za osobu za 60 minut skupinové lekce; skupiny se sestavují podle cíle, úrovně a časových možností."}
+  }
+  </script>
+</head>
+<body>
+  <header class="site-header">
+    <nav class="nav" aria-label="Hlavní navigace">
+      <a href="../" class="logo">Vojtěch Steidl</a>
+      <ul class="nav-links">
+        <li><a href="../doucovani-matematiky/">Matematika</a></li>
+        <li><a href="../skupinove-doucovani-matematiky/">Skupinové lekce</a></li>
+        <li><a href="../priprava-na-maturitu-z-matematiky/">Maturita</a></li>
+        <li><a href="../doucovani-fyziky/">Fyzika</a></li>
+        <li><a href="#zajem" class="nav-contact">Mám zájem</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+    <section class="group-hero">
+      <div class="wrap hero-grid">
+        <div>
+          <div class="crumbs"><a href="../">Domů</a> / Skupinové doučování matematiky</div>
+          <h1>Malá skupina. Stejný cíl. Matematika za 300 Kč.</h1>
+          <p>Skupinové doučování matematiky pro 3–5 studentů, kteří řeší podobný cíl a přibližně stejnou úroveň. Skupiny vznikají pro přijímačky na SŠ, maturitu a průběžnou středoškolskou matematiku — online nebo po domluvě v Jihlavě.</p>
+          <div class="hero-badges"><span class="hero-badge">3–5 studentů</span><span class="hero-badge">300 Kč / osoba</span><span class="hero-badge">60 minut</span><span class="hero-badge">Jihlava i online</span></div>
+          <div class="actions"><a class="btn" href="#zajem">Přidat se mezi zájemce</a><a class="btn secondary" href="#skupiny">Vybrat typ skupiny</a></div>
+        </div>
+        <aside class="price-card" aria-label="Cena skupinové lekce">
+          <span>Skupinová lekce</span>
+          <strong>300 Kč <small>/ osoba</small></strong>
+          <p>Cena za 60 minut. Termín navrhnu ve chvíli, kdy se sejdou studenti se stejným cílem a kompatibilními časovými možnostmi.</p>
+          <div class="price-points"><div class="price-point">malá skupina 3–5 studentů</div><div class="price-point">vlastní materiály k probíraným tématům</div><div class="price-point">společný cíl a podobná úroveň</div></div>
+        </aside>
+      </div>
+    </section>
+
+    <section class="section" id="skupiny">
+      <div class="wrap">
+        <div class="section-heading"><p class="eyebrow">Aktuálně sestavované skupiny</p><h2>Vyber si skupinu podle cíle, ne podle náhodného ročníku.</h2><p>Smyslem skupinové lekce je, aby všichni řešili podobné typy úloh. Proto se zájemci nejdřív seskupují podle cíle, úrovně a časových možností.</p></div>
+        <div class="tracks">
+          <article class="track-card" id="prijimacky"><span class="tag">Přijímačky</span><h3>Přijímačky na SŠ</h3><p>Příprava zaměřená na matematickou část přijímací zkoušky, standardní typy úloh, práci s časem a získávání jistých bodů.</p><ul><li>typové úlohy a strategie</li><li>práce s cvičnými testy</li><li>rozbor chyb a nové varianty</li></ul></article>
+          <article class="track-card" id="maturita"><span class="tag">Maturita</span><h3>Maturita z matematiky</h3><p>Systematická příprava na didaktický test podle tematických celků a skutečných slabých míst jednotlivých studentů.</p><ul><li>diagnostika bodového výkonu</li><li>didaktické testy</li><li>bodová a časová strategie</li></ul></article>
+          <article class="track-card" id="stredni-skola"><span class="tag">SŠ matematika</span><h3>Průběžná středoškolská matematika</h3><p>Skupina pro studenty, kteří chtějí stabilizovat základy a průběžně zvládat látku typickou pro podobný ročník.</p><ul><li>algebra, rovnice a funkce</li><li>geometrie a slovní úlohy</li><li>procvičení před testy</li></ul></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section alt">
+      <div class="wrap">
+        <div class="section-heading"><p class="eyebrow">Jak vznikne konkrétní termín</p><h2>Nejdřív sbírám kompatibilní zájemce. Až potom otevírám skupinu.</h2><p>Není potřeba přizpůsobovat se předem vypsanému termínu, který většině studentů nesedí. Nejprve zjistím, kdo řeší stejný cíl a kdy může.</p></div>
+        <div class="how-grid"><div class="step"><strong>Vyplníš zájem</strong><p>Vybereš cíl, ročník, preferovanou formu a možné dny.</p></div><div class="step"><strong>Porovnám úroveň</strong><p>Do jedné skupiny dávám studenty, pro které bude tempo výuky smysluplné.</p></div><div class="step"><strong>Navrhnu termín</strong><p>Jakmile se potkají 3–5 kompatibilních studentů, pošlu návrh společného času.</p></div><div class="step"><strong>Skupina začne</strong><p>Po potvrzení termínu probíhá výuka za 300 Kč na osobu a 60 minut.</p></div></div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="wrap">
+        <div class="section-heading"><p class="eyebrow">Proč malá skupina</p><h2>Nižší cena bez toho, aby se z lekce stala přednáška.</h2></div>
+        <div class="benefits"><article class="benefit"><h3>3–5 studentů</h3><p>Skupina je dost malá na průběžnou kontrolu postupu a dost velká na to, aby byla cenově výrazně dostupnější než individuální lekce.</p></article><article class="benefit"><h3>Společný problém</h3><p>Studenti nejsou spojeni náhodně. Skupina se staví kolem stejné zkoušky, podobné látky nebo podobné úrovně.</p></article><article class="benefit"><h3>Aktivní řešení</h3><p>Nejde o pasivní kurz. Studenti řeší příklady, porovnávají postupy a chyby se ověřují na dalších variantách.</p></article><article class="benefit"><h3>Navazující materiály</h3><p>K tématům používám vlastní přehledy a cvičení, aby bylo možné pokračovat i mezi jednotlivými lekcemi.</p></article></div>
+      </div>
+    </section>
+
+    <section class="section alt">
+      <div class="wrap">
+        <div class="waitlist-band">
+          <h2>VŠ matematika, reparát nebo jiné téma?</h2>
+          <p>Tyto skupiny nevypisuji genericky dopředu, protože obsah se mezi školami a obory výrazně liší. Zájem ale sbírám. Pokud se sejdou studenti se stejným předmětem nebo podobným sylabem, můžeme otevřít další skupinu.</p>
+          <div class="waitlist-note"><strong>Typický příklad:</strong> několik studentů stejného oboru potřebuje zvládnout Matematiku 1 nebo stejnou zkoušku. V takovém případě dává skupinový formát velmi dobrý smysl.</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="zajem">
+      <div class="wrap">
+        <div class="section-heading"><p class="eyebrow">Nezávazná čekací listina</p><h2>Mám zájem o místo ve skupině</h2><p>Vyplnění formuláře není rezervace ani závazná objednávka. Slouží k tomu, abych mohl spojit studenty se stejným cílem a navrhnout vhodnou skupinu.</p></div>
+        <form id="groupForm">
+          <div class="form-grid">
+            <div class="form-group"><label for="groupName">Jméno</label><input id="groupName" name="name" type="text" autocomplete="name" required></div>
+            <div class="form-group"><label for="groupEmail">E-mail</label><input id="groupEmail" name="email" type="email" autocomplete="email" required></div>
+            <div class="form-group"><label for="groupGoal">Cíl</label><select id="groupGoal" name="group_goal" required><option value="" selected disabled>Vyberte možnost</option><option value="prijimacky-ss">Přijímačky na SŠ</option><option value="maturita-matematika">Maturita z matematiky</option><option value="stredoskolska-matematika">Průběžná SŠ matematika</option><option value="vs-matematika">VŠ matematika / Matematika 1</option><option value="reparat">Reparát</option><option value="jine">Jiné</option></select></div>
+            <div class="form-group"><label for="groupGrade">Ročník / škola</label><input id="groupGrade" name="grade_school" type="text" placeholder="Např. 9. třída, 4. ročník SŠ, VUT 1. ročník"></div>
+            <div class="form-group"><label for="groupMode">Forma</label><select id="groupMode" name="preferred_mode" required><option value="" selected disabled>Vyberte možnost</option><option value="online">Online</option><option value="jihlava">Osobně v Jihlavě</option><option value="oboji">Obojí</option></select></div>
+            <div class="form-group"><label for="groupDays">Kdy můžete</label><input id="groupDays" name="availability" type="text" placeholder="Např. Po a St po 16:00, víkend"></div>
+            <div class="form-group full"><label for="groupMessage">Poznámka</label><textarea id="groupMessage" name="message" placeholder="Můžete uvést aktuální úroveň, konkrétní školu, termín zkoušky nebo témata, která potřebujete procvičit."></textarea></div>
+          </div>
+          <input type="hidden" name="service" value="skupinove-doucovani-matematiky">
+          <label class="consent"><input type="checkbox" required><span>Souhlasím se zpracováním údajů za účelem vyřízení této nezávazné poptávky.</span></label>
+          <button class="submit" type="submit">Přidat se mezi zájemce</button>
+          <p class="form-status" id="groupFormStatus" aria-live="polite"></p>
+        </form>
+      </div>
+    </section>
+
+    <section class="section alt">
+      <div class="wrap">
+        <div class="section-heading"><p class="eyebrow">Časté otázky</p><h2>Jak skupinové doučování funguje</h2></div>
+        <div class="faq"><article class="faq-item"><h3>Kolik studentů je ve skupině?</h3><p>Cílově 3–5 studentů. Skupina se otevře tehdy, když se sejdou studenti s kompatibilním cílem, úrovní a časovými možnostmi.</p></article><article class="faq-item"><h3>Kolik stojí jedna lekce?</h3><p>300 Kč za osobu za 60 minut skupinové lekce.</p></article><article class="faq-item"><h3>Musím se po vyplnění formuláře přihlásit?</h3><p>Ne. Formulář je nezávazný. Nejdřív pošlu návrh skupiny a termínu; teprve potom se rozhodnete, zda vám vyhovuje.</p></article><article class="faq-item"><h3>Je možné skupinu absolvovat online?</h3><p>Ano. Při sestavování skupiny se zohledňuje preference online, osobně v Jihlavě nebo obojí.</p></article><article class="faq-item"><h3>Co když je moje úroveň výrazně jiná než u ostatních?</h3><p>V takovém případě je lepší počkat na jinou skupinu nebo zvolit individuální lekci. Cílem není naplnit skupinu za každou cenu, ale udržet společné tempo.</p></article></div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="wrap">
+        <div class="section-heading"><h2>Další možnosti doučování</h2></div>
+        <div class="links"><a class="link-card" href="../doucovani-matematiky/">Individuální doučování matematiky →</a><a class="link-card" href="../priprava-na-maturitu-z-matematiky/">Příprava na maturitu →</a><a class="link-card" href="../doucovani-fyziky/">Doučování fyziky →</a></div>
+      </div>
+    </section>
+  </main>
+
+  <footer>© 2026 Vojtěch Steidl · Skupinové doučování matematiky v Jihlavě i online</footer>
+  <script>
+    const groupForm=document.getElementById('groupForm'),status=document.getElementById('groupFormStatus');
+    groupForm.addEventListener('submit',async event=>{
+      event.preventDefault();
+      const button=groupForm.querySelector('button[type="submit"]'),original=button.textContent,formData=new FormData(groupForm);
+      formData.append('access_key','36faa5ca-b116-4bbb-9543-81ecd1f78b55');
+      formData.append('subject','Nový zájem o skupinové doučování z vojtechsteidl.eu');
+      button.disabled=true;button.textContent='Odesílám...';status.textContent='';status.className='form-status';
+      try{
+        const response=await fetch('https://api.web3forms.com/submit',{method:'POST',body:formData});
+        const data=await response.json();
+        if(!data.success)throw new Error('submit-failed');
+        groupForm.reset();status.textContent='Děkuji. Zájem jsem obdržel a ozvu se, jakmile budu mít vhodnou skupinu nebo návrh termínu.';status.classList.add('success');
+      }catch(error){status.textContent='Formulář se nepodařilo odeslat. Napište mi prosím na vojtasteidl@seznam.cz.';status.classList.add('error');}
+      finally{button.disabled=false;button.textContent=original;}
+    });
+  </script>
+</body>
+</html>
