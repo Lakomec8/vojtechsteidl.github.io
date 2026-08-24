@@ -1,0 +1,43 @@
+name: Apply chronology code fix
+
+on:
+  push:
+    branches:
+      - fix/latest-material-dashboard
+    paths:
+      - ".ops/apply-chronology-code-fix"
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          ref: fix/latest-material-dashboard
+          fetch-depth: 0
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Apply code patch
+        run: node cloudflare-portal/scripts/apply-chronology-code-fix.mjs
+
+      - name: Commit code changes
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -- assets/student-portal.js cloudflare-portal/src/entry.ts cloudflare-portal/scripts/apply-profile-patch.mjs
+          git commit -m "Normalize portal lesson chronology"
+          git pull --rebase origin fix/latest-material-dashboard
+          git push origin HEAD:fix/latest-material-dashboard
