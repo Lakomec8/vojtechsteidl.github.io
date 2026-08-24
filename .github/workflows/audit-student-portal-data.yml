@@ -6,6 +6,9 @@ on:
       - fix/latest-material-dashboard
     paths:
       - ".ops/student-portal-audit-trigger"
+  pull_request:
+    branches:
+      - main
   workflow_dispatch:
 
 permissions:
