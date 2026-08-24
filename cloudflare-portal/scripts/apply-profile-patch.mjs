@@ -115,7 +115,11 @@ function normalizeProfileChronology(profile) {
     profile.externalLessons.sort((first, second) =>
       sortableDate(second?.date).localeCompare(sortableDate(first?.date)),
     );
+    profile.completedLessonsCount = profile.externalLessons.length;
+  } else {
+    profile.completedLessonsCount = 0;
   }
+  profile.incrementLessonCountOnMaterialAdd = false;
 }
 
 function applyLessonEvent(profile, rawEvent) {
@@ -136,35 +140,19 @@ function applyLessonEvent(profile, rawEvent) {
     return;
   }
 
-  const sameDayExternal = externalLessons.filter((item) => item?.date === date);
-  if (sameDayExternal.length > 0) {
-    throw new Error(
-      `Another external lesson already exists for ${date}; refusing an ambiguous automatic count update.`,
-    );
-  }
-
-  const materials = Array.isArray(profile.materials) ? profile.materials : [];
-  const lessons = Array.isArray(profile.lessons) ? profile.lessons : [];
-  const representedByMaterial = materials.some((item) => item?.date === date);
-  const representedByDetailedLesson = lessons.some((item) => item?.date === date);
-  const counted = !representedByMaterial && !representedByDetailedLesson;
-
   externalLessons.unshift({
     id: key,
     date,
     source: "google-calendar",
     durationHours,
-    counted,
+    counted: true,
   });
   externalLessons.sort((first, second) =>
     String(second?.date || "").localeCompare(String(first?.date || "")),
   );
   profile.externalLessons = externalLessons;
 
-  if (counted) {
-    const current = Number(profile.completedLessonsCount ?? lessons.length);
-    profile.completedLessonsCount = Math.max(Number.isFinite(current) ? current : 0, lessons.length) + 1;
-  }
+  profile.completedLessonsCount = externalLessons.length;
 
   const timeline = Array.isArray(profile.timeline) ? profile.timeline : [];
   const timelineHasDate = timeline.some((item) => item?.date === date || item?.isoDate === date);

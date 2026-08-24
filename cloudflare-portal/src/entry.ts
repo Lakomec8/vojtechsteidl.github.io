@@ -393,24 +393,14 @@ async function adminUpload(
 
   if (existingIndex >= 0) materials.splice(existingIndex, 1);
   profile.materials = normalizeMaterials([item, ...materials]);
-  profile.incrementLessonCountOnMaterialAdd = true;
+  profile.incrementLessonCountOnMaterialAdd = false;
 
-  const lessons = Array.isArray(profile.lessons) ? profile.lessons : [];
-  const detailedLessonAlreadyExists = lessons.some((lesson) => lesson?.date === date);
+  // PDF upload nikdy nemění počet absolvovaných hodin. Ten je odvozen pouze
+  // z lekcí synchronizovaných z Google Calendar.
   const externalLessons = Array.isArray(profile.externalLessons)
     ? profile.externalLessons as Array<Record<string, unknown>>
     : [];
-  const calendarAlreadyExists = externalLessons.some((lesson) => lesson?.date === date);
-
-  if (
-    isNew &&
-    !sameDateAlreadyExists &&
-    !detailedLessonAlreadyExists &&
-    !calendarAlreadyExists
-  ) {
-    const current = Number(profile.completedLessonsCount ?? lessons.length);
-    profile.completedLessonsCount = Math.max(Number.isFinite(current) ? current : 0, lessons.length) + 1;
-  }
+  profile.completedLessonsCount = externalLessons.length;
 
   await bucket.put(key, file.stream(), {
     httpMetadata: { contentType: "application/pdf" },
