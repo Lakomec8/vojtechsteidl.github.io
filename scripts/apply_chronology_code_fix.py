@@ -33,21 +33,7 @@ patch(
 )
 
 entry = ROOT / "cloudflare-portal/src/entry.ts"
-patch(
-    entry,
-    [
-        (
-            '''function cleanPdfName(name: string): string {
-  const cleaned = name.normalize("NFKC").replace(/[\\/]+/g, "-").replace(/[\u0000-\u001f]/g, "").trim();
-  if (!cleaned || cleaned === "." || cleaned === "..") throw new PortalError(400, "Invalid filename.");
-  if (!cleaned.toLowerCase().endsWith(".pdf")) throw new PortalError(400, "Only PDF files are allowed.");
-  return cleaned.slice(0, 180);
-}''',
-            '''function cleanPdfName(name: string): string {
-  const cleaned = name.normalize("NFKC").replace(/[\\/]+/g, "-").replace(/[\u0000-\u001f]/g, "").trim();
-  if (!cleaned || cleaned === "." || cleaned === "..") throw new PortalError(400, "Invalid filename.");
-  if (!cleaned.toLowerCase().endsWith(".pdf")) throw new PortalError(400, "Only PDF files are allowed.");
-  return cleaned.slice(0, 180);
+helpers = r'''  return cleaned.slice(0, 180);
 }
 
 function portalToday(): string {
@@ -89,7 +75,18 @@ function normalizeMaterials(
   }
 
   return sorted;
-}''',
+}
+
+async function profileRow'''
+patch(
+    entry,
+    [
+        (
+            '''  return cleaned.slice(0, 180);
+}
+
+async function profileRow''',
+            helpers,
             "portal date and material normalization helpers",
         ),
         (
