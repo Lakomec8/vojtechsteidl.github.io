@@ -10,10 +10,15 @@
 
   const token = sessionStorage.getItem("student_token");
 
-  const formatShortDate = (value) => {
-    if (!value) return "";
+  const parseDate = (value) => {
+    if (!value) return null;
     const date = new Date(`${value}T00:00:00`);
-    if (Number.isNaN(date.getTime())) return String(value);
+    return Number.isNaN(date.getTime()) ? null : date;
+  };
+
+  const formatShortDate = (value) => {
+    const date = parseDate(value);
+    if (!date) return value ? String(value) : "";
     return new Intl.DateTimeFormat("cs-CZ", {
       day: "numeric",
       month: "numeric",
@@ -32,11 +37,18 @@
       if (!response.ok) return;
 
       const data = await response.json();
-      const materials = Array.isArray(data.materials) ? data.materials : [];
+      const materials = (Array.isArray(data.materials) ? data.materials : [])
+        .map((material, index) => ({ material, index }))
+        .sort((first, second) => {
+          const byDate =
+            (parseDate(second.material?.date)?.getTime() || 0) -
+            (parseDate(first.material?.date)?.getTime() || 0);
+          return byDate || first.index - second.index;
+        })
+        .map(({ material }) => material);
 
-      // Pole materials je jediný zdroj pravdy pro aktuální dokument.
-      // Admin upload vkládá nový materiál na první pozici, takže první platná
-      // položka je vždy dokument, který má být vidět na nástěnce.
+      // Datum hodiny je zdroj pravdy pro to, co je aktuální. Tím zůstane
+      // nástěnka správná i při dodatečném nahrání staršího dokumentu.
       const material =
         materials.find((item) => item?.url) || data.featuredMaterial || null;
       if (!material?.url) return;
