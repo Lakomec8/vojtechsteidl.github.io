@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Doučování matematiky v Jihlavě a online | Vojtěch Steidl</title>
-  <meta name="description" content="Individuální doučování matematiky pro ZŠ a SŠ v Jihlavě i online. Příprava na písemky, reparáty, přijímačky i maturitu s vlastními materiály a studentskou zónou.">
+  <meta name="description" content="Individuální i skupinové doučování matematiky pro ZŠ a SŠ v Jihlavě i online. Příprava na písemky, přijímačky a maturitu, vlastní materiály a studentská zóna.">
   <meta name="robots" content="index,follow">
   <link rel="canonical" href="https://vojtechsteidl.eu/doucovani-matematiky/">
   <link rel="stylesheet" href="../style.css">
@@ -30,17 +30,19 @@
     .steps{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;counter-reset:step}
     .step{padding:1.35rem;border:1px solid #e2e8f0;border-radius:14px;background:#f8fafc}
     .step::before{counter-increment:step;content:counter(step);display:grid;width:34px;height:34px;margin-bottom:.8rem;place-items:center;border-radius:50%;background:#2563eb;color:#fff;font-weight:800}
-    .service-links{display:grid;grid-template-columns:repeat(2,1fr);gap:1rem}
+    .group-promo{display:grid;grid-template-columns:1.15fr .85fr;gap:2rem;align-items:center;padding:2.2rem;border:1px solid #bfdbfe;border-radius:20px;background:linear-gradient(135deg,#eff6ff,#fff);box-shadow:0 12px 32px rgba(15,23,42,.07)}
+    .group-promo h2{margin:.45rem 0 .7rem;color:#102a43;font-size:clamp(1.8rem,4vw,2.6rem);letter-spacing:-.04em}.group-promo p{color:#64748b;line-height:1.7}.group-price{padding:1.5rem;border-radius:16px;background:#102a43;color:#fff}.group-price span{display:block;color:#93c5fd;font-size:.78rem;font-weight:800;text-transform:uppercase;letter-spacing:.08em}.group-price strong{display:block;margin:.25rem 0;font-size:2.5rem;letter-spacing:-.05em}.group-price p{color:rgba(255,255,255,.72);font-size:.9rem}.group-link{display:inline-flex;margin-top:1.2rem;padding:.8rem 1rem;border-radius:9px;background:#2563eb;color:#fff;text-decoration:none;font-weight:800}.group-link:hover{color:#fff;background:#1d4ed8}
+    .service-links{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem}
     .service-link{display:block;padding:1.25rem;border:1px solid #bfdbfe;border-radius:14px;background:#eff6ff;color:#102a43;text-decoration:none;font-weight:800}
     .cta-band{padding:3rem;border-radius:20px;background:#102a43;color:#fff}
     .cta-band h2{margin-bottom:.6rem;color:#fff}
     .cta-band p{color:rgba(255,255,255,.78)}
     footer{padding:2rem 1rem;text-align:center;color:#64748b}
-    @media(max-width:850px){.grid,.steps{grid-template-columns:1fr 1fr}}
-    @media(max-width:620px){.grid,.steps,.service-links{grid-template-columns:1fr}.landing-hero{padding-top:4.5rem}.cta-band{padding:2rem}}
+    @media(max-width:850px){.grid,.steps{grid-template-columns:1fr 1fr}.group-promo{grid-template-columns:1fr}}
+    @media(max-width:620px){.grid,.steps,.service-links{grid-template-columns:1fr}.landing-hero{padding-top:4.5rem}.cta-band{padding:2rem}.group-promo{padding:1.5rem}}
   </style>
   <script type="application/ld+json">
-  {"@context":"https://schema.org","@type":"Service","name":"Doučování matematiky","provider":{"@type":"Person","name":"Vojtěch Steidl"},"areaServed":["Jihlava","Česká republika"],"serviceType":"Individuální doučování matematiky","url":"https://vojtechsteidl.eu/doucovani-matematiky/"}
+  {"@context":"https://schema.org","@type":"Service","name":"Doučování matematiky","provider":{"@type":"Person","name":"Vojtěch Steidl"},"areaServed":["Jihlava","Česká republika"],"serviceType":"Individuální a skupinové doučování matematiky","url":"https://vojtechsteidl.eu/doucovani-matematiky/"}
   </script>
 </head>
 <body>
@@ -49,6 +51,7 @@
       <a href="../" class="logo">Vojtěch Steidl</a>
       <ul class="nav-links">
         <li><a href="../doucovani-matematiky/">Matematika</a></li>
+        <li><a href="../skupinove-doucovani-matematiky/">Skupinové lekce</a></li>
         <li><a href="../priprava-na-maturitu-z-matematiky/">Maturita</a></li>
         <li><a href="../doucovani-fyziky/">Fyzika</a></li>
         <li><a href="../#kontakt" class="nav-contact">Kontakt</a></li>
@@ -60,9 +63,10 @@
       <div class="landing-wrap">
         <div class="crumbs"><a href="../">Domů</a> / Doučování matematiky</div>
         <h1>Doučování matematiky v Jihlavě i online</h1>
-        <p>Individuální výuka pro studenty ZŠ a SŠ. Zaměřuji se na pochopení postupu, systematickou přípravu a průběžné ověřování, zda student umí látku použít samostatně.</p>
+        <p>Individuální výuka podle konkrétních potřeb studenta nebo malé skupiny se společným cílem. Zaměřuji se na pochopení postupu, systematickou přípravu a průběžné ověřování, zda student umí látku použít samostatně.</p>
         <div class="actions">
-          <a class="btn" href="../#kontakt">Domluvit úvodní konzultaci</a>
+          <a class="btn" href="../#kontakt">Domluvit individuální konzultaci</a>
+          <a class="btn secondary" href="../skupinove-doucovani-matematiky/">Skupinové lekce za 300 Kč</a>
           <a class="btn secondary" href="../interactive-notes/functions/">Vyzkoušet interaktivní funkce</a>
         </div>
       </div>
@@ -96,20 +100,30 @@
 
     <section class="landing-section">
       <div class="landing-wrap">
-        <div class="section-title"><h2>Navazující služby</h2></div>
-        <div class="service-links">
-          <a class="service-link" href="../priprava-na-maturitu-z-matematiky/">Příprava na maturitu z matematiky →</a>
-          <a class="service-link" href="../doucovani-fyziky/">Doučování fyziky →</a>
+        <div class="group-promo">
+          <div><p style="color:#2563eb;font-weight:800;text-transform:uppercase;font-size:.78rem;letter-spacing:.08em">Nová možnost</p><h2>Skupinové lekce matematiky</h2><p>Malé skupiny 3–5 studentů se stejným cílem a podobnou úrovní. Aktuálně sestavuji skupiny pro přijímačky na SŠ, maturitu a průběžnou středoškolskou matematiku. Termín vznikne podle časových možností přihlášených studentů.</p><a class="group-link" href="../skupinove-doucovani-matematiky/">Zjistit více a přidat se mezi zájemce →</a></div>
+          <div class="group-price"><span>60 minut</span><strong>300 Kč / osoba</strong><p>Skupina se otevírá při 3–5 kompatibilních studentech. Vyplnění zájmu je nezávazné.</p></div>
         </div>
       </div>
     </section>
 
     <section class="landing-section alt">
       <div class="landing-wrap">
+        <div class="section-title"><h2>Navazující služby</h2></div>
+        <div class="service-links">
+          <a class="service-link" href="../skupinove-doucovani-matematiky/">Skupinové doučování matematiky →</a>
+          <a class="service-link" href="../priprava-na-maturitu-z-matematiky/">Příprava na maturitu z matematiky →</a>
+          <a class="service-link" href="../doucovani-fyziky/">Doučování fyziky →</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="landing-section">
+      <div class="landing-wrap">
         <div class="cta-band">
           <h2>Nejdřív zjistíme, co přesně je potřeba zlepšit.</h2>
-          <p>Úvodní konzultace slouží k určení cíle, rozsahu látky a vhodného způsobu spolupráce.</p>
-          <div class="actions"><a class="btn" href="../#kontakt">Kontaktovat mě</a></div>
+          <p>Pro individuální výuku můžeme začít úvodní konzultací. Pro skupinovou výuku stačí nezávazně vyplnit cíl a časové možnosti; vhodnou skupinu navrhnu podle dalších zájemců.</p>
+          <div class="actions"><a class="btn" href="../#kontakt">Individuální výuka</a><a class="btn secondary" href="../skupinove-doucovani-matematiky/#zajem">Skupinová výuka</a></div>
         </div>
       </div>
     </section>
