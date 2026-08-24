@@ -32,6 +32,7 @@ const publicDirectories = [
   "assets",
   "doucovani-fyziky",
   "doucovani-matematiky",
+  "skupinove-doucovani-matematiky",
   "priprava-na-maturitu-z-matematiky",
   "pro-skoly",
   "interactive-notes",
