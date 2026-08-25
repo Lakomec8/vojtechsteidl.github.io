@@ -297,11 +297,22 @@
     };
 
     const materialButtons = (material) => {
-      const url = escapeAttribute(material.url || "#");
+      const rawUrl = String(material.url || "#");
+      const url = escapeAttribute(rawUrl);
+      const isPdf =
+        material.badgeClass === "pdf" ||
+        /pdf/i.test(String(material.badge || "")) ||
+        /\.pdf(?:[?#].*)?$/i.test(rawUrl);
       return `
         <div class="actions">
-          <a class="secondary" href="${url}" target="_blank" rel="noopener">Otevřít</a>
-          <a class="download" href="${url}" download>Stáhnout PDF</a>
+          <a class="secondary" href="${url}" target="_blank" rel="noopener">${
+            isPdf ? "Otevřít" : "Spustit interaktivní zápis"
+          }</a>
+          ${
+            isPdf
+              ? `<a class="download" href="${url}" download>Stáhnout PDF</a>`
+              : ""
+          }
         </div>
       `;
     };
