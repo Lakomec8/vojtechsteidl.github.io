@@ -127,7 +127,9 @@ for (const row of rows) {
     anomalies.push("first-material-is-not-latest-by-date");
   }
 
-  const currentMaterials = materials.filter((item) => item?.badge === "Aktuální PDF");
+  const currentMaterials = materials.filter((item) =>
+    ["Aktuální PDF", "Aktuální materiál"].includes(item?.badge),
+  );
   if (materials.length && currentMaterials.length !== 1) {
     anomalies.push(`current-material-badge-count-${currentMaterials.length}`);
   }

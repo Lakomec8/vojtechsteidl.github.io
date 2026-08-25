@@ -56,7 +56,12 @@
       const target = document.getElementById("lastLesson");
       if (!target) return;
 
-      const url = escapeHtml(material.url);
+      const rawUrl = String(material.url);
+      const url = escapeHtml(rawUrl);
+      const isPdf =
+        material.badgeClass === "pdf" ||
+        /pdf/i.test(String(material.badge || "")) ||
+        /\.pdf(?:[?#].*)?$/i.test(rawUrl);
       target.innerHTML = `
         <div class="item">
           <div class="item-main">
@@ -66,8 +71,14 @@
           <span class="badge">${escapeHtml(material.badge || "Soubor")}</span>
         </div>
         <div class="actions">
-          <a class="secondary" href="${url}" target="_blank" rel="noopener">Otevřít</a>
-          <a class="download" href="${url}" download>Stáhnout</a>
+          <a class="secondary" href="${url}" target="_blank" rel="noopener">${
+            isPdf ? "Otevřít" : "Spustit interaktivní zápis"
+          }</a>
+          ${
+            isPdf
+              ? `<a class="download" href="${url}" download>Stáhnout PDF</a>`
+              : ""
+          }
         </div>
       `;
 
