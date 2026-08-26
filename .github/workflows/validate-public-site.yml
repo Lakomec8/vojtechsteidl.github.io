@@ -8,12 +8,15 @@ on:
       - "assets/**"
       - "doucovani-fyziky/**"
       - "doucovani-matematiky/**"
+      - "online-doucovani-matematiky/**"
       - "skupinove-doucovani-matematiky/**"
       - "priprava-na-maturitu-z-matematiky/**"
       - "pro-skoly/**"
       - "interactive-notes/**"
       - "materialy-zdarma/**"
+      - "sitemap.xml"
       - "scripts/build_public_site.py"
+      - "scripts/publish_online_tutoring.py"
       - "scripts/patch_nav_layout.py"
       - ".github/workflows/deploy-pages.yml"
       - ".github/workflows/validate-public-site.yml"
@@ -26,12 +29,15 @@ on:
       - "assets/**"
       - "doucovani-fyziky/**"
       - "doucovani-matematiky/**"
+      - "online-doucovani-matematiky/**"
       - "skupinove-doucovani-matematiky/**"
       - "priprava-na-maturitu-z-matematiky/**"
       - "pro-skoly/**"
       - "interactive-notes/**"
       - "materialy-zdarma/**"
+      - "sitemap.xml"
       - "scripts/build_public_site.py"
+      - "scripts/publish_online_tutoring.py"
       - "scripts/patch_nav_layout.py"
       - ".github/workflows/deploy-pages.yml"
       - ".github/workflows/validate-public-site.yml"
@@ -49,6 +55,9 @@ jobs:
 
       - name: Build explicit public allowlist
         run: python scripts/build_public_site.py
+
+      - name: Publish online math tutoring landing page
+        run: python scripts/publish_online_tutoring.py
 
       - name: Apply responsive navigation patch
         run: python scripts/patch_nav_layout.py
@@ -69,5 +78,8 @@ jobs:
             exit 1
           fi
           test -f .public-site/skupinove-doucovani-matematiky/index.html
+          test -f .public-site/online-doucovani-matematiky/index.html
           grep -q 'skupinove-doucovani-matematiky' .public-site/index.html
+          grep -q 'online-doucovani-matematiky' .public-site/sitemap.xml
+          grep -q 'online-doucovani-matematiky' .public-site/doucovani-matematiky/index.html
           grep -q 'responsive-nav-no-wrap' .public-site/style.css
