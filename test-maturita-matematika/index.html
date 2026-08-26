@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Diagnostický test k maturitě z matematiky | 15 úloh zdarma</title>
+  <meta name="description" content="Krátký diagnostický test k maturitě z matematiky zdarma. 15 úloh, 5 oblastí a okamžité vyhodnocení silných a slabých témat.">
+  <meta name="robots" content="index,follow">
+  <link rel="canonical" href="https://vojtechsteidl.eu/test-maturita-matematika/">
+  <link rel="stylesheet" href="../style.css">
+  <style>
+    .test-hero{padding:5.5rem 1.25rem 4.5rem;background:linear-gradient(135deg,#102a43 0%,#173f6c 58%,#1d4ed8 150%);color:#fff}
+    .test-wrap{width:min(920px,calc(100% - 2rem));margin:0 auto}
+    .crumbs{font-size:.9rem;color:rgba(255,255,255,.72)}.crumbs a{color:#fff}
+    .test-hero h1{max-width:820px;margin:.8rem 0 1rem;font-size:clamp(2.35rem,6vw,4.15rem);line-height:1.05;letter-spacing:-.055em}
+    .test-hero p{max-width:760px;color:rgba(255,255,255,.9);font-size:1.08rem}
+    .hero-meta{display:flex;gap:.65rem;flex-wrap:wrap;margin-top:1.4rem}.hero-pill{padding:.45rem .8rem;border:1px solid rgba(255,255,255,.24);border-radius:999px;background:rgba(255,255,255,.1);font-size:.88rem;font-weight:700}
+    .intro{padding:2.4rem 0 1rem}.intro-card{display:grid;grid-template-columns:1fr auto;gap:1.25rem;align-items:center;padding:1.35rem 1.5rem;border:1px solid #bfdbfe;border-radius:16px;background:#eff6ff}.intro-card strong{display:block;color:#102a43;font-size:1.05rem}.intro-card p{margin-top:.3rem;color:#64748b}.privacy-note{font-size:.86rem;color:#64748b;text-align:right}
+    .progress-shell{position:sticky;top:4.8rem;z-index:20;padding:.75rem 0;background:rgba(248,250,252,.95);backdrop-filter:blur(10px)}.progress-row{display:flex;align-items:center;gap:1rem}.progress-track{height:9px;flex:1;overflow:hidden;border-radius:999px;background:#e2e8f0}.progress-fill{height:100%;width:0;background:#2563eb;transition:width .2s ease}.progress-label{min-width:82px;color:#64748b;font-size:.88rem;font-weight:700;text-align:right}
+    .quiz{padding:1rem 0 4rem}.category-block{margin-top:2.3rem}.category-head{display:flex;align-items:end;justify-content:space-between;gap:1rem;margin-bottom:1rem}.category-head h2{color:#102a43;font-size:clamp(1.45rem,3vw,1.85rem);letter-spacing:-.03em}.category-head span{color:#64748b;font-size:.88rem;font-weight:700}
+    .question{margin:0 0 1rem;padding:1.35rem;border:1px solid #e2e8f0;border-radius:16px;background:#fff;box-shadow:0 6px 20px rgba(15,23,42,.04)}.question.unanswered{border-color:#f59e0b;box-shadow:0 0 0 3px rgba(245,158,11,.12)}.q-number{display:inline-flex;align-items:center;justify-content:center;width:30px;height:30px;margin-right:.45rem;border-radius:9px;background:#eff6ff;color:#1d4ed8;font-size:.86rem;font-weight:800}.question h3{display:inline;color:#102a43;font-size:1.03rem;line-height:1.5}.math{font-family:"Cambria Math","Times New Roman",serif;font-size:1.08em}.answers{display:grid;gap:.55rem;margin-top:1rem}.answer{display:flex;align-items:flex-start;gap:.75rem;padding:.78rem .9rem;border:1px solid #e2e8f0;border-radius:11px;background:#f8fafc;cursor:pointer;transition:border .15s ease,background .15s ease}.answer:hover{border-color:#bfdbfe;background:#eff6ff}.answer:has(input:checked){border-color:#2563eb;background:#eff6ff}.answer input{margin-top:.28rem;accent-color:#2563eb}.answer span{color:#334155}.answer.skip span{color:#64748b;font-style:italic}
+    .submit-zone{margin-top:2.5rem;padding:1.6rem;border-radius:18px;background:#102a43;color:#fff}.submit-zone h2{color:#fff;font-size:1.5rem}.submit-zone p{margin:.4rem 0 1.1rem;color:rgba(255,255,255,.78)}.submit-btn{min-height:52px;padding:.85rem 1.25rem;border:0;border-radius:10px;background:#fff;color:#102a43;font:inherit;font-weight:800;cursor:pointer}.submit-btn:hover{background:#eff6ff}.form-error{display:none;margin-top:.8rem;color:#fde68a;font-weight:700}.form-error.show{display:block}
+    .results{display:none;padding:4rem 0}.results.show{display:block}.result-hero{padding:2rem;border:1px solid #bfdbfe;border-radius:20px;background:#fff;box-shadow:0 12px 34px rgba(15,23,42,.08)}.score-line{display:flex;align-items:center;gap:1.3rem;flex-wrap:wrap}.score-circle{display:grid;place-items:center;width:118px;height:118px;border-radius:50%;background:#102a43;color:#fff}.score-circle strong{display:block;font-size:2rem;line-height:1}.score-circle span{font-size:.8rem;color:rgba(255,255,255,.75)}.result-copy{flex:1;min-width:240px}.result-copy h2{color:#102a43;font-size:clamp(1.65rem,4vw,2.25rem);letter-spacing:-.04em}.result-copy p{margin-top:.5rem;color:#64748b}
+    .breakdown{display:grid;gap:.85rem;margin-top:1.5rem}.breakdown-row{display:grid;grid-template-columns:210px 1fr 56px;gap:.8rem;align-items:center}.breakdown-row strong{color:#334155;font-size:.9rem}.bar{height:10px;overflow:hidden;border-radius:999px;background:#e2e8f0}.bar > span{display:block;height:100%;background:#2563eb}.breakdown-score{text-align:right;color:#64748b;font-size:.88rem;font-weight:800}
+    .diagnosis{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-top:1.4rem}.diagnosis-card{padding:1.25rem;border:1px solid #e2e8f0;border-radius:15px;background:#f8fafc}.diagnosis-card h3{margin-bottom:.4rem;color:#102a43}.diagnosis-card p{color:#64748b}.next-step{margin-top:1.4rem;padding:1.5rem;border-radius:16px;background:#eff6ff;border:1px solid #bfdbfe}.next-step h3{color:#102a43}.next-step p{margin:.4rem 0 1rem;color:#64748b}.result-actions{display:flex;gap:.7rem;flex-wrap:wrap}.result-btn{display:inline-flex;align-items:center;justify-content:center;min-height:48px;padding:.8rem 1rem;border-radius:9px;background:#2563eb;color:#fff;text-decoration:none;font-weight:800}.result-btn:hover{background:#1d4ed8;color:#fff}.result-btn.secondary{border:1px solid #bfdbfe;background:#fff;color:#102a43}.result-btn.secondary:hover{background:#f8fafc;color:#102a43}.reset-btn{border:0;background:transparent;color:#2563eb;font:inherit;font-weight:800;cursor:pointer;padding:.8rem .3rem}
+    .disclaimer{margin-top:1rem;color:#64748b;font-size:.84rem}.back-link{padding:0 0 4rem;text-align:center}.back-link a{font-weight:700;text-decoration:none}
+    footer{padding:2rem 1rem;text-align:center;color:#64748b}
+    @media(max-width:700px){.intro-card{grid-template-columns:1fr}.privacy-note{text-align:left}.breakdown-row{grid-template-columns:1fr 52px}.breakdown-row .bar{grid-column:1/-1;grid-row:2}.diagnosis{grid-template-columns:1fr}.progress-shell{top:4.7rem}.test-hero{padding-top:4.5rem}}
+  </style>
+</head>
+<body>
+  <header class="site-header"><nav class="nav" aria-label="Hlavní navigace"><a href="../" class="logo">Vojtěch Steidl</a><ul class="nav-links"><li><a href="../doucovani-matematiky/">Matematika</a></li><li><a href="../skupinove-doucovani-matematiky/">Skupinové lekce</a></li><li><a href="../priprava-na-maturitu-z-matematiky/">Maturita</a></li><li><a href="../doucovani-fyziky/">Fyzika</a></li><li><a href="../#kontakt" class="nav-contact">Kontakt</a></li></ul></nav></header>
+  <main>
+    <section class="test-hero"><div class="test-wrap"><div class="crumbs"><a href="../">Domů</a> / <a href="../priprava-na-maturitu-z-matematiky/">Maturita</a> / Diagnostický test</div><h1>Za 15 úloh zjisti, kde u maturity z matematiky ztrácíš body</h1><p>Krátká diagnostika základních maturitních oblastí. Po dokončení dostaneš okamžitý rozpad výsledku podle témat a doporučení, na co se zaměřit jako první.</p><div class="hero-meta"><span class="hero-pill">15 úloh</span><span class="hero-pill">5 oblastí</span><span class="hero-pill">cca 12–15 minut</span><span class="hero-pill">okamžitý výsledek</span></div></div></section>
+
+    <section class="intro"><div class="test-wrap"><div class="intro-card"><div><strong>Jak test vyplnit</strong><p>Počítej bez nápovědy. Když nevíš, zvol „Nevím / přeskočit“ — i to je pro diagnostiku užitečná informace.</p></div><div class="privacy-note">Nic se neodesílá na server.<br>Výsledek se počítá jen v prohlížeči.</div></div></div></section>
+
+    <div class="progress-shell"><div class="test-wrap"><div class="progress-row"><div class="progress-track" aria-hidden="true"><div class="progress-fill" id="progressFill"></div></div><div class="progress-label" id="progressLabel">0 / 15</div></div></div></div>
+
+    <form class="quiz" id="diagnosticForm">
+      <div class="test-wrap">
+        <section class="category-block" data-category-section="algebra"><div class="category-head"><h2>1. Algebra a rovnice</h2><span>3 úlohy</span></div>
+          <article class="question" data-category="algebra" data-correct="b"><span class="q-number">1</span><h3>Urči hodnotu výrazu <span class="math">(2⁵ · 4²) / 8²</span>.</h3><div class="answers"><label class="answer"><input type="radio" name="q1" value="a"><span>4</span></label><label class="answer"><input type="radio" name="q1" value="b"><span>8</span></label><label class="answer"><input type="radio" name="q1" value="c"><span>16</span></label><label class="answer"><input type="radio" name="q1" value="d"><span>32</span></label><label class="answer skip"><input type="radio" name="q1" value="skip"><span>Nevím / přeskočit</span></label></div></article>
+          <article class="question" data-category="algebra" data-correct="d"><span class="q-number">2</span><h3>Vyřeš rovnici <span class="math">(2x − 3)/5 − (x + 1)/2 = 1</span>.</h3><div class="answers"><label class="answer"><input type="radio" name="q2" value="a"><span>x = −11</span></label><label class="answer"><input type="radio" name="q2" value="b"><span>x = −7</span></label><label class="answer"><input type="radio" name="q2" value="c"><span>x = 11</span></label><label class="answer"><input type="radio" name="q2" value="d"><span>x = −21</span></label><label class="answer skip"><input type="radio" name="q2" value="skip"><span>Nevím / přeskočit</span></label></div></article>
+          <article class="question" data-category="algebra" data-correct="c"><span class="q-number">3</span><h3>Vyřeš nerovnici <span class="math">((x − 4)(x + 2))/(x − 1) &gt; 0</span>.</h3><div class="answers"><label class="answer"><input type="radio" name="q3" value="a"><span>(−∞; −2) ∪ (1; 4)</span></label><label class="answer"><input type="radio" name="q3" value="b"><span>(−2; 4)</span></label><label class="answer"><input type="radio" name="q3" value="c"><span>(−2; 1) ∪ (4; ∞)</span></label><label class="answer"><input type="radio" name="q3" value="d"><span>⟨−2; 1⟩ ∪ ⟨4; ∞)</span></label><label class="answer skip"><input type="radio" name="q3" value="skip"><span>Nevím / přeskočit</span></label></div></article>
+        </section>
+
+        <section class="category-block" data-category-section="functions"><div class="category-head"><h2>2. Funkce</h2><span>3 úlohy</span></div>
+          <article class="question" data-category="functions" data-correct="a"><span class="q-number">4</span><h3>Lineární funkce prochází body <span class="math">A[1; 3]</span> a <span class="math">B[4; 9]</span>. Který předpis jí odpovídá?</h3><div class="answers"><label class="answer"><input type="radio" name="q4" value="a"><span>f(x) = 2x + 1</span></label><label class="answer"><input type="radio" name="q4" value="b"><span>f(x) = 3x</span></label><label class="answer"><input type="radio" name="q4" value="c"><span>f(x) = 2x − 1</span></label><label class="answer"><input type="radio" name="q4" value="d"><span>f(x) = x + 2</span></label><label class="answer skip"><input type="radio" name="q4" value="skip"><span>Nevím / přeskočit</span></label></div></article>
+          <article class="question" data-category="functions" data-correct="c"><span class="q-number">5</span><h3>Jakou nejmenší hodnotu nabývá funkce <span class="math">f(x) = x² − 6x + 5</span>?</h3><div class="answers"><label class="answer"><input type="radio" name="q5" value="a"><span>−9</span></label><label class="answer"><input type="radio" name="q5" value="b"><span>−5</span></label><label class="answer"><input type="radio" name="q5" value="c"><span>−4</span></label><label class="answer"><input type="radio" name="q5" value="d"><span>4</span></label><label class="answer skip"><input type="radio" name="q5" value="skip"><span>Nevím / přeskočit</span></label></div></article>
+          <article class="question" data-category="functions" data-correct="b"><span class="q-number">6</span><h3>Vyřeš rovnici <span class="math">3^(2x − 1) = 27</span>.</h3><div class="answers"><label class="answer"><input type="radio" name="q6" value="a"><span>x = 1</span></label><label class="answer"><input type="radio" name="q6" value="b"><span>x = 2</span></label><label class="answer"><input type="radio" name="q6" value="c"><span>x = 3</span></label><label class="answer"><input type="radio" name="q6" value="d"><span>x = 4</span></label><label class="answer skip"><input type="radio" name="q6" value="skip"><span>Nevím / přeskočit</span></label></div></article>
+        </section>
+
+        <section class="category-block" data-category-section="geometry"><div class="category-head"><h2>3. Geometrie a trigonometrie</h2><span>3 úlohy</span></div>
+          <article class="question" data-category="geometry" data-correct="d"><span class="q-number">7</span><h3>Pravoúhlý trojúhelník má odvěsny délky 6 cm a 8 cm. Jak dlouhá je přepona?</h3><div class="answers"><label class="answer"><input type="radio" name="q7" value="a"><span>7 cm</span></label><label class="answer"><input type="radio" name="q7" value="b"><span>9 cm</span></label><label class="answer"><input type="radio" name="q7" value="c"><span>12 cm</span></label><label class="answer"><input type="radio" name="q7" value="d"><span>10 cm</span></label><label class="answer skip"><input type="radio" name="q7" value="skip"><span>Nevím / přeskočit</span></label></div></article>
+          <article class="question" data-category="geometry" data-correct="b"><span class="q-number">8</span><h3>Mezikruží má vnější poloměr 5 cm a vnitřní poloměr 3 cm. Jaký je jeho obsah?</h3><div class="answers"><label class="answer"><input type="radio" name="q8" value="a"><span>8π cm²</span></label><label class="answer"><input type="radio" name="q8" value="b"><span>16π cm²</span></label><label class="answer"><input type="radio" name="q8" value="c"><span>25π cm²</span></label><label class="answer"><input type="radio" name="q8" value="d"><span>34π cm²</span></label><label class="answer skip"><input type="radio" name="q8" value="skip"><span>Nevím / přeskočit</span></label></div></article>
+          <article class="question" data-category="geometry" data-correct="c"><span class="q-number">9</span><h3>Žebřík dlouhý 5 m je opřený o zeď. Jeho dolní konec je 3 m od zdi. Jaký je <span class="math">sin α</span>, kde α je úhel mezi žebříkem a zemí?</h3><div class="answers"><label class="answer"><input type="radio" name="q9" value="a"><span>3/5</span></label><label class="answer"><input type="radio" name="q9" value="b"><span>3/4</span></label><label class="answer"><input type="radio" name="q9" value="c"><span>4/5</span></label><label class="answer"><input type="radio" name="q9" value="d"><span>5/4</span></label><label class="answer skip"><input type="radio" name="q9" value="skip"><span>Nevím / přeskočit</span></label></div></article>
+        </section>
+
+        <section class="category-block" data-category-section="sequences"><div class="category-head"><h2>4. Posloupnosti a finanční matematika</h2><span>3 úlohy</span></div>
+          <article class="question" data-category="sequences" data-correct="d"><span class="q-number">10</span><h3>V aritmetické posloupnosti platí <span class="math">a₃ = 11</span> a <span class="math">a₇ = 27</span>. Urči <span class="math">a₁₀</span>.</h3><div class="answers"><label class="answer"><input type="radio" name="q10" value="a"><span>31</span></label><label class="answer"><input type="radio" name="q10" value="b"><span>35</span></label><label class="answer"><input type="radio" name="q10" value="c"><span>37</span></label><label class="answer"><input type="radio" name="q10" value="d"><span>39</span></label><label class="answer skip"><input type="radio" name="q10" value="skip"><span>Nevím / přeskočit</span></label></div></article>
+          <article class="question" data-category="sequences" data-correct="c"><span class="q-number">11</span><h3>Geometrická posloupnost má <span class="math">a₁ = 3</span> a kvocient <span class="math">q = 2</span>. Jaký je součet prvních pěti členů?</h3><div class="answers"><label class="answer"><input type="radio" name="q11" value="a"><span>48</span></label><label class="answer"><input type="radio" name="q11" value="b"><span>63</span></label><label class="answer"><input type="radio" name="q11" value="c"><span>93</span></label><label class="answer"><input type="radio" name="q11" value="d"><span>96</span></label><label class="answer skip"><input type="radio" name="q11" value="skip"><span>Nevím / přeskočit</span></label></div></article>
+          <article class="question" data-category="sequences" data-correct="a"><span class="q-number">12</span><h3>Na účet uložíš 20 000 Kč s roční úrokovou sazbou 5 %. Úrok se jednou ročně připíše a dále úročí. Kolik bude na účtu po 2 letech? Neuvažuj daň ani poplatky.</h3><div class="answers"><label class="answer"><input type="radio" name="q12" value="a"><span>22 050 Kč</span></label><label class="answer"><input type="radio" name="q12" value="b"><span>22 000 Kč</span></label><label class="answer"><input type="radio" name="q12" value="c"><span>21 000 Kč</span></label><label class="answer"><input type="radio" name="q12" value="d"><span>24 200 Kč</span></label><label class="answer skip"><input type="radio" name="q12" value="skip"><span>Nevím / přeskočit</span></label></div></article>
+        </section>
+
+        <section class="category-block" data-category-section="data"><div class="category-head"><h2>5. Data, kombinatorika a pravděpodobnost</h2><span>3 úlohy</span></div>
+          <article class="question" data-category="data" data-correct="b"><span class="q-number">13</span><h3>Urči medián datové řady: <span class="math">3, 5, 5, 8, 10, 12</span>.</h3><div class="answers"><label class="answer"><input type="radio" name="q13" value="a"><span>5</span></label><label class="answer"><input type="radio" name="q13" value="b"><span>6,5</span></label><label class="answer"><input type="radio" name="q13" value="c"><span>7</span></label><label class="answer"><input type="radio" name="q13" value="d"><span>7,5</span></label><label class="answer skip"><input type="radio" name="q13" value="skip"><span>Nevím / přeskočit</span></label></div></article>
+          <article class="question" data-category="data" data-correct="c"><span class="q-number">14</span><h3>Dvakrát hodíš spravedlivou mincí. Jaká je pravděpodobnost, že alespoň jednou padne panna?</h3><div class="answers"><label class="answer"><input type="radio" name="q14" value="a"><span>1/4</span></label><label class="answer"><input type="radio" name="q14" value="b"><span>1/2</span></label><label class="answer"><input type="radio" name="q14" value="c"><span>3/4</span></label><label class="answer"><input type="radio" name="q14" value="d"><span>1</span></label><label class="answer skip"><input type="radio" name="q14" value="skip"><span>Nevím / přeskočit</span></label></div></article>
+          <article class="question" data-category="data" data-correct="d"><span class="q-number">15</span><h3>Ze 6 studentů se náhodně vybírají 2 zástupci. Kolik různých dvojic lze vytvořit?</h3><div class="answers"><label class="answer"><input type="radio" name="q15" value="a"><span>8</span></label><label class="answer"><input type="radio" name="q15" value="b"><span>10</span></label><label class="answer"><input type="radio" name="q15" value="c"><span>12</span></label><label class="answer"><input type="radio" name="q15" value="d"><span>15</span></label><label class="answer skip"><input type="radio" name="q15" value="skip"><span>Nevím / přeskočit</span></label></div></article>
+        </section>
+
+        <section class="submit-zone"><h2>Hotovo?</h2><p>Vyhodnocení ukáže celkové skóre i výkon v jednotlivých oblastech. Nejde o oficiální maturitní bodový výsledek, ale o rychlou diagnostiku priorit.</p><button class="submit-btn" type="submit">Vyhodnotit test</button><div class="form-error" id="formError">U každé úlohy zvol odpověď nebo „Nevím / přeskočit“.</div></section>
+      </div>
+    </form>
+
+    <section class="results" id="results" aria-live="polite"><div class="test-wrap"><div class="result-hero"><div class="score-line"><div class="score-circle"><div><strong id="scoreValue">0/15</strong><span id="scorePercent">0 %</span></div></div><div class="result-copy"><h2 id="resultTitle">Výsledek diagnostiky</h2><p id="resultText"></p></div></div><div class="breakdown" id="breakdown"></div><div class="diagnosis"><div class="diagnosis-card"><h3>Nejdřív řeš</h3><p id="weakText"></p></div><div class="diagnosis-card"><h3>Na čem můžeš stavět</h3><p id="strongText"></p></div></div><div class="next-step"><h3 id="nextTitle">Co dál</h3><p id="nextText"></p><div class="result-actions"><a class="result-btn" href="../#kontakt">Domluvit úvodní konzultaci</a><a class="result-btn secondary" href="../priprava-na-maturitu-z-matematiky/">Jak příprava funguje</a><button class="reset-btn" type="button" id="resetButton">Vyplnit znovu</button></div></div><p class="disclaimer">Tento krátký test není oficiální didaktický test CERMAT a jeho procenta nelze přímo převádět na maturitní hodnocení. Slouží k orientačnímu určení slabých témat.</p></div></div></section>
+
+    <div class="back-link"><a href="../priprava-na-maturitu-z-matematiky/">← Zpět na přípravu k maturitě z matematiky</a></div>
+  </main>
+  <footer>© 2026 Vojtěch Steidl · Diagnostický test k maturitě z matematiky</footer>
+
+  <script>
+    (() => {
+      const form = document.getElementById('diagnosticForm');
+      const questions = [...form.querySelectorAll('.question')];
+      const progressFill = document.getElementById('progressFill');
+      const progressLabel = document.getElementById('progressLabel');
+      const formError = document.getElementById('formError');
+      const results = document.getElementById('results');
+      const labels = {
+        algebra: 'Algebra a rovnice',
+        functions: 'Funkce',
+        geometry: 'Geometrie a trigonometrie',
+        sequences: 'Posloupnosti a finance',
+        data: 'Data a pravděpodobnost'
+      };
+
+      function answeredCount() {
+        return questions.filter(q => q.querySelector('input:checked')).length;
+      }
+
+      function updateProgress() {
+        const answered = answeredCount();
+        progressFill.style.width = `${(answered / questions.length) * 100}%`;
+        progressLabel.textContent = `${answered} / ${questions.length}`;
+      }
+
+      form.addEventListener('change', (event) => {
+        const question = event.target.closest('.question');
+        if (question) question.classList.remove('unanswered');
+        formError.classList.remove('show');
+        updateProgress();
+      });
+
+      form.addEventListener('submit', (event) => {
+        event.preventDefault();
+        const unanswered = questions.filter(q => !q.querySelector('input:checked'));
+        questions.forEach(q => q.classList.remove('unanswered'));
+        if (unanswered.length) {
+          unanswered.forEach(q => q.classList.add('unanswered'));
+          formError.classList.add('show');
+          unanswered[0].scrollIntoView({behavior:'smooth', block:'center'});
+          return;
+        }
+
+        const categoryScores = {};
+        Object.keys(labels).forEach(key => categoryScores[key] = {correct:0,total:0,skipped:0});
+        let totalCorrect = 0;
+        let totalSkipped = 0;
+
+        questions.forEach(question => {
+          const category = question.dataset.category;
+          const selected = question.querySelector('input:checked').value;
+          const correct = question.dataset.correct;
+          categoryScores[category].total += 1;
+          if (selected === 'skip') {
+            categoryScores[category].skipped += 1;
+            totalSkipped += 1;
+          }
+          if (selected === correct) {
+            categoryScores[category].correct += 1;
+            totalCorrect += 1;
+          }
+        });
+
+        const percent = Math.round((totalCorrect / questions.length) * 100);
+        document.getElementById('scoreValue').textContent = `${totalCorrect}/${questions.length}`;
+        document.getElementById('scorePercent').textContent = `${percent} %`;
+
+        let title, text;
+        if (totalCorrect >= 13) {
+          title = 'Velmi dobrý základ';
+          text = 'Základní maturitní aparát máš stabilní. Největší smysl teď dává přejít na celé testy, časovou strategii a těžší úlohy.';
+        } else if (totalCorrect >= 10) {
+          title = 'Dobrý základ, ale jsou tam mezery';
+          text = 'Na řadě témat můžeš stavět, ale několik oblastí ti bude v plném testu zbytečně brát body. Vyplatí se je cíleně uzavřít.';
+        } else if (totalCorrect >= 7) {
+          title = 'Některé body jsou zatím příliš drahé';
+          text = 'Základ existuje, ale výkon je nerovnoměrný. Nejdřív bych stabilizoval nejlevnější typy úloh a až potom přidával složitější testové strategie.';
+        } else {
+          title = 'Začni systematicky od základních bodů';
+          text = 'Největší efekt teď nepřinese řešit celé testy naslepo. Potřebuješ nejprve stabilizovat několik základních oblastí a vytvořit si jisté body.';
+        }
+        if (totalSkipped >= 4) text += ` Přeskočil/a jsi ${totalSkipped} úlohy, takže součástí přípravy by měla být i rychlá identifikace postupu.`;
+        document.getElementById('resultTitle').textContent = title;
+        document.getElementById('resultText').textContent = text;
+
+        const breakdown = document.getElementById('breakdown');
+        breakdown.innerHTML = '';
+        Object.entries(categoryScores).forEach(([key, value]) => {
+          const pct = Math.round((value.correct / value.total) * 100);
+          const row = document.createElement('div');
+          row.className = 'breakdown-row';
+          row.innerHTML = `<strong>${labels[key]}</strong><div class="bar"><span style="width:${pct}%"></span></div><div class="breakdown-score">${value.correct}/${value.total}</div>`;
+          breakdown.appendChild(row);
+        });
+
+        const ranked = Object.entries(categoryScores).sort((a,b) => a[1].correct - b[1].correct);
+        const weakestScore = ranked[0][1].correct;
+        const strongestScore = ranked[ranked.length - 1][1].correct;
+        const weakest = ranked.filter(([,v]) => v.correct === weakestScore).map(([k]) => labels[k]);
+        const strongest = ranked.filter(([,v]) => v.correct === strongestScore).map(([k]) => labels[k]);
+        document.getElementById('weakText').textContent = `${weakest.join(' + ')}. Tady má cílené procvičování nejvyšší prioritu.`;
+        document.getElementById('strongText').textContent = `${strongest.join(' + ')}. Tady už máš relativně stabilní základ.`;
+
+        let nextText;
+        if (totalCorrect >= 13) nextText = 'Zkus celý oficiální didaktický test na čas a zapisuj si typ každé chyby. Diagnostiku použij jako mapu toho, co při rozboru hlídat.';
+        else if (totalCorrect >= 10) nextText = `Začni oblastí „${weakest[0]}“ a ověř ji na 8–12 nových úlohách. Potom teprve přejdi na celý test.`;
+        else if (totalCorrect >= 7) nextText = `První blok přípravy bych postavil na „${weakest[0]}“ a dalších základních jednobodových typech. Cílem je nejdřív zvýšit počet jistých bodů.`;
+        else nextText = `Začni od „${weakest[0]}“ a základního algebraického aparátu. Celý maturitní test zatím používej spíš pro diagnostiku než jako hlavní způsob tréninku.`;
+        document.getElementById('nextText').textContent = nextText;
+
+        results.classList.add('show');
+        results.scrollIntoView({behavior:'smooth', block:'start'});
+      });
+
+      document.getElementById('resetButton').addEventListener('click', () => {
+        form.reset();
+        questions.forEach(q => q.classList.remove('unanswered'));
+        results.classList.remove('show');
+        formError.classList.remove('show');
+        updateProgress();
+        window.scrollTo({top:0, behavior:'smooth'});
+      });
+
+      updateProgress();
+    })();
+  </script>
+</body>
+</html>

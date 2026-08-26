@@ -38,6 +38,7 @@ PUBLIC_DIRECTORIES = (
     "doucovani-matematiky",
     "skupinove-doucovani-matematiky",
     "priprava-na-maturitu-z-matematiky",
+    "test-maturita-matematika",
     "pro-skoly",
     "interactive-notes",
     "materialy-zdarma",
@@ -188,9 +189,17 @@ def assert_public_artifact() -> None:
     if not group_page.exists():
         raise RuntimeError("Group tutoring landing page is missing from public artifact")
 
+    diagnostic_page = DIST / "test-maturita-matematika" / "index.html"
+    if not diagnostic_page.exists():
+        raise RuntimeError("Maturita diagnostic test is missing from public artifact")
+
     homepage = (DIST / "index.html").read_text(encoding="utf-8")
     if "/skupinove-doucovani-matematiky/" not in homepage:
         raise RuntimeError("Group tutoring link is missing from deployed homepage")
+
+    maturita_page = (DIST / "priprava-na-maturitu-z-matematiky" / "index.html").read_text(encoding="utf-8")
+    if "../test-maturita-matematika/" not in maturita_page:
+        raise RuntimeError("Diagnostic test link is missing from maturita landing page")
 
 
 if DIST.exists():
