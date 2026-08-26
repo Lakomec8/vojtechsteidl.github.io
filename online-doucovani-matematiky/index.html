@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Online doučování matematiky pro ZŠ, SŠ a VŠ | Vojtěch Steidl</title>
+  <meta name="description" content="Online doučování matematiky pro ZŠ, SŠ a VŠ. Individuální výuka, přijímačky, maturita i VŠ matematika. Diagnostika zdarma, vlastní materiály a studentská zóna.">
+  <meta name="robots" content="index,follow">
+  <link rel="canonical" href="https://vojtechsteidl.eu/online-doucovani-matematiky/">
+  <meta property="og:title" content="Online doučování matematiky | Vojtěch Steidl">
+  <meta property="og:description" content="Online výuka matematiky s diagnostikou slabých míst, vlastními materiály a návazností mezi hodinami.">
+  <meta property="og:url" content="https://vojtechsteidl.eu/online-doucovani-matematiky/">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="https://vojtechsteidl.eu/foto.jpg">
+  <link rel="stylesheet" href="../style.css">
+  <style>
+    .online-hero{padding:6.2rem 1.25rem 5.3rem;background:linear-gradient(135deg,#102a43 0%,#173f6c 58%,#1d4ed8 150%);color:#fff}
+    .online-wrap{width:min(1080px,calc(100% - 2rem));margin:0 auto}
+    .crumbs{font-size:.9rem;color:rgba(255,255,255,.72)}.crumbs a{color:#fff}
+    .online-hero h1{max-width:890px;margin:.8rem 0 1rem;font-size:clamp(2.45rem,6vw,4.55rem);line-height:1.05;letter-spacing:-.055em}
+    .online-hero>div>p{max-width:790px;color:rgba(255,255,255,.9);font-size:1.1rem}
+    .hero-pills{display:flex;gap:.55rem;flex-wrap:wrap;margin-top:1.25rem}.hero-pill{padding:.42rem .75rem;border:1px solid rgba(255,255,255,.22);border-radius:999px;background:rgba(255,255,255,.1);font-size:.82rem;font-weight:700}
+    .actions{display:flex;gap:.8rem;flex-wrap:wrap;margin-top:1.6rem}.btn{display:inline-flex;align-items:center;justify-content:center;min-height:50px;padding:.85rem 1.15rem;border-radius:10px;background:#fff;color:#102a43;font-weight:800;text-decoration:none}.btn:hover{color:#102a43;background:#eff6ff}.btn.secondary{border:1px solid rgba(255,255,255,.35);background:transparent;color:#fff}.btn.secondary:hover{background:rgba(255,255,255,.1);color:#fff}
+    .online-section{padding:4.7rem 0}.online-section.alt{background:#fff}.section-title{max-width:790px;margin-bottom:1.7rem}.section-title h2{color:#102a43;font-size:clamp(1.9rem,4vw,2.8rem);letter-spacing:-.04em;line-height:1.1}.section-title p{margin-top:.7rem;color:#64748b}
+    .grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem}.card{padding:1.55rem;border:1px solid #e2e8f0;border-radius:16px;background:#fff;box-shadow:0 8px 24px rgba(15,23,42,.06)}.card h3{margin-bottom:.55rem;color:#102a43}.card p{color:#64748b}.card a{display:inline-block;margin-top:.8rem;font-weight:800;text-decoration:none}
+    .flow{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;counter-reset:flow}.flow-item{padding:1.4rem;border:1px solid #dbe6f2;border-radius:15px;background:#f8fafc}.flow-item:before{counter-increment:flow;content:counter(flow);display:grid;width:34px;height:34px;margin-bottom:.8rem;place-items:center;border-radius:50%;background:#2563eb;color:#fff;font-weight:800}.flow-item strong{color:#102a43}.flow-item p{margin-top:.4rem;color:#64748b;font-size:.93rem}
+    .diagnostic-box{display:grid;grid-template-columns:1.1fr .9fr;gap:2rem;align-items:center;padding:2.35rem;border:1px solid #bfdbfe;border-radius:22px;background:linear-gradient(135deg,#eff6ff,#fff);box-shadow:0 14px 36px rgba(15,23,42,.07)}.diagnostic-box h2{margin:.35rem 0 .7rem;color:#102a43;font-size:clamp(1.9rem,4vw,2.7rem);letter-spacing:-.04em}.diagnostic-box p{color:#64748b}.diagnostic-score{padding:1.5rem;border-radius:18px;background:#102a43;color:#fff}.diagnostic-score span{display:block;color:#93c5fd;font-size:.78rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase}.diagnostic-score strong{display:block;margin:.35rem 0;font-size:1.7rem;line-height:1.15}.diagnostic-score p{color:rgba(255,255,255,.74);font-size:.9rem}.blue-link{display:inline-flex;margin-top:1.2rem;padding:.82rem 1.05rem;border-radius:9px;background:#2563eb;color:#fff;text-decoration:none;font-weight:800}.blue-link:hover{background:#1d4ed8;color:#fff}
+    .price-box{display:grid;grid-template-columns:1fr auto;gap:2rem;align-items:center;padding:2rem;border:1px solid #e2e8f0;border-radius:20px;background:#fff;box-shadow:0 12px 30px rgba(15,23,42,.07)}.price-copy h2{color:#102a43}.price-copy p{margin-top:.6rem;color:#64748b}.price-number{text-align:right}.price-number strong{display:block;color:#102a43;font-size:2rem;letter-spacing:-.04em}.price-number span{color:#64748b;font-size:.9rem}
+    .faq{display:grid;gap:.75rem}.faq details{border:1px solid #e2e8f0;border-radius:13px;background:#fff;padding:0 1.15rem}.faq summary{cursor:pointer;padding:1rem 0;color:#102a43;font-weight:800}.faq details p{padding:0 0 1rem;color:#64748b}
+    .cta-band{padding:3rem;border-radius:22px;background:#102a43;color:#fff}.cta-band h2{margin-bottom:.65rem;color:#fff;font-size:clamp(1.8rem,4vw,2.6rem);letter-spacing:-.035em}.cta-band p{max-width:760px;color:rgba(255,255,255,.78)}
+    footer{padding:2rem 1rem;text-align:center;color:#64748b}
+    @media(max-width:900px){.grid3{grid-template-columns:1fr 1fr}.flow{grid-template-columns:1fr 1fr}.diagnostic-box{grid-template-columns:1fr}.price-box{grid-template-columns:1fr}.price-number{text-align:left}}
+    @media(max-width:620px){.grid3,.flow{grid-template-columns:1fr}.online-hero{padding-top:4.6rem}.diagnostic-box,.cta-band{padding:1.6rem}}
+  </style>
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"Service",
+    "name":"Online doučování matematiky",
+    "description":"Individuální online doučování matematiky pro ZŠ, SŠ a VŠ včetně přípravy na přijímačky a maturitu.",
+    "provider":{"@type":"Person","name":"Vojtěch Steidl","url":"https://vojtechsteidl.eu/"},
+    "areaServed":{"@type":"Country","name":"Česká republika"},
+    "serviceType":"Online doučování matematiky",
+    "url":"https://vojtechsteidl.eu/online-doucovani-matematiky/",
+    "offers":{"@type":"Offer","price":"450","priceCurrency":"CZK","description":"Individuální online lekce, 60 minut"}
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"FAQPage",
+    "mainEntity":[
+      {"@type":"Question","name":"Jak probíhá online doučování matematiky?","acceptedAnswer":{"@type":"Answer","text":"Hodina probíhá online se sdílenou obrazovkou a průběžným zápisem postupu. Student řeší příklady aktivně a po hodině může navázat na vlastní materiály a studentskou zónu."}},
+      {"@type":"Question","name":"Pro jaké úrovně je online doučování vhodné?","acceptedAnswer":{"@type":"Answer","text":"Pro žáky ZŠ, studenty SŠ i VŠ. Výuka může být průběžná nebo cílená na přijímačky, maturitu či konkrétní vysokoškolský předmět."}},
+      {"@type":"Question","name":"Kolik stojí online doučování matematiky?","acceptedAnswer":{"@type":"Answer","text":"Individuální lekce stojí 450 Kč za 60 minut. Úvodní konzultace je zdarma."}},
+      {"@type":"Question","name":"Potřebuji grafický tablet?","acceptedAnswer":{"@type":"Answer","text":"Ne. Stačí běžný počítač nebo notebook, stabilní internet a možnost videohovoru. Tablet může být výhodou, ale není podmínkou."}}
+    ]
+  }
+  </script>
+</head>
+<body>
+  <header class="site-header">
+    <nav class="nav" aria-label="Hlavní navigace">
+      <a href="../" class="logo">Vojtěch Steidl</a>
+      <ul class="nav-links">
+        <li><a href="../doucovani-matematiky/">Matematika</a></li>
+        <li><a href="../diagnostika/">Diagnostika</a></li>
+        <li><a href="../priprava-na-maturitu-z-matematiky/">Maturita</a></li>
+        <li><a href="../skupinove-doucovani-matematiky/">Skupinové lekce</a></li>
+        <li><a href="../#kontakt" class="nav-contact">Kontakt</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+    <section class="online-hero">
+      <div class="online-wrap">
+        <div class="crumbs"><a href="../">Domů</a> / Online doučování matematiky</div>
+        <h1>Online doučování matematiky pro ZŠ, SŠ a VŠ</h1>
+        <p>Individuální online výuka zaměřená na pochopení postupu, odstranění konkrétních mezer a samostatné řešení. Před první hodinou si můžeš zdarma projít krátkou diagnostiku a zjistit, která témata mají nejvyšší prioritu.</p>
+        <div class="hero-pills"><span class="hero-pill">450 Kč / 60 min</span><span class="hero-pill">Úvodní konzultace zdarma</span><span class="hero-pill">ZŠ · SŠ · VŠ</span><span class="hero-pill">Online odkudkoliv</span></div>
+        <div class="actions"><a class="btn" href="../diagnostika/">Spustit diagnostiku zdarma</a><a class="btn secondary" href="../#kontakt">Domluvit online lekci</a></div>
+      </div>
+    </section>
+
+    <section class="online-section">
+      <div class="online-wrap">
+        <div class="section-title"><h2>S čím online doučování matematiky pomůže</h2><p>Online forma není jiný typ matematiky. Rozdíl je v organizaci hodiny: postup vidíme oba v reálném čase, můžeme rychle střídat vysvětlení a procvičení a materiály zůstávají dostupné i po lekci.</p></div>
+        <div class="grid3">
+          <article class="card"><h3>ZŠ a přijímačky na SŠ</h3><p>Početní operace, procenta, rovnice, slovní úlohy, geometrie a příprava na typové přijímací úlohy.</p><a href="../test-prijimacky-9-matematika/">Diagnostika přijímačky 9. třída →</a></article>
+          <article class="card"><h3>SŠ a maturita</h3><p>Funkce, rovnice, posloupnosti, geometrie, pravděpodobnost a strategie pro didaktický test.</p><a href="../test-maturita-matematika/">Diagnostika k maturitě →</a></article>
+          <article class="card"><h3>VŠ matematika</h3><p>Algebraický aparát, funkce, limity, derivace, integrály a lineární algebra podle konkrétního předmětu.</p><a href="../test-vs-matematika-1-rocnik/">Diagnostika VŠ 1. ročník →</a></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="online-section alt">
+      <div class="online-wrap">
+        <div class="section-title"><h2>Jak online hodina probíhá</h2><p>Hodina má jasný cyklus. Nejdřív zjistíme problém, potom ho vysvětlíme, student si postup sám vyzkouší a nakonec ověříme, že funguje i na nové úloze.</p></div>
+        <div class="flow">
+          <div class="flow-item"><strong>1. Cíl hodiny</strong><p>Na začátku vybereme konkrétní téma nebo typ úlohy, který je potřeba zvládnout.</p></div>
+          <div class="flow-item"><strong>2. Vysvětlení</strong><p>Postup rozložíme na malé kroky a společně projdeme první příklad.</p></div>
+          <div class="flow-item"><strong>3. Samostatné řešení</strong><p>Další variantu už řeší student. Já zasahuji jen tam, kde je skutečný problém.</p></div>
+          <div class="flow-item"><strong>4. Návaznost</strong><p>Po hodině zůstává zápis, materiál nebo další úlohy, na které navážeme příště.</p></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="online-section">
+      <div class="online-wrap">
+        <div class="diagnostic-box">
+          <div>
+            <p style="color:#2563eb;font-weight:800;text-transform:uppercase;font-size:.78rem;letter-spacing:.08em">Začni zdarma</p>
+            <h2>Nejdřív zjisti, kde přesně ztrácíš body</h2>
+            <p>Krátká diagnostika má 15 úloh a trvá přibližně 15 minut. Výsledek rozdělí výkon podle témat, označí konkrétní chyby a nabídne možnost poslat výsledek rovnou se žádostí o bezplatný 4týdenní plán přípravy.</p>
+            <a class="blue-link" href="../diagnostika/">Vybrat diagnostický test →</a>
+          </div>
+          <div class="diagnostic-score"><span>Výsledek není jen číslo</span><strong>Slabá témata → konkrétní plán</strong><p>Místo obecného „musím se zlepšit v matematice“ dostaneš seznam oblastí, které mají nejvyšší prioritu. Online lekce pak můžeme začít rovnou tam.</p></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="online-section alt">
+      <div class="online-wrap">
+        <div class="section-title"><h2>Co je součástí výuky</h2><p>Online lekce nekončí zavřením videohovoru. Cílem je udržet návaznost mezi jednotlivými hodinami.</p></div>
+        <div class="grid3">
+          <article class="card"><h3>Vlastní materiály</h3><p>Přehledné zápisy a procvičování zaměřené na to, co jsme skutečně řešili.</p></article>
+          <article class="card"><h3>Interaktivní zápisy</h3><p>U vybraných témat může student měnit parametry a sledovat, co se s funkcí nebo grafem děje.</p><a href="../interactive-notes/functions/">Ukázka interaktivních funkcí →</a></article>
+          <article class="card"><h3>Studentská zóna</h3><p>Materiály a návaznost mezi hodinami na jednom místě pro aktivní studenty.</p></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="online-section">
+      <div class="online-wrap">
+        <div class="price-box">
+          <div class="price-copy"><h2>Kolik stojí online doučování matematiky?</h2><p>Individuální lekce trvá 60 minut. První krátká konzultace je zdarma a slouží k tomu, abychom si ujasnili cíl, aktuální úroveň a vhodný další postup. Pro studenty se stejným cílem jsou dostupné také malé skupinové lekce.</p><div class="actions"><a class="blue-link" href="../#kontakt">Domluvit konzultaci zdarma</a><a class="blue-link" href="../skupinove-doucovani-matematiky/">Skupinové lekce</a></div></div>
+          <div class="price-number"><strong>450 Kč</strong><span>individuálně / 60 minut</span><strong style="margin-top:.8rem">300 Kč</strong><span>skupina / osoba / 60 minut</span></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="online-section alt">
+      <div class="online-wrap">
+        <div class="section-title"><h2>Časté otázky k online doučování</h2></div>
+        <div class="faq">
+          <details><summary>Je online doučování matematiky vhodné i pro mladší žáky?</summary><p>Ano, pokud žák zvládne pracovat u počítače a komunikovat při videohovoru. U mladších žáků je důležitější kratší struktura úkolů a častější kontrola, že skutečně počítají sami.</p></details>
+          <details><summary>Potřebuji grafický tablet nebo speciální vybavení?</summary><p>Ne. Stačí notebook nebo počítač, stabilní internet a běžný videohovor. Grafický tablet může být praktický, ale není podmínkou.</p></details>
+          <details><summary>Lze se online připravovat na přijímačky nebo maturitu?</summary><p>Ano. Pro přijímačky i maturitu je online forma vhodná, protože můžeme kombinovat cílené procvičování témat s celými testy a následným rozborem konkrétních chyb.</p></details>
+          <details><summary>Jak zjistím, kde mám největší mezery?</summary><p>Pro přijímačky 9. třídy, maturitu a typický základ VŠ 1. ročníku můžeš začít bezplatnou diagnostikou. Ta rozdělí výsledek podle oblastí a označí chyby.</p></details>
+          <details><summary>Je možné kombinovat online a osobní doučování?</summary><p>Ano. Pokud jsi z Jihlavy nebo okolí, můžeme podle potřeby kombinovat online a osobní lekce.</p></details>
+        </div>
+      </div>
+    </section>
+
+    <section class="online-section">
+      <div class="online-wrap">
+        <div class="cta-band">
+          <h2>Nejlepší první krok není kupovat hodinu. Je zjistit, co přesně potřebuješ.</h2>
+          <p>Vyber si bezplatnou diagnostiku a během přibližně 15 minut dostaneš první mapu slabých míst. Pokud chceš začít rovnou konkrétním tématem, domluvíme krátkou úvodní konzultaci zdarma.</p>
+          <div class="actions"><a class="btn" href="../diagnostika/">Diagnostika zdarma</a><a class="btn secondary" href="../#kontakt">Domluvit konzultaci</a></div>
+        </div>
+      </div>
+    </section>
+  </main>
+  <footer>© 2026 Vojtěch Steidl · Online doučování matematiky</footer>
+</body>
+</html>

@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
-"""Patch the built public stylesheet so the main navigation never wraps to two rows."""
+"""Patch the built public navigation so it never wraps and remains usable on subpages."""
 
 from pathlib import Path
 
-STYLE_PATH = Path(__file__).resolve().parents[1] / ".public-site" / "style.css"
+DIST = Path(__file__).resolve().parents[1] / ".public-site"
+STYLE_PATH = DIST / "style.css"
 MARKER = "/* responsive-nav-no-wrap */"
 
 PATCH = r'''
@@ -61,6 +62,27 @@ PATCH = r'''
 }
 '''
 
+NAV_SCRIPT = '''
+<script data-responsive-nav>
+(() => {
+  const button = document.getElementById('hamburger');
+  const links = document.getElementById('navLinks');
+  if (!button || !links || button.dataset.bound === '1') return;
+  button.dataset.bound = '1';
+  button.addEventListener('click', () => {
+    const open = links.classList.toggle('active');
+    button.classList.toggle('active', open);
+    button.setAttribute('aria-expanded', open ? 'true' : 'false');
+  });
+  links.querySelectorAll('a').forEach(link => link.addEventListener('click', () => {
+    links.classList.remove('active');
+    button.classList.remove('active');
+    button.setAttribute('aria-expanded', 'false');
+  }));
+})();
+</script>
+'''
+
 if not STYLE_PATH.is_file():
     raise FileNotFoundError(f"Built stylesheet not found: {STYLE_PATH}")
 
@@ -68,4 +90,32 @@ css = STYLE_PATH.read_text(encoding="utf-8")
 if MARKER not in css:
     STYLE_PATH.write_text(css.rstrip() + PATCH + "\n", encoding="utf-8")
 
-print("Patched responsive navigation layout")
+patched_pages = 0
+for page in DIST.rglob("*.html"):
+    html = page.read_text(encoding="utf-8")
+    if 'class="nav-links"' not in html:
+        continue
+
+    changed = False
+    if 'class="hamburger"' not in html:
+        nav_tag = '<ul class="nav-links">'
+        if nav_tag in html:
+            replacement = '<button class="hamburger" id="hamburger" type="button" aria-label="Otevřít menu" aria-expanded="false"><span></span><span></span><span></span></button>\n      <ul class="nav-links" id="navLinks">'
+            html = html.replace(nav_tag, replacement, 1)
+            changed = True
+        elif '<ul class="nav-links" id="navLinks">' in html:
+            html = html.replace('<ul class="nav-links" id="navLinks">', '<button class="hamburger" id="hamburger" type="button" aria-label="Otevřít menu" aria-expanded="false"><span></span><span></span><span></span></button>\n      <ul class="nav-links" id="navLinks">', 1)
+            changed = True
+    elif 'id="navLinks"' not in html:
+        html = html.replace('<ul class="nav-links">', '<ul class="nav-links" id="navLinks">', 1)
+        changed = True
+
+    if 'class="hamburger"' in html and 'id="navLinks"' in html and 'data-responsive-nav' not in html and '</body>' in html:
+        html = html.replace('</body>', NAV_SCRIPT + '</body>', 1)
+        changed = True
+
+    if changed:
+        page.write_text(html, encoding="utf-8")
+        patched_pages += 1
+
+print(f"Patched responsive navigation layout on {patched_pages} pages")
