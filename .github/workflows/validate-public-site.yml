@@ -14,6 +14,7 @@ on:
       - "interactive-notes/**"
       - "materialy-zdarma/**"
       - "scripts/build_public_site.py"
+      - "scripts/patch_nav_layout.py"
       - ".github/workflows/deploy-pages.yml"
       - ".github/workflows/validate-public-site.yml"
   push:
@@ -31,6 +32,7 @@ on:
       - "interactive-notes/**"
       - "materialy-zdarma/**"
       - "scripts/build_public_site.py"
+      - "scripts/patch_nav_layout.py"
       - ".github/workflows/deploy-pages.yml"
       - ".github/workflows/validate-public-site.yml"
   workflow_dispatch:
@@ -47,6 +49,9 @@ jobs:
 
       - name: Build explicit public allowlist
         run: python scripts/build_public_site.py
+
+      - name: Apply responsive navigation patch
+        run: python scripts/patch_nav_layout.py
 
       - name: Assert private tutoring data is not published
         shell: bash
@@ -65,3 +70,4 @@ jobs:
           fi
           test -f .public-site/skupinove-doucovani-matematiky/index.html
           grep -q 'skupinove-doucovani-matematiky' .public-site/index.html
+          grep -q 'responsive-nav-no-wrap' .public-site/style.css
