@@ -11,16 +11,20 @@
     .answer-feedback.ok{background:#f0fdf4;color:#166534}
     .answer-feedback.bad{background:#fef2f2;color:#991b1b}
     .answer-feedback.skip{background:#fffbeb;color:#92400e}
+    .review-errors-btn{display:inline-flex;align-items:center;justify-content:center;min-height:48px;padding:.8rem 1rem;border:1px solid #fecaca;border-radius:9px;background:#fff;color:#b91c1c;font:inherit;font-weight:800;cursor:pointer}
+    .review-errors-btn:hover{background:#fef2f2}
   `;
   document.head.appendChild(style);
 
   function clearFeedback() {
     document.querySelectorAll('.answer').forEach(label => label.classList.remove('diagnostic-correct','diagnostic-wrong','diagnostic-skipped'));
     document.querySelectorAll('.answer-feedback').forEach(node => node.remove());
+    document.getElementById('reviewErrorsButton')?.remove();
   }
 
   function renderFeedback() {
     clearFeedback();
+    let errorCount = 0;
     document.querySelectorAll('.question[data-correct]').forEach(question => {
       const correct = question.dataset.correct;
       const selected = question.querySelector('input[type="radio"]:checked');
@@ -36,11 +40,13 @@
         feedback.classList.add('ok');
         feedback.textContent = 'Správně.';
       } else if (selected.value === 'skip') {
+        errorCount += 1;
         selectedLabel?.classList.add('diagnostic-skipped');
         correctLabel?.classList.add('diagnostic-correct');
         feedback.classList.add('skip');
         feedback.textContent = `Přeskočeno. Správná odpověď: ${correctLabel?.querySelector('span')?.textContent?.trim() || 'viz zeleně zvýrazněná možnost'}.`;
       } else {
+        errorCount += 1;
         selectedLabel?.classList.add('diagnostic-wrong');
         correctLabel?.classList.add('diagnostic-correct');
         feedback.classList.add('bad');
@@ -48,6 +54,20 @@
       }
       question.appendChild(feedback);
     });
+
+    const actions = document.querySelector('.result-actions');
+    if (actions && errorCount > 0) {
+      const button = document.createElement('button');
+      button.type = 'button';
+      button.id = 'reviewErrorsButton';
+      button.className = 'review-errors-btn';
+      button.textContent = `Projít konkrétní chyby (${errorCount})`;
+      button.addEventListener('click', () => {
+        const firstError = document.querySelector('.diagnostic-wrong, .diagnostic-skipped');
+        firstError?.closest('.question')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      });
+      actions.prepend(button);
+    }
   }
 
   const form = document.getElementById('diagnosticForm');
