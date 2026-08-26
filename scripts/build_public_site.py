@@ -38,7 +38,10 @@ PUBLIC_DIRECTORIES = (
     "doucovani-matematiky",
     "skupinove-doucovani-matematiky",
     "priprava-na-maturitu-z-matematiky",
+    "diagnostika",
+    "test-prijimacky-9-matematika",
     "test-maturita-matematika",
+    "test-vs-matematika-1-rocnik",
     "pro-skoly",
     "interactive-notes",
     "materialy-zdarma",
@@ -83,32 +86,51 @@ def patch_public_entrypoint() -> None:
     # identical for every student account.
     html = html.replace("https://portal.vojtechsteidl.eu", PORTAL_URL)
 
-    # Surface group tutoring as a first-class product on the deployed homepage
-    # without changing the existing individual tutoring flow.
+    # Surface group tutoring and diagnostics as first-class public products.
     html = replace_required(
         html,
         '<meta name="description" content="Individuální doučování matematiky a fyziky v Jihlavě i online. Součástí výuky jsou vlastní materiály a osobní studentská zóna.">',
-        '<meta name="description" content="Individuální i skupinové doučování matematiky a fyziky v Jihlavě i online. Skupinové lekce matematiky od 300 Kč na osobu, vlastní materiály a studentská zóna.">',
-        "group tutoring meta description",
+        '<meta name="description" content="Individuální i skupinové doučování matematiky a fyziky v Jihlavě i online. Diagnostické testy zdarma, skupinové lekce od 300 Kč na osobu, vlastní materiály a studentská zóna.">',
+        "group tutoring and diagnostics meta description",
     )
     html = replace_required(
         html,
         '<li><a href="#cenik">Ceník</a></li>',
-        '<li><a href="/skupinove-doucovani-matematiky/">Skupinové lekce</a></li><li><a href="#cenik">Ceník</a></li>',
-        "group tutoring navigation link",
+        '<li><a href="/diagnostika/">Diagnostika</a></li><li><a href="/skupinove-doucovani-matematiky/">Skupinové lekce</a></li><li><a href="#cenik">Ceník</a></li>',
+        "diagnostics and group tutoring navigation links",
     )
     html = replace_required(
         html,
         '<p>Individuální výuka doplněná o přehledné zápisy, interaktivní materiály a osobní studentskou zónu, kde má student návaznost mezi jednotlivými hodinami.</p>',
-        '<p>Individuální výuka i malé skupinové lekce matematiky doplněné o přehledné zápisy, vlastní materiály a studentskou zónu, kde má student návaznost mezi jednotlivými hodinami.</p>',
+        '<p>Individuální výuka i malé skupinové lekce matematiky doplněné o přehledné zápisy, diagnostické testy, vlastní materiály a studentskou zónu, kde má student návaznost mezi jednotlivými hodinami.</p>',
         "group tutoring hero copy",
     )
     html = replace_required(
         html,
         '<div class="hero-actions"><a href="#kontakt" class="cta-button">Domluvit úvodní konzultaci zdarma <i class="fas fa-arrow-right"></i></a><a href="https://vojtechsteidl.eu/student-portal/" class="cta-button cta-button-secondary"><i class="fas fa-user-lock"></i> Vstoupit do studentské zóny</a></div>',
-        '<div class="hero-actions"><a href="#kontakt" class="cta-button">Domluvit úvodní konzultaci zdarma <i class="fas fa-arrow-right"></i></a><a href="/skupinove-doucovani-matematiky/" class="cta-button cta-button-secondary"><i class="fas fa-users"></i> Skupinové lekce od 300 Kč</a><a href="https://vojtechsteidl.eu/student-portal/" class="cta-button cta-button-secondary"><i class="fas fa-user-lock"></i> Studentská zóna</a></div>',
-        "group tutoring hero action",
+        '<div class="hero-actions"><a href="#kontakt" class="cta-button">Domluvit úvodní konzultaci zdarma <i class="fas fa-arrow-right"></i></a><a href="/diagnostika/" class="cta-button cta-button-secondary"><i class="fas fa-chart-line"></i> Diagnostika zdarma</a><a href="/skupinove-doucovani-matematiky/" class="cta-button cta-button-secondary"><i class="fas fa-users"></i> Skupinové lekce od 300 Kč</a><a href="https://vojtechsteidl.eu/student-portal/" class="cta-button cta-button-secondary"><i class="fas fa-user-lock"></i> Studentská zóna</a></div>',
+        "diagnostics and group tutoring hero actions",
     )
+
+    diagnostics_section = '''
+        <section class="school-promo-section" id="diagnostika">
+            <div class="school-promo">
+                <div>
+                    <p class="eyebrow">Zdarma · bez registrace · okamžitý výsledek</p>
+                    <h2>Nejdřív zjisti, kde přesně ztrácíš body</h2>
+                    <p>Krátké diagnostické testy matematiky pro přijímačky na SŠ, maturitu a 1. ročník VŠ. Po dokončení dostaneš rozpad výsledku podle témat a u každé chyby uvidíš správnou odpověď.</p>
+                    <div class="school-promo-actions"><a class="school-promo-button" href="/diagnostika/">Spustit diagnostiku zdarma <i class="fas fa-arrow-right"></i></a></div>
+                    <p class="school-promo-note">15 úloh · 5 oblastí · přibližně 15 minut · výsledek se počítá pouze v prohlížeči</p>
+                </div>
+                <div class="school-promo-points">
+                    <div class="school-promo-point"><i class="fas fa-school"></i><span><strong>Přijímačky 9. třída</strong> — čísla, algebra, slovní úlohy, geometrie a data.</span></div>
+                    <div class="school-promo-point"><i class="fas fa-graduation-cap"></i><span><strong>Maturita z matematiky</strong> — rychlá mapa slabých maturitních oblastí.</span></div>
+                    <div class="school-promo-point"><i class="fas fa-square-root-variable"></i><span><strong>VŠ 1. ročník</strong> — algebra, funkce, limity, derivace a lineární algebra.</span></div>
+                    <div class="school-promo-point"><i class="fas fa-check-circle"></i><span><strong>Konkrétní chyby</strong> — špatná volba červeně, správná odpověď zeleně.</span></div>
+                </div>
+            </div>
+        </section>
+'''
 
     group_section = '''
         <section class="school-promo-section" id="skupinove-lekce">
@@ -132,8 +154,8 @@ def patch_public_entrypoint() -> None:
     html = replace_required(
         html,
         '<section class="school-promo-section" id="pro-skoly">',
-        group_section + '<section class="school-promo-section" id="pro-skoly">',
-        "group tutoring homepage section",
+        diagnostics_section + group_section + '<section class="school-promo-section" id="pro-skoly">',
+        "diagnostics and group tutoring homepage sections",
     )
 
     old_note = (
@@ -153,6 +175,17 @@ def patch_public_entrypoint() -> None:
         raise RuntimeError("Expected student-zone login note was not found")
     html = html.replace(old_note, new_note)
     index_path.write_text(html, encoding="utf-8")
+
+
+def patch_maturita_diagnostic_feedback() -> None:
+    path = DIST / "test-maturita-matematika" / "index.html"
+    html = path.read_text(encoding="utf-8")
+    script = '<script src="../assets/diagnostic-feedback.js"></script>'
+    if script not in html:
+        if "</body>" not in html:
+            raise RuntimeError("Maturita diagnostic page has no closing body tag")
+        html = html.replace("</body>", script + "\n</body>", 1)
+    path.write_text(html, encoding="utf-8")
 
 
 def assert_public_artifact() -> None:
@@ -189,17 +222,32 @@ def assert_public_artifact() -> None:
     if not group_page.exists():
         raise RuntimeError("Group tutoring landing page is missing from public artifact")
 
-    diagnostic_page = DIST / "test-maturita-matematika" / "index.html"
-    if not diagnostic_page.exists():
-        raise RuntimeError("Maturita diagnostic test is missing from public artifact")
+    required_diagnostics = (
+        "diagnostika/index.html",
+        "test-prijimacky-9-matematika/index.html",
+        "test-maturita-matematika/index.html",
+        "test-vs-matematika-1-rocnik/index.html",
+        "assets/diagnostic-feedback.js",
+        "assets/diagnostic-engine.js",
+        "assets/diagnostic-test.css",
+    )
+    missing_diagnostics = [relative for relative in required_diagnostics if not (DIST / relative).is_file()]
+    if missing_diagnostics:
+        raise RuntimeError("Diagnostics are incomplete: " + ", ".join(missing_diagnostics))
 
     homepage = (DIST / "index.html").read_text(encoding="utf-8")
     if "/skupinove-doucovani-matematiky/" not in homepage:
         raise RuntimeError("Group tutoring link is missing from deployed homepage")
+    if "/diagnostika/" not in homepage:
+        raise RuntimeError("Diagnostics link is missing from deployed homepage")
 
     maturita_page = (DIST / "priprava-na-maturitu-z-matematiky" / "index.html").read_text(encoding="utf-8")
     if "../test-maturita-matematika/" not in maturita_page:
         raise RuntimeError("Diagnostic test link is missing from maturita landing page")
+
+    maturita_test = (DIST / "test-maturita-matematika" / "index.html").read_text(encoding="utf-8")
+    if "../assets/diagnostic-feedback.js" not in maturita_test:
+        raise RuntimeError("Maturita diagnostic feedback highlighting is missing")
 
 
 if DIST.exists():
@@ -212,5 +260,6 @@ for relative in PUBLIC_DIRECTORIES:
     copy_required(relative)
 
 patch_public_entrypoint()
+patch_maturita_diagnostic_feedback()
 assert_public_artifact()
 print(f"Built hardened public site at {DIST}")
