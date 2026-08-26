@@ -20,7 +20,13 @@
   </url>
   <url>
     <loc>https://vojtechsteidl.eu/priprava-na-maturitu-z-matematiky/</loc>
-    <lastmod>2026-08-24</lastmod>
+    <lastmod>2026-08-26</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://vojtechsteidl.eu/test-maturita-matematika/</loc>
+    <lastmod>2026-08-26</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
