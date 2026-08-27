@@ -9,6 +9,7 @@
   <meta http-equiv="Expires" content="0">
   <title>Studentský portál | Vojtěch Steidl</title>
   <link rel="stylesheet" href="assets/student-portal.css?v=20260824-1">
+  <link rel="stylesheet" href="assets/student-payment.css?v=20260827-1">
 </head>
 <body>
   <div id="loader"><div class="spinner"></div><div>Načítám studentský portál…</div></div>
@@ -56,6 +57,7 @@
           <section class="card"><h2>Poslední hodina</h2><div id="lastLesson"></div></section>
           <section class="card"><h2>Doporučený další krok</h2><div id="nextAction"></div></section>
         </div>
+        <section class="card dashboard-payment"><h2>Platba za lekci</h2><div id="paymentContent"><div class="empty">Načítám platební údaje…</div></div></section>
       </section>
 
       <section class="view" id="history"><section class="card"><h2>Historie hodin</h2><p class="card-intro">Přehled probírané látky, hodnocení, doporučení a materiálů ke každé hodině.</p><div class="list" id="historyList"></div></section></section>
@@ -68,6 +70,7 @@
 
   <script src="assets/student-portal.js?v=20260825-1"></script>
   <script src="assets/student-next-lesson.js?v=20260827-1"></script>
+  <script src="assets/student-payment.js?v=20260827-1"></script>
   <script src="assets/student-dashboard-featured.js?v=20260825-1"></script>
 </body>
 </html>
