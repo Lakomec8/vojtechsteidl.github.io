@@ -1,5 +1,6 @@
 {
   "name": "vojtechsteidl-secure-portal",
+  "description": "Secure Cloudflare student portal",
   "private": true,
   "type": "module",
   "scripts": {
