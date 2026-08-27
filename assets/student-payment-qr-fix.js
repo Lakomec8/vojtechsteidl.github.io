@@ -5,7 +5,7 @@
   const applyStableQr = () => {
     if (!container.textContent.includes("400 Kč")) return;
     container.querySelectorAll("img").forEach((image) => {
-      image.src = "assets/payment-400.svg?v=20260827-2";
+      image.src = "/assets/payment-400.svg?v=20260827-3";
     });
   };
 
