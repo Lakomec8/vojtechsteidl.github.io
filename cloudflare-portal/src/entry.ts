@@ -263,7 +263,7 @@ async function materialsManager(request: Request, env: Env): Promise<Response> {
   const rows = (result.results || []).map((student) => `
     <li>
       <strong>${escapeHtml(student.display_name)}</strong>
-      <a href="${PORTAL_PREFIX}/admin/upload/${encodeURIComponent(student.id)}">Nahrát PDF</a>
+      <a href="${PORTAL_PREFIX}/admin/upload/${encodeURIComponent(student.id)}">Nahrát / spravovat PDF</a>
     </li>`).join("");
 
   return html(`<!doctype html>
@@ -333,14 +333,85 @@ async function profileRow(studentId: string, env: Env): Promise<Record<string, u
   }
 }
 
-function uploadForm(student: PortalStudent, message = ""): Response {
+function materialR2Key(item: Record<string, unknown>, student: PortalStudent): string {
+  const directKey = String(item?.r2Key || "").trim();
+  const prefix = `${student.material_path}/`;
+  if (directKey.startsWith(prefix) && directKey.length > prefix.length) return directKey;
+
+  const url = String(item?.url || "").trim();
+  const urlPrefix = `${PORTAL_PREFIX}/Materials/${encodeURIComponent(student.material_path)}/`;
+  if (!url.startsWith(urlPrefix)) return "";
+  try {
+    const remainder = decodeMaterialRemainder(url.slice(urlPrefix.length));
+    return `${student.material_path}/${remainder}`;
+  } catch {
+    return "";
+  }
+}
+
+function applyMaterialProfileInvariants(profile: Record<string, unknown>): void {
+  profile.incrementLessonCountOnMaterialAdd = false;
+  const externalLessons = Array.isArray(profile.externalLessons)
+    ? profile.externalLessons as Array<Record<string, unknown>>
+    : [];
+  profile.completedLessonsCount = externalLessons.length;
+}
+
+async function saveProfile(studentId: string, profile: Record<string, unknown>, env: Env): Promise<void> {
+  await env.DB.prepare(
+    `UPDATE student_profiles
+        SET payload_json = ?1,
+            updated_at = CURRENT_TIMESTAMP
+      WHERE student_id = ?2`,
+  ).bind(JSON.stringify(profile), studentId).run();
+}
+
+async function uploadForm(student: PortalStudent, env: Env, message = ""): Promise<Response> {
   const today = portalToday();
-  const notice = message ? `<p style="padding:12px;background:#ecfdf5;border-radius:10px">${escapeHtml(message)}</p>` : "";
+  const profile = await profileRow(student.id, env);
+  const rawMaterials = profile.materials;
+  const materials = Array.isArray(rawMaterials)
+    ? rawMaterials as Array<Record<string, unknown>>
+    : [];
+  const notice = message
+    ? `<p class="notice">${escapeHtml(message)}</p>`
+    : "";
+  const materialRows = materials.map((material) => {
+    const key = materialR2Key(material, student);
+    const title = String(material?.title || "Materiál").trim() || "Materiál";
+    const date = materialDate(material);
+    const fileName = key ? key.slice(student.material_path.length + 1) : "";
+    const actions = key ? `
+      <div class="actions">
+        <form method="post" enctype="multipart/form-data" class="replace-form">
+          <input type="hidden" name="action" value="replace">
+          <input type="hidden" name="existingKey" value="${escapeHtml(key)}">
+          <label class="file-label">Nové PDF<input name="file" type="file" accept="application/pdf,.pdf" required></label>
+          <button type="submit" class="secondary">Nahradit PDF</button>
+        </form>
+        <form method="post" class="delete-form" onsubmit="return confirm('Opravdu smazat tento materiál?')">
+          <input type="hidden" name="action" value="delete">
+          <input type="hidden" name="existingKey" value="${escapeHtml(key)}">
+          <button type="submit" class="danger">Smazat</button>
+        </form>
+      </div>` : `<p class="muted">Tento starší záznam nemá spravovatelný R2 klíč.</p>`;
+
+    return `<article class="material-card">
+      <div class="material-main">
+        <strong>${escapeHtml(title)}</strong>
+        <span>${date ? escapeHtml(date) : "Bez data"}${fileName ? ` • ${escapeHtml(fileName)}` : ""}</span>
+      </div>
+      ${actions}
+    </article>`;
+  }).join("") || `<p class="empty">Zatím tu nejsou žádné materiály.</p>`;
+
   return html(`<!doctype html>
 <html lang="cs"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="robots" content="noindex,nofollow"><title>Nahrát materiál | ${escapeHtml(student.display_name)}</title>
-<style>body{font-family:Inter,system-ui,sans-serif;background:#f4f7fb;color:#102a43;margin:0}.wrap{width:min(680px,calc(100% - 32px));margin:48px auto}.box{background:#fff;border:1px solid #d9e2ec;border-radius:16px;padding:24px}label{display:block;font-weight:700;margin:18px 0 6px}input{width:100%;box-sizing:border-box;padding:11px;border:1px solid #bcccdc;border-radius:9px}button{margin-top:22px;padding:11px 16px;border:0;border-radius:9px;background:#2563eb;color:#fff;font-weight:700;cursor:pointer}a{color:#2563eb}</style>
-</head><body><main class="wrap"><p><a href="${PORTAL_PREFIX}/admin/materials">← Materiály</a></p><div class="box"><h1>${escapeHtml(student.display_name)}</h1>${notice}<form method="post" enctype="multipart/form-data"><label for="file">PDF</label><input id="file" name="file" type="file" accept="application/pdf,.pdf" required><label for="title">Název na nástěnce</label><input id="title" name="title" type="text" maxlength="140" placeholder="Např. Kvadratické rovnice"><label for="date">Datum hodiny</label><input id="date" name="date" type="date" value="${today}" required><button type="submit">Nahrát do soukromého úložiště</button></form></div></main></body></html>`);
+<meta name="robots" content="noindex,nofollow"><title>Správa materiálů | ${escapeHtml(student.display_name)}</title>
+<style>
+body{font-family:Inter,system-ui,sans-serif;background:#f4f7fb;color:#102a43;margin:0}.wrap{width:min(860px,calc(100% - 32px));margin:48px auto}.box{background:#fff;border:1px solid #d9e2ec;border-radius:16px;padding:24px;margin-bottom:20px}a{color:#2563eb}.notice{padding:12px;background:#ecfdf5;border-radius:10px}.muted,.empty{color:#627d98}.upload-form label{display:block;font-weight:700;margin:18px 0 6px}.upload-form input{width:100%;box-sizing:border-box;padding:11px;border:1px solid #bcccdc;border-radius:9px}button{padding:11px 16px;border:0;border-radius:9px;font-weight:700;cursor:pointer}.primary{margin-top:22px;background:#2563eb;color:#fff}.secondary{background:#e0ecff;color:#174ea6}.danger{background:#fee2e2;color:#b42318}.material-card{border-top:1px solid #e7edf4;padding:18px 0}.material-card:first-of-type{border-top:0}.material-main{display:flex;flex-direction:column;gap:4px}.material-main span{font-size:14px;color:#627d98}.actions{display:flex;align-items:flex-end;gap:12px;margin-top:14px;flex-wrap:wrap}.replace-form{display:flex;align-items:flex-end;gap:10px;flex:1;min-width:280px}.file-label{font-size:13px;font-weight:700;display:flex;flex-direction:column;gap:6px;flex:1}.file-label input{max-width:100%}.delete-form{margin-left:auto}@media(max-width:640px){.actions,.replace-form{align-items:stretch;flex-direction:column}.delete-form{margin-left:0}.actions button{width:100%}}
+</style>
+</head><body><main class="wrap"><p><a href="${PORTAL_PREFIX}/admin/materials">← Materiály</a></p><div class="box"><h1>${escapeHtml(student.display_name)}</h1>${notice}<h2>Nahrát nový materiál</h2><form method="post" enctype="multipart/form-data" class="upload-form"><input type="hidden" name="action" value="upload"><label for="file">PDF</label><input id="file" name="file" type="file" accept="application/pdf,.pdf" required><label for="title">Název na nástěnce</label><input id="title" name="title" type="text" maxlength="140" placeholder="Např. Kvadratické rovnice"><label for="date">Datum materiálu</label><input id="date" name="date" type="date" value="${today}" required><button type="submit" class="primary">Nahrát do soukromého úložiště</button></form></div><div class="box"><h2>Existující materiály</h2>${materialRows}</div></main></body></html>`);
 }
 
 async function adminUpload(
@@ -350,13 +421,60 @@ async function adminUpload(
 ): Promise<Response> {
   await requireAdmin(request, env);
   const student = await studentById(studentId, env);
-  if (request.method === "GET") return uploadForm(student);
+  if (request.method === "GET") return uploadForm(student, env);
   if (request.method !== "POST") return plain("Method not allowed", 405);
 
   const bucket = (env as ExtendedEnv).MATERIALS;
   if (!bucket) throw new PortalError(503, "Private material storage is not configured yet.");
 
   const form = await request.formData();
+  const action = String(form.get("action") || "upload").trim().toLowerCase();
+  const profile = await profileRow(student.id, env);
+  const rawMaterials = profile.materials;
+  const materials = Array.isArray(rawMaterials)
+    ? [...rawMaterials] as Array<Record<string, unknown>>
+    : [];
+
+  if (action === "delete") {
+    const existingKey = String(form.get("existingKey") || "").trim();
+    const existingIndex = materials.findIndex((item) => materialR2Key(item, student) === existingKey);
+    if (existingIndex < 0) throw new PortalError(404, "Material was not found.");
+    const removed = materials[existingIndex];
+    const removedTitle = String(removed?.title || existingKey.split("/").at(-1) || "Materiál");
+
+    await bucket.delete(existingKey);
+    materials.splice(existingIndex, 1);
+    profile.materials = normalizeMaterials(materials);
+    applyMaterialProfileInvariants(profile);
+    await saveProfile(student.id, profile, env);
+    return uploadForm(student, env, `${removedTitle} byl smazán.`);
+  }
+
+  if (action === "replace") {
+    const existingKey = String(form.get("existingKey") || "").trim();
+    const existingIndex = materials.findIndex((item) => materialR2Key(item, student) === existingKey);
+    if (existingIndex < 0) throw new PortalError(404, "Material was not found.");
+
+    const file = form.get("file");
+    if (!(file instanceof File)) throw new PortalError(400, "PDF file is required.");
+    if (file.size <= 0 || file.size > MAX_UPLOAD_BYTES) {
+      throw new PortalError(400, "PDF must be between 1 byte and 25 MB.");
+    }
+    cleanPdfName(file.name);
+    const existing = materials[existingIndex];
+    const existingDate = materialDate(existing) || portalToday();
+    const existingTitle = String(existing?.title || existingKey.split("/").at(-1) || "Materiál");
+
+    await bucket.put(existingKey, file.stream(), {
+      httpMetadata: { contentType: "application/pdf" },
+      customMetadata: { studentId: student.id, originalName: file.name, lessonDate: existingDate },
+    });
+
+    return uploadForm(student, env, `${existingTitle} byl nahrazen novým PDF.`);
+  }
+
+  if (action !== "upload") throw new PortalError(400, "Unknown material action.");
+
   const file = form.get("file");
   if (!(file instanceof File)) throw new PortalError(400, "PDF file is required.");
   if (file.size <= 0 || file.size > MAX_UPLOAD_BYTES) {
@@ -366,17 +484,13 @@ async function adminUpload(
   const titleInput = String(form.get("title") || "").trim();
   const title = titleInput || fileName.replace(/\.pdf$/i, "").replace(/[-_]+/g, " ");
   const date = String(form.get("date") || "").trim();
-  if (!/^\d{4}-\d{2}-\d{2}$/.test(date)) throw new PortalError(400, "Invalid lesson date.");
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(date)) throw new PortalError(400, "Invalid material date.");
 
-  const profile = await profileRow(student.id, env);
-  const rawMaterials = profile.materials;
-  const materials = Array.isArray(rawMaterials) ? [...rawMaterials] as Array<Record<string, unknown>> : [];
   const encodedPath = encodeURIComponent(student.material_path);
   const encodedName = encodeURIComponent(fileName);
   const materialUrl = `${PORTAL_PREFIX}/Materials/${encodedPath}/${encodedName}`;
   const key = `${student.material_path}/${fileName}`;
-  const existingIndex = materials.findIndex((item) => item?.url === materialUrl || item?.r2Key === key);
-  const sameDateAlreadyExists = materials.some((item, index) => index !== existingIndex && item?.date === date);
+  const existingIndex = materials.findIndex((item) => item?.url === materialUrl || materialR2Key(item, student) === key);
   const isNew = existingIndex < 0;
 
   const item: Record<string, unknown> = {
@@ -393,14 +507,7 @@ async function adminUpload(
 
   if (existingIndex >= 0) materials.splice(existingIndex, 1);
   profile.materials = normalizeMaterials([item, ...materials]);
-  profile.incrementLessonCountOnMaterialAdd = false;
-
-  // PDF upload nikdy nemění počet absolvovaných hodin. Ten je odvozen pouze
-  // z lekcí synchronizovaných z Google Calendar.
-  const externalLessons = Array.isArray(profile.externalLessons)
-    ? profile.externalLessons as Array<Record<string, unknown>>
-    : [];
-  profile.completedLessonsCount = externalLessons.length;
+  applyMaterialProfileInvariants(profile);
 
   await bucket.put(key, file.stream(), {
     httpMetadata: { contentType: "application/pdf" },
@@ -408,18 +515,13 @@ async function adminUpload(
   });
 
   try {
-    await env.DB.prepare(
-      `UPDATE student_profiles
-          SET payload_json = ?1,
-              updated_at = CURRENT_TIMESTAMP
-        WHERE student_id = ?2`,
-    ).bind(JSON.stringify(profile), student.id).run();
+    await saveProfile(student.id, profile, env);
   } catch (error) {
     if (isNew) await bucket.delete(key).catch(() => undefined);
     throw error;
   }
 
-  return uploadForm(student, `${fileName} byl uložen do R2 a přidán na nástěnku.`);
+  return uploadForm(student, env, `${fileName} byl uložen do R2 a přidán na nástěnku.`);
 }
 
 async function augmentAdminLanding(response: Response): Promise<Response> {
