@@ -9,6 +9,7 @@ on:
       - "assets/student-portal.js"
       - "assets/student-portal.css"
       - "assets/student-dashboard-featured.js"
+      - "assets/student-self-checks.js"
       - ".github/workflows/deploy-cloudflare-portal.yml"
   workflow_dispatch:
 
@@ -54,6 +55,10 @@ jobs:
       - name: Typecheck Worker and bindings
         working-directory: cloudflare-portal
         run: npm run typecheck
+
+      - name: Apply production database migrations
+        working-directory: cloudflare-portal
+        run: npm run db:migrate:remote
 
       - name: Deploy production Worker
         working-directory: cloudflare-portal

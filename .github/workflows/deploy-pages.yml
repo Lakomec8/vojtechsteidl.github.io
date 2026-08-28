@@ -27,9 +27,6 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Inject Cloudflare Web Analytics on public pages
-        run: python scripts/inject_analytics.py
-
       - name: Build hardened public artifact
         run: python scripts/build_public_site.py
 

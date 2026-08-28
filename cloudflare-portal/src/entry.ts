@@ -8,13 +8,13 @@ const ADMIN_STUDENT_COOKIE = "portal_admin_student";
 const ADMIN_VIEW_COOKIE = "portal_admin_view_once";
 const MAX_UPLOAD_BYTES = 25 * 1024 * 1024;
 
-type PortalStudent = {
+export type PortalStudent = {
   id: string;
   display_name: string;
   material_path: string;
 };
 
-type PortalPrincipal = {
+export type PortalPrincipal = {
   email: string;
   student: PortalStudent | null;
   isAdmin: boolean;
@@ -26,7 +26,7 @@ type ExtendedEnv = Env & {
 
 type WorkerRequest = Parameters<typeof worker.fetch>[0];
 
-class PortalError extends Error {
+export class PortalError extends Error {
   constructor(
     readonly status: number,
     message: string,
@@ -35,7 +35,7 @@ class PortalError extends Error {
   }
 }
 
-function privateHeaders(headers = new Headers()): Headers {
+export function privateHeaders(headers = new Headers()): Headers {
   headers.set("Cache-Control", "private, no-store, max-age=0");
   headers.set("Pragma", "no-cache");
   headers.set("X-Content-Type-Options", "nosniff");
@@ -148,7 +148,7 @@ async function authenticatedEmail(request: Request, env: Env): Promise<string> {
   }
 }
 
-async function principalForRequest(request: Request, env: Env): Promise<PortalPrincipal> {
+export async function principalForRequest(request: Request, env: Env): Promise<PortalPrincipal> {
   const email = await authenticatedEmail(request, env);
   const student = await env.DB.prepare(
     `SELECT id, display_name, material_path
@@ -174,7 +174,7 @@ async function principalForRequest(request: Request, env: Env): Promise<PortalPr
   return { email, student: null, isAdmin: true };
 }
 
-async function studentById(id: string, env: Env): Promise<PortalStudent> {
+export async function studentById(id: string, env: Env): Promise<PortalStudent> {
   const student = await env.DB.prepare(
     `SELECT id, display_name, material_path
        FROM students
@@ -186,7 +186,7 @@ async function studentById(id: string, env: Env): Promise<PortalStudent> {
   return student;
 }
 
-async function selectedStudentForPrincipal(
+export async function selectedStudentForPrincipal(
   request: Request,
   env: Env,
   principal: PortalPrincipal,

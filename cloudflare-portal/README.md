@@ -59,6 +59,12 @@ npm run db:migrate:remote
 
 Then execute the generated `seed.private.sql` against D1 using Wrangler after reviewing it locally.
 
+## Student self-checks
+
+Self-checks are versioned in D1 and assigned to individual students. The student receives only prompts and answer options; grading and correct answers stay in the Worker. Each real student submission stores one attempt and its answers in a D1 batch. An administrator can open the existing student preview and complete the same test, but preview submissions are deliberately never persisted.
+
+The initial library test is seeded by `migrations/0003_self_checks.sql`. Add later tests under a new id/version in a new migration so already submitted attempts keep their original question set. The production deployment applies pending D1 migrations before publishing the Worker, while pull requests build the portal and apply all migrations to a local D1 database.
+
 ## Deployment sequence
 
 1. Keep the existing production site untouched.
