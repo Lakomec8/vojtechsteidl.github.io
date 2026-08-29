@@ -4,6 +4,8 @@ on:
   pull_request:
     paths:
       - "cloudflare-portal/**"
+      - "assets/student-self-checks.js"
+      - "assets/student-portal.css"
       - ".github/workflows/validate-cloudflare-portal.yml"
   workflow_dispatch:
 
@@ -35,6 +37,13 @@ jobs:
         run: |
           node --check scripts/apply-profile-patch.mjs
           node --check scripts/migrate-materials-to-r2.mjs
+          node --check ../assets/student-self-checks.js
+
+      - name: Apply and verify local database migrations
+        run: |
+          npm run db:migrate:local
+          npx wrangler d1 execute DB --local --command "SELECT (SELECT COUNT(*) FROM self_check_tests WHERE status = 'published') AS tests, (SELECT COUNT(*) FROM self_check_questions) AS questions" --json > /tmp/self-check-seed.json
+          node -e "const fs=require('node:fs');const rows=JSON.parse(fs.readFileSync('/tmp/self-check-seed.json','utf8'));const result=rows?.[0]?.results?.[0];if(Number(result?.tests)<1||Number(result?.questions)<8)process.exit(1)"
 
       - name: Build private portal artifact
         run: npm run build

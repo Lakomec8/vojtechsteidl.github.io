@@ -8,7 +8,7 @@
   <meta http-equiv="Pragma" content="no-cache">
   <meta http-equiv="Expires" content="0">
   <title>Studentský portál | Vojtěch Steidl</title>
-  <link rel="stylesheet" href="assets/student-portal.css?v=20260824-1">
+  <link rel="stylesheet" href="assets/student-portal.css?v=20260828-1">
   <link rel="stylesheet" href="assets/student-payment.css?v=20260827-1">
 </head>
 <body>
@@ -20,7 +20,7 @@
         <button class="active" data-view="dashboard">Nástěnka</button>
         <button data-view="history">Historie hodin</button>
         <button data-view="materials">Materiály</button>
-        <button data-view="tasks">Úkoly</button>
+        <button data-view="tasks">Procvičování</button>
         <button data-view="schedule">Termíny</button>
         <button data-view="links">Odkazy</button>
       </nav>
@@ -28,7 +28,7 @@
     </aside>
     <main class="main">
       <div class="top">
-        <input class="search" id="search" type="search" placeholder="Hledat v hodinách, materiálech a úkolech…">
+        <input class="search" id="search" type="search" placeholder="Hledat v hodinách, materiálech a procvičování…">
         <div class="student"><div class="avatar" id="initials">S</div><span id="name">Načítání…</span></div>
       </div>
 
@@ -62,13 +62,22 @@
 
       <section class="view" id="history"><section class="card"><h2>Historie hodin</h2><p class="card-intro">Přehled probírané látky, hodnocení, doporučení a materiálů ke každé hodině.</p><div class="list" id="historyList"></div></section></section>
       <section class="view" id="materials"><section class="card"><h2>Materiály</h2><div class="list" id="materialsList"></div></section></section>
-      <section class="view" id="tasks"><section class="card"><h2>Úkoly</h2><div class="list" id="tasksList"></div><div class="formula" id="formula" hidden></div></section></section>
+      <section class="view" id="tasks">
+        <section class="card"><h2>Úkoly</h2><div class="list" id="tasksList"></div><div class="formula" id="formula" hidden></div></section>
+        <section class="card self-check-section"><div class="self-check-heading"><div><h2>Otestuj znalosti</h2><p>Krátké testy pro vlastní kontrolu. Po odeslání hned uvidíš výsledek i vysvětlení.</p></div></div><div class="list" id="selfChecksList"><div class="empty">Načítám přiřazené testy…</div></div></section>
+      </section>
       <section class="view" id="schedule"><div class="grid"><section class="card"><h2>Nejbližší termíny</h2><div class="list" id="upcomingList"></div></section><section class="card"><h2>Časová osa</h2><div class="list" id="timelineList"></div></section></div></section>
       <section class="view" id="links"><section class="card"><h2>Užitečné odkazy</h2><div class="list" id="linksList"></div></section></section>
     </main>
   </div>
 
+  <dialog class="self-check-dialog" id="selfCheckDialog" aria-labelledby="selfCheckTitle">
+    <div class="self-check-dialog-head"><div><span class="badge" id="selfCheckTopic">Self-check</span><h2 id="selfCheckTitle">Otestuj znalosti</h2></div><button class="self-check-close" id="selfCheckClose" type="button" aria-label="Zavřít">×</button></div>
+    <div id="selfCheckContent"></div>
+  </dialog>
+
   <script src="assets/student-portal.js?v=20260825-1"></script>
+  <script src="assets/student-self-checks.js?v=20260828-1"></script>
   <script src="assets/student-next-lesson.js?v=20260827-1"></script>
   <script src="assets/student-payment.js?v=20260827-1"></script>
   <script src="assets/student-payment-qr-fix.js?v=20260827-2"></script>

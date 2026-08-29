@@ -1,5 +1,9 @@
 import { createRemoteJWKSet, jwtVerify } from "jose";
 import libraryEntry from "./library-entry";
+import {
+  enhanceAdminLandingWithSelfChecks,
+  handleSelfCheckRoute,
+} from "./self-checks";
 
 const HOSTS = new Set(["vojtechsteidl.eu", "www.vojtechsteidl.eu"]);
 const PREFIX = "/student-portal";
@@ -273,11 +277,21 @@ export default {
   async fetch(request: Request, env: Env): Promise<Response> {
     const url = new URL(request.url);
     try {
+      const selfCheckResponse = await handleSelfCheckRoute(request, env);
+      if (selfCheckResponse) return selfCheckResponse;
+
       if (HOSTS.has(url.hostname) && url.pathname === BACKFILL_ROUTE) {
         return backfill(request, env);
       }
 
-      const response = await libraryEntry.fetch(request as WorkerRequest, env);
+      let response = await libraryEntry.fetch(request as WorkerRequest, env);
+      if (
+        HOSTS.has(url.hostname) &&
+        request.method === "GET" &&
+        (url.pathname === `${PREFIX}/admin` || url.pathname === `${PREFIX}/admin/` || url.pathname === `${PREFIX}/`)
+      ) {
+        response = await enhanceAdminLandingWithSelfChecks(response);
+      }
       if (
         HOSTS.has(url.hostname) &&
         request.method === "GET" &&

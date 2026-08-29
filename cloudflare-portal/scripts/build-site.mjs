@@ -121,7 +121,10 @@ const portalHtml = await readFile(portalHtmlPath, "utf8");
 const portalTemplateIsValid =
   portalHtml.includes('id="loader"') &&
   portalHtml.includes('id="app"') &&
+  portalHtml.includes('id="selfChecksList"') &&
+  portalHtml.includes('id="selfCheckDialog"') &&
   portalHtml.includes("assets/student-portal.js") &&
+  portalHtml.includes("assets/student-self-checks.js") &&
   !portalHtml.includes('window.location.replace("/student-portal/")') &&
   !/http-equiv=["']refresh["']/i.test(portalHtml);
 
