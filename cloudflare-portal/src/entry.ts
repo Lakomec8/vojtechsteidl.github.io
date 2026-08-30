@@ -376,7 +376,7 @@ async function uploadForm(student: PortalStudent, env: Env, message = ""): Promi
   const notice = message
     ? `<p class="notice">${escapeHtml(message)}</p>`
     : "";
-  const materialRows = materials.map((material) => {
+  const materialRows = materials.map((material, materialIndex) => {
     const key = materialR2Key(material, student);
     const title = String(material?.title || "Materiál").trim() || "Materiál";
     const date = materialDate(material);
@@ -394,7 +394,14 @@ async function uploadForm(student: PortalStudent, env: Env, message = ""): Promi
           <input type="hidden" name="existingKey" value="${escapeHtml(key)}">
           <button type="submit" class="danger">Smazat</button>
         </form>
-      </div>` : `<p class="muted">Tento starší záznam nemá spravovatelný R2 klíč.</p>`;
+      </div>` : `
+      <div class="actions">
+        <form method="post" class="delete-form" onsubmit="return confirm('Opravdu smazat tento materiál ze studentského profilu?')">
+          <input type="hidden" name="action" value="remove">
+          <input type="hidden" name="materialIndex" value="${materialIndex}">
+          <button type="submit" class="danger">Smazat z profilu</button>
+        </form>
+      </div>`;
 
     return `<article class="material-card">
       <div class="material-main">
@@ -434,6 +441,25 @@ async function adminUpload(
   const materials = Array.isArray(rawMaterials)
     ? [...rawMaterials] as Array<Record<string, unknown>>
     : [];
+
+  if (action === "remove") {
+    const materialIndex = Number(form.get("materialIndex"));
+    if (!Number.isInteger(materialIndex) || materialIndex < 0 || materialIndex >= materials.length) {
+      throw new PortalError(404, "Material was not found.");
+    }
+
+    const removed = materials[materialIndex];
+    if (materialR2Key(removed, student)) {
+      throw new PortalError(400, "Use the delete action for directly uploaded material.");
+    }
+
+    const removedTitle = String(removed?.title || "Materiál");
+    materials.splice(materialIndex, 1);
+    profile.materials = normalizeMaterials(materials);
+    applyMaterialProfileInvariants(profile);
+    await saveProfile(student.id, profile, env);
+    return uploadForm(student, env, `${removedTitle} byl smazán ze studentského profilu.`);
+  }
 
   if (action === "delete") {
     const existingKey = String(form.get("existingKey") || "").trim();
