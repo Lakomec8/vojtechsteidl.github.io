@@ -6,6 +6,12 @@ type StudentRow = {
   material_path: string;
 };
 
+type AdminStudentRow = StudentRow & {
+  visit_count: number;
+  visits_30d: number;
+  last_visit_at: string | null;
+};
+
 type ProfileRow = {
   payload_json: string;
 };
@@ -241,6 +247,28 @@ async function profileForStudent(
   return json({ ...profile, studentId: student.id, adminView });
 }
 
+async function recordStudentVisit(studentId: string, env: Env): Promise<void> {
+  const activeVisit = await env.DB.prepare(
+    `UPDATE student_portal_visits
+        SET last_seen_at = CURRENT_TIMESTAMP
+      WHERE id = (
+        SELECT id
+          FROM student_portal_visits
+         WHERE student_id = ?1
+           AND last_seen_at >= datetime('now', '-30 minutes')
+         ORDER BY last_seen_at DESC
+         LIMIT 1
+      )`,
+  ).bind(studentId).run();
+
+  if (activeVisit.meta.changes === 0) {
+    await env.DB.prepare(
+      `INSERT INTO student_portal_visits (student_id)
+       VALUES (?1)`,
+    ).bind(studentId).run();
+  }
+}
+
 async function profileResponse(
   request: Request,
   env: Env,
@@ -248,11 +276,13 @@ async function profileResponse(
 ): Promise<Response> {
   if (!allowAdmin) {
     const student = await authenticatedStudent(request, env);
+    await recordStudentVisit(student.id, env);
     return profileForStudent(student, env, false);
   }
 
   const principal = await authenticatedPrincipal(request, env);
   if (principal.student) {
+    await recordStudentVisit(principal.student.id, env);
     return profileForStudent(principal.student, env, false);
   }
 
@@ -349,6 +379,18 @@ function escapeHtml(value: string): string {
   })[character] || character);
 }
 
+function formatVisitDate(value: string | null): string {
+  if (!value) return "Zatím bez návštěvy";
+  const normalized = value.includes("T") ? value : `${value.replace(" ", "T")}Z`;
+  const date = new Date(normalized);
+  if (Number.isNaN(date.getTime())) return "Neznámé datum";
+  return new Intl.DateTimeFormat("cs-CZ", {
+    timeZone: "Europe/Prague",
+    dateStyle: "short",
+    timeStyle: "short",
+  }).format(date);
+}
+
 async function adminLandingResponse(
   request: Request,
   env: Env,
@@ -359,18 +401,32 @@ async function adminLandingResponse(
   }
 
   const result = await env.DB.prepare(
-    `SELECT id, display_name, material_path
-       FROM students
-      WHERE enabled = 1
-      ORDER BY display_name COLLATE NOCASE`,
-  ).all<StudentRow>();
+    `SELECT s.id,
+            s.display_name,
+            s.material_path,
+            COUNT(v.id) AS visit_count,
+            COALESCE(SUM(
+              CASE WHEN v.started_at >= datetime('now', '-30 days') THEN 1 ELSE 0 END
+            ), 0) AS visits_30d,
+            MAX(v.last_seen_at) AS last_visit_at
+       FROM students s
+       LEFT JOIN student_portal_visits v ON v.student_id = s.id
+      WHERE s.enabled = 1
+      GROUP BY s.id, s.display_name, s.material_path
+      ORDER BY s.display_name COLLATE NOCASE`,
+  ).all<AdminStudentRow>();
   const students = result.results || [];
 
   const cards = students.length
     ? students.map((student) => `
         <a class="student-card" href="${PORTAL_PREFIX}/admin/view/${encodeURIComponent(student.id)}">
           <strong>${escapeHtml(student.display_name)}</strong>
-          <span>Otevřít studentskou zónu</span>
+          <div class="stats" aria-label="Statistika návštěv">
+            <span><b>${Number(student.visit_count) || 0}</b> celkem</span>
+            <span><b>${Number(student.visits_30d) || 0}</b> za 30 dní</span>
+          </div>
+          <small>Poslední návštěva: ${escapeHtml(formatVisitDate(student.last_visit_at))}</small>
+          <span class="open">Otevřít studentskou zónu</span>
         </a>
       `).join("")
     : `<p class="empty">V databázi nejsou žádní aktivní studenti.</p>`;
@@ -388,8 +444,8 @@ async function adminLandingResponse(
     .top{display:flex;justify-content:space-between;gap:20px;align-items:center;margin-bottom:28px}.eyebrow{font-size:12px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:#2563eb}
     h1{margin:6px 0 8px;font-size:clamp(28px,5vw,44px);letter-spacing:-.04em}.copy{margin:0;color:#627d98}.logout{color:#334e68;text-decoration:none;font-weight:700}
     .notice{margin:24px 0;padding:14px 16px;border:1px solid #bfdbfe;border-radius:12px;background:#eff6ff;color:#1e3a5f;font-size:14px}
-    .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:14px}.student-card{display:flex;min-height:120px;padding:20px;flex-direction:column;justify-content:center;border:1px solid #d9e2ec;border-radius:16px;background:#fff;color:inherit;text-decoration:none;box-shadow:0 8px 24px rgba(15,23,42,.06)}
-    .student-card:hover{border-color:#93c5fd;transform:translateY(-2px)}.student-card strong{font-size:19px}.student-card span{margin-top:7px;color:#2563eb;font-size:14px;font-weight:700}.empty{padding:20px;background:#fff;border-radius:14px}
+    .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:14px}.student-card{display:flex;min-height:190px;padding:20px;flex-direction:column;border:1px solid #d9e2ec;border-radius:16px;background:#fff;color:inherit;text-decoration:none;box-shadow:0 8px 24px rgba(15,23,42,.06);transition:.18s ease}
+    .student-card:hover{border-color:#93c5fd;transform:translateY(-2px)}.student-card>strong{font-size:19px}.stats{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:18px 0 10px}.stats span{display:flex;flex-direction:column;margin:0;padding:9px 10px;border-radius:10px;background:#f4f7fb;color:#627d98;font-size:12px;font-weight:700}.stats b{color:#102a43;font-size:20px}.student-card small{color:#627d98}.student-card .open{margin-top:auto;padding-top:17px;color:#2563eb;font-size:14px;font-weight:700}.empty{padding:20px;background:#fff;border-radius:14px}
   </style>
 </head>
 <body>
@@ -398,7 +454,7 @@ async function adminLandingResponse(
       <div><div class="eyebrow">Administrátor</div><h1>Studentské zóny</h1><p class="copy">Vyber studenta, jehož portál chceš zkontrolovat.</p></div>
       <a class="logout" href="/cdn-cgi/access/logout">Odhlásit</a>
     </div>
-    <div class="notice">Administrátorský náhled je read-only vůči D1. Změny checkboxů úkolů se ukládají pouze lokálně v tomto prohlížeči.</div>
+    <div class="notice">Návštěva se započítá po alespoň 30 minutách neaktivity. Administrátorské náhledy se nepočítají a zůstávají read-only vůči D1; změny checkboxů úkolů se ukládají pouze lokálně v tomto prohlížeči.</div>
     <section class="grid">${cards}</section>
   </main>
 </body>
