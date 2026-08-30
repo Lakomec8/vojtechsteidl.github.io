@@ -7,6 +7,7 @@ This directory is a staging scaffold for moving `vojtechsteidl.eu` away from a p
 - Public website assets are built from an explicit allowlist.
 - `students/*.json`, `docs/`, `.uploads/` and scripts are never copied into the deployment artifact.
 - Student profile data is stored in Cloudflare D1.
+- Student portal visits are stored in D1 in 30-minute sessions; administrator previews are excluded.
 - Cloudflare Access authenticates the user.
 - The Worker validates the signed `Cf-Access-Jwt-Assertion` JWT before trusting identity.
 - The authenticated email is mapped to exactly one student record in D1.
