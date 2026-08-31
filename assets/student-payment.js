@@ -9,6 +9,7 @@
     const response = await fetch("./api/profile", {
       cache: "no-store",
       credentials: "same-origin",
+      headers: { "X-Requested-With": "XMLHttpRequest" },
     });
     if (!response.ok) throw new Error("profile request failed");
 

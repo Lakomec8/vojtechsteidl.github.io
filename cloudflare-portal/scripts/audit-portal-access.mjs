@@ -170,11 +170,13 @@ const identities = resultRows(runD1(`
 const report = {
   checkedAt: new Date().toISOString(),
   d1Reachable: true,
+  accessApplicationsReachable: false,
   accessPoliciesReachable: false,
   accessLogsReachable: false,
   applicationFound: false,
   identities: [],
   errors: [],
+  warnings: [],
 };
 
 const active = identities.filter((row) => Number(row.enabled) === 1);
@@ -189,6 +191,7 @@ try {
   const accountApps = await cloudflare(`/accounts/${encodeURIComponent(accountId)}/access/apps?per_page=100`, {
     optional: true,
   });
+  if (Array.isArray(accountApps)) report.accessApplicationsReachable = true;
   let app = findPortalApplication(accountApps);
   let accessScope = app ? { type: "accounts", id: accountId } : null;
 
@@ -201,6 +204,7 @@ try {
       const zoneApps = await cloudflare(`/zones/${encodeURIComponent(zone.id)}/access/apps?per_page=100`, {
         optional: true,
       });
+      if (Array.isArray(zoneApps)) report.accessApplicationsReachable = true;
       app = findPortalApplication(zoneApps);
       if (app) {
         accessScope = { type: "zones", id: zone.id };
@@ -210,7 +214,11 @@ try {
   }
 
   if (!app?.id || !accessScope) {
-    report.errors.push("portal-access-application-not-found");
+    if (report.accessApplicationsReachable) {
+      report.errors.push("portal-access-application-not-found");
+    } else {
+      report.warnings.push("access-applications-api-unavailable");
+    }
   } else {
       report.applicationFound = true;
       const policies = await cloudflare(
@@ -218,7 +226,7 @@ try {
         { optional: true },
       );
       if (!Array.isArray(policies)) {
-        report.errors.push("access-policies-api-unavailable");
+        report.warnings.push("access-policies-api-unavailable");
       } else {
         report.accessPoliciesReachable = true;
         let logsSupported = true;
@@ -242,7 +250,7 @@ try {
       }
   }
 } catch (error) {
-  report.errors.push(`access-audit-error:${error instanceof Error ? error.message : "unknown"}`);
+  report.warnings.push(`access-audit-error:${error instanceof Error ? error.message : "unknown"}`);
 }
 
 if (!report.identities.length) {

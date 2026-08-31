@@ -35,6 +35,7 @@
     const response = await fetch(url, {
       cache: "no-store",
       credentials: "same-origin",
+      headers: { "X-Requested-With": "XMLHttpRequest" },
       ...options,
     });
     let payload = null;
