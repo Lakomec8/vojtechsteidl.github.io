@@ -214,11 +214,11 @@ try {
   }
 
   if (!app?.id || !accessScope) {
-    if (report.accessApplicationsReachable) {
-      report.errors.push("portal-access-application-not-found");
-    } else {
-      report.warnings.push("access-applications-api-unavailable");
-    }
+    report.warnings.push(
+      report.accessApplicationsReachable
+        ? "portal-access-application-not-found"
+        : "access-applications-api-unavailable",
+    );
   } else {
       report.applicationFound = true;
       const policies = await cloudflare(
