@@ -1,0 +1,68 @@
+name: Upload student materials to R2
+
+on:
+  push:
+    paths:
+      - ".student-material-upload/**/READY"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: student-material-upload-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  upload:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Install Cloudflare portal dependencies
+        working-directory: cloudflare-portal
+        run: npm install --no-audit --no-fund
+
+      - name: Upload queued materials and update D1
+        shell: bash
+        run: |
+          set -euo pipefail
+          shopt -s nullglob
+          ready_files=(.student-material-upload/*/READY)
+          if [ ${#ready_files[@]} -eq 0 ]; then
+            echo "No READY upload found."
+            exit 0
+          fi
+          for ready in "${ready_files[@]}"; do
+            upload_dir="$(dirname "$ready")"
+            node cloudflare-portal/scripts/upload-student-material-queue.mjs "$upload_dir/META.json"
+            rm -rf "$upload_dir"
+          done
+
+      - name: Commit consumed queue entries
+        shell: bash
+        run: |
+          set -euo pipefail
+          if git diff --quiet && [ -z "$(git status --porcelain)" ]; then
+            echo "No queue cleanup to commit."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A .student-material-upload
+          git commit -m "Consume student material upload queue"
+          git pull --rebase origin "${GITHUB_REF_NAME}"
+          git push origin "HEAD:${GITHUB_REF_NAME}"
