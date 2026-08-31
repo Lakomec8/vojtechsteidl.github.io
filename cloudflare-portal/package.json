@@ -8,6 +8,7 @@
     "cf:types": "wrangler types",
     "typecheck": "wrangler types && tsc --noEmit",
     "test:fixtures": "node scripts/validate-test-fixtures.mjs",
+    "audit:access": "node scripts/audit-portal-access.mjs",
     "dev": "npm run build && wrangler dev",
     "deploy": "npm run build && npm run typecheck && wrangler deploy",
     "db:migrate:local": "wrangler d1 migrations apply DB --local",
