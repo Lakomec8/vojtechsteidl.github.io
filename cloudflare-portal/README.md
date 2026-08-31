@@ -50,6 +50,21 @@ npm run db:seed
 
 Both `student-emails.json` and `seed.private.sql` are gitignored.
 
+## Expired Access sessions
+
+All browser requests to the portal API must send
+`X-Requested-With: XMLHttpRequest`. Cloudflare Access then returns `401` when
+the application session expires, and the portal can show the user the recovery
+link at `/cdn-cgi/access/logout` instead of leaving the dashboard stuck.
+
+After using the logout link, wait 30 seconds before opening the portal again so
+previously issued Access tokens have stopped being accepted.
+
+The deployment audit always blocks active D1 accounts with a missing email or
+profile. Comparing those accounts with Access policies additionally requires
+the CI API token to have read permission for Access applications and policies;
+without that scope, the audit reports a warning and continues the deployment.
+
 ## Database
 
 Apply the schema:
