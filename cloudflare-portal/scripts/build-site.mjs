@@ -99,7 +99,7 @@ portalJs = replaceOrFail(
 portalJs = replaceOrFail(
   portalJs,
   '    const response = await fetch(\n      `students/${encodeURIComponent(token)}.json?ts=${Date.now()}`,\n      { cache: "no-store" },\n    );',
-  '    const response = await fetch("./api/profile", {\n      cache: "no-store",\n      credentials: "same-origin",\n    });',
+  '    const response = await fetch("./api/profile", {\n      cache: "no-store",\n      credentials: "same-origin",\n      headers: { "X-Requested-With": "XMLHttpRequest" },\n    });',
   "route profile reads through authenticated API",
 );
 portalJs = replaceOrFail(
@@ -115,6 +115,14 @@ portalJs = replaceOrFail(
   "use Cloudflare Access logout",
 );
 await writeFile(portalJsPath, portalJs);
+
+if (
+  !portalJs.includes('headers: { "X-Requested-With": "XMLHttpRequest" }') ||
+  !portalJs.includes("Přihlášení vypršelo") ||
+  !portalJs.includes('/cdn-cgi/access/logout')
+) {
+  throw new Error("Private portal is missing expired-session recovery.");
+}
 
 const portalHtmlPath = join(dist, "student-portal.html");
 const portalHtml = await readFile(portalHtmlPath, "utf8");

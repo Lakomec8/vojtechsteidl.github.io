@@ -16,6 +16,8 @@
   const escapeAttribute = escapeHtml;
   const emptyState = (message) => `<div class="empty">${escapeHtml(message)}</div>`;
 
+  class SessionExpiredError extends Error {}
+
   const parseDate = (value) => {
     if (!value) return null;
     const date = new Date(`${value}T00:00:00`);
@@ -55,12 +57,15 @@
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
-  const showError = (message) => {
+  const showError = (message, sessionExpired = false) => {
+    const action = sessionExpired
+      ? '<a href="/cdn-cgi/access/logout">Obnovit přihlášení</a><p><small>Po odhlášení znovu otevři studentskou zónu.</small></p>'
+      : '<a href="index.html">Zpět na hlavní stránku</a>';
     document.body.innerHTML = `
       <main class="error">
         <h1>Studentský portál není dostupný</h1>
         <p>${escapeHtml(message)}</p>
-        <a href="index.html">Zpět na hlavní stránku</a>
+        ${action}
       </main>
     `;
   };
@@ -93,6 +98,18 @@
       `students/${encodeURIComponent(token)}.json?ts=${Date.now()}`,
       { cache: "no-store" },
     );
+
+    if (response.status === 401) {
+      throw new SessionExpiredError(
+        "Přihlášení vypršelo. Obnov ho a pak studentskou zónu otevři znovu.",
+      );
+    }
+
+    if (response.status === 403) {
+      throw new Error(
+        "Přihlášený účet nemá přístup. Zkontroluj použitý e-mail nebo kontaktuj lektora.",
+      );
+    }
 
     if (!response.ok) {
       throw new Error(
@@ -676,7 +693,10 @@
     updateSummary();
     app.hidden = false;
   } catch (error) {
-    showError(error.message || "Došlo k neočekávané chybě.");
+    showError(
+      error.message || "Došlo k neočekávané chybě.",
+      error instanceof SessionExpiredError,
+    );
   } finally {
     loader.classList.add("hidden");
   }

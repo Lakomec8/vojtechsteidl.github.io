@@ -32,7 +32,10 @@
         : "./api/profile";
       const response = await fetch(profileUrl, {
         cache: "no-store",
-        ...(token ? {} : { credentials: "same-origin" }),
+        ...(token ? {} : {
+          credentials: "same-origin",
+          headers: { "X-Requested-With": "XMLHttpRequest" },
+        }),
       });
       if (!response.ok) return;
 

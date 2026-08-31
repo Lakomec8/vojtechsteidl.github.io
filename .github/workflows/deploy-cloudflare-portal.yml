@@ -9,6 +9,8 @@ on:
       - "assets/student-portal.js"
       - "assets/student-portal.css"
       - "assets/student-dashboard-featured.js"
+      - "assets/student-next-lesson.js"
+      - "assets/student-payment.js"
       - "assets/student-self-checks.js"
       - ".github/workflows/deploy-cloudflare-portal.yml"
   workflow_dispatch:
@@ -60,7 +62,7 @@ jobs:
         working-directory: cloudflare-portal
         run: npm run db:migrate:remote
 
-      - name: Verify every active account can pass Cloudflare Access
+      - name: Audit active portal accounts and Access policy
         working-directory: cloudflare-portal
         env:
           PORTAL_POLICY_AUD: 89190bdbddce22e6d1bc3c2d2e42ae790ec5aedfb00adbe8eb0ce6d0c71225d2
