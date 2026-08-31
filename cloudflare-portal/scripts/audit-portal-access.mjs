@@ -98,7 +98,7 @@ function policyCoverage(email, policies) {
 function safeIdentity(row, policyStatus, latestAuth) {
   return {
     kind: row.kind,
-    id: row.ref_id,
+    id: row.kind === "admin" ? "administrator" : row.ref_id,
     displayName: row.display_name,
     enabled: Number(row.enabled) === 1,
     hasEmail: Boolean(normalizedEmail(row.email)),
@@ -114,6 +114,17 @@ function safeIdentity(row, policyStatus, latestAuth) {
         }
       : null,
   };
+}
+
+function identityLabel(row) {
+  return row.kind === "admin" ? "administrator" : `${row.kind}:${row.ref_id}`;
+}
+
+function findPortalApplication(apps) {
+  if (!Array.isArray(apps)) return null;
+  return apps.find((candidate) => candidate?.aud === policyAud)
+    || apps.find((candidate) => String(candidate?.domain || "").includes("vojtechsteidl.eu/student-portal"))
+    || null;
 }
 
 async function latestAuthentication(email, appId) {
@@ -168,27 +179,42 @@ const report = {
 
 const active = identities.filter((row) => Number(row.enabled) === 1);
 for (const row of active) {
-  if (!normalizedEmail(row.email)) report.errors.push(`${row.kind}:${row.ref_id}:missing-email`);
+  if (!normalizedEmail(row.email)) report.errors.push(`${identityLabel(row)}:missing-email`);
   if (row.kind === "student" && Number(row.has_profile) !== 1) {
     report.errors.push(`student:${row.ref_id}:missing-profile`);
   }
 }
 
 try {
-  const apps = await cloudflare(`/accounts/${encodeURIComponent(accountId)}/access/apps?per_page=100`, {
+  const accountApps = await cloudflare(`/accounts/${encodeURIComponent(accountId)}/access/apps?per_page=100`, {
     optional: true,
   });
-  if (!Array.isArray(apps)) {
-    report.errors.push("access-apps-api-unavailable");
+  let app = findPortalApplication(accountApps);
+  let accessScope = app ? { type: "accounts", id: accountId } : null;
+
+  if (!app) {
+    const zones = await cloudflare(
+      `/zones?name=vojtechsteidl.eu&account.id=${encodeURIComponent(accountId)}&per_page=10`,
+      { optional: true },
+    );
+    for (const zone of Array.isArray(zones) ? zones : []) {
+      const zoneApps = await cloudflare(`/zones/${encodeURIComponent(zone.id)}/access/apps?per_page=100`, {
+        optional: true,
+      });
+      app = findPortalApplication(zoneApps);
+      if (app) {
+        accessScope = { type: "zones", id: zone.id };
+        break;
+      }
+    }
+  }
+
+  if (!app?.id || !accessScope) {
+    report.errors.push("portal-access-application-not-found");
   } else {
-    const app = apps.find((candidate) => candidate?.aud === policyAud)
-      || apps.find((candidate) => String(candidate?.domain || "").includes("vojtechsteidl.eu/student-portal"));
-    if (!app?.id) {
-      report.errors.push("portal-access-application-not-found");
-    } else {
       report.applicationFound = true;
       const policies = await cloudflare(
-        `/accounts/${encodeURIComponent(accountId)}/access/apps/${encodeURIComponent(app.id)}/policies?per_page=1000`,
+        `/${accessScope.type}/${encodeURIComponent(accessScope.id)}/access/apps/${encodeURIComponent(app.id)}/policies?per_page=1000`,
         { optional: true },
       );
       if (!Array.isArray(policies)) {
@@ -210,11 +236,10 @@ try {
             }
           }
           report.identities.push(safeIdentity(row, coverage, latestAuth));
-          if (coverage === "missing") report.errors.push(`${row.kind}:${row.ref_id}:not-in-access-policy`);
-          if (coverage === "unknown") report.errors.push(`${row.kind}:${row.ref_id}:access-policy-not-provable`);
+          if (coverage === "missing") report.errors.push(`${identityLabel(row)}:not-in-access-policy`);
+          if (coverage === "unknown") report.errors.push(`${identityLabel(row)}:access-policy-not-provable`);
         }
       }
-    }
   }
 } catch (error) {
   report.errors.push(`access-audit-error:${error instanceof Error ? error.message : "unknown"}`);
