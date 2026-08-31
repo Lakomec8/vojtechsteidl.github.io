@@ -42,6 +42,14 @@ function rows(payload) {
   return [];
 }
 
+function sourceList(item) {
+  if (Array.isArray(item.sources) && item.sources.length) {
+    return item.sources.map((value) => String(value || "").trim()).filter(Boolean);
+  }
+  const single = String(item.source || "").trim();
+  return single ? [single] : [];
+}
+
 if (process.argv.length !== 3) fail("Usage: node scripts/upload-student-material-queue.mjs <META.json>");
 for (const required of ["CLOUDFLARE_API_TOKEN", "CLOUDFLARE_ACCOUNT_ID"]) {
   if (!process.env[required]) fail(`Missing required environment variable: ${required}`);
@@ -65,16 +73,19 @@ const uploadedKeys = [];
 
 try {
   for (const item of meta.files) {
-    const source = String(item.source || "").trim();
+    const sources = sourceList(item);
     const fileName = String(item.fileName || "").trim();
     const title = String(item.title || "").trim();
     const date = String(item.date || "").trim();
-    if (!source || !fileName || !title || !/^\d{4}-\d{2}-\d{2}$/.test(date)) fail("Invalid file metadata");
+    if (!sources.length || !fileName || !title || !/^\d{4}-\d{2}-\d{2}$/.test(date)) fail("Invalid file metadata");
     if (!fileName.toLowerCase().endsWith(".pdf") || /[\\/]/.test(fileName)) fail(`Invalid PDF filename: ${fileName}`);
 
-    const b64 = readFileSync(resolve(queueDir, source), "utf8").replace(/\s+/g, "");
+    const b64 = sources
+      .map((source) => readFileSync(resolve(queueDir, source), "utf8"))
+      .join("")
+      .replace(/\s+/g, "");
     const bytes = Buffer.from(b64, "base64");
-    if (bytes.subarray(0, 5).toString("ascii") !== "%PDF-") fail(`Decoded file is not a PDF: ${source}`);
+    if (bytes.subarray(0, 5).toString("ascii") !== "%PDF-") fail(`Decoded file is not a PDF: ${fileName}`);
 
     const localPath = join(tempDir, fileName);
     writeFileSync(localPath, bytes);
