@@ -44,6 +44,8 @@ jobs:
           npm run db:migrate:local
           npx wrangler d1 execute DB --local --command "SELECT (SELECT COUNT(*) FROM self_check_tests WHERE status = 'published') AS tests, (SELECT COUNT(*) FROM self_check_questions) AS questions" --json > /tmp/self-check-seed.json
           node -e "const fs=require('node:fs');const rows=JSON.parse(fs.readFileSync('/tmp/self-check-seed.json','utf8'));const result=rows?.[0]?.results?.[0];if(Number(result?.tests)<1||Number(result?.questions)<8)process.exit(1)"
+          npx wrangler d1 execute DB --local --command "SELECT (SELECT SUM(amount) FROM tutoring_income) AS revenue, (SELECT SUM(duration_minutes)/60 FROM tutoring_lessons) AS hours, (SELECT COUNT(*) FROM tutoring_lessons) AS lessons, (SELECT COUNT(*) FROM tutoring_income) AS incomes, (SELECT COUNT(*) FROM tutoring_calendar_events WHERE status='completed') AS completed, (SELECT COUNT(*) FROM tutoring_calendar_events WHERE status='planned') AS planned, (SELECT COUNT(*) FROM (SELECT google_event_id FROM tutoring_lessons WHERE google_event_id IS NOT NULL GROUP BY google_event_id HAVING COUNT(*) > 1)) AS duplicates" --json > /tmp/tutoring-os-seed.json
+          node -e "const fs=require('node:fs');const rows=JSON.parse(fs.readFileSync('/tmp/tutoring-os-seed.json','utf8'));const r=rows?.[0]?.results?.[0];if(Number(r?.revenue)!==8800||Number(r?.hours)!==21||Number(r?.lessons)!==20||Number(r?.incomes)!==20||Number(r?.completed)!==10||Number(r?.planned)!==18||Number(r?.duplicates)!==0)process.exit(1)"
 
       - name: Build private portal artifact
         run: npm run build
