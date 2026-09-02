@@ -124,8 +124,25 @@ function fullDateLabel(value: string): string {
   }).format(date);
 }
 
-function monthKey(value: string): string {
-  return value.slice(0, 7);
+function weekStart(value: string): string {
+  const date = new Date(`${value.slice(0, 10)}T12:00:00Z`);
+  if (Number.isNaN(date.getTime())) return value.slice(0, 10);
+  const weekday = date.getUTCDay() || 7;
+  date.setUTCDate(date.getUTCDate() - weekday + 1);
+  return date.toISOString().slice(0, 10);
+}
+
+function weekLabel(value: string): string {
+  const start = new Date(`${value}T12:00:00Z`);
+  const end = new Date(start);
+  end.setUTCDate(end.getUTCDate() + 6);
+  const startDay = start.getUTCDate();
+  const endDay = end.getUTCDate();
+  const startMonth = start.getUTCMonth() + 1;
+  const endMonth = end.getUTCMonth() + 1;
+  return startMonth === endMonth
+    ? `${startDay}.–${endDay}. ${endMonth}.`
+    : `${startDay}. ${startMonth}.–${endDay}. ${endMonth}.`;
 }
 
 function monthName(value: string): string {
@@ -190,17 +207,32 @@ function renderDashboard(data: Awaited<ReturnType<typeof dashboardData>>, email:
   const allowance = Math.round(revenue * 0.6);
   const estimatedTaxBase = Math.max(0, revenue - allowance);
 
-  const monthly = new Map<string, { revenue: number; minutes: number; count: number }>();
-  for (const lesson of lessons) {
-    const key = monthKey(lesson.lesson_date);
-    const item = monthly.get(key) || { revenue: 0, minutes: 0, count: 0 };
-    item.revenue += lesson.payment_status === "paid" ? Number(lesson.amount) : 0;
+  const weekly = new Map<string, { revenue: number; minutes: number; count: number }>();
+  for (const lesson of paidLessons) {
+    const key = weekStart(lesson.lesson_date);
+    const item = weekly.get(key) || { revenue: 0, minutes: 0, count: 0 };
+    item.revenue += Number(lesson.amount);
     item.minutes += Number(lesson.duration_minutes);
     item.count += 1;
-    monthly.set(key, item);
+    weekly.set(key, item);
   }
-  const monthRows = [...monthly.entries()].sort(([a], [b]) => a.localeCompare(b));
-  const maxMonthRevenue = Math.max(1, ...monthRows.map(([, item]) => item.revenue));
+
+  const paidWeekKeys = [...weekly.keys()].sort();
+  const currentWeek = weekStart(new Date().toISOString().slice(0, 10));
+  const firstWeek = paidWeekKeys[0] || currentWeek;
+  const lastWeek = paidWeekKeys.at(-1) && paidWeekKeys.at(-1)! > currentWeek
+    ? paidWeekKeys.at(-1)!
+    : currentWeek;
+  const allWeekRows: Array<[string, { revenue: number; minutes: number; count: number }]> = [];
+  const weekCursor = new Date(`${firstWeek}T12:00:00Z`);
+  const weekEnd = new Date(`${lastWeek}T12:00:00Z`);
+  while (weekCursor <= weekEnd) {
+    const key = weekCursor.toISOString().slice(0, 10);
+    allWeekRows.push([key, weekly.get(key) || { revenue: 0, minutes: 0, count: 0 }]);
+    weekCursor.setUTCDate(weekCursor.getUTCDate() + 7);
+  }
+  const weekRows = allWeekRows.slice(-12);
+  const maxWeekRevenue = Math.max(1, ...weekRows.map(([, item]) => item.revenue));
 
   const studentStats = students.map((student) => {
     const ownLessons = lessons.filter((lesson) => lesson.student_id === student.id);
@@ -259,9 +291,12 @@ function renderDashboard(data: Awaited<ReturnType<typeof dashboardData>>, email:
     </article>`;
   }).join("");
 
-  const monthBars = monthRows.map(([key, item]) => {
-    const height = Math.max(10, Math.round((item.revenue / maxMonthRevenue) * 150));
-    return `<div class="bar-column"><span>${esc(money(item.revenue))}</span><div class="bar" style="height:${height}px"></div><strong>${esc(monthName(key).split(" ")[0])}</strong><small>${item.count} lekcí</small></div>`;
+  const weekBars = weekRows.map(([key, item]) => {
+    const height = item.revenue > 0
+      ? Math.max(10, Math.round((item.revenue / maxWeekRevenue) * 150))
+      : 3;
+    const lessonCount = item.count === 1 ? "1 lekce" : `${item.count} lekcí`;
+    return `<div class="bar-column"><span>${esc(money(item.revenue))}</span><div class="bar" style="height:${height}px"></div><strong>${esc(weekLabel(key))}</strong><small>${item.count ? lessonCount : "bez lekcí"}</small></div>`;
   }).join("");
 
   const studentBars = studentStats.filter((student) => student.revenue > 0).map((student) => {
@@ -282,13 +317,13 @@ function renderDashboard(data: Awaited<ReturnType<typeof dashboardData>>, email:
     button,a{font:inherit}.shell{width:min(1480px,calc(100% - 32px));margin:20px auto;display:grid;grid-template-columns:226px minmax(0,1fr);min-height:calc(100vh - 40px);border:1px solid rgba(151,148,137,.55);border-radius:28px;background:rgba(248,247,241,.88);box-shadow:var(--shadow);overflow:hidden;backdrop-filter:blur(16px)}
     .sidebar{padding:24px 18px;background:rgba(231,229,220,.76);border-right:1px solid var(--line);display:flex;flex-direction:column;gap:28px}.brand{display:flex;gap:12px;align-items:center;padding:0 7px}.brand-mark{width:42px;height:42px;border-radius:14px;display:grid;place-items:center;background:var(--mint);box-shadow:inset 0 1px rgba(255,255,255,.8),0 7px 14px rgba(56,129,101,.18);font-weight:900}.brand strong{display:block;font-size:15px}.brand span{font-size:11px;color:var(--muted);letter-spacing:.08em;text-transform:uppercase}.nav{display:grid;gap:7px}.nav button{display:flex;align-items:center;gap:11px;width:100%;border:0;background:transparent;color:#5d5f58;padding:11px 12px;border-radius:13px;text-align:left;cursor:pointer;font-weight:700}.nav button:hover{background:rgba(255,255,255,.55)}.nav button.active{color:var(--ink);background:var(--surface);box-shadow:var(--shadow-soft)}.nav svg{width:18px;height:18px}.sync-card{margin-top:auto;padding:15px;border-radius:18px;background:var(--surface);border:1px solid var(--line);box-shadow:var(--shadow-soft)}.sync-head{display:flex;align-items:center;gap:8px;font-weight:800;font-size:13px}.sync-dot{width:9px;height:9px;border-radius:50%;background:var(--mint-strong);box-shadow:0 0 0 4px var(--mint-soft)}.sync-card p{font-size:12px;color:var(--muted);line-height:1.5;margin:10px 0 0}.account{padding:9px 7px 0;border-top:1px solid var(--line);font-size:11px;color:var(--muted);overflow:hidden;text-overflow:ellipsis}
     main{padding:28px 30px 44px;min-width:0}.topbar{display:flex;justify-content:space-between;gap:24px;align-items:flex-start;margin-bottom:24px}.eyebrow{font-size:11px;font-weight:900;letter-spacing:.13em;text-transform:uppercase;color:#557765}.topbar h1{font-size:clamp(32px,4vw,56px);line-height:.98;letter-spacing:-.055em;margin:7px 0 8px}.topbar p{margin:0;color:var(--muted)}.top-actions{display:flex;gap:9px;align-items:center}.button{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--line);border-radius:999px;padding:10px 15px;color:var(--ink);background:var(--surface);text-decoration:none;font-weight:800;font-size:13px;box-shadow:var(--shadow-soft)}.button.primary{background:var(--mint);border-color:#83dcb9}.button:hover{transform:translateY(-1px)}
-    .view{display:none}.view.active{display:block}.kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;margin-bottom:14px}.card{background:rgba(251,250,246,.93);border:1px solid var(--line);border-radius:22px;box-shadow:var(--shadow-soft)}.kpi{padding:18px;min-height:145px;display:flex;flex-direction:column}.kpi-top{display:flex;justify-content:space-between;align-items:center}.kpi-label{font-size:12px;color:var(--muted);font-weight:800}.icon-box{width:34px;height:34px;border-radius:11px;background:var(--surface-2);display:grid;place-items:center}.icon-box.mint{background:var(--mint-soft)}.kpi strong{font-size:clamp(27px,3vw,42px);letter-spacing:-.045em;margin-top:auto}.kpi small{color:var(--muted);margin-top:3px}.delta{color:#347c61;font-weight:800}.content-grid{display:grid;grid-template-columns:minmax(0,1.42fr) minmax(320px,.78fr);gap:14px;margin-bottom:14px}.section{padding:20px}.section-head{display:flex;justify-content:space-between;gap:16px;align-items:flex-start;margin-bottom:18px}.section h2{margin:0;font-size:19px;letter-spacing:-.025em}.section-head p{margin:4px 0 0;color:var(--muted);font-size:12px}.chip{border:1px solid var(--line);background:var(--surface-2);padding:7px 11px;border-radius:999px;font-size:11px;font-weight:800}.chart{height:220px;display:flex;align-items:flex-end;gap:22px;padding:28px 8px 0;border-bottom:1px solid var(--line);background-image:linear-gradient(rgba(62,63,57,.06) 1px,transparent 1px);background-size:100% 48px}.bar-column{height:100%;flex:1;min-width:64px;display:flex;align-items:center;justify-content:flex-end;flex-direction:column;position:relative}.bar-column>span{font-size:11px;font-weight:800;margin-bottom:7px}.bar{width:min(58px,70%);border-radius:14px 14px 4px 4px;background:linear-gradient(180deg,var(--mint),#78d8b4);box-shadow:inset 0 1px rgba(255,255,255,.75),0 8px 16px rgba(67,140,111,.2)}.bar-column strong{font-size:12px;margin-top:9px;text-transform:capitalize}.bar-column small{font-size:10px;color:var(--muted)}.split-list{display:grid;gap:14px}.split-row{display:grid;grid-template-columns:72px minmax(80px,1fr) 70px;gap:9px;align-items:center;font-size:12px}.split-row span{font-weight:700}.split-row strong{text-align:right}.track{height:9px;border-radius:99px;background:var(--surface-2);overflow:hidden}.track i{display:block;height:100%;border-radius:inherit;background:var(--mint-strong)}.track i.blue{background:var(--blue)}.track i.amber{background:var(--amber)}.track i.violet{background:var(--violet)}.track i.stone{background:#aaa99f}
+    .view{display:none}.view.active{display:block}.kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;margin-bottom:14px}.card{background:rgba(251,250,246,.93);border:1px solid var(--line);border-radius:22px;box-shadow:var(--shadow-soft)}.kpi{padding:18px;min-height:145px;display:flex;flex-direction:column}.kpi-top{display:flex;justify-content:space-between;align-items:center}.kpi-label{font-size:12px;color:var(--muted);font-weight:800}.icon-box{width:34px;height:34px;border-radius:11px;background:var(--surface-2);display:grid;place-items:center}.icon-box.mint{background:var(--mint-soft)}.kpi strong{font-size:clamp(27px,3vw,42px);letter-spacing:-.045em;margin-top:auto}.kpi small{color:var(--muted);margin-top:3px}.delta{color:#347c61;font-weight:800}.content-grid{display:grid;grid-template-columns:minmax(0,1.42fr) minmax(320px,.78fr);gap:14px;margin-bottom:14px}.section{padding:20px}.section-head{display:flex;justify-content:space-between;gap:16px;align-items:flex-start;margin-bottom:18px}.section h2{margin:0;font-size:19px;letter-spacing:-.025em}.section-head p{margin:4px 0 0;color:var(--muted);font-size:12px}.chip{border:1px solid var(--line);background:var(--surface-2);padding:7px 11px;border-radius:999px;font-size:11px;font-weight:800}.chart{height:220px;display:flex;align-items:flex-end;gap:16px;padding:28px 8px 0;border-bottom:1px solid var(--line);overflow-x:auto;overflow-y:hidden;background-image:linear-gradient(rgba(62,63,57,.06) 1px,transparent 1px);background-size:100% 48px}.bar-column{height:100%;flex:0 0 76px;min-width:76px;display:flex;align-items:center;justify-content:flex-end;flex-direction:column;position:relative}.bar-column>span{font-size:11px;font-weight:800;margin-bottom:7px}.bar{width:min(58px,70%);border-radius:14px 14px 4px 4px;background:linear-gradient(180deg,var(--mint),#78d8b4);box-shadow:inset 0 1px rgba(255,255,255,.75),0 8px 16px rgba(67,140,111,.2)}.bar-column strong{font-size:12px;margin-top:9px;text-transform:capitalize}.bar-column small{font-size:10px;color:var(--muted)}.split-list{display:grid;gap:14px}.split-row{display:grid;grid-template-columns:72px minmax(80px,1fr) 70px;gap:9px;align-items:center;font-size:12px}.split-row span{font-weight:700}.split-row strong{text-align:right}.track{height:9px;border-radius:99px;background:var(--surface-2);overflow:hidden}.track i{display:block;height:100%;border-radius:inherit;background:var(--mint-strong)}.track i.blue{background:var(--blue)}.track i.amber{background:var(--amber)}.track i.violet{background:var(--violet)}.track i.stone{background:#aaa99f}
     .wide-card{padding:20px;overflow:auto}.table-head{display:flex;justify-content:space-between;gap:15px;align-items:center;margin-bottom:14px}.table-head h2{margin:0;font-size:19px}.search{display:flex;align-items:center;gap:8px;padding:9px 13px;border:1px solid var(--line);border-radius:999px;background:var(--surface);color:var(--muted)}.search input{border:0;outline:0;background:transparent;width:150px;color:var(--ink)}table{width:100%;border-collapse:collapse;min-width:780px}th{text-align:left;font-size:10px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);padding:10px 11px;border-bottom:1px solid var(--line)}td{padding:13px 11px;border-bottom:1px solid rgba(213,210,200,.7);font-size:13px;vertical-align:middle}tr:last-child td{border-bottom:0}td small{display:block;color:var(--muted);font-size:10px;margin-top:3px}td.money{font-weight:900}.avatar{display:inline-grid;place-items:center;width:29px;height:29px;border-radius:10px;background:var(--mint);margin-right:9px;box-shadow:inset 0 1px rgba(255,255,255,.7)}.avatar.blue{background:var(--blue)}.avatar.amber{background:var(--amber)}.avatar.violet{background:var(--violet)}.avatar.stone{background:#c9c7be}.pill{display:inline-flex;align-items:center;border-radius:99px;padding:5px 9px;font-size:10px;font-weight:900;background:var(--surface-2);white-space:nowrap}.pill.success{background:var(--mint-soft);color:#2f7258}.pill.planned{background:#e5eef3;color:#4f7187}.pill.muted{color:var(--muted)}.status-dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--mint-strong);margin-right:8px}.status-dot.baseline{background:var(--amber)}
     .timeline{display:grid;gap:10px}.timeline-item{display:grid;grid-template-columns:48px 1fr auto;align-items:center;gap:14px;padding:12px;border:1px solid var(--line);border-radius:16px;background:var(--surface)}.timeline-item.completed{opacity:.72}.date-tile{width:48px;height:50px;border-radius:13px;display:grid;place-items:center;align-content:center;background:var(--surface-2);line-height:1}.date-tile strong{font-size:20px}.date-tile span{font-size:9px;color:var(--muted);text-transform:uppercase;margin-top:4px}.timeline-copy{display:grid}.timeline-copy small{color:var(--muted);font-size:10px}.timeline-copy strong{font-size:14px;margin:2px 0}.timeline-copy span{font-size:11px;color:var(--muted)}
     .tax-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}.tax-hero{padding:25px;min-height:280px;display:flex;flex-direction:column}.tax-number{font-size:clamp(44px,6vw,78px);letter-spacing:-.065em;margin:28px 0 4px}.tax-breakdown{margin-top:auto;display:grid;gap:11px}.tax-row{display:flex;justify-content:space-between;border-top:1px solid var(--line);padding-top:11px;font-size:13px}.tax-row span{color:var(--muted)}.note{padding:14px;border-radius:15px;background:#f6edce;color:#6f5b1f;font-size:12px;line-height:1.55}.empty{padding:28px;text-align:center;color:var(--muted)}
     @media(max-width:1100px){.shell{grid-template-columns:82px minmax(0,1fr)}.sidebar{padding:22px 12px}.brand-copy,.nav button span,.sync-card,.account{display:none}.brand{justify-content:center}.nav button{justify-content:center;padding:12px}.kpis{grid-template-columns:repeat(2,1fr)}}
     @media(max-width:780px){body{background-size:28px 28px}.shell{display:block;width:100%;margin:0;border:0;border-radius:0;min-height:100vh}.sidebar{position:sticky;top:0;z-index:8;display:flex;flex-direction:row;align-items:center;padding:9px 12px;border-right:0;border-bottom:1px solid var(--line);overflow:auto}.brand{padding:0}.brand-mark{width:36px;height:36px}.nav{display:flex;gap:4px}.nav button{padding:9px}.top-actions .button:not(.primary){display:none}main{padding:22px 14px 80px}.topbar{align-items:flex-end}.topbar h1{font-size:36px}.topbar p{font-size:12px}.kpis{grid-template-columns:1fr 1fr;gap:10px}.kpi{min-height:125px;padding:14px}.kpi strong{font-size:26px}.content-grid,.tax-grid{grid-template-columns:1fr}.section{padding:16px}.timeline-item{grid-template-columns:44px 1fr}.timeline-item>.pill{grid-column:2}.chart{gap:10px}.table-head{align-items:flex-start;flex-direction:column}.search{width:100%}.search input{width:100%}}
-    @media(max-width:480px){.kpis{grid-template-columns:1fr}.topbar h1{font-size:32px}.button.primary{padding:9px 12px}.topbar{gap:10px}.chart{height:190px}.bar-column{min-width:48px}.split-row{grid-template-columns:60px 1fr 62px}}
+    @media(max-width:480px){.kpis{grid-template-columns:1fr}.topbar h1{font-size:32px}.button.primary{padding:9px 12px}.topbar{gap:10px}.chart{height:190px}.bar-column{flex-basis:62px;min-width:62px}.split-row{grid-template-columns:60px 1fr 62px}}
   </style>
 </head>
 <body>
@@ -316,7 +351,7 @@ function renderDashboard(data: Awaited<ReturnType<typeof dashboardData>>, email:
           <article class="card kpi"><div class="kpi-top"><span class="kpi-label">Neuhrazeno</span><span class="icon-box mint">✓</span></div><strong>${esc(money(unpaid))}</strong><small>Všechny dokončené lekce spárovány</small></article>
         </div>
         <div class="content-grid">
-          <article class="card section"><div class="section-head"><div><h2>Vývoj příjmů</h2><p>Uhrazené lekce podle měsíce</p></div><span class="chip">2026</span></div><div class="chart">${monthBars}</div></article>
+          <article class="card section"><div class="section-head"><div><h2>Vývoj příjmů</h2><p>Uhrazené lekce po týdnech · pondělí až neděle</p></div><span class="chip">Posledních ${weekRows.length} týdnů</span></div><div class="chart">${weekBars}</div></article>
           <article class="card section"><div class="section-head"><div><h2>Příjmy podle studentů</h2><p>Bez historického baseline 4.–16. 8.</p></div></div><div class="split-list">${studentBars}</div><div class="note" style="margin-top:20px"><strong>Historický baseline:</strong> 10 hodin a 4 100 Kč zůstává správně nealokováno, protože původní data neobsahují konkrétní studenty.</div></article>
         </div>
         <article class="card wide-card"><div class="table-head"><div><h2>Studenti</h2><span style="font-size:12px;color:var(--muted)">Poslední a další lekce, hodiny a příjmy</span></div><label class="search">⌕ <input id="studentSearch" type="search" placeholder="Hledat studenta"></label></div><table><thead><tr><th>Student</th><th>Stav</th><th>Sazba</th><th>Poslední</th><th>Další</th><th>Odučeno</th><th>Příjmy</th></tr></thead><tbody id="studentRows">${studentRows}</tbody></table></article>
