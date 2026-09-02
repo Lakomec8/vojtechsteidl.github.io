@@ -42,7 +42,7 @@ VALUES (
     'upcoming', json('[]'),
     'links', json('[]'),
     'externalLessons', json('[]'),
-    'incrementLessonCountOnMaterialAdd', json('true')
+    'incrementLessonCountOnMaterialAdd', json('false')
   )
 )
 ON CONFLICT(student_id) DO NOTHING;

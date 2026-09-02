@@ -33,6 +33,7 @@ type LessonRow = {
 type CalendarRow = {
   google_event_id: string;
   student_id: string;
+  participant_ids: string;
   summary: string;
   starts_at: string;
   ends_at: string;
@@ -148,7 +149,14 @@ async function dashboardData(env: Env): Promise<{
   const [students, lessons, events, expenses, sync] = await Promise.all([
     env.DB.prepare("SELECT id, display_name, hourly_rate, active, accent FROM tutoring_students ORDER BY active DESC, display_name COLLATE NOCASE").all<StudentRow>(),
     env.DB.prepare("SELECT id, google_event_id, student_id, student_label, lesson_date, starts_at, ends_at, duration_minutes, hourly_rate, amount, payment_status, paid_at, payment_method, source FROM tutoring_lessons ORDER BY lesson_date DESC, id DESC").all<LessonRow>(),
-    env.DB.prepare("SELECT google_event_id, student_id, summary, starts_at, ends_at, duration_minutes, status, calendar_url, last_synced_at FROM tutoring_calendar_events ORDER BY starts_at").all<CalendarRow>(),
+    env.DB.prepare(`SELECT e.google_event_id, e.student_id, e.summary, e.starts_at, e.ends_at,
+                           e.duration_minutes, e.status, e.calendar_url, e.last_synced_at,
+                           COALESCE(GROUP_CONCAT(es.student_id), e.student_id) AS participant_ids
+                      FROM tutoring_calendar_events AS e
+                      LEFT JOIN tutoring_calendar_event_students AS es
+                        ON es.google_event_id = e.google_event_id
+                     GROUP BY e.google_event_id
+                     ORDER BY e.starts_at`).all<CalendarRow>(),
     env.DB.prepare("SELECT id, spent_on, supplier, description, amount, tax_deductible FROM tutoring_expenses ORDER BY spent_on DESC").all<ExpenseRow>(),
     env.DB.prepare("SELECT last_synced_at, completed_events, planned_events, note FROM tutoring_sync_state WHERE id = 1").first<SyncRow>(),
   ]);
@@ -165,7 +173,15 @@ function renderDashboard(data: Awaited<ReturnType<typeof dashboardData>>, email:
   const { students, lessons, events, expenses, sync } = data;
   const paidLessons = lessons.filter((lesson) => lesson.payment_status === "paid");
   const revenue = paidLessons.reduce((sum, lesson) => sum + Number(lesson.amount), 0);
-  const totalMinutes = lessons.filter((lesson) => lesson.payment_status !== "cancelled").reduce((sum, lesson) => sum + Number(lesson.duration_minutes), 0);
+  const countedTeachingSessions = new Set<string>();
+  const totalMinutes = lessons
+    .filter((lesson) => lesson.payment_status !== "cancelled")
+    .reduce((sum, lesson) => {
+      const sessionKey = lesson.google_event_id || lesson.id;
+      if (countedTeachingSessions.has(sessionKey)) return sum;
+      countedTeachingSessions.add(sessionKey);
+      return sum + Number(lesson.duration_minutes);
+    }, 0);
   const unpaid = lessons.filter((lesson) => lesson.payment_status === "unpaid").reduce((sum, lesson) => sum + Number(lesson.amount), 0);
   const activeStudents = students.filter((student) => student.active).length;
   const completedEvents = events.filter((event) => event.status === "completed");
@@ -189,7 +205,7 @@ function renderDashboard(data: Awaited<ReturnType<typeof dashboardData>>, email:
   const studentStats = students.map((student) => {
     const ownLessons = lessons.filter((lesson) => lesson.student_id === student.id);
     const ownCompleted = ownLessons.filter((lesson) => lesson.payment_status !== "cancelled");
-    const ownEvents = events.filter((event) => event.student_id === student.id);
+    const ownEvents = events.filter((event) => event.participant_ids.split(",").includes(student.id));
     const last = ownCompleted.map((lesson) => lesson.starts_at || lesson.lesson_date).sort().at(-1) || null;
     const next = ownEvents.filter((event) => event.status === "planned").map((event) => event.starts_at).sort()[0] || null;
     return {
@@ -227,11 +243,18 @@ function renderDashboard(data: Awaited<ReturnType<typeof dashboardData>>, email:
   const timeline = timelineEvents.map((event) => {
     const day = new Intl.DateTimeFormat("cs-CZ", { timeZone: PRAGUE_TIME_ZONE, day: "2-digit" }).format(new Date(event.starts_at));
     const weekday = new Intl.DateTimeFormat("cs-CZ", { timeZone: PRAGUE_TIME_ZONE, weekday: "short" }).format(new Date(event.starts_at));
-    const student = students.find((item) => item.id === event.student_id);
-    const eventAmount = Math.round((event.duration_minutes / 60) * Number(student?.hourly_rate || 450));
+    const participants = event.participant_ids
+      .split(",")
+      .map((id) => students.find((item) => item.id === id))
+      .filter((student): student is StudentRow => Boolean(student));
+    const participantLabel = participants.map((student) => student.display_name).join(" + ") || event.summary;
+    const eventAmount = participants.reduce(
+      (sum, student) => sum + Math.round((event.duration_minutes / 60) * Number(student.hourly_rate)),
+      0,
+    );
     return `<article class="timeline-item ${event.status}">
       <div class="date-tile"><strong>${esc(day)}</strong><span>${esc(weekday)}</span></div>
-      <div class="timeline-copy"><small>${esc(dateLabel(event.starts_at, true).split(" ").at(-1) || "")}</small><strong>${esc(student?.display_name || event.summary)}</strong><span>${esc(hours(event.duration_minutes))} · ${esc(money(eventAmount))}</span></div>
+      <div class="timeline-copy"><small>${esc(dateLabel(event.starts_at, true).split(" ").at(-1) || "")}</small><strong>${esc(participantLabel)}</strong><span>${esc(hours(event.duration_minutes))} · ${esc(money(eventAmount))}${participants.length > 1 ? " celkem" : ""}</span></div>
       <span class="pill ${event.status === "completed" ? "success" : "planned"}">${event.status === "completed" ? "Hotovo" : "Plán"}</span>
     </article>`;
   }).join("");
@@ -301,7 +324,7 @@ function renderDashboard(data: Awaited<ReturnType<typeof dashboardData>>, email:
 
       <section class="view" id="students"><article class="card wide-card"><div class="table-head"><div><h2>Přehled studentů</h2><span style="font-size:12px;color:var(--muted)">Aktuální stav vypočtený z lekcí a Kalendáře</span></div><span class="chip">${activeStudents} aktivní</span></div><table><thead><tr><th>Student</th><th>Stav</th><th>Sazba</th><th>Poslední</th><th>Další</th><th>Odučeno</th><th>Příjmy</th></tr></thead><tbody>${studentRows}</tbody></table></article></section>
 
-      <section class="view" id="finance"><div class="kpis"><article class="card kpi"><span class="kpi-label">Příjmy</span><strong>${esc(money(revenue))}</strong><small>20 bankovních úhrad</small></article><article class="card kpi"><span class="kpi-label">Výdaje</span><strong>${esc(money(deductibleExpenses))}</strong><small>${expenses.length ? expenses.length + " záznamů" : "Zatím bez záznamů"}</small></article><article class="card kpi"><span class="kpi-label">Pohledávky</span><strong>${esc(money(unpaid))}</strong><small>Žádná po splatnosti</small></article><article class="card kpi"><span class="kpi-label">Průměr / hodina</span><strong>${esc(money(Math.round(revenue / Math.max(1, totalMinutes / 60))))}</strong><small>Včetně historického baseline</small></article></div><article class="card wide-card"><div class="table-head"><div><h2>Daňová evidence příjmů</h2><span style="font-size:12px;color:var(--muted)">Dokončená lekce = úhrada převodem v den lekce</span></div><span class="chip">Google ID bez duplicit</span></div><table><thead><tr><th>Datum</th><th>Plátce / zdroj</th><th>Délka</th><th>Částka</th><th>Úhrada</th></tr></thead><tbody>${lessonRows}</tbody></table></article></section>
+      <section class="view" id="finance"><div class="kpis"><article class="card kpi"><span class="kpi-label">Příjmy</span><strong>${esc(money(revenue))}</strong><small>${paidLessons.length} evidovaných úhrad</small></article><article class="card kpi"><span class="kpi-label">Výdaje</span><strong>${esc(money(deductibleExpenses))}</strong><small>${expenses.length ? expenses.length + " záznamů" : "Zatím bez záznamů"}</small></article><article class="card kpi"><span class="kpi-label">Pohledávky</span><strong>${esc(money(unpaid))}</strong><small>Žádná po splatnosti</small></article><article class="card kpi"><span class="kpi-label">Průměr / hodina</span><strong>${esc(money(Math.round(revenue / Math.max(1, totalMinutes / 60))))}</strong><small>Včetně historického baseline</small></article></div><article class="card wide-card"><div class="table-head"><div><h2>Daňová evidence příjmů</h2><span style="font-size:12px;color:var(--muted)">Dokončená lekce = úhrada převodem v den lekce</span></div><span class="chip">Google ID + student bez duplicit</span></div><table><thead><tr><th>Datum</th><th>Plátce / zdroj</th><th>Délka</th><th>Částka</th><th>Úhrada</th></tr></thead><tbody>${lessonRows}</tbody></table></article></section>
 
       <section class="view" id="calendar"><div class="content-grid"><article class="card section"><div class="section-head"><div><h2>Časová osa · ${esc(monthName(currentMonth))}</h2><p>Dokončené a budoucí lekce z Google Calendar</p></div><span class="chip">${timelineEvents.length} událostí</span></div><div class="timeline">${timeline || '<div class="empty">V tomto měsíci nejsou žádné lekce.</div>'}</div></article><article class="card section"><div class="section-head"><div><h2>Stav synchronizace</h2><p>Google event ID je unikátní klíč</p></div><span class="sync-dot"></span></div><div class="tax-breakdown"><div class="tax-row"><span>Dokončeno</span><strong>${completedEvents.length}</strong></div><div class="tax-row"><span>Plánováno</span><strong>${plannedEvents.length}</strong></div><div class="tax-row"><span>Duplicitní lekce</span><strong>0</strong></div><div class="tax-row"><span>Poslední sync</span><strong>${esc(sync ? dateLabel(sync.last_synced_at, true) : "—")}</strong></div></div><div class="note" style="margin-top:20px">Budoucí události jsou pouze v časové ose. Do lekcí a příjmů se zapíší až po skončení.</div></article></div></section>
 
@@ -320,14 +343,20 @@ function renderDashboard(data: Awaited<ReturnType<typeof dashboardData>>, email:
 </html>`);
 }
 
-function studentIdFor(summary: string): string | null {
+function studentIdsFor(summary: string, students: StudentRow[]): string[] {
   const normalized = summary.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
-  if (normalized.includes("natal")) return "natalie";
-  if (normalized.includes("vojta")) return "vojta";
-  if (normalized.includes("petra")) return "petra";
-  if (normalized.includes("anicka")) return "anicka";
-  if (normalized.includes("evelin")) return "evelina";
-  return null;
+  const matched = students.filter((student) => {
+    const firstName = student.display_name
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .toLowerCase()
+      .split(/\s+/)[0];
+    return firstName.length >= 3 && normalized.includes(firstName);
+  }).map((student) => student.id);
+  if (normalized.includes("evelin") && students.some((student) => student.id === "evelina")) {
+    matched.push("evelina");
+  }
+  return [...new Set(matched)];
 }
 
 function isoDateInPrague(value: string): string {
@@ -360,8 +389,9 @@ async function syncCalendar(request: Request, env: Env): Promise<Response> {
 
   for (const event of payload.events) {
     if (!event || typeof event.id !== "string" || typeof event.summary !== "string" || typeof event.start !== "string" || typeof event.end !== "string") continue;
-    const studentId = studentIdFor(event.summary);
-    if (!studentId || !byId.has(studentId)) continue;
+    const studentIds = studentIdsFor(event.summary, students).filter((studentId) => byId.has(studentId));
+    if (!studentIds.length) continue;
+    const primaryStudentId = studentIds[0];
     const start = new Date(event.start);
     const end = new Date(event.end);
     if (Number.isNaN(start.getTime()) || Number.isNaN(end.getTime()) || end <= start) continue;
@@ -375,27 +405,38 @@ async function syncCalendar(request: Request, env: Env): Promise<Response> {
       ON CONFLICT(google_event_id) DO UPDATE SET student_id=excluded.student_id, summary=excluded.summary,
       starts_at=excluded.starts_at, ends_at=excluded.ends_at, duration_minutes=excluded.duration_minutes,
       status=excluded.status, calendar_url=excluded.calendar_url, last_synced_at=excluded.last_synced_at`)
-      .bind(event.id, studentId, event.summary.trim(), event.start, event.end, durationMinutes, status, event.url || null, syncedAt).run();
+      .bind(event.id, primaryStudentId, event.summary.trim(), event.start, event.end, durationMinutes, status, event.url || null, syncedAt).run();
+
+    await env.DB.prepare("DELETE FROM tutoring_calendar_event_students WHERE google_event_id = ?1")
+      .bind(event.id).run();
+    await env.DB.batch(studentIds.map((studentId) =>
+      env.DB.prepare(`INSERT INTO tutoring_calendar_event_students (google_event_id, student_id)
+        VALUES (?1, ?2)`).bind(event.id, studentId),
+    ));
 
     if (status !== "completed") continue;
-    const exists = await env.DB.prepare("SELECT id FROM tutoring_lessons WHERE google_event_id = ?1 LIMIT 1").bind(event.id).first<{ id: string }>();
-    if (exists) continue;
-    const student = byId.get(studentId)!;
-    const amount = Math.round((durationMinutes / 60) * Number(student.hourly_rate));
-    const suffix = safeEventId(event.id);
-    const lessonId = `L-GCAL-${suffix}`;
-    const incomeId = `P-GCAL-${suffix}`;
     const lessonDate = isoDateInPrague(event.start);
-    await env.DB.batch([
-      env.DB.prepare(`INSERT INTO tutoring_lessons
-        (id, google_event_id, student_id, student_label, lesson_date, starts_at, ends_at, duration_minutes, hourly_rate, amount, payment_status, paid_at, payment_method, source, note)
-        VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, 'paid', ?5, 'Převod', 'google_calendar', 'Automaticky vytvořeno po skončení události.')`)
-        .bind(lessonId, event.id, studentId, student.display_name, lessonDate, event.start, event.end, durationMinutes, student.hourly_rate, amount),
-      env.DB.prepare(`INSERT INTO tutoring_income (id, lesson_id, received_on, payer_label, amount, payment_method, description)
-        VALUES (?1, ?2, ?3, ?4, ?5, 'Převod', 'Doučování – automatická úhrada po lekci')`)
-        .bind(incomeId, lessonId, lessonDate, student.display_name, amount),
-    ]);
-    insertedLessons++;
+    for (const studentId of studentIds) {
+      const exists = await env.DB.prepare(
+        "SELECT id FROM tutoring_lessons WHERE google_event_id = ?1 AND student_id = ?2 LIMIT 1",
+      ).bind(event.id, studentId).first<{ id: string }>();
+      if (exists) continue;
+      const student = byId.get(studentId)!;
+      const amount = Math.round((durationMinutes / 60) * Number(student.hourly_rate));
+      const suffix = `${safeEventId(event.id)}-${studentId}`;
+      const lessonId = `L-GCAL-${suffix}`;
+      const incomeId = `P-GCAL-${suffix}`;
+      await env.DB.batch([
+        env.DB.prepare(`INSERT INTO tutoring_lessons
+          (id, google_event_id, student_id, student_label, lesson_date, starts_at, ends_at, duration_minutes, hourly_rate, amount, payment_status, paid_at, payment_method, source, note)
+          VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, 'paid', ?5, 'Převod', 'google_calendar', 'Automaticky vytvořeno po skončení události.')`)
+          .bind(lessonId, event.id, studentId, student.display_name, lessonDate, event.start, event.end, durationMinutes, student.hourly_rate, amount),
+        env.DB.prepare(`INSERT INTO tutoring_income (id, lesson_id, received_on, payer_label, amount, payment_method, description)
+          VALUES (?1, ?2, ?3, ?4, ?5, 'Převod', 'Doučování – automatická úhrada po lekci')`)
+          .bind(incomeId, lessonId, lessonDate, student.display_name, amount),
+      ]);
+      insertedLessons++;
+    }
   }
 
   await env.DB.prepare(`INSERT INTO tutoring_sync_state (id, last_synced_at, completed_events, planned_events, source, note)
