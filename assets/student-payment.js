@@ -14,16 +14,24 @@
     if (!response.ok) throw new Error("profile request failed");
 
     const profile = await response.json();
-    const isNatalie = String(profile.studentId || "").toLowerCase() === "natalie";
-    const amount = isNatalie ? 400 : 450;
-    const qr = isNatalie ? QR_400 : QR_450;
+    const studentId = String(profile.studentId || "").toLowerCase();
+    const isGroupStudent = studentId === "adam" || studentId === "krystof";
+    const isNatalie = studentId === "natalie";
+    const amount = isGroupStudent ? 300 : isNatalie ? 400 : 450;
+    const qr = isGroupStudent
+      ? "/assets/payment-300.svg?v=20260902-1"
+      : isNatalie ? QR_400 : QR_450;
+    const lessonLabel = isGroupStudent ? "1 skupinová lekce · 60 min" : "1 lekce";
+    const paymentText = isGroupStudent
+      ? "QR platba je předvyplněná na jednu hodinu za jednoho účastníka."
+      : "QR platba je předvyplněná na jednu lekci.";
 
     container.innerHTML = `
       <div class="payment-layout">
         <div class="payment-copy">
-          <span class="badge">1 lekce</span>
+          <span class="badge">${lessonLabel}</span>
           <strong>${amount} Kč</strong>
-          <p>QR platba je předvyplněná na jednu lekci. Platbu lze poslat také ručně na účet:</p>
+          <p>${paymentText} Platbu lze poslat také ručně na účet:</p>
           <code>2401739315/2010</code>
           <small>Bez zprávy pro příjemce.</small>
         </div>
