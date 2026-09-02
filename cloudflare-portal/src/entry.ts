@@ -252,6 +252,145 @@ async function requireAdmin(request: Request, env: Env): Promise<PortalPrincipal
   return principal;
 }
 
+function studentInitials(displayName: string): string {
+  return displayName
+    .split(/\s+/)
+    .filter(Boolean)
+    .slice(0, 2)
+    .map((part) => Array.from(part)[0] || "")
+    .join("")
+    .toLocaleUpperCase("cs-CZ");
+}
+
+function defaultStudentProfile(displayName: string): Record<string, unknown> {
+  return {
+    studentName: displayName,
+    studentInitials: studentInitials(displayName),
+    completedLessonsCount: 0,
+    progress: 0,
+    progressText: "Studijní profil byl vytvořen.",
+    priority: {
+      title: "Začínáme",
+      text: "Po první hodině zde bude aktuální priorita.",
+      deadline: "Bez termínu",
+    },
+    readiness: {
+      label: "Studijní postup",
+      lessonWeight: 60,
+      taskWeight: 40,
+    },
+    lessons: [],
+    materials: [],
+    tasks: [],
+    timeline: [],
+    upcoming: [],
+    links: [],
+    externalLessons: [],
+    incrementLessonCountOnMaterialAdd: false,
+  };
+}
+
+function studentManagerPage(
+  students: Array<{ id: string; display_name: string; has_profile: number }>,
+  message = "",
+  values: { id?: string; displayName?: string; email?: string } = {},
+  status = 200,
+): Response {
+  const notice = message
+    ? `<p class="notice" role="status">${escapeHtml(message)}</p>`
+    : "";
+  const rows = students.map((student) => `
+    <li>
+      <span><strong>${escapeHtml(student.display_name)}</strong><small>ID: ${escapeHtml(student.id)}</small></span>
+      <span class="status">${student.has_profile ? "Profil připraven" : "Profil chybí"}</span>
+    </li>`).join("");
+
+  return html(`<!doctype html>
+<html lang="cs"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow"><title>Studenti | Administrace</title>
+<style>body{font-family:Inter,system-ui,sans-serif;background:#f4f7fb;color:#102a43;margin:0}.wrap{width:min(760px,calc(100% - 32px));margin:48px auto}.back,a{color:#2563eb}.box{background:#fff;border:1px solid #d9e2ec;border-radius:16px;padding:24px;margin-top:18px}.notice{background:#ecfdf3;border:1px solid #a7f3d0;border-radius:10px;padding:12px 14px}.form{display:grid;gap:14px}.form label{display:grid;gap:6px;font-weight:700}.form input{font:inherit;border:1px solid #bcccdc;border-radius:9px;padding:11px 12px}.form button{font:inherit;font-weight:700;color:#fff;background:#2563eb;border:0;border-radius:9px;padding:12px 16px;cursor:pointer}.hint,small{display:block;color:#627d98;font-weight:400}.hint{margin-bottom:18px}ul{list-style:none;padding:0;margin:16px 0 0}li{display:flex;align-items:center;justify-content:space-between;gap:18px;padding:13px 0;border-top:1px solid #e7edf4}li:first-child{border-top:0}.status{font-size:.9rem;color:#147d64}@media(max-width:560px){li{align-items:flex-start;flex-direction:column;gap:5px}}</style>
+</head><body><main class="wrap"><p><a class="back" href="${PORTAL_ROOT}">← Studentské zóny</a></p><div class="box"><h1>Přidat studenta</h1><p class="hint">Stejný e-mail musí být povolený také v Cloudflare Access policy. V repozitáři se neukládá.</p>${notice}<form method="post" class="form"><label for="displayName">Jméno<input id="displayName" name="displayName" type="text" maxlength="80" autocomplete="off" required value="${escapeHtml(values.displayName || "")}"></label><label for="studentId">ID studenta<input id="studentId" name="id" type="text" minlength="2" maxlength="64" pattern="[a-z0-9][a-z0-9_-]+" autocapitalize="none" autocomplete="off" required value="${escapeHtml(values.id || "")}"><small>Malá písmena, číslice, pomlčka nebo podtržítko.</small></label><label for="email">E-mail<input id="email" name="email" type="email" maxlength="254" inputmode="email" autocomplete="off" required value="${escapeHtml(values.email || "")}"></label><button type="submit">Vytvořit studentskou zónu</button></form></div><div class="box"><h2>Aktivní studenti</h2><ul>${rows}</ul></div></main></body></html>`, status);
+}
+
+async function studentManager(request: Request, env: Env): Promise<Response> {
+  await requireAdmin(request, env);
+
+  const loadStudents = async () => {
+    const result = await env.DB.prepare(
+      `SELECT s.id, s.display_name,
+              CASE WHEN p.student_id IS NULL THEN 0 ELSE 1 END AS has_profile
+         FROM students s
+         LEFT JOIN student_profiles p ON p.student_id = s.id
+        WHERE s.enabled = 1
+        ORDER BY s.display_name COLLATE NOCASE`,
+    ).all<{ id: string; display_name: string; has_profile: number }>();
+    return result.results || [];
+  };
+
+  if (request.method === "GET" || request.method === "HEAD") {
+    const response = studentManagerPage(await loadStudents());
+    return request.method === "HEAD"
+      ? new Response(null, { status: response.status, headers: response.headers })
+      : response;
+  }
+  if (request.method !== "POST") throw new PortalError(405, "Method not allowed.");
+
+  const origin = request.headers.get("Origin");
+  if (origin !== new URL(request.url).origin) {
+    throw new PortalError(403, "Invalid request origin.");
+  }
+  const contentType = request.headers.get("Content-Type") || "";
+  if (!contentType.startsWith("application/x-www-form-urlencoded") && !contentType.startsWith("multipart/form-data")) {
+    throw new PortalError(415, "Unsupported form encoding.");
+  }
+
+  const form = await request.formData();
+  const values = {
+    id: String(form.get("id") || "").trim().toLowerCase(),
+    displayName: String(form.get("displayName") || "").normalize("NFKC").trim(),
+    email: String(form.get("email") || "").trim().toLowerCase(),
+  };
+  let validationError = "";
+  if (!/^[a-z0-9][a-z0-9_-]{1,63}$/.test(values.id)) validationError = "ID studenta nemá platný formát.";
+  else if (!values.displayName || values.displayName.length > 80) validationError = "Jméno musí mít 1 až 80 znaků.";
+  else if (values.email.length > 254 || !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(values.email)) validationError = "E-mail nemá platný formát.";
+  if (validationError) {
+    return studentManagerPage(await loadStudents(), validationError, values, 400);
+  }
+
+  try {
+    await env.DB.batch([
+      env.DB.prepare(
+        `INSERT INTO students (id, email, display_name, material_path, enabled)
+         VALUES (?1, ?2, ?3, ?1, 1)
+         ON CONFLICT(id) DO UPDATE SET
+           email = excluded.email,
+           display_name = excluded.display_name,
+           material_path = excluded.material_path,
+           enabled = 1,
+           updated_at = CURRENT_TIMESTAMP`,
+      ).bind(values.id, values.email, values.displayName),
+      env.DB.prepare(
+        `INSERT INTO student_profiles (student_id, payload_json)
+         VALUES (?1, ?2)
+         ON CONFLICT(student_id) DO NOTHING`,
+      ).bind(values.id, JSON.stringify(defaultStudentProfile(values.displayName))),
+    ]);
+  } catch {
+    return studentManagerPage(
+      await loadStudents(),
+      "Studenta se nepodařilo uložit. Zkontrolujte, zda e-mail není přiřazený jinému ID.",
+      values,
+      409,
+    );
+  }
+
+  return studentManagerPage(
+    await loadStudents(),
+    `Studentská zóna pro ${values.displayName} je připravená.`,
+  );
+}
+
 async function materialsManager(request: Request, env: Env): Promise<Response> {
   await requireAdmin(request, env);
   const result = await env.DB.prepare(
@@ -560,7 +699,7 @@ async function augmentAdminLanding(response: Response): Promise<Response> {
   }
   const enhanced = body.replace(
     '<div class="notice">',
-    `<p style="margin:0 0 18px"><a href="${PORTAL_PREFIX}/admin/materials" style="color:#2563eb;font-weight:700">Správa soukromých materiálů →</a></p><div class="notice">`,
+    `<p style="margin:0 0 18px"><a href="${PORTAL_PREFIX}/admin/students" style="color:#2563eb;font-weight:700">Přidat studenta →</a> · <a href="${PORTAL_PREFIX}/admin/materials" style="color:#2563eb;font-weight:700">Správa soukromých materiálů →</a></p><div class="notice">`,
   );
   const headers = new Headers(response.headers);
   headers.delete("Content-Length");
@@ -582,6 +721,10 @@ export default {
 
       if (url.pathname === `${PORTAL_PREFIX}/admin/materials`) {
         return materialsManager(request, env);
+      }
+
+      if (url.pathname === `${PORTAL_PREFIX}/admin/students`) {
+        return studentManager(request, env);
       }
 
       const uploadMatch = url.pathname.match(/^\/student-portal\/admin\/upload\/([^/]+)$/);
