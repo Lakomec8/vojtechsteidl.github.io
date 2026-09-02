@@ -128,6 +128,15 @@ const response = await fetch(
 const result = await response.json();
 if (!response.ok || result.success !== true
   || !Array.isArray(result.result) || result.result.some((item) => item.success !== true)) {
-  throw new Error("Cloudflare D1 rejected the encrypted bootstrap.");
+  const safeErrors = [
+    ...(Array.isArray(result.errors) ? result.errors : []),
+    ...(Array.isArray(result.result)
+      ? result.result.flatMap((item) => Array.isArray(item.errors) ? item.errors : [])
+      : []),
+  ].map((error) => ({
+    code: typeof error?.code === "number" ? error.code : null,
+    message: String(error?.message || "Unknown D1 error").slice(0, 300),
+  }));
+  throw new Error(`Cloudflare D1 rejected the encrypted bootstrap (HTTP ${response.status}): ${JSON.stringify(safeErrors)}`);
 }
 console.log("Encrypted D1 student bootstrap completed for 2 records.");
