@@ -4,6 +4,8 @@ import worker from "./index";
 const MAIN_HOSTS = new Set(["vojtechsteidl.eu", "www.vojtechsteidl.eu"]);
 const PORTAL_ROOT = "/student-portal/";
 const PORTAL_PREFIX = "/student-portal";
+const STUDENT_BOOTSTRAP_PATH = "/student-bootstrap";
+const STUDENT_BOOTSTRAP_TOKEN_HASH = "4a15256fbb1c6c8fb63566258de88f0d863a2bbdb0aa2ad3796a8a327a10d6e7";
 const ADMIN_STUDENT_COOKIE = "portal_admin_student";
 const ADMIN_VIEW_COOKIE = "portal_admin_view_once";
 const MAX_UPLOAD_BYTES = 25 * 1024 * 1024;
@@ -290,6 +292,29 @@ function defaultStudentProfile(displayName: string): Record<string, unknown> {
   };
 }
 
+async function saveStudentToD1(
+  env: Env,
+  values: { id: string; displayName: string; email: string },
+): Promise<void> {
+  await env.DB.batch([
+    env.DB.prepare(
+      `INSERT INTO students (id, email, display_name, material_path, enabled)
+       VALUES (?1, ?2, ?3, ?1, 1)
+       ON CONFLICT(id) DO UPDATE SET
+         email = excluded.email,
+         display_name = excluded.display_name,
+         material_path = excluded.material_path,
+         enabled = 1,
+         updated_at = CURRENT_TIMESTAMP`,
+    ).bind(values.id, values.email, values.displayName),
+    env.DB.prepare(
+      `INSERT INTO student_profiles (student_id, payload_json)
+       VALUES (?1, ?2)
+       ON CONFLICT(student_id) DO NOTHING`,
+    ).bind(values.id, JSON.stringify(defaultStudentProfile(values.displayName))),
+  ]);
+}
+
 function studentManagerPage(
   students: Array<{ id: string; display_name: string; has_profile: number }>,
   message = "",
@@ -359,23 +384,7 @@ async function studentManager(request: Request, env: Env): Promise<Response> {
   }
 
   try {
-    await env.DB.batch([
-      env.DB.prepare(
-        `INSERT INTO students (id, email, display_name, material_path, enabled)
-         VALUES (?1, ?2, ?3, ?1, 1)
-         ON CONFLICT(id) DO UPDATE SET
-           email = excluded.email,
-           display_name = excluded.display_name,
-           material_path = excluded.material_path,
-           enabled = 1,
-           updated_at = CURRENT_TIMESTAMP`,
-      ).bind(values.id, values.email, values.displayName),
-      env.DB.prepare(
-        `INSERT INTO student_profiles (student_id, payload_json)
-         VALUES (?1, ?2)
-         ON CONFLICT(student_id) DO NOTHING`,
-      ).bind(values.id, JSON.stringify(defaultStudentProfile(values.displayName))),
-    ]);
+    await saveStudentToD1(env, values);
   } catch {
     return studentManagerPage(
       await loadStudents(),
@@ -389,6 +398,58 @@ async function studentManager(request: Request, env: Env): Promise<Response> {
     await loadStudents(),
     `Studentská zóna pro ${values.displayName} je připravená.`,
   );
+}
+
+async function validBootstrapToken(token: string): Promise<boolean> {
+  if (!/^[a-f0-9]{64}$/.test(token)) return false;
+  const digest = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(token));
+  const actual = Array.from(new Uint8Array(digest), (byte) => byte.toString(16).padStart(2, "0")).join("");
+  let difference = actual.length ^ STUDENT_BOOTSTRAP_TOKEN_HASH.length;
+  for (let index = 0; index < Math.max(actual.length, STUDENT_BOOTSTRAP_TOKEN_HASH.length); index += 1) {
+    difference |= (actual.charCodeAt(index) || 0) ^ (STUDENT_BOOTSTRAP_TOKEN_HASH.charCodeAt(index) || 0);
+  }
+  return difference === 0;
+}
+
+function bootstrapPage(token: string, message = "", status = 200): Response {
+  const notice = message ? `<p class="notice" role="status">${escapeHtml(message)}</p>` : "";
+  return html(`<!doctype html>
+<html lang="cs"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow"><title>Jednorázové založení studenta</title>
+<style>body{font-family:Inter,system-ui,sans-serif;background:#f4f7fb;color:#102a43;margin:0}.box{width:min(560px,calc(100% - 32px));margin:48px auto;background:#fff;border:1px solid #d9e2ec;border-radius:16px;padding:24px}.notice{background:#ecfdf3;border:1px solid #a7f3d0;border-radius:10px;padding:12px 14px}.form{display:grid;gap:14px}.form label{display:grid;gap:6px;font-weight:700}.form input{font:inherit;border:1px solid #bcccdc;border-radius:9px;padding:11px 12px}.form button{font:inherit;font-weight:700;color:#fff;background:#2563eb;border:0;border-radius:9px;padding:12px 16px;cursor:pointer}</style>
+</head><body><main class="box"><h1>Jednorázové založení studenta</h1>${notice}<form method="post" class="form"><input type="hidden" name="token" value="${escapeHtml(token)}"><label>Jméno<input name="displayName" type="text" maxlength="80" required></label><label>ID studenta<input name="id" type="text" minlength="2" maxlength="64" pattern="[a-z0-9][a-z0-9_-]+" required></label><label>E-mail<input name="email" type="email" maxlength="254" required></label><button type="submit">Uložit do D1</button></form></main></body></html>`, status);
+}
+
+async function bootstrapStudent(request: Request, env: Env): Promise<Response> {
+  const url = new URL(request.url);
+  const form = request.method === "POST" ? await request.formData() : null;
+  const token = String(form?.get("token") || url.searchParams.get("token") || "");
+  if (!await validBootstrapToken(token)) throw new PortalError(404, "Not found.");
+  if (request.method === "GET" || request.method === "HEAD") {
+    const response = bootstrapPage(token);
+    return request.method === "HEAD"
+      ? new Response(null, { status: response.status, headers: response.headers })
+      : response;
+  }
+  if (request.method !== "POST") throw new PortalError(405, "Method not allowed.");
+  if (request.headers.get("Origin") !== url.origin) throw new PortalError(403, "Invalid request origin.");
+
+  const values = {
+    id: String(form?.get("id") || "").trim().toLowerCase(),
+    displayName: String(form?.get("displayName") || "").normalize("NFKC").trim(),
+    email: String(form?.get("email") || "").trim().toLowerCase(),
+  };
+  if (!/^[a-z0-9][a-z0-9_-]{1,63}$/.test(values.id)
+    || !values.displayName || values.displayName.length > 80
+    || values.email.length > 254 || !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(values.email)) {
+    return bootstrapPage(token, "Údaje nemají platný formát.", 400);
+  }
+  try {
+    await saveStudentToD1(env, values);
+  } catch {
+    return bootstrapPage(token, "Zápis do D1 se nezdařil.", 409);
+  }
+  return bootstrapPage(token, `Studentská zóna pro ${values.displayName} je připravená.`);
 }
 
 async function materialsManager(request: Request, env: Env): Promise<Response> {
@@ -713,6 +774,10 @@ export default {
     try {
       if (!MAIN_HOSTS.has(url.hostname)) {
         return delegate(request, env);
+      }
+
+      if (url.pathname === STUDENT_BOOTSTRAP_PATH) {
+        return bootstrapStudent(request, env);
       }
 
       if (url.pathname === "/student-portal*") {
