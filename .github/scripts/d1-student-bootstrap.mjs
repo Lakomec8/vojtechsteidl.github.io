@@ -114,29 +114,31 @@ for (const student of students) {
   });
 }
 
-const response = await fetch(
-  `https://api.cloudflare.com/client/v4/accounts/${accountId}/d1/database/${databaseId}/query`,
-  {
-    method: "POST",
-    headers: {
-      Authorization: `Bearer ${apiToken}`,
-      "Content-Type": "application/json",
+for (const statement of statements) {
+  const response = await fetch(
+    `https://api.cloudflare.com/client/v4/accounts/${accountId}/d1/database/${databaseId}/query`,
+    {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${apiToken}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(statement),
     },
-    body: JSON.stringify(statements),
-  },
-);
-const result = await response.json();
-if (!response.ok || result.success !== true
-  || !Array.isArray(result.result) || result.result.some((item) => item.success !== true)) {
-  const safeErrors = [
-    ...(Array.isArray(result.errors) ? result.errors : []),
-    ...(Array.isArray(result.result)
-      ? result.result.flatMap((item) => Array.isArray(item.errors) ? item.errors : [])
-      : []),
-  ].map((error) => ({
-    code: typeof error?.code === "number" ? error.code : null,
-    message: String(error?.message || "Unknown D1 error").slice(0, 300),
-  }));
-  throw new Error(`Cloudflare D1 rejected the encrypted bootstrap (HTTP ${response.status}): ${JSON.stringify(safeErrors)}`);
+  );
+  const result = await response.json();
+  if (!response.ok || result.success !== true
+    || !Array.isArray(result.result) || result.result.some((item) => item.success !== true)) {
+    const safeErrors = [
+      ...(Array.isArray(result.errors) ? result.errors : []),
+      ...(Array.isArray(result.result)
+        ? result.result.flatMap((item) => Array.isArray(item.errors) ? item.errors : [])
+        : []),
+    ].map((error) => ({
+      code: typeof error?.code === "number" ? error.code : null,
+      message: String(error?.message || "Unknown D1 error").slice(0, 300),
+    }));
+    throw new Error(`Cloudflare D1 rejected the encrypted bootstrap (HTTP ${response.status}): ${JSON.stringify(safeErrors)}`);
+  }
 }
 console.log("Encrypted D1 student bootstrap completed for 2 records.");
