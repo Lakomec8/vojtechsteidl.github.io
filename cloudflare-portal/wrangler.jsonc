@@ -22,10 +22,6 @@
       "zone_name": "vojtechsteidl.eu"
     },
     {
-      "pattern": "vojtechsteidl.eu/student-bootstrap*",
-      "zone_name": "vojtechsteidl.eu"
-    },
-    {
       "pattern": "www.vojtechsteidl.eu/student-portal*",
       "zone_name": "vojtechsteidl.eu"
     }
