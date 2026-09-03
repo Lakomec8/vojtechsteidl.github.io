@@ -1,12 +1,15 @@
 {
   "$schema": "./node_modules/wrangler/config-schema.json",
   "name": "vojtechsteidl-secure-portal",
-  "main": "src/tutoring-os.ts",
+  "main": "src/tutoring-cron-entry.ts",
   "compatibility_date": "2026-08-19",
   "compatibility_flags": ["nodejs_compat"],
   "observability": {
     "enabled": true,
     "head_sampling_rate": 1
+  },
+  "triggers": {
+    "crons": ["*/15 * * * *"]
   },
   "vars": {
     "TEAM_DOMAIN": "https://broad-cherry-72ff.cloudflareaccess.com",
