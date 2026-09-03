@@ -51,6 +51,7 @@
     let bestScore = 0;
 
     for (const assignment of assignments) {
+      if (Number(assignment.available) !== 1) continue;
       const assignmentText = [assignment.title, assignment.topic].filter(Boolean).join(" ");
       const assignmentTokens = tokens(assignmentText);
       const assignmentTopic = normalize(assignment.topic);

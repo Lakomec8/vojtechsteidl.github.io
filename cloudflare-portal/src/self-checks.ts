@@ -4,6 +4,7 @@ import {
   privateHeaders,
   selectedStudentForPrincipal,
 } from "./entry";
+import { selfCheckSummaryForStudent } from "./student-learning";
 
 const HOSTS = new Set(["vojtechsteidl.eu", "www.vojtechsteidl.eu"]);
 const PREFIX = "/student-portal";
@@ -28,6 +29,9 @@ type AssignmentListRow = {
   latest_score: number | null;
   latest_max_score: number | null;
   latest_submitted_at: string | null;
+  assignment_status: string;
+  test_status: string;
+  available: number;
 };
 
 type AssignmentDetailRow = AssignmentListRow & {
@@ -55,6 +59,9 @@ type AdminAssignmentRow = {
   latest_score: number | null;
   latest_max_score: number | null;
   latest_submitted_at: string | null;
+  assignment_status: string;
+  test_status: string;
+  available: number;
 };
 
 function json(value: unknown, status = 200): Response {
@@ -153,7 +160,10 @@ async function assignmentForStudent(
             COALESCE(SUM(q.points), 0) AS max_score,
             latest.score AS latest_score,
             latest.max_score AS latest_max_score,
-            latest.submitted_at AS latest_submitted_at
+            latest.submitted_at AS latest_submitted_at,
+            a.status AS assignment_status,
+            t.status AS test_status,
+            CASE WHEN a.status = 'active' AND t.status = 'published' THEN 1 ELSE 0 END AS available
        FROM self_check_assignments a
        JOIN self_check_tests t ON t.id = a.test_id
        JOIN self_check_questions q ON q.test_id = t.id
@@ -193,7 +203,10 @@ async function listAssignments(request: Request, env: Env): Promise<Response> {
             COALESCE(SUM(q.points), 0) AS max_score,
             latest.score AS latest_score,
             latest.max_score AS latest_max_score,
-            latest.submitted_at AS latest_submitted_at
+            latest.submitted_at AS latest_submitted_at,
+            a.status AS assignment_status,
+            t.status AS test_status,
+            CASE WHEN a.status = 'active' AND t.status = 'published' THEN 1 ELSE 0 END AS available
        FROM self_check_assignments a
        JOIN self_check_tests t ON t.id = a.test_id
        JOIN self_check_questions q ON q.test_id = t.id
@@ -206,10 +219,15 @@ async function listAssignments(request: Request, env: Env): Promise<Response> {
             LIMIT 1
          )
       WHERE a.student_id = ?1
-        AND a.status = 'active'
-        AND t.status = 'published'
+        AND (
+          (a.status = 'active' AND t.status = 'published')
+          OR EXISTS (
+            SELECT 1 FROM self_check_attempts history WHERE history.assignment_id = a.id
+          )
+        )
       GROUP BY a.id
-      ORDER BY CASE WHEN a.due_at IS NULL THEN 1 ELSE 0 END,
+      ORDER BY available DESC,
+               CASE WHEN a.due_at IS NULL THEN 1 ELSE 0 END,
                a.due_at,
                a.assigned_at DESC`,
   ).bind(student.id).all<AssignmentListRow>();
@@ -362,6 +380,10 @@ async function submitAssignment(
     await env.DB.batch(statements);
   }
 
+  const selfCheckSummary = principal.isAdmin
+    ? null
+    : await selfCheckSummaryForStudent(student.id, env);
+
   console.log(JSON.stringify({
     event: "self_check_submitted",
     assignmentId: assignment.id,
@@ -377,6 +399,7 @@ async function submitAssignment(
     maxScore,
     percent: Math.round((score / maxScore) * 100),
     submittedAt,
+    selfCheckSummary,
     results: graded,
   });
 }
@@ -412,7 +435,10 @@ async function adminPage(request: Request, env: Env, url: URL): Promise<Response
               a.assigned_at,
               latest.score AS latest_score,
               latest.max_score AS latest_max_score,
-              latest.submitted_at AS latest_submitted_at
+              latest.submitted_at AS latest_submitted_at,
+              a.status AS assignment_status,
+              t.status AS test_status,
+              CASE WHEN a.status = 'active' AND t.status = 'published' THEN 1 ELSE 0 END AS available
          FROM self_check_assignments a
          JOIN students s ON s.id = a.student_id
          JOIN self_check_tests t ON t.id = a.test_id
@@ -422,7 +448,10 @@ async function adminPage(request: Request, env: Env, url: URL): Promise<Response
               WHERE assignment_id = a.id
               ORDER BY submitted_at DESC, id DESC LIMIT 1
            )
-        WHERE a.status = 'active'
+        WHERE (a.status = 'active' AND t.status = 'published')
+           OR EXISTS (
+             SELECT 1 FROM self_check_attempts history WHERE history.assignment_id = a.id
+           )
         ORDER BY a.assigned_at DESC`,
     ).all<AdminAssignmentRow>(),
   ]);
@@ -451,8 +480,9 @@ async function adminPage(request: Request, env: Env, url: URL): Promise<Response
       ? ` · ${escapeHtml(assignment.latest_submitted_at.slice(0, 10))}`
       : "";
     const due = assignment.due_at ? `Termín ${escapeHtml(assignment.due_at)}` : "Bez termínu";
+    const state = assignment.available ? "Aktivní" : "Historický výsledek";
     return `<article class="assignment">
-      <div><strong>${escapeHtml(assignment.display_name)}</strong><span>${escapeHtml(assignment.test_title)}</span><small>${escapeHtml(assignment.topic)} · ${due} · Poslední výsledek: ${escapeHtml(lastAttempt)}${attemptDate}</small></div>
+      <div><strong>${escapeHtml(assignment.display_name)}</strong><span>${escapeHtml(assignment.test_title)}</span><small>${escapeHtml(assignment.topic)} · ${state} · ${due} · Poslední výsledek: ${escapeHtml(lastAttempt)}${attemptDate}</small></div>
       <a href="${PREFIX}/admin/view/${encodeURIComponent(assignment.student_id)}#tasks">Otevřít náhled</a>
     </article>`;
   }).join("") || `<p class="empty">Zatím není přiřazen žádný self-check.</p>`;
@@ -473,7 +503,7 @@ ${notice}
 <button type="submit">Přiřadit</button>
 </form></section>
 <section class="box"><h2>Knihovna testů</h2>${testCards}</section>
-<section class="box"><h2>Aktivní přiřazení</h2>${assignmentRows}</section>
+<section class="box"><h2>Přiřazení a výsledky</h2>${assignmentRows}</section>
 </main></body></html>`);
 }
 

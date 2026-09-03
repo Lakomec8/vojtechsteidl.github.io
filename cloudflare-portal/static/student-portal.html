@@ -8,7 +8,7 @@
   <meta http-equiv="Pragma" content="no-cache">
   <meta http-equiv="Expires" content="0">
   <title>Studentský portál | Vojtěch Steidl</title>
-  <link rel="stylesheet" href="assets/student-portal.css?v=20260828-1">
+  <link rel="stylesheet" href="assets/student-portal.css?v=20260903-2">
   <link rel="stylesheet" href="assets/student-self-checks-math.css?v=20260829-1">
   <link rel="stylesheet" href="assets/student-payment.css?v=20260827-1">
 </head>
@@ -51,6 +51,7 @@
         <div class="metrics">
           <div class="metric"><span>Absolvované hodiny</span><strong id="lessonCount">0</strong><small id="lastLessonDate">Zatím bez záznamu</small></div>
           <div class="metric"><span>Průměr hodnocení</span><strong id="overallScore">–</strong><small id="overallScoreCopy">Zatím bez hodnocení</small></div>
+          <div class="metric"><span>Poslední test</span><strong id="selfCheckScore">–</strong><small id="selfCheckScoreCopy">Zatím bez výsledku</small></div>
           <div class="metric"><span>Aktivní úkoly</span><strong id="activeCount">0</strong><small id="taskMetricCopy">Žádný aktivní úkol</small></div>
           <div class="metric"><span>Následující hodina</span><strong id="nextDate">–</strong><small id="nextDateCopy">–</small></div>
         </div>
@@ -83,10 +84,53 @@
     <div id="selfCheckContent"></div>
   </dialog>
 
-  <script src="assets/student-portal.js?v=20260825-1"></script>
-  <script src="assets/student-self-checks.js?v=20260828-1"></script>
+  <script src="assets/student-portal.js?v=20260903-2"></script>
+  <script>
+    (() => {
+      const metric = document.getElementById("lessonCount");
+      const app = document.getElementById("app");
+      const token = sessionStorage.getItem("student_token");
+      if (!metric || !app || !token) return;
+
+      fetch(`students/${encodeURIComponent(token)}.json?hours=${Date.now()}`, { cache: "no-store" })
+        .then((response) => response.ok ? response.json() : null)
+        .then((profile) => {
+          if (!profile) return;
+          const historicalRaw = Number(profile.historicalLessonCountOffset);
+          const historicalHours = Number.isFinite(historicalRaw) ? Math.max(0, historicalRaw) : 0;
+          const minutesRaw = Number(profile.completedLessonMinutes);
+          const calendarHours = Number.isFinite(minutesRaw)
+            ? Math.max(0, minutesRaw) / 60
+            : (Array.isArray(profile.externalLessons) ? profile.externalLessons : []).reduce(
+                (sum, lesson) => {
+                  const duration = Number(lesson?.durationHours);
+                  return sum + (Number.isFinite(duration) ? Math.max(0, duration) : 0);
+                },
+                0,
+              );
+          const value = new Intl.NumberFormat("cs-CZ", { maximumFractionDigits: 2 }).format(
+            historicalHours + calendarHours,
+          );
+          const apply = () => { metric.textContent = value; };
+
+          if (!app.hidden) {
+            apply();
+            return;
+          }
+          const observer = new MutationObserver(() => {
+            if (app.hidden) return;
+            observer.disconnect();
+            apply();
+          });
+          observer.observe(app, { attributes: true, attributeFilter: ["hidden"] });
+          window.setTimeout(() => observer.disconnect(), 10000);
+        })
+        .catch(() => {});
+    })();
+  </script>
+  <script src="assets/student-self-checks.js?v=20260903-2"></script>
   <script src="assets/student-self-checks-math.js?v=20260829-1"></script>
-  <script src="assets/student-dashboard-material-selfchecks.js?v=20260903-1"></script>
+  <script src="assets/student-dashboard-material-selfchecks.js?v=20260903-2"></script>
   <script src="assets/student-next-lesson.js?v=20260827-1"></script>
   <script src="assets/student-payment.js?v=20260902-1"></script>
   <script src="assets/student-payment-qr-fix.js?v=20260827-2"></script>
