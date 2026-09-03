@@ -54,6 +54,12 @@
           <div class="metric"><span>Aktivní úkoly</span><strong id="activeCount">0</strong><small id="taskMetricCopy">Žádný aktivní úkol</small></div>
           <div class="metric"><span>Následující hodina</span><strong id="nextDate">–</strong><small id="nextDateCopy">–</small></div>
         </div>
+        <section class="card dashboard-material" aria-labelledby="dashboardMaterialsTitle">
+          <h2 id="dashboardMaterialsTitle">Materiály a procvičování</h2>
+          <p class="card-intro">Otevři si materiál k tématu a pokud máš přiřazený navazující self-check, můžeš ho spustit rovnou odsud.</p>
+          <div class="list" id="dashboardMaterialsList"><div class="empty">Načítám materiály…</div></div>
+          <div class="actions"><button class="secondary" type="button" data-open="materials">Zobrazit všechny materiály</button><button class="secondary" type="button" data-open="tasks">Všechna procvičování</button></div>
+        </section>
         <div class="grid">
           <section class="card"><h2>Poslední hodina</h2><div id="lastLesson"></div></section>
           <section class="card"><h2>Doporučený další krok</h2><div id="nextAction"></div></section>
@@ -80,6 +86,7 @@
   <script src="assets/student-portal.js?v=20260825-1"></script>
   <script src="assets/student-self-checks.js?v=20260828-1"></script>
   <script src="assets/student-self-checks-math.js?v=20260829-1"></script>
+  <script src="assets/student-dashboard-material-selfchecks.js?v=20260903-1"></script>
   <script src="assets/student-next-lesson.js?v=20260827-1"></script>
   <script src="assets/student-payment.js?v=20260902-1"></script>
   <script src="assets/student-payment-qr-fix.js?v=20260827-2"></script>
