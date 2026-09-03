@@ -75,6 +75,7 @@ jobs:
         run: npm run audit:access
 
       - name: Audit calendar-backed student dashboard data
+        working-directory: cloudflare-portal
         run: node scripts/audit-student-portal.mjs
 
       - name: Deploy production Worker
