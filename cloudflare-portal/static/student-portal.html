@@ -85,6 +85,49 @@
   </dialog>
 
   <script src="assets/student-portal.js?v=20260903-2"></script>
+  <script>
+    (() => {
+      const metric = document.getElementById("lessonCount");
+      const app = document.getElementById("app");
+      const token = sessionStorage.getItem("student_token");
+      if (!metric || !app || !token) return;
+
+      fetch(`students/${encodeURIComponent(token)}.json?hours=${Date.now()}`, { cache: "no-store" })
+        .then((response) => response.ok ? response.json() : null)
+        .then((profile) => {
+          if (!profile) return;
+          const historicalRaw = Number(profile.historicalLessonCountOffset);
+          const historicalHours = Number.isFinite(historicalRaw) ? Math.max(0, historicalRaw) : 0;
+          const minutesRaw = Number(profile.completedLessonMinutes);
+          const calendarHours = Number.isFinite(minutesRaw)
+            ? Math.max(0, minutesRaw) / 60
+            : (Array.isArray(profile.externalLessons) ? profile.externalLessons : []).reduce(
+                (sum, lesson) => {
+                  const duration = Number(lesson?.durationHours);
+                  return sum + (Number.isFinite(duration) ? Math.max(0, duration) : 0);
+                },
+                0,
+              );
+          const value = new Intl.NumberFormat("cs-CZ", { maximumFractionDigits: 2 }).format(
+            historicalHours + calendarHours,
+          );
+          const apply = () => { metric.textContent = value; };
+
+          if (!app.hidden) {
+            apply();
+            return;
+          }
+          const observer = new MutationObserver(() => {
+            if (app.hidden) return;
+            observer.disconnect();
+            apply();
+          });
+          observer.observe(app, { attributes: true, attributeFilter: ["hidden"] });
+          window.setTimeout(() => observer.disconnect(), 10000);
+        })
+        .catch(() => {});
+    })();
+  </script>
   <script src="assets/student-self-checks.js?v=20260903-2"></script>
   <script src="assets/student-self-checks-math.js?v=20260829-1"></script>
   <script src="assets/student-dashboard-material-selfchecks.js?v=20260903-2"></script>
