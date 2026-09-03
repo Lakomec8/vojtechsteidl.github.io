@@ -11,7 +11,41 @@ SELECT student.id,
          ELSE 450
        END,
        student.enabled
-  FROM students AS student;
+  FROM students AS student
+ WHERE student.id <> 'prusikova'
+    OR NOT EXISTS (SELECT 1 FROM tutoring_students WHERE id = 'anicka');
+
+-- Authentication/profile IDs and calendar IDs are separate domains. Never
+-- rely on them accidentally having the same spelling.
+CREATE TABLE IF NOT EXISTS student_tutoring_links (
+  student_id TEXT PRIMARY KEY,
+  tutoring_student_id TEXT NOT NULL UNIQUE,
+  created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (student_id) REFERENCES students(id) ON DELETE CASCADE,
+  FOREIGN KEY (tutoring_student_id) REFERENCES tutoring_students(id) ON DELETE CASCADE
+);
+
+-- Production profile "Anna" is the student called "Anička" in Calendar.
+DELETE FROM student_tutoring_links
+ WHERE tutoring_student_id = 'anicka'
+   AND student_id <> 'prusikova'
+   AND EXISTS (SELECT 1 FROM students WHERE id = 'prusikova');
+
+INSERT INTO student_tutoring_links (student_id, tutoring_student_id)
+SELECT 'prusikova', 'anicka'
+ WHERE EXISTS (SELECT 1 FROM students WHERE id = 'prusikova')
+   AND EXISTS (SELECT 1 FROM tutoring_students WHERE id = 'anicka')
+ON CONFLICT(student_id) DO UPDATE SET
+  tutoring_student_id = excluded.tutoring_student_id,
+  updated_at = CURRENT_TIMESTAMP;
+
+-- All other existing profiles currently use the same stable ID in both
+-- domains. Future profiles receive an explicit link when they are created.
+INSERT OR IGNORE INTO student_tutoring_links (student_id, tutoring_student_id)
+SELECT student.id, student.id
+  FROM students AS student
+  JOIN tutoring_students AS tutoring ON tutoring.id = student.id;
 
 -- Student dashboards query the latest attempt for every assignment, including
 -- historical diagnostics. Keep that lookup fast as the attempt history grows.

@@ -64,6 +64,20 @@ function compactItems(items, fields = ["title", "badge", "source", "counted"]) {
   });
 }
 
+const linkTableAvailable = Number(resultRows(runD1(`
+  SELECT COUNT(*) AS available
+    FROM sqlite_master
+   WHERE type = 'table' AND name = 'student_tutoring_links';
+`))[0]?.available || 0) === 1;
+
+const calendarLinkJoin = linkTableAvailable
+  ? "LEFT JOIN student_tutoring_links AS link ON link.student_id = s.id"
+  : `LEFT JOIN (
+       SELECT id AS student_id,
+              CASE WHEN id = 'prusikova' THEN 'anicka' ELSE id END AS tutoring_student_id
+         FROM students
+     ) AS link ON link.student_id = s.id`;
+
 const payload = runD1(`
   SELECT s.id,
          s.display_name,
@@ -71,14 +85,15 @@ const payload = runD1(`
          s.enabled,
          p.updated_at,
          p.payload_json,
+         link.tutoring_student_id,
          (SELECT COUNT(*)
             FROM tutoring_lessons AS lesson
-           WHERE lesson.student_id = s.id
+           WHERE lesson.student_id = link.tutoring_student_id
              AND lesson.source = 'google_calendar'
              AND lesson.payment_status <> 'cancelled') AS calendar_lesson_count,
          (SELECT MAX(lesson.lesson_date)
             FROM tutoring_lessons AS lesson
-           WHERE lesson.student_id = s.id
+           WHERE lesson.student_id = link.tutoring_student_id
              AND lesson.source = 'google_calendar'
              AND lesson.payment_status <> 'cancelled') AS latest_calendar_lesson_date,
          (SELECT COUNT(*)
@@ -107,6 +122,7 @@ const payload = runD1(`
            LIMIT 1) AS latest_self_check_submitted_at
     FROM students AS s
     LEFT JOIN student_profiles AS p ON p.student_id = s.id
+    ${calendarLinkJoin}
    WHERE s.enabled = 1
    ORDER BY s.display_name COLLATE NOCASE;
 `);
@@ -143,6 +159,7 @@ for (const row of rows) {
   if (!Number.isFinite(historicalOffsetRaw) || historicalOffsetRaw < 0) {
     anomalies.push("invalid-historical-lesson-offset");
   }
+  if (!row.tutoring_student_id) anomalies.push("missing-calendar-identity-link");
   if (profile.incrementLessonCountOnMaterialAdd === true) {
     anomalies.push("material-upload-still-configured-to-count-lessons");
   }
@@ -168,6 +185,7 @@ for (const row of rows) {
     id: row.id,
     displayName: row.display_name,
     materialPath: row.material_path,
+    calendarIdentity: row.tutoring_student_id,
     updatedAt: row.updated_at,
     completedLessonsCount: effectiveCompleted,
     historicalLessonCountOffset: historicalOffset,

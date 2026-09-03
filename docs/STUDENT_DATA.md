@@ -7,6 +7,7 @@ Produkční studentský portál běží přes Cloudflare Worker. Profily jsou ul
 - Každá skutečně absolvovaná hodina se eviduje z Google Calendaru.
 - Synchronizované kalendářní hodiny jsou uložené v D1 tabulce `tutoring_lessons`.
 - API při každém načtení profilu z těchto řádků vytvoří pole `externalLessons`; nejde o ručně udržovanou kopii v JSON profilu.
+- Přihlašovací ID profilu a kalendářní ID propojuje `student_tutoring_links`; aplikace nespoléhá na to, že jsou textově shodná.
 - Každá položka v `externalLessons` odpovídá jedné proběhlé kalendářní události a má unikátní ID události.
 - Datum hodiny používá formát `YYYY-MM-DD`.
 - Pole `lessons`, `materials`, `tasks`, `timeline`, `upcoming`, `links` a `externalLessons` mají být pole, i když jsou prázdná.

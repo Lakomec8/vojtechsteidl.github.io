@@ -383,6 +383,13 @@ async function studentManager(request: Request, env: Env): Promise<Response> {
            active = 1,
            updated_at = CURRENT_TIMESTAMP`,
       ).bind(values.id, values.displayName),
+      env.DB.prepare(
+        `INSERT INTO student_tutoring_links (student_id, tutoring_student_id)
+         VALUES (?1, ?1)
+         ON CONFLICT(student_id) DO UPDATE SET
+           tutoring_student_id = excluded.tutoring_student_id,
+           updated_at = CURRENT_TIMESTAMP`,
+      ).bind(values.id),
     ]);
   } catch {
     return studentManagerPage(

@@ -39,7 +39,9 @@ export async function calendarLessonsForStudent(
   const result = await env.DB.prepare(
     `SELECT google_event_id, lesson_date, starts_at, ends_at, duration_minutes
        FROM tutoring_lessons
-      WHERE student_id = ?1
+       JOIN student_tutoring_links AS link
+         ON link.tutoring_student_id = tutoring_lessons.student_id
+      WHERE link.student_id = ?1
         AND source = 'google_calendar'
         AND payment_status <> 'cancelled'
         AND google_event_id IS NOT NULL
