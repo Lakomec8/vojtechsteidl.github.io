@@ -70,7 +70,41 @@ const payload = runD1(`
          s.material_path,
          s.enabled,
          p.updated_at,
-         p.payload_json
+         p.payload_json,
+         (SELECT COUNT(*)
+            FROM tutoring_lessons AS lesson
+           WHERE lesson.student_id = s.id
+             AND lesson.source = 'google_calendar'
+             AND lesson.payment_status <> 'cancelled') AS calendar_lesson_count,
+         (SELECT MAX(lesson.lesson_date)
+            FROM tutoring_lessons AS lesson
+           WHERE lesson.student_id = s.id
+             AND lesson.source = 'google_calendar'
+             AND lesson.payment_status <> 'cancelled') AS latest_calendar_lesson_date,
+         (SELECT COUNT(*)
+            FROM self_check_attempts AS attempt
+           WHERE attempt.student_id = s.id) AS self_check_attempt_count,
+         (SELECT attempt.score
+            FROM self_check_attempts AS attempt
+           WHERE attempt.student_id = s.id
+           ORDER BY attempt.submitted_at DESC, attempt.id DESC
+           LIMIT 1) AS latest_self_check_score,
+         (SELECT attempt.max_score
+            FROM self_check_attempts AS attempt
+           WHERE attempt.student_id = s.id
+           ORDER BY attempt.submitted_at DESC, attempt.id DESC
+           LIMIT 1) AS latest_self_check_max_score,
+         (SELECT test.title
+            FROM self_check_attempts AS attempt
+            JOIN self_check_tests AS test ON test.id = attempt.test_id
+           WHERE attempt.student_id = s.id
+           ORDER BY attempt.submitted_at DESC, attempt.id DESC
+           LIMIT 1) AS latest_self_check_title,
+         (SELECT attempt.submitted_at
+            FROM self_check_attempts AS attempt
+           WHERE attempt.student_id = s.id
+           ORDER BY attempt.submitted_at DESC, attempt.id DESC
+           LIMIT 1) AS latest_self_check_submitted_at
     FROM students AS s
     LEFT JOIN student_profiles AS p ON p.student_id = s.id
    WHERE s.enabled = 1
@@ -97,21 +131,15 @@ for (const row of rows) {
 
   const lessons = arr(profile.lessons);
   const materials = arr(profile.materials);
-  const externalLessons = arr(profile.externalLessons);
   const timeline = arr(profile.timeline);
 
-  const expectedCompleted = externalLessons.length;
-  const completed = Number(profile.completedLessonsCount ?? expectedCompleted);
+  const expectedCompleted = Number(row.calendar_lesson_count || 0);
   const historicalOffsetRaw = Number(profile.historicalLessonCountOffset ?? 0);
   const historicalOffset = Number.isFinite(historicalOffsetRaw)
     ? Math.max(0, Math.round(historicalOffsetRaw))
     : 0;
   const effectiveCompleted = historicalOffset + expectedCompleted;
 
-  if (!Number.isFinite(completed) || completed < 0) anomalies.push("invalid-completed-count");
-  if (Number.isFinite(completed) && completed !== expectedCompleted) {
-    anomalies.push(`completed-count-does-not-match-calendar-${completed}-vs-${expectedCompleted}`);
-  }
   if (!Number.isFinite(historicalOffsetRaw) || historicalOffsetRaw < 0) {
     anomalies.push("invalid-historical-lesson-offset");
   }
@@ -119,7 +147,6 @@ for (const row of rows) {
     anomalies.push("material-upload-still-configured-to-count-lessons");
   }
   if (!isDescending(materials)) anomalies.push("materials-not-chronological");
-  if (!isDescending(externalLessons)) anomalies.push("calendar-lessons-not-chronological");
 
   const latestMaterialDate = latestDate(materials);
   const firstMaterialDate = dateOf(materials[0]);
@@ -142,18 +169,25 @@ for (const row of rows) {
     displayName: row.display_name,
     materialPath: row.material_path,
     updatedAt: row.updated_at,
-    completedLessonsCount: Number.isFinite(completed) ? completed : profile.completedLessonsCount,
+    completedLessonsCount: effectiveCompleted,
     historicalLessonCountOffset: historicalOffset,
     effectiveCompletedLessonsCount: effectiveCompleted,
     expectedCalendarLessonCount: expectedCompleted,
-    latestCalendarLessonDate: latestDate(externalLessons),
+    latestCalendarLessonDate: row.latest_calendar_lesson_date,
+    selfCheckAttemptCount: Number(row.self_check_attempt_count || 0),
+    latestSelfCheck: row.latest_self_check_score == null
+      ? null
+      : {
+          title: row.latest_self_check_title,
+          score: Number(row.latest_self_check_score),
+          maxScore: Number(row.latest_self_check_max_score),
+          submittedAt: row.latest_self_check_submitted_at,
+        },
     latestMaterialDate,
     latestDetailedLessonDate: latestDate(lessons),
     materialsChronological: isDescending(materials),
-    calendarLessonsChronological: isDescending(externalLessons),
     lessons: compactItems(lessons, ["title", "subject", "score"]),
     materials: compactItems(materials, ["title", "badge", "source"]),
-    externalLessons: compactItems(externalLessons, ["source", "counted", "durationHours"]),
     timeline: compactItems(timeline, ["title", "badge", "source"]),
     anomalies,
   });

@@ -11,7 +11,9 @@ The secure portal now runs a Cloudflare Cron Trigger every 15 minutes.
 - marks the calendar event as completed,
 - refreshes `tutoring_sync_state`.
 
-The same reconciliation runs opportunistically when the administrator opens `/student-portal/admin/tutoring/`, so a missed cron run does not leave the dashboard stale.
+The same reconciliation runs opportunistically before an administrator opens `/student-portal/admin/tutoring/` and before any student profile is returned. A missed cron run therefore cannot leave a student dashboard stale. Inserts are conflict-safe and also repair a missing income row for an already-created lesson.
+
+Student dashboards do not read a cached lesson count from profile JSON. Every profile response derives `externalLessons`, the completed count and total minutes from the calendar-backed `tutoring_lessons` ledger for that student.
 
 ## Calendar ingestion boundary
 

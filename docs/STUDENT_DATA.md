@@ -5,7 +5,8 @@ Produkční studentský portál běží přes Cloudflare Worker. Profily jsou ul
 ## Povinná pravidla
 
 - Každá skutečně absolvovaná hodina se eviduje z Google Calendaru.
-- Synchronizované kalendářní hodiny jsou v profilu v poli `externalLessons`.
+- Synchronizované kalendářní hodiny jsou uložené v D1 tabulce `tutoring_lessons`.
+- API při každém načtení profilu z těchto řádků vytvoří pole `externalLessons`; nejde o ručně udržovanou kopii v JSON profilu.
 - Každá položka v `externalLessons` odpovídá jedné proběhlé kalendářní události a má unikátní ID události.
 - Datum hodiny používá formát `YYYY-MM-DD`.
 - Pole `lessons`, `materials`, `tasks`, `timeline`, `upcoming`, `links` a `externalLessons` mají být pole, i když jsou prázdná.
@@ -17,9 +18,9 @@ Produkční studentský portál běží přes Cloudflare Worker. Profily jsou ul
 
 **Jediným zdrojem pravdy pro počet absolvovaných hodin je Google Calendar.**
 
-Počet na studentské nástěnce se počítá jako počet synchronizovaných proběhlých kalendářních událostí v `externalLessons`.
+Počet na studentské nástěnce se počítá jako počet unikátních synchronizovaných proběhlých kalendářních událostí v D1 pro přihlášeného studenta. API z nich vytvoří `externalLessons` a klient zobrazuje stejný počet.
 
-`completedLessonsCount` je pouze odvozená/cache hodnota a při každé normalizaci profilu se musí přepočítat z `externalLessons`.
+`completedLessonsCount` je pouze odvozená hodnota odpovědi API. Nesmí se aktualizovat při nahrávání materiálu ani udržovat jako druhý zdroj pravdy v JSON profilu.
 
 Platí zejména:
 

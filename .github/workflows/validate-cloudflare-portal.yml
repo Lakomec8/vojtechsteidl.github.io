@@ -37,7 +37,10 @@ jobs:
         run: |
           node --check scripts/apply-profile-patch.mjs
           node --check scripts/migrate-materials-to-r2.mjs
+          node --check scripts/audit-student-portal.mjs
+          node --check ../assets/student-portal.js
           node --check ../assets/student-self-checks.js
+          node --check ../assets/student-dashboard-material-selfchecks.js
 
       - name: Apply and verify local database migrations
         run: |
@@ -46,6 +49,10 @@ jobs:
           node -e "const fs=require('node:fs');const rows=JSON.parse(fs.readFileSync('/tmp/self-check-seed.json','utf8'));const result=rows?.[0]?.results?.[0];if(Number(result?.tests)<1||Number(result?.questions)<8)process.exit(1)"
           npx wrangler d1 execute DB --local --command "SELECT (SELECT SUM(amount) FROM tutoring_income) AS revenue, (SELECT SUM(duration_minutes)/60 FROM (SELECT COALESCE(google_event_id,id) AS session_id, MAX(duration_minutes) AS duration_minutes FROM tutoring_lessons GROUP BY session_id)) AS hours, (SELECT COUNT(*) FROM tutoring_lessons) AS lessons, (SELECT COUNT(*) FROM tutoring_income) AS incomes, (SELECT COUNT(*) FROM tutoring_calendar_events WHERE status='completed') AS completed, (SELECT COUNT(*) FROM tutoring_calendar_events WHERE status='planned') AS planned, (SELECT COUNT(*) FROM (SELECT google_event_id, student_id FROM tutoring_lessons WHERE google_event_id IS NOT NULL GROUP BY google_event_id, student_id HAVING COUNT(*) > 1)) AS duplicates" --json > /tmp/tutoring-os-seed.json
           node -e "const fs=require('node:fs');const rows=JSON.parse(fs.readFileSync('/tmp/tutoring-os-seed.json','utf8'));const r=rows?.[0]?.results?.[0];if(Number(r?.revenue)!==9650||Number(r?.hours)!==23||Number(r?.lessons)!==22||Number(r?.incomes)!==22||Number(r?.completed)!==12||Number(r?.planned)!==41||Number(r?.duplicates)!==0)process.exit(1)"
+          npx wrangler d1 execute DB --local --command "SELECT COUNT(*) AS lessons, SUM(duration_minutes) AS minutes FROM tutoring_lessons WHERE student_id='anicka' AND source='google_calendar' AND payment_status<>'cancelled'" --json > /tmp/anicka-lessons.json
+          node -e "const fs=require('node:fs');const rows=JSON.parse(fs.readFileSync('/tmp/anicka-lessons.json','utf8'));const r=rows?.[0]?.results?.[0];if(Number(r?.lessons)!==2||Number(r?.minutes)!==120)process.exit(1)"
+          npx wrangler d1 execute DB --local --command "INSERT OR IGNORE INTO students(id,email,display_name,material_path) VALUES('anicka','anicka-test@example.invalid','Anička','anicka'); INSERT OR IGNORE INTO student_profiles(student_id,payload_json) VALUES('anicka','{}'); INSERT OR IGNORE INTO self_check_assignments(id,student_id,test_id,status) VALUES('regression-anicka-diagnostic','anicka','intervaly-planimetrie-diagnostika-v1','archived'); INSERT OR IGNORE INTO self_check_attempts(id,assignment_id,student_id,test_id,score,max_score,submitted_at) VALUES('regression-anicka-attempt','regression-anicka-diagnostic','anicka','intervaly-planimetrie-diagnostika-v1',16,20,'2026-09-03T10:00:00Z'); SELECT a.id, latest.score, latest.max_score, CASE WHEN a.status='active' AND t.status='published' THEN 1 ELSE 0 END AS available FROM self_check_assignments a JOIN self_check_tests t ON t.id=a.test_id LEFT JOIN self_check_attempts latest ON latest.id=(SELECT id FROM self_check_attempts WHERE assignment_id=a.id ORDER BY submitted_at DESC,id DESC LIMIT 1) WHERE a.student_id='anicka' AND ((a.status='active' AND t.status='published') OR EXISTS(SELECT 1 FROM self_check_attempts history WHERE history.assignment_id=a.id))" --json > /tmp/anicka-diagnostic.json
+          node -e "const fs=require('node:fs');const batches=JSON.parse(fs.readFileSync('/tmp/anicka-diagnostic.json','utf8'));const results=batches.flatMap(x=>x.results||[]);const r=results.find(x=>x.id==='regression-anicka-diagnostic');if(Number(r?.score)!==16||Number(r?.max_score)!==20||Number(r?.available)!==0)process.exit(1)"
 
       - name: Build private portal artifact
         run: npm run build

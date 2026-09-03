@@ -74,6 +74,9 @@ jobs:
           PORTAL_POLICY_AUD: 89190bdbddce22e6d1bc3c2d2e42ae790ec5aedfb00adbe8eb0ce6d0c71225d2
         run: npm run audit:access
 
+      - name: Audit calendar-backed student dashboard data
+        run: node scripts/audit-student-portal.mjs
+
       - name: Deploy production Worker
         working-directory: cloudflare-portal
         run: npx wrangler deploy

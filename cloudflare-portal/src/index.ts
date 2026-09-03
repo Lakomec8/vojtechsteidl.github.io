@@ -1,4 +1,8 @@
 import { createRemoteJWKSet, jwtVerify } from "jose";
+import {
+  calendarLessonsForStudent,
+  selfCheckSummaryForStudent,
+} from "./student-learning";
 
 type StudentRow = {
   id: string;
@@ -224,14 +228,18 @@ async function profileForStudent(
   env: Env,
   adminView = false,
 ): Promise<Response> {
-  const row = await env.DB.prepare(
-    `SELECT payload_json
-       FROM student_profiles
-      WHERE student_id = ?1
-      LIMIT 1`,
-  )
-    .bind(student.id)
-    .first<ProfileRow>();
+  const [row, calendarLessons, selfCheckSummary] = await Promise.all([
+    env.DB.prepare(
+      `SELECT payload_json
+         FROM student_profiles
+        WHERE student_id = ?1
+        LIMIT 1`,
+    )
+      .bind(student.id)
+      .first<ProfileRow>(),
+    calendarLessonsForStudent(student.id, env),
+    selfCheckSummaryForStudent(student.id, env),
+  ]);
 
   if (!row) {
     throw new RequestError(404, "Student profile was not found.");
@@ -244,7 +252,33 @@ async function profileForStudent(
     throw new RequestError(500, "Student profile data is invalid.");
   }
 
-  return json({ ...profile, studentId: student.id, adminView });
+  const historicalOffsetValue = Number(profile.historicalLessonCountOffset);
+  const historicalLessonCountOffset = Number.isFinite(historicalOffsetValue)
+    ? Math.max(0, Math.round(historicalOffsetValue))
+    : 0;
+  const externalLessons = calendarLessons.map((lesson) => ({
+    id: lesson.google_event_id,
+    googleEventId: lesson.google_event_id,
+    date: lesson.lesson_date,
+    title: "Doučování",
+    startsAt: lesson.starts_at,
+    endsAt: lesson.ends_at,
+    durationHours: Number(lesson.duration_minutes) / 60,
+    source: "google_calendar",
+  }));
+
+  return json({
+    ...profile,
+    externalLessons,
+    completedLessonsCount: historicalLessonCountOffset + externalLessons.length,
+    completedLessonMinutes: calendarLessons.reduce(
+      (sum, lesson) => sum + Number(lesson.duration_minutes),
+      0,
+    ),
+    selfCheckSummary,
+    studentId: student.id,
+    adminView,
+  });
 }
 
 async function recordStudentVisit(studentId: string, env: Env): Promise<void> {

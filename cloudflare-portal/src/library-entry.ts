@@ -234,7 +234,6 @@ async function assign(request: Request, env: Env): Promise<Response> {
   if (existing >= 0) materials.splice(existing, 1);
   data.materials = normalizeMaterials([item, ...materials]);
   data.incrementLessonCountOnMaterialAdd = false;
-  data.completedLessonsCount = Array.isArray(data.externalLessons) ? data.externalLessons.length : 0;
   await env.DB.prepare(`UPDATE student_profiles SET payload_json = ?1, updated_at = CURRENT_TIMESTAMP WHERE student_id = ?2`)
     .bind(JSON.stringify(data), student.id).run();
   return redirect(`${PREFIX}/admin/library?assigned=${encodeURIComponent(student.display_name)}`);

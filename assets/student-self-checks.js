@@ -90,12 +90,16 @@
       if (assignment.due_at) meta.append(node("span", "", `do ${formatDate(assignment.due_at)}`));
       const latest = node("p", "self-check-latest", latestResult(assignment));
       if (assignment.latest_submitted_at) latest.append(` · ${formatDate(assignment.latest_submitted_at)}`);
+      if (!assignment.available) meta.append(node("span", "badge good", "Dokončeno"));
       main.append(heading, description, meta, latest);
 
-      const button = node("button", "primary self-check-start", assignment.latest_score === null ? "Spustit test" : "Zkusit znovu");
-      button.type = "button";
-      button.addEventListener("click", () => openAssignment(assignment.id));
-      card.append(main, button);
+      card.append(main);
+      if (assignment.available) {
+        const button = node("button", "primary self-check-start", assignment.latest_score === null ? "Spustit test" : "Zkusit znovu");
+        button.type = "button";
+        button.addEventListener("click", () => openAssignment(assignment.id));
+        card.append(button);
+      }
       list.append(card);
     }
   }
@@ -186,7 +190,12 @@
         body: JSON.stringify({ answers }),
       });
       renderResult(payload);
-      if (!payload.preview) loadAssignments();
+      if (!payload.preview) {
+        loadAssignments();
+        window.dispatchEvent(new CustomEvent("student:self-check-submitted", {
+          detail: { summary: payload.selfCheckSummary },
+        }));
+      }
     } catch (error) {
       const message = node("div", "self-check-error", error.message);
       form.prepend(message);

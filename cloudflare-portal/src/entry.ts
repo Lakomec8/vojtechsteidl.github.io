@@ -375,6 +375,14 @@ async function studentManager(request: Request, env: Env): Promise<Response> {
          VALUES (?1, ?2)
          ON CONFLICT(student_id) DO NOTHING`,
       ).bind(values.id, JSON.stringify(defaultStudentProfile(values.displayName))),
+      env.DB.prepare(
+        `INSERT INTO tutoring_students (id, display_name, hourly_rate, active)
+         VALUES (?1, ?2, 450, 1)
+         ON CONFLICT(id) DO UPDATE SET
+           display_name = excluded.display_name,
+           active = 1,
+           updated_at = CURRENT_TIMESTAMP`,
+      ).bind(values.id, values.displayName),
     ]);
   } catch {
     return studentManagerPage(
@@ -490,10 +498,6 @@ function materialR2Key(item: Record<string, unknown>, student: PortalStudent): s
 
 function applyMaterialProfileInvariants(profile: Record<string, unknown>): void {
   profile.incrementLessonCountOnMaterialAdd = false;
-  const externalLessons = Array.isArray(profile.externalLessons)
-    ? profile.externalLessons as Array<Record<string, unknown>>
-    : [];
-  profile.completedLessonsCount = externalLessons.length;
 }
 
 async function saveProfile(studentId: string, profile: Record<string, unknown>, env: Env): Promise<void> {

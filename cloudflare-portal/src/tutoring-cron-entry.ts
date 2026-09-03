@@ -77,18 +77,13 @@ export async function settleCompletedTutoringEvents(env: Env): Promise<number> {
 
     const lessonDate = isoDateInPrague(event.starts_at);
     for (const student of students) {
-      const exists = await env.DB.prepare(
-        "SELECT id FROM tutoring_lessons WHERE google_event_id = ?1 AND student_id = ?2 LIMIT 1",
-      ).bind(event.google_event_id, student.id).first<{ id: string }>();
-      if (exists) continue;
-
       const amount = Math.round((Number(event.duration_minutes) / 60) * Number(student.hourly_rate));
       const suffix = `${safeEventId(event.google_event_id)}-${student.id}`;
       const lessonId = `L-GCAL-${suffix}`;
       const incomeId = `P-GCAL-${suffix}`;
 
-      await env.DB.batch([
-        env.DB.prepare(`INSERT INTO tutoring_lessons
+      const [lessonResult] = await env.DB.batch([
+        env.DB.prepare(`INSERT OR IGNORE INTO tutoring_lessons
           (id, google_event_id, student_id, student_label, lesson_date, starts_at, ends_at,
            duration_minutes, hourly_rate, amount, payment_status, paid_at, payment_method, source, note)
           VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10,
@@ -105,12 +100,16 @@ export async function settleCompletedTutoringEvents(env: Env): Promise<number> {
             student.hourly_rate,
             amount,
           ),
-        env.DB.prepare(`INSERT INTO tutoring_income
+        env.DB.prepare(`INSERT OR IGNORE INTO tutoring_income
           (id, lesson_id, received_on, payer_label, amount, payment_method, description)
-          VALUES (?1, ?2, ?3, ?4, ?5, 'Převod', 'Doučování – automatická úhrada po lekci')`)
-          .bind(incomeId, lessonId, lessonDate, student.display_name, amount),
+          SELECT ?1, lesson.id, lesson.lesson_date, lesson.student_label, lesson.amount,
+                 'Převod', 'Doučování – automatická úhrada po lekci'
+            FROM tutoring_lessons AS lesson
+           WHERE lesson.google_event_id = ?2
+             AND lesson.student_id = ?3`)
+          .bind(incomeId, event.google_event_id, student.id),
       ]);
-      insertedLessons++;
+      insertedLessons += Number(lessonResult.meta.changes || 0);
     }
 
     await env.DB.prepare(`
@@ -150,7 +149,12 @@ export async function settleCompletedTutoringEvents(env: Env): Promise<number> {
 export default {
   async fetch(request: Request, env: Env): Promise<Response> {
     const url = new URL(request.url);
-    if (request.method === "GET" && url.pathname === "/student-portal/admin/tutoring/") {
+    const shouldSettleBeforeRead = request.method === "GET" && (
+      url.pathname === "/student-portal/admin/tutoring/" ||
+      url.pathname === "/student-portal/api/profile" ||
+      (url.hostname === "portal.vojtechsteidl.eu" && url.pathname === "/api/profile")
+    );
+    if (shouldSettleBeforeRead) {
       try {
         await settleCompletedTutoringEvents(env);
       } catch (error) {

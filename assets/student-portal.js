@@ -197,6 +197,11 @@
     const tasks = Array.isArray(data.tasks) ? data.tasks : [];
     const timeline = Array.isArray(data.timeline) ? data.timeline : [];
     const links = Array.isArray(data.links) ? data.links : [];
+    let selfCheckSummary = data.selfCheckSummary || {
+      completedTests: 0,
+      averagePercent: null,
+      latest: null,
+    };
 
     const today = new Date();
     today.setHours(0, 0, 0, 0);
@@ -240,29 +245,51 @@
         ) / scoredLessons.length
       : null;
     const readinessConfig = data.readiness || {};
+    const selfCheckAveragePercent = () => {
+      if (selfCheckSummary?.averagePercent === null || selfCheckSummary?.averagePercent === undefined) {
+        return null;
+      }
+      const value = Number(selfCheckSummary.averagePercent);
+      return Number.isFinite(value) ? value : null;
+    };
 
     const calculateReadiness = () => {
       const completedCount = tasks.filter((task) => completed[task.id]).length;
       const taskRatio = tasks.length ? completedCount / tasks.length : 0;
-      let value;
+      const diagnosticPercent = selfCheckAveragePercent();
+      const components = [];
+      if (averageScore !== null) components.push({
+        value: averageScore * 10,
+        weight: Math.max(0, Number(readinessConfig.lessonWeight ?? 60)),
+      });
+      if (tasks.length) components.push({
+        value: taskRatio * 100,
+        weight: Math.max(0, Number(readinessConfig.taskWeight ?? 40)),
+      });
+      if (diagnosticPercent !== null) components.push({
+        value: diagnosticPercent,
+        weight: Math.max(0, Number(readinessConfig.selfCheckWeight ?? 50)),
+      });
 
-      if (averageScore !== null && tasks.length) {
-        value =
-          averageScore *
-            10 *
-            (Number(readinessConfig.lessonWeight ?? 60) / 100) +
-          taskRatio *
-            100 *
-            (Number(readinessConfig.taskWeight ?? 40) / 100);
-      } else if (averageScore !== null) {
-        value = averageScore * 10;
-      } else if (tasks.length) {
-        value = taskRatio * 100;
-      } else {
-        value = Number(data.progress) || 0;
-      }
+      const totalWeight = components.reduce((sum, component) => sum + component.weight, 0);
+      const value = components.length && totalWeight > 0
+        ? components.reduce(
+            (sum, component) => sum + component.value * component.weight,
+            0,
+          ) / totalWeight
+        : Number(data.progress) || 0;
 
       return Math.max(0, Math.min(100, Math.round(value)));
+    };
+
+    const renderSelfCheckMetric = () => {
+      const latest = selfCheckSummary?.latest;
+      $("selfCheckScore").textContent = latest
+        ? `${latest.score}/${latest.maxScore}`
+        : "–";
+      $("selfCheckScoreCopy").textContent = latest
+        ? `${latest.percent} % · ${latest.title}`
+        : "Zatím bez výsledku";
     };
 
     const renderNextAction = () => {
@@ -294,15 +321,18 @@
         readinessConfig.label || "Studijní postup";
       $("readinessValue").textContent = `${readiness} %`;
       $("readinessFill").style.width = `${readiness}%`;
-      $("readinessCopy").textContent = `${
-        averageScore !== null
-          ? `Hodiny ${averageScore.toFixed(1).replace(".0", "")}/10`
-          : "Bez hodnocení hodin"
-      } · ${
-        tasks.length
-          ? `${completedCount} z ${tasks.length} úkolů hotovo`
-          : "Bez aktivních úkolů"
-      }`;
+      const progressParts = [];
+      if (averageScore !== null) {
+        progressParts.push(`Hodiny ${averageScore.toFixed(1).replace(".0", "")}/10`);
+      }
+      const diagnosticPercent = selfCheckAveragePercent();
+      if (diagnosticPercent !== null) {
+        progressParts.push(`Testy ${diagnosticPercent} %`);
+      }
+      if (tasks.length) progressParts.push(`${completedCount} z ${tasks.length} úkolů hotovo`);
+      $("readinessCopy").textContent = progressParts.length
+        ? progressParts.join(" · ")
+        : "Zatím bez hodnocení, testů a aktivních úkolů";
       $("activeCount").textContent = activeCount;
       $("taskMetricCopy").textContent = tasks.length
         ? activeCount
@@ -440,6 +470,7 @@
       scoredLessons.length,
       completedLessonsCount,
     );
+    renderSelfCheckMetric();
 
     const deadline = data.deadline || {};
     const nextEvent = upcoming[0] || null;
@@ -688,6 +719,13 @@
     $("logout").addEventListener("click", () => {
       sessionStorage.removeItem("student_token");
       window.location.href = "index.html";
+    });
+
+    window.addEventListener("student:self-check-submitted", (event) => {
+      if (!event.detail?.summary) return;
+      selfCheckSummary = event.detail.summary;
+      renderSelfCheckMetric();
+      updateSummary();
     });
 
     updateSummary();
