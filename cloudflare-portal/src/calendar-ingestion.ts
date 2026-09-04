@@ -154,10 +154,16 @@ function expandCalendar(ics: string, students: TutoringStudent[], rangeStart: Da
 
 async function activeStudents(env: Env): Promise<TutoringStudent[]> {
   const result = await env.DB.prepare(`
-    SELECT id, display_name
-      FROM tutoring_students
-     WHERE active = 1
-     ORDER BY id
+    SELECT tutoring.id,
+           COALESCE(NULLIF(TRIM(student.display_name), ''), tutoring.display_name) AS display_name
+      FROM tutoring_students AS tutoring
+      LEFT JOIN student_tutoring_links AS link
+        ON link.tutoring_student_id = tutoring.id
+      LEFT JOIN students AS student
+        ON student.id = link.student_id
+       AND student.enabled = 1
+     WHERE tutoring.active = 1
+     ORDER BY tutoring.id
   `).all<TutoringStudent>();
   return result.results || [];
 }
