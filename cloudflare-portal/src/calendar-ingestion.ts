@@ -4,8 +4,10 @@ type CalendarEnv = Env & {
   GOOGLE_CALENDAR_ICS_URL?: string;
 };
 
-type IcalEvent = InstanceType<typeof ICAL.Event>;
-type IcalTime = InstanceType<typeof ICAL.Time>;
+// ical.js 2.2.x exposes a richer runtime surface than its generated declaration
+// file models in a few recurrence paths. Keep that mismatch isolated here.
+type IcalEvent = any;
+type IcalTime = any;
 
 type TutoringStudent = {
   id: string;
@@ -105,7 +107,7 @@ function expandCalendar(ics: string, students: TutoringStudent[], rangeStart: Da
   const exceptions: IcalEvent[] = [];
 
   for (const component of components) {
-    const event = new ICAL.Event(component);
+    const event: IcalEvent = new ICAL.Event(component);
     if (event.recurrenceId) exceptions.push(event);
     else masters.set(event.uid, event);
   }
