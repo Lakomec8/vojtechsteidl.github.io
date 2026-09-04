@@ -16,6 +16,7 @@
     "db:seed": "node scripts/generate-seed.mjs"
   },
   "dependencies": {
+    "ical.js": "^2.2.1",
     "jose": "^6.0.0"
   },
   "devDependencies": {
