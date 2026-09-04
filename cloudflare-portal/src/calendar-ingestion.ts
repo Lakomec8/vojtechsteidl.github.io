@@ -99,7 +99,7 @@ function expandCalendar(ics: string, students: TutoringStudent[], rangeStart: Da
   for (const timezoneComponent of root.getAllSubcomponents("vtimezone")) {
     const tzid = String(timezoneComponent.getFirstPropertyValue("tzid") || "").trim();
     if (!tzid) continue;
-    ICAL.TimezoneService.register(tzid, new ICAL.Timezone({ component: timezoneComponent, tzid }));
+    ICAL.TimezoneService.register(new ICAL.Timezone({ component: timezoneComponent, tzid }), tzid);
   }
 
   const components = root.getAllSubcomponents("vevent");
