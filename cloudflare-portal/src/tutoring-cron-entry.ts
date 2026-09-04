@@ -175,13 +175,8 @@ export default {
         console.error(JSON.stringify({
           event: "tutoring_sync_on_load_error",
           message: error instanceof Error ? error.message : "unknown",
+          settlement_skipped: true,
         }));
-        await settleCompletedTutoringEvents(env).catch((settlementError) => {
-          console.error(JSON.stringify({
-            event: "tutoring_settlement_on_load_error",
-            message: settlementError instanceof Error ? settlementError.message : "unknown",
-          }));
-        });
       }
     }
     return tutoringWorker.fetch(request as WorkerRequest, env);
@@ -189,17 +184,12 @@ export default {
 
   scheduled(_controller: ScheduledController, env: TutoringEnv, ctx: ExecutionContext): void {
     ctx.waitUntil(
-      syncAndSettle(env).catch(async (error) => {
+      syncAndSettle(env).catch((error) => {
         console.error(JSON.stringify({
           event: "tutoring_scheduled_sync_error",
           message: error instanceof Error ? error.message : "unknown",
+          settlement_skipped: true,
         }));
-        await settleCompletedTutoringEvents(env).catch((settlementError) => {
-          console.error(JSON.stringify({
-            event: "tutoring_scheduled_settlement_error",
-            message: settlementError instanceof Error ? settlementError.message : "unknown",
-          }));
-        });
       }),
     );
   },
