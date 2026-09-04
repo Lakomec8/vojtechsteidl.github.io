@@ -58,6 +58,11 @@ function isCancelled(event: IcalEvent): boolean {
   return String(event.component.getFirstPropertyValue("status") || "").toUpperCase() === "CANCELLED";
 }
 
+function matchesAnyStudent(event: IcalEvent, students: TutoringStudent[]): boolean {
+  const summary = String(event.summary || "").trim();
+  return students.some((student) => containsName(summary, student.display_name));
+}
+
 function occurrenceFromDates(
   event: IcalEvent,
   startsAt: Date,
@@ -112,7 +117,7 @@ function expandCalendar(ics: string, students: TutoringStudent[], rangeStart: Da
 
   const occurrences = new Map<string, CalendarOccurrence>();
   for (const event of masters.values()) {
-    if (isCancelled(event)) continue;
+    if (isCancelled(event) || !matchesAnyStudent(event, students)) continue;
 
     if (!event.isRecurring()) {
       const startsAt = event.startDate.toJSDate();
@@ -128,8 +133,8 @@ function expandCalendar(ics: string, students: TutoringStudent[], rangeStart: Da
       const occurrenceStart = next.toJSDate();
       if (occurrenceStart > rangeEnd) break;
       const details = event.getOccurrenceDetails(next);
-      const startsAt = details.startTime.toJSDate();
-      const endsAt = details.endTime.toJSDate();
+      const startsAt = details.startDate.toJSDate();
+      const endsAt = details.endDate.toJSDate();
       if (endsAt < rangeStart) continue;
       const occurrence = occurrenceFromDates(
         details.item,
