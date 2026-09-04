@@ -1,6 +1,8 @@
 import tutoringWorker from "./tutoring-os";
+import { syncGoogleCalendarToD1 } from "./calendar-ingestion";
 
 type WorkerRequest = Parameters<typeof tutoringWorker.fetch>[0];
+type TutoringEnv = Env & { GOOGLE_CALENDAR_ICS_URL?: string };
 
 type PlannedEvent = {
   google_event_id: string;
@@ -146,8 +148,20 @@ export async function settleCompletedTutoringEvents(env: Env): Promise<number> {
   return insertedLessons;
 }
 
+async function syncAndSettle(env: TutoringEnv): Promise<void> {
+  const syncResult = await syncGoogleCalendarToD1(env);
+  if (!syncResult.skipped) {
+    console.log(JSON.stringify({
+      event: "tutoring_calendar_ingestion",
+      imported: syncResult.imported,
+      cancelled: syncResult.cancelled,
+    }));
+  }
+  await settleCompletedTutoringEvents(env);
+}
+
 export default {
-  async fetch(request: Request, env: Env): Promise<Response> {
+  async fetch(request: Request, env: TutoringEnv): Promise<Response> {
     const url = new URL(request.url);
     const shouldSettleBeforeRead = request.method === "GET" && (
       url.pathname === "/student-portal/admin/tutoring/" ||
@@ -156,25 +170,37 @@ export default {
     );
     if (shouldSettleBeforeRead) {
       try {
-        await settleCompletedTutoringEvents(env);
+        await syncAndSettle(env);
       } catch (error) {
         console.error(JSON.stringify({
-          event: "tutoring_settlement_on_load_error",
+          event: "tutoring_sync_on_load_error",
           message: error instanceof Error ? error.message : "unknown",
         }));
+        await settleCompletedTutoringEvents(env).catch((settlementError) => {
+          console.error(JSON.stringify({
+            event: "tutoring_settlement_on_load_error",
+            message: settlementError instanceof Error ? settlementError.message : "unknown",
+          }));
+        });
       }
     }
     return tutoringWorker.fetch(request as WorkerRequest, env);
   },
 
-  scheduled(_controller: ScheduledController, env: Env, ctx: ExecutionContext): void {
+  scheduled(_controller: ScheduledController, env: TutoringEnv, ctx: ExecutionContext): void {
     ctx.waitUntil(
-      settleCompletedTutoringEvents(env).catch((error) => {
+      syncAndSettle(env).catch(async (error) => {
         console.error(JSON.stringify({
-          event: "tutoring_scheduled_settlement_error",
+          event: "tutoring_scheduled_sync_error",
           message: error instanceof Error ? error.message : "unknown",
         }));
+        await settleCompletedTutoringEvents(env).catch((settlementError) => {
+          console.error(JSON.stringify({
+            event: "tutoring_scheduled_settlement_error",
+            message: settlementError instanceof Error ? settlementError.message : "unknown",
+          }));
+        });
       }),
     );
   },
-} satisfies ExportedHandler<Env>;
+} satisfies ExportedHandler<TutoringEnv>;
