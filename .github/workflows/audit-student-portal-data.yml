@@ -44,3 +44,29 @@ jobs:
 
       - name: Audit production D1 student profiles
         run: node cloudflare-portal/scripts/audit-student-portal.mjs
+
+      - name: Audit production planned calendar mappings
+        working-directory: cloudflare-portal
+        shell: bash
+        run: |
+          set -euo pipefail
+          npx wrangler d1 execute DB --remote --json --command "
+            SELECT e.google_event_id,
+                   e.summary,
+                   e.starts_at,
+                   e.ends_at,
+                   e.status,
+                   e.student_id AS primary_student_id,
+                   GROUP_CONCAT(es.student_id) AS participant_ids,
+                   GROUP_CONCAT(ts.display_name) AS participant_names,
+                   e.last_synced_at
+              FROM tutoring_calendar_events AS e
+              LEFT JOIN tutoring_calendar_event_students AS es
+                ON es.google_event_id = e.google_event_id
+              LEFT JOIN tutoring_students AS ts
+                ON ts.id = es.student_id
+             WHERE e.starts_at >= '2026-09-04T00:00:00.000Z'
+               AND e.starts_at < '2026-09-21T00:00:00.000Z'
+             GROUP BY e.google_event_id
+             ORDER BY e.starts_at, e.google_event_id;
+          "
