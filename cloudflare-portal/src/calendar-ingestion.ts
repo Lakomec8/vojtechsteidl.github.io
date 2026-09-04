@@ -4,6 +4,9 @@ type CalendarEnv = Env & {
   GOOGLE_CALENDAR_ICS_URL?: string;
 };
 
+type IcalEvent = InstanceType<typeof ICAL.Event>;
+type IcalTime = InstanceType<typeof ICAL.Time>;
+
 type TutoringStudent = {
   id: string;
   display_name: string;
@@ -45,22 +48,22 @@ function googleBaseEventId(uid: string): string {
   return uid.endsWith(GOOGLE_UID_SUFFIX) ? uid.slice(0, -GOOGLE_UID_SUFFIX.length) : uid;
 }
 
-function eventIdForOccurrence(event: ICAL.Event, recurrenceId?: ICAL.Time | null): string {
+function eventIdForOccurrence(event: IcalEvent, recurrenceId?: IcalTime | null): string {
   const base = googleBaseEventId(event.uid);
   if (!recurrenceId) return base;
   return `${base}_${compactUtc(recurrenceId.toJSDate())}`;
 }
 
-function isCancelled(event: ICAL.Event): boolean {
+function isCancelled(event: IcalEvent): boolean {
   return String(event.component.getFirstPropertyValue("status") || "").toUpperCase() === "CANCELLED";
 }
 
 function occurrenceFromDates(
-  event: ICAL.Event,
+  event: IcalEvent,
   startsAt: Date,
   endsAt: Date,
   students: TutoringStudent[],
-  recurrenceId?: ICAL.Time | null,
+  recurrenceId?: IcalTime | null,
 ): CalendarOccurrence | null {
   if (isCancelled(event)) return null;
   const summary = String(event.summary || "").trim();
@@ -87,13 +90,14 @@ function expandCalendar(ics: string, students: TutoringStudent[], rangeStart: Da
   const root = new ICAL.Component(ICAL.parse(ics));
 
   for (const timezoneComponent of root.getAllSubcomponents("vtimezone")) {
-    const timezone = new ICAL.Timezone(timezoneComponent);
-    ICAL.TimezoneService.register(timezone.tzid, timezone);
+    const tzid = String(timezoneComponent.getFirstPropertyValue("tzid") || "").trim();
+    if (!tzid) continue;
+    ICAL.TimezoneService.register(tzid, new ICAL.Timezone({ component: timezoneComponent, tzid }));
   }
 
   const components = root.getAllSubcomponents("vevent");
-  const masters = new Map<string, ICAL.Event>();
-  const exceptions: ICAL.Event[] = [];
+  const masters = new Map<string, IcalEvent>();
+  const exceptions: IcalEvent[] = [];
 
   for (const component of components) {
     const event = new ICAL.Event(component);
