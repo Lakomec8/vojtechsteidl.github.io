@@ -87,6 +87,46 @@ def patch_public_entrypoint() -> None:
     # identical for every student account.
     html = html.replace("https://portal.vojtechsteidl.eu", PORTAL_URL)
 
+    # Make the public homepage canonical and expose stable entity data to crawlers.
+    html = replace_required(
+        html,
+        '<meta name="robots" content="index, follow">',
+        '<meta name="robots" content="index, follow">\n    <link rel="canonical" href="https://vojtechsteidl.eu/">',
+        "homepage canonical",
+    )
+    homepage_schema = '''    <script type="application/ld+json">
+    {
+      "@context":"https://schema.org",
+      "@graph":[
+        {
+          "@type":"Person",
+          "@id":"https://vojtechsteidl.eu/#person",
+          "name":"Vojtěch Steidl",
+          "url":"https://vojtechsteidl.eu/",
+          "image":"https://vojtechsteidl.eu/foto.jpg",
+          "jobTitle":"Lektor matematiky a fyziky",
+          "telephone":"+420728345633",
+          "email":"vojtasteidl@seznam.cz",
+          "knowsAbout":["matematika","fyzika","doučování"]
+        },
+        {
+          "@type":"WebSite",
+          "@id":"https://vojtechsteidl.eu/#website",
+          "url":"https://vojtechsteidl.eu/",
+          "name":"Doučování matematiky a fyziky | Vojtěch Steidl",
+          "publisher":{"@id":"https://vojtechsteidl.eu/#person"},
+          "inLanguage":"cs-CZ"
+        }
+      ]
+    }
+    </script>'''
+    html = replace_required(
+        html,
+        "</head>",
+        homepage_schema + "\n</head>",
+        "homepage structured data",
+    )
+
     # Surface group tutoring and diagnostics as first-class public products.
     html = replace_required(
         html,
@@ -120,7 +160,7 @@ def patch_public_entrypoint() -> None:
                     <p class="eyebrow">Zdarma · bez registrace · okamžitý výsledek</p>
                     <h2>Nejdřív zjisti, kde přesně ztrácíš body</h2>
                     <p>Krátké diagnostické testy matematiky pro přijímačky na SŠ, maturitu a 1. ročník VŠ. Po dokončení dostaneš rozpad výsledku podle témat a u každé chyby uvidíš správnou odpověď.</p>
-                    <div class="school-promo-actions"><a class="school-promo-button" href="/diagnostika/">Spustit diagnostiku zdarma <i class="fas fa-arrow-right"></i></a></div>
+                    <div class="school-promo-actions"><a class="school-promo-button" href="/diagnostika/">Spustit diagnostiku zdarma <i class="fas fa-arrow-right"></i></a><a class="school-promo-button" href="/priprava-na-prijimacky-z-matematiky/">Příprava na přijímačky <i class="fas fa-arrow-right"></i></a></div>
                     <p class="school-promo-note">15 úloh · 5 oblastí · přibližně 15 minut · výsledek se počítá pouze v prohlížeči</p>
                 </div>
                 <div class="school-promo-points">
@@ -244,10 +284,14 @@ def assert_public_artifact() -> None:
         raise RuntimeError("Diagnostics are incomplete: " + ", ".join(missing_diagnostics))
 
     homepage = (DIST / "index.html").read_text(encoding="utf-8")
+    if '<link rel="canonical" href="https://vojtechsteidl.eu/">' not in homepage:
+        raise RuntimeError("Homepage canonical link is missing")
     if "/skupinove-doucovani-matematiky/" not in homepage:
         raise RuntimeError("Group tutoring link is missing from deployed homepage")
     if "/diagnostika/" not in homepage:
         raise RuntimeError("Diagnostics link is missing from deployed homepage")
+    if "/priprava-na-prijimacky-z-matematiky/" not in homepage:
+        raise RuntimeError("Admissions landing page link is missing from deployed homepage")
 
     maturita_page = (DIST / "priprava-na-maturitu-z-matematiky" / "index.html").read_text(encoding="utf-8")
     if "../test-maturita-matematika/" not in maturita_page:
