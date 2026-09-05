@@ -50,8 +50,13 @@ jobs:
           fi
           grep -q 'responsive-nav-no-wrap' .public-site/style.css
           test -f .public-site/online-doucovani-matematiky/index.html
+          test -f .public-site/priprava-na-prijimacky-z-matematiky/index.html
+          grep -q '<link rel="canonical" href="https://vojtechsteidl.eu/">' .public-site/index.html
+          grep -q 'priprava-na-prijimacky-z-matematiky' .public-site/index.html
           grep -q 'online-doucovani-matematiky' .public-site/sitemap.xml
+          grep -q 'priprava-na-prijimacky-z-matematiky' .public-site/sitemap.xml
           grep -q 'online-doucovani-matematiky' .public-site/doucovani-matematiky/index.html
+          grep -q 'test-prijimacky-9-matematika' .public-site/priprava-na-prijimacky-z-matematiky/index.html
 
       - name: Configure GitHub Pages
         uses: actions/configure-pages@v5
