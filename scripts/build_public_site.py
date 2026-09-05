@@ -37,6 +37,7 @@ PUBLIC_DIRECTORIES = (
     "doucovani-fyziky",
     "doucovani-matematiky",
     "skupinove-doucovani-matematiky",
+    "priprava-na-prijimacky-z-matematiky",
     "priprava-na-maturitu-z-matematiky",
     "diagnostika",
     "test-prijimacky-9-matematika",
@@ -221,6 +222,13 @@ def assert_public_artifact() -> None:
     group_page = DIST / "skupinove-doucovani-matematiky" / "index.html"
     if not group_page.exists():
         raise RuntimeError("Group tutoring landing page is missing from public artifact")
+
+    admissions_page = DIST / "priprava-na-prijimacky-z-matematiky" / "index.html"
+    if not admissions_page.exists():
+        raise RuntimeError("Admissions math landing page is missing from public artifact")
+    admissions_html = admissions_page.read_text(encoding="utf-8")
+    if "../test-prijimacky-9-matematika/" not in admissions_html:
+        raise RuntimeError("Admissions diagnostic link is missing from admissions landing page")
 
     required_diagnostics = (
         "diagnostika/index.html",
