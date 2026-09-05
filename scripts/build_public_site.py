@@ -36,6 +36,7 @@ PUBLIC_DIRECTORIES = (
     "assets",
     "doucovani-fyziky",
     "doucovani-matematiky",
+    "doucovani-vs-matematiky",
     "skupinove-doucovani-matematiky",
     "priprava-na-prijimacky-z-matematiky",
     "priprava-na-maturitu-z-matematiky",
@@ -82,18 +83,27 @@ def patch_public_entrypoint() -> None:
     index_path = DIST / "index.html"
     html = index_path.read_text(encoding="utf-8")
 
-    # Use one canonical student login entry point. This avoids unnecessary
-    # cross-host Access cookie redirects and keeps the recovery instructions
-    # identical for every student account.
     html = html.replace("https://portal.vojtechsteidl.eu", PORTAL_URL)
 
-    # Make the public homepage canonical and expose stable entity data to crawlers.
+    html = replace_required(
+        html,
+        '<title>Doučování matematiky a fyziky | Jihlava i online | Vojtěch Steidl</title>',
+        '<title>Doučování matematiky a fyziky | online ČR + Vysočina | Vojtěch Steidl</title>',
+        "homepage title",
+    )
     html = replace_required(
         html,
         '<meta name="robots" content="index, follow">',
         '<meta name="robots" content="index, follow">\n    <link rel="canonical" href="https://vojtechsteidl.eu/">',
         "homepage canonical",
     )
+    html = replace_required(
+        html,
+        '<meta property="og:title" content="Doučování matematiky a fyziky | Jihlava i online">',
+        '<meta property="og:title" content="Doučování matematiky a fyziky | online ČR + Vysočina">',
+        "homepage og title",
+    )
+
     homepage_schema = '''    <script type="application/ld+json">
     {
       "@context":"https://schema.org",
@@ -107,7 +117,7 @@ def patch_public_entrypoint() -> None:
           "jobTitle":"Lektor matematiky a fyziky",
           "telephone":"+420728345633",
           "email":"vojtasteidl@seznam.cz",
-          "knowsAbout":["matematika","fyzika","doučování"]
+          "knowsAbout":["matematika","fyzika","doučování","vysokoškolská matematika"]
         },
         {
           "@type":"WebSite",
@@ -120,37 +130,31 @@ def patch_public_entrypoint() -> None:
       ]
     }
     </script>'''
-    html = replace_required(
-        html,
-        "</head>",
-        homepage_schema + "\n</head>",
-        "homepage structured data",
-    )
+    html = replace_required(html, "</head>", homepage_schema + "\n</head>", "homepage structured data")
 
-    # Surface group tutoring and diagnostics as first-class public products.
     html = replace_required(
         html,
         '<meta name="description" content="Individuální doučování matematiky a fyziky v Jihlavě i online. Součástí výuky jsou vlastní materiály a osobní studentská zóna.">',
-        '<meta name="description" content="Individuální i skupinové doučování matematiky a fyziky v Jihlavě i online. Diagnostické testy zdarma, skupinové lekce od 300 Kč na osobu, vlastní materiály a studentská zóna.">',
-        "group tutoring and diagnostics meta description",
+        '<meta name="description" content="Individuální i skupinové doučování matematiky a fyziky online po celé ČR a osobně po domluvě u lektora na Vysočině. Diagnostické testy zdarma, VŠ matematika, vlastní materiály a studentská zóna.">',
+        "homepage service meta description",
     )
     html = replace_required(
         html,
         '<li><a href="#cenik">Ceník</a></li>',
-        '<li><a href="/diagnostika/">Diagnostika</a></li><li><a href="/skupinove-doucovani-matematiky/">Skupinové lekce</a></li><li><a href="#cenik">Ceník</a></li>',
-        "diagnostics and group tutoring navigation links",
+        '<li><a href="/doucovani-vs-matematiky/">VŠ matematika</a></li><li><a href="/diagnostika/">Diagnostika</a></li><li><a href="/skupinove-doucovani-matematiky/">Skupinové lekce</a></li><li><a href="#cenik">Ceník</a></li>',
+        "university diagnostics and group navigation links",
     )
     html = replace_required(
         html,
         '<p>Individuální výuka doplněná o přehledné zápisy, interaktivní materiály a osobní studentskou zónu, kde má student návaznost mezi jednotlivými hodinami.</p>',
-        '<p>Individuální výuka i malé skupinové lekce matematiky doplněné o přehledné zápisy, diagnostické testy, vlastní materiály a studentskou zónu, kde má student návaznost mezi jednotlivými hodinami.</p>',
-        "group tutoring hero copy",
+        '<p>Individuální výuka online po celé ČR a osobně po domluvě na Vysočině, doplněná o přehledné zápisy, diagnostické testy, vlastní materiály a studentskou zónu. Pro VŠ studenty je dostupná také cílená příprava na zápočty a zkoušky.</p>',
+        "homepage hero positioning",
     )
     html = replace_required(
         html,
         '<div class="hero-actions"><a href="#kontakt" class="cta-button">Domluvit úvodní konzultaci zdarma <i class="fas fa-arrow-right"></i></a><a href="https://vojtechsteidl.eu/student-portal/" class="cta-button cta-button-secondary"><i class="fas fa-user-lock"></i> Vstoupit do studentské zóny</a></div>',
-        '<div class="hero-actions"><a href="#kontakt" class="cta-button">Domluvit úvodní konzultaci zdarma <i class="fas fa-arrow-right"></i></a><a href="/diagnostika/" class="cta-button cta-button-secondary"><i class="fas fa-chart-line"></i> Diagnostika zdarma</a><a href="/skupinove-doucovani-matematiky/" class="cta-button cta-button-secondary"><i class="fas fa-users"></i> Skupinové lekce od 300 Kč</a><a href="https://vojtechsteidl.eu/student-portal/" class="cta-button cta-button-secondary"><i class="fas fa-user-lock"></i> Studentská zóna</a></div>',
-        "diagnostics and group tutoring hero actions",
+        '<div class="hero-actions"><a href="#kontakt" class="cta-button">Domluvit úvodní konzultaci zdarma <i class="fas fa-arrow-right"></i></a><a href="/doucovani-vs-matematiky/" class="cta-button cta-button-secondary"><i class="fas fa-square-root-variable"></i> VŠ matematika</a><a href="/diagnostika/" class="cta-button cta-button-secondary"><i class="fas fa-chart-line"></i> Diagnostika zdarma</a><a href="/skupinove-doucovani-matematiky/" class="cta-button cta-button-secondary"><i class="fas fa-users"></i> Skupinové lekce od 300 Kč</a><a href="https://vojtechsteidl.eu/student-portal/" class="cta-button cta-button-secondary"><i class="fas fa-user-lock"></i> Studentská zóna</a></div>',
+        "homepage hero actions",
     )
 
     diagnostics_section = '''
@@ -160,7 +164,7 @@ def patch_public_entrypoint() -> None:
                     <p class="eyebrow">Zdarma · bez registrace · okamžitý výsledek</p>
                     <h2>Nejdřív zjisti, kde přesně ztrácíš body</h2>
                     <p>Krátké diagnostické testy matematiky pro přijímačky na SŠ, maturitu a 1. ročník VŠ. Po dokončení dostaneš rozpad výsledku podle témat a u každé chyby uvidíš správnou odpověď.</p>
-                    <div class="school-promo-actions"><a class="school-promo-button" href="/diagnostika/">Spustit diagnostiku zdarma <i class="fas fa-arrow-right"></i></a><a class="school-promo-button" href="/priprava-na-prijimacky-z-matematiky/">Příprava na přijímačky <i class="fas fa-arrow-right"></i></a></div>
+                    <div class="school-promo-actions"><a class="school-promo-button" href="/diagnostika/">Spustit diagnostiku zdarma <i class="fas fa-arrow-right"></i></a><a class="school-promo-button" href="/priprava-na-prijimacky-z-matematiky/">Příprava na přijímačky <i class="fas fa-arrow-right"></i></a><a class="school-promo-button" href="/doucovani-vs-matematiky/">VŠ matematika <i class="fas fa-arrow-right"></i></a></div>
                     <p class="school-promo-note">15 úloh · 5 oblastí · přibližně 15 minut · výsledek se počítá pouze v prohlížeči</p>
                 </div>
                 <div class="school-promo-points">
@@ -181,7 +185,7 @@ def patch_public_entrypoint() -> None:
                     <h2>Skupinové lekce matematiky za 300 Kč na osobu</h2>
                     <p>Pro studenty se stejným cílem sestavuji malé skupiny pro přijímačky na SŠ, maturitu a průběžnou středoškolskou matematiku. Nejdřív sbírám zájemce podle úrovně a časových možností; teprve potom navrhnu společný termín.</p>
                     <div class="school-promo-actions"><a class="school-promo-button" href="/skupinove-doucovani-matematiky/">Zjistit více a přidat se mezi zájemce <i class="fas fa-arrow-right"></i></a></div>
-                    <p class="school-promo-note">300 Kč / osoba / 60 minut · online nebo po domluvě v Jihlavě · vyplnění zájmu je nezávazné</p>
+                    <p class="school-promo-note">300 Kč / osoba / 60 minut · online nebo osobně po domluvě u lektora na Vysočině · vyplnění zájmu je nezávazné</p>
                 </div>
                 <div class="school-promo-points">
                     <div class="school-promo-point"><i class="fas fa-school"></i><span><strong>Přijímačky na SŠ</strong> — typové úlohy, strategie a práce s testem.</span></div>
@@ -251,24 +255,27 @@ def assert_public_artifact() -> None:
         "materialy-zdarma/previews/maturita-jednobodove-ulohy-01.jpg",
         "materialy-zdarma/previews/maturita-jednobodove-ulohy-02.jpg",
     )
-    missing_material_files = [
-        relative for relative in required_material_files if not (DIST / relative).is_file()
-    ]
+    missing_material_files = [relative for relative in required_material_files if not (DIST / relative).is_file()]
     if missing_material_files:
-        raise RuntimeError(
-            "Free PDF gallery is incomplete: " + ", ".join(missing_material_files)
-        )
+        raise RuntimeError("Free PDF gallery is incomplete: " + ", ".join(missing_material_files))
 
-    group_page = DIST / "skupinove-doucovani-matematiky" / "index.html"
-    if not group_page.exists():
-        raise RuntimeError("Group tutoring landing page is missing from public artifact")
+    for relative, label in (
+        ("skupinove-doucovani-matematiky/index.html", "Group tutoring landing page"),
+        ("priprava-na-prijimacky-z-matematiky/index.html", "Admissions math landing page"),
+        ("doucovani-vs-matematiky/index.html", "University math landing page"),
+    ):
+        if not (DIST / relative).exists():
+            raise RuntimeError(f"{label} is missing from public artifact")
 
-    admissions_page = DIST / "priprava-na-prijimacky-z-matematiky" / "index.html"
-    if not admissions_page.exists():
-        raise RuntimeError("Admissions math landing page is missing from public artifact")
-    admissions_html = admissions_page.read_text(encoding="utf-8")
+    admissions_html = (DIST / "priprava-na-prijimacky-z-matematiky" / "index.html").read_text(encoding="utf-8")
     if "../test-prijimacky-9-matematika/" not in admissions_html:
         raise RuntimeError("Admissions diagnostic link is missing from admissions landing page")
+
+    university_html = (DIST / "doucovani-vs-matematiky" / "index.html").read_text(encoding="utf-8")
+    if "../test-vs-matematika-1-rocnik/" not in university_html:
+        raise RuntimeError("University diagnostic link is missing from university math landing page")
+    if "standardně za studenty nedojíždím" not in university_html:
+        raise RuntimeError("University page must state the in-person travel model accurately")
 
     required_diagnostics = (
         "diagnostika/index.html",
@@ -286,12 +293,23 @@ def assert_public_artifact() -> None:
     homepage = (DIST / "index.html").read_text(encoding="utf-8")
     if '<link rel="canonical" href="https://vojtechsteidl.eu/">' not in homepage:
         raise RuntimeError("Homepage canonical link is missing")
-    if "/skupinove-doucovani-matematiky/" not in homepage:
-        raise RuntimeError("Group tutoring link is missing from deployed homepage")
-    if "/diagnostika/" not in homepage:
-        raise RuntimeError("Diagnostics link is missing from deployed homepage")
-    if "/priprava-na-prijimacky-z-matematiky/" not in homepage:
-        raise RuntimeError("Admissions landing page link is missing from deployed homepage")
+    for link, label in (
+        ("/skupinove-doucovani-matematiky/", "Group tutoring"),
+        ("/diagnostika/", "Diagnostics"),
+        ("/priprava-na-prijimacky-z-matematiky/", "Admissions landing page"),
+        ("/doucovani-vs-matematiky/", "University math landing page"),
+    ):
+        if link not in homepage:
+            raise RuntimeError(f"{label} link is missing from deployed homepage")
+
+    if "online po celé ČR" not in homepage or "Vysočině" not in homepage:
+        raise RuntimeError("Homepage positioning does not reflect online-first plus Vysočina model")
+
+    math_page = (DIST / "doucovani-matematiky" / "index.html").read_text(encoding="utf-8")
+    if "standardně za studenty nedojíždím" not in math_page:
+        raise RuntimeError("Local tutoring page must state the no-commuting model accurately")
+    if "../doucovani-vs-matematiky/" not in math_page:
+        raise RuntimeError("University math internal link is missing from local tutoring page")
 
     maturita_page = (DIST / "priprava-na-maturitu-z-matematiky" / "index.html").read_text(encoding="utf-8")
     if "../test-maturita-matematika/" not in maturita_page:
