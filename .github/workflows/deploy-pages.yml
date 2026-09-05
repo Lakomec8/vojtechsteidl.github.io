@@ -33,6 +33,9 @@ jobs:
       - name: Publish online math tutoring landing page
         run: python scripts/publish_online_tutoring.py
 
+      - name: Trim homepage secondary sections
+        run: python scripts/trim_homepage.py
+
       - name: Keep navigation to one row or hamburger
         run: python scripts/patch_nav_layout.py
 
@@ -55,6 +58,10 @@ jobs:
           grep -q '<link rel="canonical" href="https://vojtechsteidl.eu/">' .public-site/index.html
           grep -q 'doucovani-vs-matematiky' .public-site/index.html
           grep -q 'priprava-na-prijimacky-z-matematiky' .public-site/index.html
+          ! grep -q 'id="pro-skoly"' .public-site/index.html
+          ! grep -q 'id="faq"' .public-site/index.html
+          ! grep -q 'href="#reference"' .public-site/index.html
+          grep -q 'id="reference"' .public-site/index.html
           grep -q 'doucovani-vs-matematiky' .public-site/sitemap.xml
           grep -q 'online-doucovani-matematiky' .public-site/sitemap.xml
           grep -q 'priprava-na-prijimacky-z-matematiky' .public-site/sitemap.xml

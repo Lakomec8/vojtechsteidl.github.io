@@ -19,6 +19,7 @@ on:
       - "sitemap.xml"
       - "scripts/build_public_site.py"
       - "scripts/publish_online_tutoring.py"
+      - "scripts/trim_homepage.py"
       - "scripts/patch_nav_layout.py"
       - ".github/workflows/deploy-pages.yml"
       - ".github/workflows/validate-public-site.yml"
@@ -42,6 +43,7 @@ on:
       - "sitemap.xml"
       - "scripts/build_public_site.py"
       - "scripts/publish_online_tutoring.py"
+      - "scripts/trim_homepage.py"
       - "scripts/patch_nav_layout.py"
       - ".github/workflows/deploy-pages.yml"
       - ".github/workflows/validate-public-site.yml"
@@ -62,6 +64,9 @@ jobs:
 
       - name: Publish online math tutoring landing page
         run: python scripts/publish_online_tutoring.py
+
+      - name: Trim homepage secondary sections
+        run: python scripts/trim_homepage.py
 
       - name: Apply responsive navigation patch
         run: python scripts/patch_nav_layout.py
@@ -89,6 +94,10 @@ jobs:
           grep -q 'doucovani-vs-matematiky' .public-site/index.html
           grep -q 'priprava-na-prijimacky-z-matematiky' .public-site/index.html
           grep -q 'skupinove-doucovani-matematiky' .public-site/index.html
+          ! grep -q 'id="pro-skoly"' .public-site/index.html
+          ! grep -q 'id="faq"' .public-site/index.html
+          ! grep -q 'href="#reference"' .public-site/index.html
+          grep -q 'id="reference"' .public-site/index.html
           grep -q 'doucovani-vs-matematiky' .public-site/sitemap.xml
           grep -q 'online-doucovani-matematiky' .public-site/sitemap.xml
           grep -q 'priprava-na-prijimacky-z-matematiky' .public-site/sitemap.xml
