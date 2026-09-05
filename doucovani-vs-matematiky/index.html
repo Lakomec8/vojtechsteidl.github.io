@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Doučování VŠ matematiky | 1. ročník, derivace, integrály | Vojtěch Steidl</title>
+  <meta name="description" content="Doučování vysokoškolské matematiky pro 1. ročník i navazující předměty. Limity, derivace, integrály, lineární algebra a příprava na zápočty a zkoušky online i osobně na Vysočině.">
+  <meta name="robots" content="index,follow,max-image-preview:large">
+  <link rel="canonical" href="https://vojtechsteidl.eu/doucovani-vs-matematiky/">
+  <meta property="og:title" content="Doučování VŠ matematiky | Vojtěch Steidl">
+  <meta property="og:description" content="Cílená příprava na vysokoškolskou matematiku: funkce, limity, derivace, integrály, lineární algebra, zápočty a zkoušky.">
+  <meta property="og:url" content="https://vojtechsteidl.eu/doucovani-vs-matematiky/">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="https://vojtechsteidl.eu/foto.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="stylesheet" href="../style.css">
+  <style>
+    .vs-hero{padding:6.2rem 1.25rem 5.2rem;background:linear-gradient(135deg,#102a43 0%,#173f6c 58%,#1d4ed8 150%);color:#fff}.vs-wrap{width:min(1080px,calc(100% - 2rem));margin:0 auto}.crumbs{font-size:.9rem;color:rgba(255,255,255,.72)}.crumbs a{color:#fff}.vs-hero h1{max-width:940px;margin:.8rem 0 1rem;font-size:clamp(2.45rem,6vw,4.55rem);line-height:1.05;letter-spacing:-.055em}.vs-hero p{max-width:820px;color:rgba(255,255,255,.9);font-size:1.1rem}.hero-pills{display:flex;gap:.55rem;flex-wrap:wrap;margin-top:1.25rem}.hero-pill{padding:.42rem .75rem;border:1px solid rgba(255,255,255,.22);border-radius:999px;background:rgba(255,255,255,.1);font-size:.82rem;font-weight:700}.actions{display:flex;gap:.8rem;flex-wrap:wrap;margin-top:1.6rem}.btn{display:inline-flex;align-items:center;justify-content:center;min-height:50px;padding:.85rem 1.15rem;border-radius:10px;background:#fff;color:#102a43;font-weight:800;text-decoration:none}.btn:hover{color:#102a43;background:#eff6ff}.btn.secondary{border:1px solid rgba(255,255,255,.35);background:transparent;color:#fff}.btn.secondary:hover{background:rgba(255,255,255,.1);color:#fff}
+    .vs-section{padding:4.7rem 0}.vs-section.alt{background:#fff}.section-title{max-width:820px;margin-bottom:1.7rem}.section-title h2{color:#102a43;font-size:clamp(1.9rem,4vw,2.8rem);letter-spacing:-.04em;line-height:1.1}.section-title p{margin-top:.7rem;color:#64748b}.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem}.card{padding:1.55rem;border:1px solid #e2e8f0;border-radius:16px;background:#fff;box-shadow:0 8px 24px rgba(15,23,42,.06)}.card h3{margin-bottom:.55rem;color:#102a43}.card p{color:#64748b}.card ul{margin:.8rem 0 0;padding-left:1.15rem;color:#64748b}.card li+li{margin-top:.35rem}
+    .diagnostic-box{display:grid;grid-template-columns:1.1fr .9fr;gap:2rem;align-items:center;padding:2.4rem;border:1px solid #bfdbfe;border-radius:22px;background:linear-gradient(135deg,#eff6ff,#fff);box-shadow:0 14px 36px rgba(15,23,42,.07)}.diagnostic-box h2{margin:.35rem 0 .75rem;color:#102a43;font-size:clamp(1.9rem,4vw,2.7rem);letter-spacing:-.04em}.diagnostic-box p{color:#64748b}.score-card{padding:1.55rem;border-radius:18px;background:#102a43;color:#fff}.score-card span{display:block;color:#93c5fd;font-size:.78rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase}.score-card strong{display:block;margin:.4rem 0;font-size:1.55rem;line-height:1.2}.score-card p{color:rgba(255,255,255,.76);font-size:.92rem}.blue-link{display:inline-flex;margin-top:1rem;padding:.82rem 1.05rem;border-radius:9px;background:#2563eb;color:#fff;text-decoration:none;font-weight:800}.blue-link:hover{background:#1d4ed8;color:#fff}
+    .steps{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;counter-reset:step}.step{padding:1.4rem;border:1px solid #dbe6f2;border-radius:15px;background:#f8fafc}.step::before{counter-increment:step;content:counter(step);display:grid;width:34px;height:34px;margin-bottom:.8rem;place-items:center;border-radius:50%;background:#2563eb;color:#fff;font-weight:800}.step strong{color:#102a43}.step p{margin-top:.4rem;color:#64748b;font-size:.93rem}
+    .exam-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:1rem}.exam-grid article{padding:1.6rem;border:1px solid #e2e8f0;border-radius:16px;background:#fff}.exam-grid h3{color:#102a43;margin-bottom:.55rem}.exam-grid p{color:#64748b}.exam-grid ul{margin:.75rem 0 0;padding-left:1.15rem;color:#64748b}.exam-grid li+li{margin-top:.4rem}
+    .format-box{display:grid;grid-template-columns:1fr auto;gap:2rem;align-items:center;padding:2rem;border:1px solid #e2e8f0;border-radius:20px;background:#fff;box-shadow:0 12px 30px rgba(15,23,42,.07)}.format-box h2{color:#102a43}.format-box p{margin-top:.6rem;color:#64748b}.format-price{text-align:right}.format-price strong{display:block;color:#102a43;font-size:2rem;letter-spacing:-.04em}.format-price span{color:#64748b;font-size:.9rem}
+    .links{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem}.link-card{display:block;padding:1.25rem;border:1px solid #bfdbfe;border-radius:14px;background:#eff6ff;color:#102a43;text-decoration:none;font-weight:800}.link-card small{display:block;margin-top:.45rem;color:#64748b;font-weight:500;line-height:1.45}
+    .faq{display:grid;gap:.75rem}.faq details{border:1px solid #e2e8f0;border-radius:13px;background:#fff;padding:0 1.15rem}.faq summary{cursor:pointer;padding:1rem 0;color:#102a43;font-weight:800}.faq details p{padding:0 0 1rem;color:#64748b}.cta-band{padding:3rem;border-radius:22px;background:#102a43;color:#fff}.cta-band h2{margin-bottom:.65rem;color:#fff;font-size:clamp(1.8rem,4vw,2.6rem);letter-spacing:-.035em}.cta-band p{max-width:760px;color:rgba(255,255,255,.78)}footer{padding:2rem 1rem;text-align:center;color:#64748b}
+    @media(max-width:900px){.grid3{grid-template-columns:1fr 1fr}.steps{grid-template-columns:1fr 1fr}.diagnostic-box{grid-template-columns:1fr}.format-box{grid-template-columns:1fr}.format-price{text-align:left}.links{grid-template-columns:1fr 1fr}}
+    @media(max-width:620px){.grid3,.steps,.exam-grid,.links{grid-template-columns:1fr}.vs-hero{padding-top:4.6rem}.diagnostic-box,.cta-band{padding:1.6rem}}
+  </style>
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"Service",
+    "name":"Doučování vysokoškolské matematiky",
+    "description":"Individuální doučování vysokoškolské matematiky včetně funkcí, limit, derivací, integrálů a lineární algebry. Příprava na zápočty a zkoušky online i osobně na Vysočině.",
+    "provider":{"@type":"Person","name":"Vojtěch Steidl","url":"https://vojtechsteidl.eu/"},
+    "areaServed":[{"@type":"Country","name":"Česká republika"},{"@type":"AdministrativeArea","name":"Vysočina"}],
+    "serviceType":"Doučování VŠ matematiky",
+    "url":"https://vojtechsteidl.eu/doucovani-vs-matematiky/",
+    "offers":{"@type":"Offer","price":"450","priceCurrency":"CZK","description":"Individuální lekce, 60 minut"}
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"BreadcrumbList",
+    "itemListElement":[
+      {"@type":"ListItem","position":1,"name":"Domů","item":"https://vojtechsteidl.eu/"},
+      {"@type":"ListItem","position":2,"name":"Doučování VŠ matematiky","item":"https://vojtechsteidl.eu/doucovani-vs-matematiky/"}
+    ]
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"FAQPage",
+    "mainEntity":[
+      {"@type":"Question","name":"Pro jaké vysokoškolské předměty je doučování vhodné?","acceptedAnswer":{"@type":"Answer","text":"Nejčastěji pro matematiku v prvním ročníku a navazující předměty: funkce, limity, derivace, integrály, lineární algebra, matice, vektory a analytická geometrie. Konkrétní obsah se vždy řídí sylabem předmětu."}},
+      {"@type":"Question","name":"Mohu přijít jen před zápočtem nebo zkouškou?","acceptedAnswer":{"@type":"Answer","text":"Ano. Před krátkodobou přípravou je vhodné poslat sylabus, cvičné testy nebo seznam témat. Podle toho se vyberou úlohy s nejvyšší prioritou."}},
+      {"@type":"Question","name":"Je VŠ doučování dostupné online?","acceptedAnswer":{"@type":"Answer","text":"Ano. Online výuka je dostupná po celé České republice. Osobní lekce probíhají po domluvě u lektora na Vysočině."}},
+      {"@type":"Question","name":"Kolik stojí individuální lekce?","acceptedAnswer":{"@type":"Answer","text":"Standardní individuální lekce stojí 450 Kč za 60 minut. Úvodní konzultace je zdarma."}}
+    ]
+  }
+  </script>
+</head>
+<body>
+  <header class="site-header">
+    <nav class="nav" aria-label="Hlavní navigace">
+      <a href="../" class="logo">Vojtěch Steidl</a>
+      <ul class="nav-links">
+        <li><a href="../online-doucovani-matematiky/">Online</a></li>
+        <li><a href="../doucovani-matematiky/">Vysočina</a></li>
+        <li><a href="../doucovani-vs-matematiky/">VŠ matematika</a></li>
+        <li><a href="../priprava-na-maturitu-z-matematiky/">Maturita</a></li>
+        <li><a href="../#kontakt" class="nav-contact">Kontakt</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+    <section class="vs-hero">
+      <div class="vs-wrap">
+        <div class="crumbs"><a href="../">Domů</a> / Doučování VŠ matematiky</div>
+        <h1>Doučování vysokoškolské matematiky pro 1. ročník i zkouškové</h1>
+        <p>Individuální příprava na vysokoškolskou matematiku podle konkrétního sylabu. Nejdřív oddělíme chybějící středoškolský základ od nové vysokoškolské látky, potom trénujeme přesně ty typy úloh, které potřebuješ zvládnout k zápočtu nebo zkoušce.</p>
+        <div class="hero-pills"><span class="hero-pill">1. ročník VŠ</span><span class="hero-pill">Zápočty a zkoušky</span><span class="hero-pill">Online po celé ČR</span><span class="hero-pill">450 Kč / 60 min</span></div>
+        <div class="actions"><a class="btn" href="../test-vs-matematika-1-rocnik/">Vyzkoušet VŠ diagnostiku</a><a class="btn secondary" href="../#kontakt">Domluvit lekci</a></div>
+      </div>
+    </section>
+
+    <section class="vs-section">
+      <div class="vs-wrap">
+        <div class="section-title"><h2>Kde se matematika v 1. ročníku nejčastěji láme</h2><p>Na VŠ často není problém jen nová definice. Student současně potřebuje bezpečně ovládat algebraické úpravy, funkce, rovnice a práci se zápisem. Proto nejdřív hledáme příčinu chyby, ne jen poslední špatný krok.</p></div>
+        <div class="grid3">
+          <article class="card"><h3>Matematická analýza</h3><p>Od funkce a limity až po derivace a integrály.</p><ul><li>definiční obor a vlastnosti funkcí</li><li>limity a spojitost</li><li>derivace a průběh funkce</li><li>neurčitý a určitý integrál</li></ul></article>
+          <article class="card"><h3>Lineární algebra</h3><p>Postupy, které bývají jednoduché až ve chvíli, kdy je jasná jejich struktura.</p><ul><li>matice a determinanty</li><li>soustavy lineárních rovnic</li><li>vektory a lineární závislost</li><li>základní práce s lineárními prostory</li></ul></article>
+          <article class="card"><h3>Algebraický základ</h3><p>Často skrytý důvod, proč se nová VŠ látka zdá těžší, než skutečně je.</p><ul><li>zlomky a mocniny</li><li>úpravy výrazů</li><li>rovnice a nerovnice</li><li>logaritmy a exponenciální výrazy</li></ul></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="vs-section alt">
+      <div class="vs-wrap">
+        <div class="diagnostic-box">
+          <div>
+            <p style="color:#2563eb;font-weight:800;text-transform:uppercase;font-size:.78rem;letter-spacing:.08em">První orientace</p>
+            <h2>Diagnostika matematiky pro 1. ročník VŠ</h2>
+            <p>Krátký test pomůže zjistit, zda je problém hlavně v algebře, funkcích, limitách, derivacích nebo lineární algebře. Není to náhrada za sylabus konkrétní školy, ale dobrý rychlý filtr před první hodinou.</p>
+            <a class="blue-link" href="../test-vs-matematika-1-rocnik/">Spustit VŠ diagnostiku →</a>
+          </div>
+          <div class="score-card"><span>Co potřebuji před lekcí</span><strong>Sylabus nebo konkrétní příklady</strong><p>Ideálně pošli seznam témat, cvičný test, domácí úlohu nebo vzorové příklady. Příprava pak míří rovnou na požadavky tvého předmětu.</p></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="vs-section">
+      <div class="vs-wrap">
+        <div class="section-title"><h2>Jak probíhá cílená příprava</h2><p>U VŠ matematiky je důležité nerozmělnit čas do celé učebnice. Pracujeme od požadavku zkoušky zpět k tomu, co musí student umět.</p></div>
+        <div class="steps">
+          <div class="step"><strong>Požadavky</strong><p>Projdu sylabus, test nebo seznam témat a určíme skutečný rozsah.</p></div>
+          <div class="step"><strong>Slabé místo</strong><p>Zjistíme, zda problém vzniká v nové látce, nebo v dřívějším algebraickém základu.</p></div>
+          <div class="step"><strong>Typové úlohy</strong><p>Student postup nejdřív pochopí a potom ho použije na nové variantě bez nápovědy.</p></div>
+          <div class="step"><strong>Kontrola</strong><p>Před zápočtem nebo zkouškou řešíme úlohy ve formátu co nejbližším reálnému zadání.</p></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="vs-section alt">
+      <div class="vs-wrap">
+        <div class="section-title"><h2>Dvě různé situace, dva různé plány</h2></div>
+        <div class="exam-grid">
+          <article><h3>Průběžné doučování během semestru</h3><p>Cílem je držet krok s přednáškami a cvičeními a nedovolit, aby se malé mezery nabalovaly.</p><ul><li>aktuální látka z týdne</li><li>domácí úlohy a cvičení</li><li>vysvětlení definic na příkladech</li><li>průběžná kontrola základů</li></ul></article>
+          <article><h3>Příprava před zápočtem nebo zkouškou</h3><p>Čas je omezený, proto nejdřív maximalizujeme témata s nejvyšší pravděpodobností výskytu a bodovým přínosem.</p><ul><li>starší testy a vzorová zadání</li><li>nejčastější typy úloh</li><li>rychlost a spolehlivost výpočtu</li><li>rozbor opakovaných chyb</li></ul></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="vs-section">
+      <div class="vs-wrap">
+        <div class="format-box">
+          <div><h2>Primárně online, osobně po domluvě na Vysočině</h2><p>VŠ matematika se dobře řeší online přes sdílený zápis a konkrétní příklady. Osobní lekce jsou možné po domluvě u lektora na Vysočině; standardně za studenty nedojíždím.</p></div>
+          <div class="format-price"><strong>450 Kč</strong><span>individuální lekce / 60 min</span></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="vs-section alt">
+      <div class="vs-wrap">
+        <div class="section-title"><h2>Navazující možnosti</h2></div>
+        <div class="links">
+          <a class="link-card" href="../test-vs-matematika-1-rocnik/">Diagnostika VŠ 1. ročník<small>Rychlá orientace v algebře, funkcích, limitách, derivacích a lineární algebře.</small></a>
+          <a class="link-card" href="../online-doucovani-matematiky/">Online doučování matematiky<small>Individuální výuka odkudkoliv v ČR.</small></a>
+          <a class="link-card" href="../doucovani-matematiky/">Osobní výuka na Vysočině<small>Po domluvě u lektora, bez běžného dojíždění za studentem.</small></a>
+        </div>
+      </div>
+    </section>
+
+    <section class="vs-section">
+      <div class="vs-wrap">
+        <div class="section-title"><h2>Časté otázky k VŠ matematice</h2></div>
+        <div class="faq">
+          <details><summary>Potřebuji doučování na celý semestr?</summary><p>Ne. Lze řešit průběžnou spolupráci i několik cílených lekcí před zápočtem nebo zkouškou. Rozhoduje rozsah látky a současná úroveň.</p></details>
+          <details><summary>Můžeme řešit matematiku přesně podle mé školy?</summary><p>Ano. Nejlepší je poslat sylabus, prezentace, seznam témat nebo starší test. Výuka se potom řídí konkrétními požadavky předmětu, ne obecným seznamem kapitol.</p></details>
+          <details><summary>Co když mám problém už se středoškolskou algebrou?</summary><p>To je běžná situace. Potřebné základy doplníme pouze v rozsahu, který je nutný pro aktuální VŠ téma, aby se čas neztrácel obecnou repetitorikou.</p></details>
+          <details><summary>Je lepší online nebo osobní hodina?</summary><p>U VŠ matematiky většinou funguje online forma velmi dobře. Osobní výuka je možná po domluvě u lektora na Vysočině.</p></details>
+        </div>
+      </div>
+    </section>
+
+    <section class="vs-section alt">
+      <div class="vs-wrap"><div class="cta-band"><h2>Pošli sylabus nebo konkrétní zadání.</h2><p>Z něj lze rychle určit, co je potřeba zvládnout, kolik témat skutečně chybí a jestli dává smysl jedna konzultace nebo systematičtější příprava.</p><div class="actions"><a class="btn" href="../#kontakt">Domluvit úvodní konzultaci</a><a class="btn secondary" href="../test-vs-matematika-1-rocnik/">VŠ diagnostika</a></div></div></div>
+    </section>
+  </main>
+  <footer>© 2026 Vojtěch Steidl · Doučování VŠ matematiky · online a Vysočina</footer>
+</body>
+</html>

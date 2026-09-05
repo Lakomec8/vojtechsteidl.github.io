@@ -8,6 +8,7 @@ on:
       - "assets/**"
       - "doucovani-fyziky/**"
       - "doucovani-matematiky/**"
+      - "doucovani-vs-matematiky/**"
       - "online-doucovani-matematiky/**"
       - "skupinove-doucovani-matematiky/**"
       - "priprava-na-prijimacky-z-matematiky/**"
@@ -30,6 +31,7 @@ on:
       - "assets/**"
       - "doucovani-fyziky/**"
       - "doucovani-matematiky/**"
+      - "doucovani-vs-matematiky/**"
       - "online-doucovani-matematiky/**"
       - "skupinove-doucovani-matematiky/**"
       - "priprava-na-prijimacky-z-matematiky/**"
@@ -81,12 +83,16 @@ jobs:
           fi
           test -f .public-site/skupinove-doucovani-matematiky/index.html
           test -f .public-site/online-doucovani-matematiky/index.html
+          test -f .public-site/doucovani-vs-matematiky/index.html
           test -f .public-site/priprava-na-prijimacky-z-matematiky/index.html
           grep -q '<link rel="canonical" href="https://vojtechsteidl.eu/">' .public-site/index.html
+          grep -q 'doucovani-vs-matematiky' .public-site/index.html
           grep -q 'priprava-na-prijimacky-z-matematiky' .public-site/index.html
           grep -q 'skupinove-doucovani-matematiky' .public-site/index.html
+          grep -q 'doucovani-vs-matematiky' .public-site/sitemap.xml
           grep -q 'online-doucovani-matematiky' .public-site/sitemap.xml
           grep -q 'priprava-na-prijimacky-z-matematiky' .public-site/sitemap.xml
-          grep -q 'online-doucovani-matematiky' .public-site/doucovani-matematiky/index.html
+          grep -q 'standardně za studenty nedojíždím' .public-site/doucovani-matematiky/index.html
+          grep -q 'test-vs-matematika-1-rocnik' .public-site/doucovani-vs-matematiky/index.html
           grep -q 'test-prijimacky-9-matematika' .public-site/priprava-na-prijimacky-z-matematiky/index.html
           grep -q 'responsive-nav-no-wrap' .public-site/style.css
