@@ -7,7 +7,11 @@ const distRoot = join(appRoot, "dist");
 const sourceAssets = join(appRoot, "static", "assets");
 const distAssets = join(distRoot, "assets");
 const katexDist = join(appRoot, "node_modules", "katex", "dist");
-const katexTarget = join(distAssets, "katex");
+// Keep KaTeX below the existing protected /assets/student-* route.
+// The Worker intentionally blocks arbitrary private assets, so using a
+// student-prefixed directory lets the renderer, stylesheet and fonts load
+// without widening the portal asset allowlist.
+const katexTarget = join(distAssets, "student-katex");
 
 await mkdir(distAssets, { recursive: true });
 await cp(join(sourceAssets, "student-self-checks-v2.css"), join(distAssets, "student-self-checks-v2.css"));
@@ -26,19 +30,20 @@ let html = await readFile(portalPath, "utf8");
 
 html = html.replace(
   /\s*<link rel="stylesheet" href="assets\/student-self-checks-math\.css\?v=[^"]+">/,
-  '\n  <link rel="stylesheet" href="assets/katex/katex.min.css?v=0.16.11">\n  <link rel="stylesheet" href="assets/student-self-checks-v2.css?v=20260907-1">',
+  '\n  <link rel="stylesheet" href="assets/student-katex/katex.min.css?v=0.16.11">\n  <link rel="stylesheet" href="assets/student-self-checks-v2.css?v=20260907-2">',
 );
 
 html = html.replace(
   /\s*<script src="assets\/student-self-checks\.js\?v=[^"]+"><\/script>\s*<script src="assets\/student-self-checks-math\.js\?v=[^"]+"><\/script>/,
-  '\n  <script src="assets/katex/katex.min.js?v=0.16.11"></script>\n  <script src="assets/student-self-checks-v2.js?v=20260907-1"></script>',
+  '\n  <script src="assets/student-katex/katex.min.js?v=0.16.11"></script>\n  <script src="assets/student-self-checks-v2.js?v=20260907-2"></script>',
 );
 
 if (
-  !html.includes("assets/katex/katex.min.css") ||
-  !html.includes("assets/katex/katex.min.js") ||
+  !html.includes("assets/student-katex/katex.min.css") ||
+  !html.includes("assets/student-katex/katex.min.js") ||
   !html.includes("assets/student-self-checks-v2.css") ||
   !html.includes("assets/student-self-checks-v2.js") ||
+  html.includes("assets/katex/") ||
   html.includes("assets/student-self-checks-math.js") ||
   /assets\/student-self-checks\.js\?/.test(html)
 ) {
@@ -46,4 +51,4 @@ if (
 }
 
 await writeFile(portalPath, html);
-console.log("Prepared self-check v2 UI with bundled KaTeX assets.");
+console.log("Prepared self-check v2 UI with protected bundled KaTeX assets.");
