@@ -79,7 +79,7 @@ jobs:
       - name: Assert private tutoring data is not published
         shell: bash
         run: |
-          set -euo pipefail
+          set -euxo pipefail
           forbidden=(Materials students .uploads .student-updates cloudflare-portal docs scripts .github)
           for path in "${forbidden[@]}"; do
             if [ -e ".public-site/$path" ]; then
