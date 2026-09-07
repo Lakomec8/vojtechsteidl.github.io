@@ -4,7 +4,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "build": "node scripts/build-site.mjs",
+    "build": "node scripts/build-site.mjs && node scripts/prepare-self-check-v2.mjs",
     "cf:types": "wrangler types",
     "typecheck": "wrangler types && tsc --noEmit",
     "test:fixtures": "node scripts/validate-test-fixtures.mjs",
@@ -17,7 +17,8 @@
   },
   "dependencies": {
     "ical.js": "^2.2.1",
-    "jose": "^6.0.0"
+    "jose": "^6.0.0",
+    "katex": "0.16.11"
   },
   "devDependencies": {
     "@types/node": "^24.0.0",
