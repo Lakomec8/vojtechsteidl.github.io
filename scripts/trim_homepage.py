@@ -12,6 +12,18 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 INDEX = ROOT / ".public-site" / "index.html"
 
+EVELINA_SOURCE = (
+    '<p class="testimonial-text">„Doporučuji každému, kdo potřebuje matematiku opravdu pochopit, '
+    'a ne se ji jen mechanicky učit.“</p><p class="testimonial-author">Kateřina N.</p>'
+    '<p class="testimonial-role">Příprava na přijímačky</p>'
+)
+EVELINA_REPLACEMENT = (
+    '<p class="testimonial-text">„Je velmi trpělivý, ochotný a dokáže látku vysvětlit jednoduše '
+    'a srozumitelně, i když se na první pohled zdá složitá. Bylo vidět, že mu opravdu záleží na tom, '
+    'abych látku pochopila, ne jen naučila nazpaměť.“</p><p class="testimonial-author">Evelína</p>'
+    '<p class="testimonial-role">Studentka · reference na Doučuji.eu</p>'
+)
+
 
 def section_bounds(html: str, marker: str, label: str) -> tuple[int, int]:
     start = html.find(marker)
@@ -37,6 +49,12 @@ if not INDEX.is_file():
     raise FileNotFoundError(f"Public homepage is missing: {INDEX}")
 
 html = INDEX.read_text(encoding="utf-8")
+
+# Prefer the stronger, recent reference submitted by Evelína on Doučuji.eu while
+# keeping the established three-card desktop layout intact.
+if EVELINA_SOURCE not in html:
+    raise RuntimeError("Expected testimonial slot for Evelína was not found")
+html = html.replace(EVELINA_SOURCE, EVELINA_REPLACEMENT, 1)
 
 # Reduce top-navigation noise. Dedicated pages remain accessible through the
 # rest of the site and the school page remains linked from the footer.
@@ -68,7 +86,7 @@ if "</main>" not in html:
     raise RuntimeError("Homepage has no closing main tag")
 html = html.replace("</main>", testimonials + "\n    </main>", 1)
 
-# Guard the intended information hierarchy.
+# Guard the intended information hierarchy and the newly selected testimonial.
 if 'id="pro-skoly"' in html:
     raise RuntimeError("School promo still appears on homepage")
 if 'id="faq"' in html:
@@ -77,10 +95,12 @@ if 'href="#reference"' in html:
     raise RuntimeError("Reference link still appears in top navigation")
 if 'class="nav-schools"' in html:
     raise RuntimeError("School link still appears in top navigation")
+if 'testimonial-author">Evelína<' not in html or "reference na Doučuji.eu" not in html:
+    raise RuntimeError("Evelína testimonial is missing from the public homepage")
 contact_pos = html.find('id="kontakt"')
 testimonials_pos = html.find('id="reference"')
 if contact_pos < 0 or testimonials_pos < 0 or testimonials_pos < contact_pos:
     raise RuntimeError("Testimonials are not placed after the contact section")
 
 INDEX.write_text(html, encoding="utf-8")
-print("Trimmed homepage: removed school promo and FAQ; moved testimonials below contact")
+print("Trimmed homepage and selected Evelína testimonial for social proof")
