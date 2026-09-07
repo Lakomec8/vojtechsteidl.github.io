@@ -64,6 +64,13 @@ function compactItems(items, fields = ["title", "badge", "source", "counted"]) {
   });
 }
 
+function splitPipe(value) {
+  return String(value || "")
+    .split("|")
+    .map((item) => item.trim())
+    .filter(Boolean);
+}
+
 const linkTableAvailable = Number(resultRows(runD1(`
   SELECT COUNT(*) AS available
     FROM sqlite_master
@@ -99,6 +106,11 @@ const payload = runD1(`
          (SELECT COUNT(*)
             FROM self_check_attempts AS attempt
            WHERE attempt.student_id = s.id) AS self_check_attempt_count,
+         (SELECT group_concat(test.id || ':' || test.title, '|')
+            FROM self_check_assignments AS assignment
+            JOIN self_check_tests AS test ON test.id = assignment.test_id
+           WHERE assignment.student_id = s.id
+             AND assignment.status = 'active') AS active_self_checks,
          (SELECT attempt.score
             FROM self_check_attempts AS attempt
            WHERE attempt.student_id = s.id
@@ -193,6 +205,7 @@ for (const row of rows) {
     expectedCalendarLessonCount: expectedCompleted,
     latestCalendarLessonDate: row.latest_calendar_lesson_date,
     selfCheckAttemptCount: Number(row.self_check_attempt_count || 0),
+    activeSelfChecks: splitPipe(row.active_self_checks),
     latestSelfCheck: row.latest_self_check_score == null
       ? null
       : {
