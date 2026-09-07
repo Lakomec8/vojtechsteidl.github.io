@@ -36,6 +36,9 @@ jobs:
       - name: Trim homepage secondary sections
         run: python scripts/trim_homepage.py
 
+      - name: Present homepage diagnostics as product preview
+        run: python scripts/enhance_homepage_diagnostic.py
+
       - name: Keep navigation to one row or hamburger
         run: python scripts/patch_nav_layout.py
 
@@ -58,6 +61,9 @@ jobs:
           grep -q '<link rel="canonical" href="https://vojtechsteidl.eu/">' .public-site/index.html
           grep -q 'doucovani-vs-matematiky' .public-site/index.html
           grep -q 'priprava-na-prijimacky-z-matematiky' .public-site/index.html
+          grep -q 'homepage-diagnostic-product-preview' .public-site/index.html
+          grep -q 'class="home-diagnostic-section" id="diagnostika"' .public-site/index.html
+          ! grep -q '<section class="school-promo-section" id="diagnostika">' .public-site/index.html
           ! grep -q 'id="pro-skoly"' .public-site/index.html
           ! grep -q 'id="faq"' .public-site/index.html
           ! grep -q 'href="#reference"' .public-site/index.html
