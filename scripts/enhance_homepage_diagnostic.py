@@ -87,6 +87,22 @@ CSS = r'''<style id="homepage-diagnostic-product-preview">
     outline: none;
     transform: translateY(-2px);
 }
+.home-diagnostic-secondary {
+    display: inline-flex;
+    align-items: center;
+    min-height: 3rem;
+    padding: .7rem .2rem;
+    color: var(--blue-dark);
+    font-size: .88rem;
+    font-weight: 800;
+    text-decoration: none;
+}
+.home-diagnostic-secondary:hover,
+.home-diagnostic-secondary:focus-visible {
+    color: var(--navy);
+    text-decoration: underline;
+    outline: none;
+}
 .home-diagnostic-note {
     display: block;
     margin-top: .85rem;
@@ -301,6 +317,8 @@ REPLACEMENT = r'''<section class="home-diagnostic-section" id="diagnostika">
                     </div>
                     <div class="home-diagnostic-actions">
                         <a class="home-diagnostic-button" href="/diagnostika/">Vyzkoušet diagnostiku <i class="fas fa-arrow-right"></i></a>
+                        <a class="home-diagnostic-secondary" href="/priprava-na-prijimacky-z-matematiky/">Příprava na přijímačky</a>
+                        <a class="home-diagnostic-secondary" href="/doucovani-vs-matematiky/">VŠ matematika</a>
                     </div>
                     <span class="home-diagnostic-note">Přijímačky na SŠ · maturita · 1. ročník VŠ · přibližně 15 minut</span>
                 </div>
@@ -363,6 +381,8 @@ def main() -> None:
         raise RuntimeError("Enhanced homepage diagnostic section is missing")
     if "73 %" not in html or "Nejvyšší priorita" not in html:
         raise RuntimeError("Diagnostic result preview is incomplete")
+    if "/priprava-na-prijimacky-z-matematiky/" not in html:
+        raise RuntimeError("Admissions internal link was lost from homepage diagnostics")
 
     INDEX.write_text(html, encoding="utf-8")
     print("Enhanced homepage diagnostic section with product-style result preview")
