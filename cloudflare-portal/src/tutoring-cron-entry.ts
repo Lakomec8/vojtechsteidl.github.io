@@ -17,6 +17,10 @@ type TutoringStudent = {
   hourly_rate: number;
 };
 
+type UpcomingEventRow = PlannedEvent & {
+  summary: string;
+};
+
 function safeEventId(value: string): string {
   return value.replace(/[^a-zA-Z0-9_-]/g, "-").slice(0, 150);
 }
@@ -50,6 +54,85 @@ async function participantsForEvent(env: Env, eventId: string): Promise<Tutoring
      WHERE s.active = 1
   `).bind(eventId).all<TutoringStudent>();
   return result.results || [];
+}
+
+async function upcomingLessonsForStudent(env: Env, studentId: string): Promise<Array<Record<string, unknown>>> {
+  const result = await env.DB.prepare(`
+    SELECT DISTINCT e.google_event_id,
+           e.summary,
+           e.starts_at,
+           e.ends_at,
+           e.duration_minutes
+      FROM tutoring_calendar_events AS e
+      JOIN (
+        SELECT es.google_event_id, link.student_id AS portal_student_id
+          FROM tutoring_calendar_event_students AS es
+          JOIN student_tutoring_links AS link
+            ON link.tutoring_student_id = es.student_id
+        UNION
+        SELECT event.google_event_id, link.student_id AS portal_student_id
+          FROM tutoring_calendar_events AS event
+          JOIN student_tutoring_links AS link
+            ON link.tutoring_student_id = event.student_id
+      ) AS matched
+        ON matched.google_event_id = e.google_event_id
+     WHERE matched.portal_student_id = ?1
+       AND e.status = 'planned'
+       AND datetime(e.starts_at) >= datetime('now')
+     ORDER BY datetime(e.starts_at)
+     LIMIT 20
+  `).bind(studentId).all<UpcomingEventRow>();
+
+  return (result.results || []).map((event) => ({
+    id: event.google_event_id,
+    googleEventId: event.google_event_id,
+    title: event.summary || "Doučování",
+    start: event.starts_at,
+    end: event.ends_at,
+    durationHours: Number(event.duration_minutes) / 60,
+    source: "google_calendar",
+  }));
+}
+
+async function augmentProfileWithUpcomingLessons(response: Response, env: Env): Promise<Response> {
+  if (!response.ok || !(response.headers.get("Content-Type") || "").includes("application/json")) {
+    return response;
+  }
+
+  const body = await response.text();
+  let payload: Record<string, unknown>;
+  try {
+    payload = JSON.parse(body) as Record<string, unknown>;
+  } catch {
+    return new Response(body, {
+      status: response.status,
+      statusText: response.statusText,
+      headers: response.headers,
+    });
+  }
+
+  const studentId = String(payload.studentId || "").trim();
+  if (!studentId) {
+    return new Response(body, {
+      status: response.status,
+      statusText: response.statusText,
+      headers: response.headers,
+    });
+  }
+
+  const calendarUpcomingLessons = await upcomingLessonsForStudent(env, studentId);
+  const headers = new Headers(response.headers);
+  headers.delete("Content-Length");
+  headers.set("Content-Type", "application/json; charset=utf-8");
+
+  return new Response(JSON.stringify({
+    ...payload,
+    calendarUpcomingLessons,
+  }), {
+    status: response.status,
+    statusText: response.statusText,
+    headers,
+  });
 }
 
 export async function settleCompletedTutoringEvents(env: Env): Promise<number> {
@@ -163,10 +246,13 @@ async function syncAndSettle(env: TutoringEnv): Promise<void> {
 export default {
   async fetch(request: Request, env: TutoringEnv): Promise<Response> {
     const url = new URL(request.url);
-    const shouldSettleBeforeRead = request.method === "GET" && (
-      url.pathname === "/student-portal/admin/tutoring/" ||
+    const isProfileRead = request.method === "GET" && (
       url.pathname === "/student-portal/api/profile" ||
       (url.hostname === "portal.vojtechsteidl.eu" && url.pathname === "/api/profile")
+    );
+    const shouldSettleBeforeRead = request.method === "GET" && (
+      url.pathname === "/student-portal/admin/tutoring/" ||
+      isProfileRead
     );
     if (shouldSettleBeforeRead) {
       try {
@@ -179,7 +265,19 @@ export default {
         }));
       }
     }
-    return tutoringWorker.fetch(request as WorkerRequest, env);
+
+    const response = await tutoringWorker.fetch(request as WorkerRequest, env);
+    if (!isProfileRead) return response;
+
+    try {
+      return await augmentProfileWithUpcomingLessons(response, env);
+    } catch (error) {
+      console.error(JSON.stringify({
+        event: "tutoring_upcoming_profile_error",
+        message: error instanceof Error ? error.message : "unknown",
+      }));
+      return response;
+    }
   },
 
   scheduled(_controller: ScheduledController, env: TutoringEnv, ctx: ExecutionContext): void {
