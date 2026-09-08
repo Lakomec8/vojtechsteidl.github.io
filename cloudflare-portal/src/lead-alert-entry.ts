@@ -18,12 +18,66 @@ type LeadEnv = Env & {
   LEAD_ALERT_NTFY_URL?: string;
 };
 
+type LeadOrderRow = {
+  id: string;
+  status: string;
+};
+
 const TUTORING_APP_PATH = "/student-portal/admin/tutoring/";
 
 async function collectAndPush(env: LeadEnv): Promise<void> {
   await ensureLeadPushChannel(env);
   await runLeadAlert(env);
   await runLeadPush(env);
+}
+
+async function orderLeadDashboard(response: Response, env: LeadEnv): Promise<Response> {
+  if (!response.ok || !(response.headers.get("Content-Type") || "").includes("text/html")) return response;
+
+  const body = await response.text();
+  const cardPattern = /<article class="lead-card" data-lead-id="([^"]+)">[\s\S]*?<\/article>/g;
+  const cards = new Map<string, string>();
+  let match: RegExpExecArray | null;
+  while ((match = cardPattern.exec(body)) !== null) {
+    cards.set(match[1], match[0]);
+  }
+  if (!cards.size) return new Response(body, { status: response.status, statusText: response.statusText, headers: response.headers });
+
+  const ordered = await env.DB.prepare(`SELECT id, status
+      FROM tutoring_leads
+     ORDER BY datetime(first_seen_at) DESC, id DESC
+     LIMIT 120`).all<LeadOrderRow>();
+
+  const used = new Set<string>();
+  const orderedCards: string[] = [];
+  for (const row of ordered.results || []) {
+    let card = cards.get(row.id);
+    if (!card) continue;
+    used.add(row.id);
+    if (["replied", "won"].includes(row.status)) {
+      card = card.replace(
+        '<button class="button" type="button" data-status="replied">Odpovězeno</button>',
+        '<button class="button" type="button" disabled title="Tento lead je už označený jako odpovězený.">Už odpovězeno</button>',
+      );
+    }
+    orderedCards.push(card);
+  }
+  for (const [id, card] of cards) {
+    if (!used.has(id)) orderedCards.push(card);
+  }
+
+  let updated = body.replace(
+    /<section class="list" id="leadList">[\s\S]*?<\/section>/,
+    `<section class="list" id="leadList">${orderedCards.join("")}</section>`,
+  );
+  updated = updated.replace(
+    "Doučuji.eu aktivní · Bazoš automatizace vypnuta kvůli podmínkám platformy",
+    "Řazení: nejnovější zachycené nahoře · Doučuji.eu aktivní",
+  );
+
+  const headers = new Headers(response.headers);
+  headers.delete("Content-Length");
+  return new Response(updated, { status: response.status, statusText: response.statusText, headers });
 }
 
 export default {
@@ -40,7 +94,8 @@ export default {
     if (leadResponse) {
       if (isManualLeadRefresh && leadResponse.ok) await runLeadPush(env);
       if (request.method === "GET" && url.pathname === `${LEAD_APP_PATH}/`) {
-        return addLeadPushLink(leadResponse);
+        const withPush = await addLeadPushLink(leadResponse);
+        return orderLeadDashboard(withPush, env);
       }
       return leadResponse;
     }
