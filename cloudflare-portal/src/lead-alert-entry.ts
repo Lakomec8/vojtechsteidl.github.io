@@ -24,6 +24,7 @@ type LeadOrderRow = {
 };
 
 const TUTORING_APP_PATH = "/student-portal/admin/tutoring/";
+const RESOLVED_LEAD_STATUSES = new Set(["replied", "won", "lost", "ignored"]);
 
 async function collectAndPush(env: LeadEnv): Promise<void> {
   await ensureLeadPushChannel(env);
@@ -31,7 +32,7 @@ async function collectAndPush(env: LeadEnv): Promise<void> {
   await runLeadPush(env);
 }
 
-async function orderLeadDashboard(response: Response, env: LeadEnv): Promise<Response> {
+async function orderLeadDashboard(response: Response, env: LeadEnv, showResolved: boolean): Promise<Response> {
   if (!response.ok || !(response.headers.get("Content-Type") || "").includes("text/html")) return response;
 
   const body = await response.text();
@@ -50,18 +51,30 @@ async function orderLeadDashboard(response: Response, env: LeadEnv): Promise<Res
 
   const used = new Set<string>();
   const orderedCards: string[] = [];
+  let hiddenResolved = 0;
   for (const row of ordered.results || []) {
     let card = cards.get(row.id);
     if (!card) continue;
     used.add(row.id);
+
+    const isResolved = RESOLVED_LEAD_STATUSES.has(row.status);
+    if (isResolved && !showResolved) {
+      hiddenResolved += 1;
+      continue;
+    }
+
     if (["replied", "won"].includes(row.status)) {
       card = card.replace(
         '<button class="button" type="button" data-status="replied">Odpovězeno</button>',
         '<button class="button" type="button" disabled title="Tento lead je už označený jako odpovězený.">Už odpovězeno</button>',
       );
     }
+    if (isResolved && showResolved) {
+      card = card.replace('<article class="lead-card"', '<article class="lead-card resolved-card"');
+    }
     orderedCards.push(card);
   }
+
   for (const [id, card] of cards) {
     if (!used.has(id)) orderedCards.push(card);
   }
@@ -70,10 +83,27 @@ async function orderLeadDashboard(response: Response, env: LeadEnv): Promise<Res
     /<section class="list" id="leadList">[\s\S]*?<\/section>/,
     `<section class="list" id="leadList">${orderedCards.join("")}</section>`,
   );
+
+  updated = updated.replace(
+    /<h2>Nejnovější leady<\/h2><span>[^<]*<\/span>/,
+    `<h2>${showResolved ? "Všechny leady" : "Aktivní leady"}</h2><span>${orderedCards.length} zobrazených${!showResolved && hiddenResolved ? ` · ${hiddenResolved} vyřízených skryto` : ""}</span>`,
+  );
   updated = updated.replace(
     "Doučuji.eu aktivní · Bazoš automatizace vypnuta kvůli podmínkám platformy",
     "Řazení: nejnovější zachycené nahoře · Doučuji.eu aktivní",
   );
+
+  const toggle = showResolved
+    ? `<a class="button" href="${LEAD_APP_PATH}/">Skrýt vyřízené</a>`
+    : `<a class="button" href="${LEAD_APP_PATH}/?resolved=1">Zobrazit vyřízené${hiddenResolved ? ` (${hiddenResolved})` : ""}</a>`;
+  updated = updated.replace('<div class="top-actions">', `<div class="top-actions">${toggle}`);
+
+  if (showResolved) {
+    updated = updated.replace(
+      "</style>",
+      ".lead-card.resolved-card{opacity:.56;background:#e7e5de;border-style:dashed}.lead-card.resolved-card:hover{opacity:.78}</style>",
+    );
+  }
 
   const headers = new Headers(response.headers);
   headers.delete("Content-Length");
@@ -95,7 +125,7 @@ export default {
       if (isManualLeadRefresh && leadResponse.ok) await runLeadPush(env);
       if (request.method === "GET" && url.pathname === `${LEAD_APP_PATH}/`) {
         const withPush = await addLeadPushLink(leadResponse);
-        return orderLeadDashboard(withPush, env);
+        return orderLeadDashboard(withPush, env, url.searchParams.get("resolved") === "1");
       }
       return leadResponse;
     }
