@@ -27,14 +27,81 @@ type LeadOrderRow = {
   status: string;
 };
 
+type LeadHealthRow = {
+  status: string;
+  run_at: string;
+  message: string | null;
+};
+
 const TUTORING_APP_PATH = "/student-portal/admin/tutoring/";
 const RESOLVED_LEAD_STATUSES = new Set(["replied", "won", "lost", "ignored"]);
+const RECENT_SUCCESS_WINDOW_MS = 30 * 60 * 1000;
+
+function esc(value: unknown): string {
+  return String(value ?? "").replace(/[&<>"']/g, (character) => ({
+    "&": "&amp;",
+    "<": "&lt;",
+    ">": "&gt;",
+    '"': "&quot;",
+    "'": "&#039;",
+  })[character] || character);
+}
+
+function friendlySourceError(message: string | null): string {
+  const http = String(message || "").match(/Doucuji feed HTTP\s+(\d+)/i);
+  if (http) {
+    const status = Number(http[1]);
+    if (status === 403 || status === 429) return `Doučuji.eu tento jednotlivý pokus odmítlo (HTTP ${status}).`;
+    if (status >= 500) return `Doučuji.eu bylo při posledním pokusu dočasně nedostupné (HTTP ${status}).`;
+    return `Doučuji.eu při posledním pokusu vrátilo HTTP ${status}.`;
+  }
+  return "Poslední načtení Doučuji.eu se nepodařilo.";
+}
 
 async function collectAndPush(env: LeadEnv): Promise<void> {
   await ensureLeadPushChannel(env);
   await runLeadAlert(env);
   await ensureLeadDrafts(env);
   await runLeadPushWithDrafts(env);
+}
+
+async function clarifyMonitoringState(response: Response, env: LeadEnv): Promise<Response> {
+  if (!response.ok || !(response.headers.get("Content-Type") || "").includes("text/html")) return response;
+
+  const [latest, lastSuccess] = await Promise.all([
+    env.DB.prepare(`SELECT status, run_at, message
+                      FROM tutoring_lead_runs
+                     WHERE source = 'doucuji'
+                     ORDER BY id DESC
+                     LIMIT 1`).first<LeadHealthRow>(),
+    env.DB.prepare(`SELECT status, run_at, message
+                      FROM tutoring_lead_runs
+                     WHERE source = 'doucuji' AND status = 'ok'
+                     ORDER BY id DESC
+                     LIMIT 1`).first<LeadHealthRow>(),
+  ]);
+
+  if (!latest || latest.status !== "error") return response;
+
+  const body = await response.text();
+  const lastSuccessAt = lastSuccess ? Date.parse(lastSuccess.run_at) : Number.NaN;
+  const recentlyHealthy = Number.isFinite(lastSuccessAt) && Date.now() - lastSuccessAt <= RECENT_SUCCESS_WINDOW_MS;
+  const stateLabel = recentlyHealthy ? "Běží" : "Zdroj čeká";
+  const note = `<div class="source-health-note"><strong>Monitoring je aktivní.</strong> ${esc(friendlySourceError(latest.message))} Další pokus proběhne automaticky do 5 minut.</div>`;
+
+  let updated = body.replace(
+    '<i class="dot error"></i>Chyba',
+    `<i class="dot warning"></i>${stateLabel}`,
+  );
+  updated = updated.replace(
+    "</style>",
+    ".dot.warning{background:var(--amber);box-shadow:0 0 0 4px #f6edce}.source-health-note{padding:12px 14px;margin:0 0 16px;border-radius:14px;background:#f6edce;color:#6f5b1f;border:1px solid #ead797;font-size:11px;line-height:1.5}.source-health-note strong{color:#594714}</style>",
+  );
+  updated = updated.replace('<div class="section-head">', `${note}<div class="section-head">`);
+
+  const headers = new Headers(response.headers);
+  headers.delete("Content-Length");
+  return new Response(updated, { status: response.status, statusText: response.statusText, headers });
 }
 
 async function orderLeadDashboard(response: Response, env: LeadEnv, showResolved: boolean): Promise<Response> {
@@ -84,9 +151,17 @@ async function orderLeadDashboard(response: Response, env: LeadEnv, showResolved
     if (!used.has(id)) orderedCards.push(card);
   }
 
+  const listContent = orderedCards.length
+    ? orderedCards.join("")
+    : `<article class="card empty">${showResolved
+      ? "Nejsou tu žádné uložené leady."
+      : hiddenResolved
+        ? `Žádné nové aktivní leady. ${hiddenResolved} vyřízených leadů je schovaných v archivu.`
+        : "Žádné nové aktivní leady."}</article>`;
+
   let updated = body.replace(
     /<section class="list" id="leadList">[\s\S]*?<\/section>/,
-    `<section class="list" id="leadList">${orderedCards.join("")}</section>`,
+    `<section class="list" id="leadList">${listContent}</section>`,
   );
 
   updated = updated.replace(
@@ -135,7 +210,8 @@ export default {
         await ensureLeadDrafts(env);
         const withPush = await addLeadPushLink(leadResponse);
         const ordered = await orderLeadDashboard(withPush, env, url.searchParams.get("resolved") === "1");
-        return addLeadDraftsToDashboard(ordered, env);
+        const withDrafts = await addLeadDraftsToDashboard(ordered, env);
+        return clarifyMonitoringState(withDrafts, env);
       }
       return leadResponse;
     }
