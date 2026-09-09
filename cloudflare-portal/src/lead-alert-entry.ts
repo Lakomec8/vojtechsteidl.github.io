@@ -21,6 +21,10 @@ import {
   handleEuOpportunityRequest,
   runEuOpportunityScan,
 } from "./eu-opportunities";
+import {
+  addOpportunityRadarLink,
+  handleOpportunityRadarRequest,
+} from "./opportunity-radar";
 
 type WorkerRequest = Parameters<typeof tutoringCronWorker.fetch>[0];
 type LeadEnv = Env & {
@@ -199,6 +203,9 @@ export default {
   async fetch(request: Request, env: LeadEnv): Promise<Response> {
     const url = new URL(request.url);
 
+    const radarResponse = await handleOpportunityRadarRequest(request, env);
+    if (radarResponse) return radarResponse;
+
     const euResponse = await handleEuOpportunityRequest(request, env);
     if (euResponse) return euResponse;
 
@@ -220,7 +227,8 @@ export default {
         const ordered = await orderLeadDashboard(withPush, env, url.searchParams.get("resolved") === "1");
         const withDrafts = await addLeadDraftsToDashboard(ordered, env);
         const withEu = await addEuOpportunitiesLink(withDrafts);
-        return clarifyMonitoringState(withEu, env);
+        const withRadar = await addOpportunityRadarLink(withEu);
+        return clarifyMonitoringState(withRadar, env);
       }
       return leadResponse;
     }
@@ -228,7 +236,8 @@ export default {
     const response = await tutoringCronWorker.fetch(request as WorkerRequest, env);
     if (request.method === "GET" && url.pathname === TUTORING_APP_PATH) {
       const withLeadAlert = await addLeadAlertLink(response);
-      return addEuOpportunitiesLink(withLeadAlert);
+      const withEu = await addEuOpportunitiesLink(withLeadAlert);
+      return addOpportunityRadarLink(withEu);
     }
     return response;
   },
