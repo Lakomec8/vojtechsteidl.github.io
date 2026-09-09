@@ -10,8 +10,12 @@ import {
   addLeadPushLink,
   ensureLeadPushChannel,
   handleLeadPushRequest,
-  runLeadPush,
 } from "./lead-push";
+import {
+  addLeadDraftsToDashboard,
+  ensureLeadDrafts,
+  runLeadPushWithDrafts,
+} from "./lead-draft";
 
 type WorkerRequest = Parameters<typeof tutoringCronWorker.fetch>[0];
 type LeadEnv = Env & {
@@ -29,7 +33,8 @@ const RESOLVED_LEAD_STATUSES = new Set(["replied", "won", "lost", "ignored"]);
 async function collectAndPush(env: LeadEnv): Promise<void> {
   await ensureLeadPushChannel(env);
   await runLeadAlert(env);
-  await runLeadPush(env);
+  await ensureLeadDrafts(env);
+  await runLeadPushWithDrafts(env);
 }
 
 async function orderLeadDashboard(response: Response, env: LeadEnv, showResolved: boolean): Promise<Response> {
@@ -122,10 +127,15 @@ export default {
 
     const leadResponse = await handleLeadAlertRequest(request, env);
     if (leadResponse) {
-      if (isManualLeadRefresh && leadResponse.ok) await runLeadPush(env);
+      if (isManualLeadRefresh && leadResponse.ok) {
+        await ensureLeadDrafts(env);
+        await runLeadPushWithDrafts(env);
+      }
       if (request.method === "GET" && url.pathname === `${LEAD_APP_PATH}/`) {
+        await ensureLeadDrafts(env);
         const withPush = await addLeadPushLink(leadResponse);
-        return orderLeadDashboard(withPush, env, url.searchParams.get("resolved") === "1");
+        const ordered = await orderLeadDashboard(withPush, env, url.searchParams.get("resolved") === "1");
+        return addLeadDraftsToDashboard(ordered, env);
       }
       return leadResponse;
     }
