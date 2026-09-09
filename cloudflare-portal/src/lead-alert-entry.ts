@@ -16,6 +16,11 @@ import {
   ensureLeadDrafts,
   runLeadPushWithDrafts,
 } from "./lead-draft";
+import {
+  addEuOpportunitiesLink,
+  handleEuOpportunityRequest,
+  runEuOpportunityScan,
+} from "./eu-opportunities";
 
 type WorkerRequest = Parameters<typeof tutoringCronWorker.fetch>[0];
 type LeadEnv = Env & {
@@ -194,6 +199,9 @@ export default {
   async fetch(request: Request, env: LeadEnv): Promise<Response> {
     const url = new URL(request.url);
 
+    const euResponse = await handleEuOpportunityRequest(request, env);
+    if (euResponse) return euResponse;
+
     const pushResponse = await handleLeadPushRequest(request, env);
     if (pushResponse) return pushResponse;
 
@@ -211,14 +219,16 @@ export default {
         const withPush = await addLeadPushLink(leadResponse);
         const ordered = await orderLeadDashboard(withPush, env, url.searchParams.get("resolved") === "1");
         const withDrafts = await addLeadDraftsToDashboard(ordered, env);
-        return clarifyMonitoringState(withDrafts, env);
+        const withEu = await addEuOpportunitiesLink(withDrafts);
+        return clarifyMonitoringState(withEu, env);
       }
       return leadResponse;
     }
 
     const response = await tutoringCronWorker.fetch(request as WorkerRequest, env);
     if (request.method === "GET" && url.pathname === TUTORING_APP_PATH) {
-      return addLeadAlertLink(response);
+      const withLeadAlert = await addLeadAlertLink(response);
+      return addEuOpportunitiesLink(withLeadAlert);
     }
     return response;
   },
@@ -233,7 +243,21 @@ export default {
       }),
     );
 
-    const minute = new Date(controller.scheduledTime).getUTCMinutes();
+    const scheduledAt = new Date(controller.scheduledTime);
+    const minute = scheduledAt.getUTCMinutes();
+    const hour = scheduledAt.getUTCHours();
+
+    if (minute === 0 && hour % 6 === 0) {
+      ctx.waitUntil(
+        runEuOpportunityScan(env).catch((error) => {
+          console.error(JSON.stringify({
+            event: "eu_opportunity_scheduled_error",
+            message: error instanceof Error ? error.message : "unknown",
+          }));
+        }),
+      );
+    }
+
     if (minute % 15 === 0) {
       tutoringCronWorker.scheduled(controller, env, ctx);
     }
