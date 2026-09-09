@@ -1,0 +1,5 @@
+# Netlify is retained only as a dormant fallback. Production hosting is handled by GitHub Pages
+# (public site) and Cloudflare Workers (student/admin portal).
+# Exit code 0 tells Netlify to stop Git-triggered builds before a deploy is created.
+[build]
+  ignore = "exit 0"
