@@ -5,6 +5,15 @@
 
   if (!nextDateElement || !nextCopyElement || !app) return;
 
+  // Streamline the dashboard: keep only completed lessons, latest self-check
+  // and the next lesson. The previous subjective/derived metrics remain in the
+  // DOM for backwards compatibility but are not shown.
+  ["overallScore", "activeCount"].forEach((id) => {
+    const element = document.getElementById(id);
+    const metric = element?.closest?.(".metric");
+    if (metric) metric.hidden = true;
+  });
+
   const waitForPortal = async () => {
     const deadline = Date.now() + 10000;
     while (app.hidden && Date.now() < deadline) {
@@ -13,21 +22,27 @@
   };
 
   const lessonStart = (lesson) => {
-    const raw = String(lesson?.start || "").trim();
+    const raw = String(
+      lesson?.start || lesson?.startsAt || lesson?.starts_at || "",
+    ).trim();
     if (raw) {
       const parsed = new Date(raw);
       if (!Number.isNaN(parsed.getTime())) return parsed;
     }
 
     const date = String(lesson?.date || "").trim();
-    const time = String(lesson?.startTime || "00:00").trim();
+    const time = String(
+      lesson?.startTime || lesson?.time || lesson?.start_time || "00:00",
+    ).trim();
     if (!/^\d{4}-\d{2}-\d{2}$/.test(date) || !/^\d{2}:\d{2}$/.test(time)) return null;
     const parsed = new Date(`${date}T${time}:00`);
     return Number.isNaN(parsed.getTime()) ? null : parsed;
   };
 
   const lessonEnd = (lesson) => {
-    const raw = String(lesson?.end || "").trim();
+    const raw = String(
+      lesson?.end || lesson?.endsAt || lesson?.ends_at || "",
+    ).trim();
     if (raw) {
       const parsed = new Date(raw);
       if (!Number.isNaN(parsed.getTime())) return parsed;
@@ -50,6 +65,32 @@
       timeZone: "Europe/Prague",
     }).format(date);
 
+  const renderSelfCheckFocus = (profile) => {
+    const label = document.getElementById("readinessLabel");
+    const value = document.getElementById("readinessValue");
+    const fill = document.getElementById("readinessFill");
+    const copy = document.getElementById("readinessCopy");
+    if (!label || !value || !fill || !copy) return;
+
+    const latest = profile?.selfCheckSummary?.latest || null;
+    label.textContent = "Poslední self-check";
+
+    if (!latest) {
+      value.textContent = "–";
+      fill.style.width = "0%";
+      copy.textContent = "Zatím bez dokončeného testu";
+      return;
+    }
+
+    const percent = Number(latest.percent);
+    const safePercent = Number.isFinite(percent)
+      ? Math.max(0, Math.min(100, Math.round(percent)))
+      : 0;
+    value.textContent = `${safePercent} %`;
+    fill.style.width = `${safePercent}%`;
+    copy.textContent = `${latest.score}/${latest.maxScore} bodů · ${latest.title}`;
+  };
+
   try {
     const response = await fetch("./api/profile", {
       cache: "no-store",
@@ -60,19 +101,28 @@
 
     const profile = await response.json();
     const now = new Date();
-    const lessons = (Array.isArray(profile.calendarUpcomingLessons)
-      ? profile.calendarUpcomingLessons
-      : [])
+
+    // Calendar-backed lessons are authoritative. `upcoming` is a safe fallback
+    // for older/static profiles while all students transition to the D1 feed.
+    const candidates = [
+      ...(Array.isArray(profile.calendarUpcomingLessons)
+        ? profile.calendarUpcomingLessons
+        : []),
+      ...(Array.isArray(profile.upcoming) ? profile.upcoming : []),
+    ];
+
+    const lessons = candidates
       .map((lesson) => ({ lesson, start: lessonStart(lesson) }))
       .filter(({ start }) => start && start.getTime() >= now.getTime())
       .sort((first, second) => first.start.getTime() - second.start.getTime());
 
     await waitForPortal();
+    renderSelfCheckFocus(profile);
 
     const next = lessons[0] || null;
     if (!next) {
       nextDateElement.textContent = "–";
-      nextCopyElement.textContent = "–";
+      nextCopyElement.textContent = "Další termín zatím není evidovaný";
       return;
     }
 
@@ -84,7 +134,7 @@
   } catch (error) {
     await waitForPortal();
     nextDateElement.textContent = "–";
-    nextCopyElement.textContent = "–";
+    nextCopyElement.textContent = "Další termín se nepodařilo načíst";
     console.warn("Následující hodinu se nepodařilo načíst z kalendářních dat.", error);
   }
 })();
