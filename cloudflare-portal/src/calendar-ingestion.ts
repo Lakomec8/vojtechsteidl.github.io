@@ -153,17 +153,16 @@ function expandCalendar(ics: string, students: TutoringStudent[], rangeStart: Da
 }
 
 async function activeStudents(env: Env): Promise<TutoringStudent[]> {
+  // Calendar matching must use the canonical tutoring identity, not the portal
+  // display name. A portal profile can deliberately have a different label
+  // (for example prusikova/"Anna" maps to tutoring identity anicka/"Anička").
+  // Using the portal label here caused valid Google Calendar events to be
+  // silently ignored and therefore made both completed and upcoming lessons stale.
   const result = await env.DB.prepare(`
-    SELECT tutoring.id,
-           COALESCE(NULLIF(TRIM(student.display_name), ''), tutoring.display_name) AS display_name
-      FROM tutoring_students AS tutoring
-      LEFT JOIN student_tutoring_links AS link
-        ON link.tutoring_student_id = tutoring.id
-      LEFT JOIN students AS student
-        ON student.id = link.student_id
-       AND student.enabled = 1
-     WHERE tutoring.active = 1
-     ORDER BY tutoring.id
+    SELECT id, display_name
+      FROM tutoring_students
+     WHERE active = 1
+     ORDER BY id
   `).all<TutoringStudent>();
   return result.results || [];
 }
