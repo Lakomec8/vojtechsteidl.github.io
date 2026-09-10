@@ -1,6 +1,7 @@
 import { createRemoteJWKSet, jwtVerify } from "jose";
 import {
   calendarLessonsForStudent,
+  calendarUpcomingLessonsForStudent,
   selfCheckSummaryForStudent,
 } from "./student-learning";
 
@@ -228,7 +229,7 @@ async function profileForStudent(
   env: Env,
   adminView = false,
 ): Promise<Response> {
-  const [row, calendarLessons, selfCheckSummary] = await Promise.all([
+  const [row, calendarLessons, calendarUpcomingLessons, selfCheckSummary] = await Promise.all([
     env.DB.prepare(
       `SELECT payload_json
          FROM student_profiles
@@ -238,6 +239,7 @@ async function profileForStudent(
       .bind(student.id)
       .first<ProfileRow>(),
     calendarLessonsForStudent(student.id, env),
+    calendarUpcomingLessonsForStudent(student.id, env),
     selfCheckSummaryForStudent(student.id, env),
   ]);
 
@@ -266,10 +268,21 @@ async function profileForStudent(
     durationHours: Number(lesson.duration_minutes) / 60,
     source: "google_calendar",
   }));
+  const upcomingLessons = calendarUpcomingLessons.map((lesson) => ({
+    id: lesson.google_event_id,
+    googleEventId: lesson.google_event_id,
+    date: lesson.starts_at.slice(0, 10),
+    title: "Doučování",
+    start: lesson.starts_at,
+    end: lesson.ends_at,
+    durationHours: Number(lesson.duration_minutes) / 60,
+    source: "google_calendar",
+  }));
 
   return json({
     ...profile,
     externalLessons,
+    calendarUpcomingLessons: upcomingLessons,
     completedLessonsCount: historicalLessonCountOffset + externalLessons.length,
     completedLessonMinutes: calendarLessons.reduce(
       (sum, lesson) => sum + Number(lesson.duration_minutes),
