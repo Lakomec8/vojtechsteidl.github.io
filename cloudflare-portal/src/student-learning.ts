@@ -6,6 +6,13 @@ export type CalendarLesson = {
   duration_minutes: number;
 };
 
+export type CalendarUpcomingLesson = {
+  google_event_id: string;
+  starts_at: string;
+  ends_at: string;
+  duration_minutes: number;
+};
+
 type SelfCheckAttemptRow = {
   assignment_id: string;
   assignment_status: string;
@@ -47,6 +54,27 @@ export async function calendarLessonsForStudent(
         AND google_event_id IS NOT NULL
       ORDER BY lesson_date DESC, starts_at DESC, id DESC`,
   ).bind(studentId).all<CalendarLesson>();
+
+  return result.results || [];
+}
+
+export async function calendarUpcomingLessonsForStudent(
+  studentId: string,
+  env: Env,
+): Promise<CalendarUpcomingLesson[]> {
+  const result = await env.DB.prepare(
+    `SELECT event.google_event_id,
+            event.starts_at,
+            event.ends_at,
+            event.duration_minutes
+       FROM tutoring_calendar_events AS event
+       JOIN student_tutoring_links AS link
+         ON link.tutoring_student_id = event.student_id
+      WHERE link.student_id = ?1
+        AND event.status = 'planned'
+        AND datetime(event.starts_at) >= datetime('now')
+      ORDER BY datetime(event.starts_at) ASC, event.google_event_id ASC`,
+  ).bind(studentId).all<CalendarUpcomingLesson>();
 
   return result.results || [];
 }
