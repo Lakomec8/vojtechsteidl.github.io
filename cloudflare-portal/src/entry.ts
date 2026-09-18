@@ -38,6 +38,7 @@ export class PortalError extends Error {
 export function privateHeaders(headers = new Headers()): Headers {
   headers.set("Cache-Control", "private, no-store, max-age=0");
   headers.set("Pragma", "no-cache");
+  headers.set("X-Robots-Tag", "noindex, nofollow, noarchive");
   headers.set("X-Content-Type-Options", "nosniff");
   headers.set("Referrer-Policy", "strict-origin-when-cross-origin");
   headers.set("Permissions-Policy", "camera=(), microphone=(), geolocation=()");
