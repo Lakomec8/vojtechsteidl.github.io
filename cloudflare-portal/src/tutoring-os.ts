@@ -56,6 +56,16 @@ type ExpenseRow = {
   amount: number;
   tax_deductible: number;
 };
+type LeadRow = {
+  id: string;
+  source: string;
+  title: string;
+  subject: string;
+  source_url: string;
+  score: number;
+  status: "new" | "reviewed" | "replied" | "won" | "lost" | "ignored";
+  first_seen_at: string;
+};
 type SyncEvent = {
   id: string;
   summary: string;
@@ -150,6 +160,17 @@ function monthName(value: string): string {
   return new Intl.DateTimeFormat("cs-CZ", { month: "long", year: "numeric", timeZone: PRAGUE_TIME_ZONE }).format(date);
 }
 
+function leadStatusLabel(status: LeadRow["status"]): string {
+  return ({
+    new: "Nový",
+    reviewed: "Zkontrolováno",
+    replied: "Odpovězeno",
+    won: "Získáno",
+    lost: "Nezískáno",
+    ignored: "Ignorováno",
+  } as Record<LeadRow["status"], string>)[status];
+}
+
 async function requireAdmin(request: Request, env: Env): Promise<string> {
   const principal = await principalForRequest(request, env);
   if (!principal.isAdmin) throw new PortalError(403, "Administrator access is required.");
@@ -161,9 +182,10 @@ async function dashboardData(env: Env): Promise<{
   lessons: LessonRow[];
   events: CalendarRow[];
   expenses: ExpenseRow[];
+  leads: LeadRow[];
   sync: SyncRow | null;
 }> {
-  const [students, lessons, events, expenses, sync] = await Promise.all([
+  const [students, lessons, events, expenses, leads, sync] = await Promise.all([
     env.DB.prepare("SELECT id, display_name, hourly_rate, active, accent FROM tutoring_students ORDER BY active DESC, display_name COLLATE NOCASE").all<StudentRow>(),
     env.DB.prepare("SELECT id, google_event_id, student_id, student_label, lesson_date, starts_at, ends_at, duration_minutes, hourly_rate, amount, payment_status, paid_at, payment_method, source FROM tutoring_lessons ORDER BY lesson_date DESC, id DESC").all<LessonRow>(),
     env.DB.prepare(`SELECT e.google_event_id, e.student_id, e.summary, e.starts_at, e.ends_at,
@@ -175,6 +197,10 @@ async function dashboardData(env: Env): Promise<{
                      GROUP BY e.google_event_id
                      ORDER BY e.starts_at`).all<CalendarRow>(),
     env.DB.prepare("SELECT id, spent_on, supplier, description, amount, tax_deductible FROM tutoring_expenses ORDER BY spent_on DESC").all<ExpenseRow>(),
+    env.DB.prepare(`SELECT id, source, title, subject, source_url, score, status, first_seen_at
+                      FROM tutoring_leads
+                     ORDER BY datetime(first_seen_at) DESC
+                     LIMIT 300`).all<LeadRow>(),
     env.DB.prepare("SELECT last_synced_at, completed_events, planned_events, note FROM tutoring_sync_state WHERE id = 1").first<SyncRow>(),
   ]);
   return {
@@ -182,12 +208,13 @@ async function dashboardData(env: Env): Promise<{
     lessons: lessons.results || [],
     events: events.results || [],
     expenses: expenses.results || [],
+    leads: leads.results || [],
     sync,
   };
 }
 
 function renderDashboard(data: Awaited<ReturnType<typeof dashboardData>>, email: string): Response {
-  const { students, lessons, events, expenses, sync } = data;
+  const { students, lessons, events, expenses, leads, sync } = data;
   const paidLessons = lessons.filter((lesson) => lesson.payment_status === "paid");
   const revenue = paidLessons.reduce((sum, lesson) => sum + Number(lesson.amount), 0);
   const countedTeachingSessions = new Set<string>();
@@ -207,6 +234,22 @@ function renderDashboard(data: Awaited<ReturnType<typeof dashboardData>>, email:
   const allowance = Math.round(revenue * 0.6);
   const estimatedTaxBase = Math.max(0, revenue - allowance);
 
+  const leadEligible = leads.filter((lead) => lead.status !== "ignored");
+  const leadContacted = leadEligible.filter((lead) => ["replied", "won", "lost"].includes(lead.status));
+  const leadWon = leadEligible.filter((lead) => lead.status === "won");
+  const leadLost = leadEligible.filter((lead) => lead.status === "lost");
+  const leadClosed = leadWon.length + leadLost.length;
+  const leadConversion = leadEligible.length ? Math.round((leadWon.length / leadEligible.length) * 100) : 0;
+  const leadCloseRate = leadClosed ? Math.round((leadWon.length / leadClosed) * 100) : 0;
+  const leadReplyRate = leadEligible.length ? Math.round((leadContacted.length / leadEligible.length) * 100) : 0;
+  const leadNew30d = leadEligible.filter((lead) => {
+    const seen = new Date(lead.first_seen_at).getTime();
+    return Number.isFinite(seen) && seen >= Date.now() - 30 * 24 * 60 * 60 * 1000;
+  }).length;
+  const averageLeadScore = leadEligible.length
+    ? Math.round(leadEligible.reduce((sum, lead) => sum + Number(lead.score), 0) / leadEligible.length)
+    : 0;
+
   const weekly = new Map<string, { revenue: number; minutes: number; count: number }>();
   for (const lesson of paidLessons) {
     const key = weekStart(lesson.lesson_date);
@@ -219,6 +262,23 @@ function renderDashboard(data: Awaited<ReturnType<typeof dashboardData>>, email:
 
   const paidWeekKeys = [...weekly.keys()].sort();
   const currentWeek = weekStart(new Date().toISOString().slice(0, 10));
+  const leadWeeks: Array<{ key: string; total: number; won: number }> = [];
+  const leadWeekMap = new Map<string, { total: number; won: number }>();
+  for (const lead of leadEligible) {
+    const key = weekStart(lead.first_seen_at.slice(0, 10));
+    const item = leadWeekMap.get(key) || { total: 0, won: 0 };
+    item.total += 1;
+    if (lead.status === "won") item.won += 1;
+    leadWeekMap.set(key, item);
+  }
+  const leadWeekCursor = new Date(`${currentWeek}T12:00:00Z`);
+  leadWeekCursor.setUTCDate(leadWeekCursor.getUTCDate() - 7 * 7);
+  for (let index = 0; index < 8; index++) {
+    const key = leadWeekCursor.toISOString().slice(0, 10);
+    const item = leadWeekMap.get(key) || { total: 0, won: 0 };
+    leadWeeks.push({ key, total: item.total, won: item.won });
+    leadWeekCursor.setUTCDate(leadWeekCursor.getUTCDate() + 7);
+  }
   const firstWeek = paidWeekKeys[0] || currentWeek;
   const lastWeek = paidWeekKeys.at(-1) && paidWeekKeys.at(-1)! > currentWeek
     ? paidWeekKeys.at(-1)!
@@ -304,6 +364,40 @@ function renderDashboard(data: Awaited<ReturnType<typeof dashboardData>>, email:
     return `<div class="split-row"><span>${esc(student.display_name)}</span><div class="track"><i class="${esc(student.accent)}" style="width:${Math.max(4, width)}%"></i></div><strong>${esc(money(student.revenue))}</strong></div>`;
   }).join("");
 
+  const leadFunnelMax = Math.max(1, leadEligible.length);
+  const leadFunnel = [
+    ["Relevantní", leadEligible.length],
+    ["Kontaktované", leadContacted.length],
+    ["Uzavřené", leadClosed],
+    ["Získané", leadWon.length],
+  ].map(([label, rawValue]) => {
+    const value = Number(rawValue);
+    const width = Math.max(value ? 6 : 0, Math.round((value / leadFunnelMax) * 100));
+    return `<div class="funnel-row"><span>${esc(label)}</span><div class="track"><i style="width:${width}%"></i></div><strong>${value}</strong></div>`;
+  }).join("");
+
+  const maxLeadWeek = Math.max(1, ...leadWeeks.map((item) => item.total));
+  const leadWeekBars = leadWeeks.map((item) => {
+    const totalHeight = item.total ? Math.max(10, Math.round((item.total / maxLeadWeek) * 130)) : 3;
+    const wonHeight = item.won ? Math.max(7, Math.round((item.won / maxLeadWeek) * 130)) : 2;
+    const rate = item.total ? Math.round((item.won / item.total) * 100) : 0;
+    return `<div class="lead-week-column"><div class="lead-week-values"><span>${item.total}</span><span>${item.won}</span></div><div class="lead-week-bars"><i class="all" style="height:${totalHeight}px"></i><i class="won" style="height:${wonHeight}px"></i></div><strong>${esc(weekLabel(item.key))}</strong><small>${rate}% win</small></div>`;
+  }).join("");
+
+  const leadRows = leads.slice(0, 24).map((lead) => `
+    <tr data-lead-id="${esc(lead.id)}">
+      <td><strong>${esc(lead.title)}</strong><small>${esc(lead.subject || lead.source)}</small></td>
+      <td><span class="score-pill">${esc(lead.score)}/100</span></td>
+      <td><span class="pill lead-${esc(lead.status)}">${esc(leadStatusLabel(lead.status))}</span></td>
+      <td>${esc(dateLabel(lead.first_seen_at, true))}</td>
+      <td class="lead-actions-cell">
+        <a class="mini-action" href="${esc(lead.source_url)}" target="_blank" rel="noopener noreferrer">Otevřít</a>
+        <button class="mini-action" type="button" data-lead-status="replied">Odpovězeno</button>
+        <button class="mini-action success-action" type="button" data-lead-status="won">Získáno</button>
+        <button class="mini-action" type="button" data-lead-status="lost">Nezískáno</button>
+      </td>
+    </tr>`).join("");
+
   return html(`<!doctype html>
 <html lang="cs">
 <head>
@@ -320,7 +414,7 @@ function renderDashboard(data: Awaited<ReturnType<typeof dashboardData>>, email:
     .view{display:none}.view.active{display:block}.kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;margin-bottom:14px}.card{background:rgba(251,250,246,.93);border:1px solid var(--line);border-radius:22px;box-shadow:var(--shadow-soft)}.kpi{padding:18px;min-height:145px;display:flex;flex-direction:column}.kpi-top{display:flex;justify-content:space-between;align-items:center}.kpi-label{font-size:12px;color:var(--muted);font-weight:800}.icon-box{width:34px;height:34px;border-radius:11px;background:var(--surface-2);display:grid;place-items:center}.icon-box.mint{background:var(--mint-soft)}.kpi strong{font-size:clamp(27px,3vw,42px);letter-spacing:-.045em;margin-top:auto}.kpi small{color:var(--muted);margin-top:3px}.delta{color:#347c61;font-weight:800}.content-grid{display:grid;grid-template-columns:minmax(0,1.42fr) minmax(320px,.78fr);gap:14px;margin-bottom:14px}.section{padding:20px}.section-head{display:flex;justify-content:space-between;gap:16px;align-items:flex-start;margin-bottom:18px}.section h2{margin:0;font-size:19px;letter-spacing:-.025em}.section-head p{margin:4px 0 0;color:var(--muted);font-size:12px}.chip{border:1px solid var(--line);background:var(--surface-2);padding:7px 11px;border-radius:999px;font-size:11px;font-weight:800}.chart{height:220px;display:flex;align-items:flex-end;gap:16px;padding:28px 8px 0;border-bottom:1px solid var(--line);overflow-x:auto;overflow-y:hidden;background-image:linear-gradient(rgba(62,63,57,.06) 1px,transparent 1px);background-size:100% 48px}.bar-column{height:100%;flex:0 0 76px;min-width:76px;display:flex;align-items:center;justify-content:flex-end;flex-direction:column;position:relative}.bar-column>span{font-size:11px;font-weight:800;margin-bottom:7px}.bar{width:min(58px,70%);border-radius:14px 14px 4px 4px;background:linear-gradient(180deg,var(--mint),#78d8b4);box-shadow:inset 0 1px rgba(255,255,255,.75),0 8px 16px rgba(67,140,111,.2)}.bar-column strong{font-size:12px;margin-top:9px;text-transform:capitalize}.bar-column small{font-size:10px;color:var(--muted)}.split-list{display:grid;gap:14px}.split-row{display:grid;grid-template-columns:72px minmax(80px,1fr) 70px;gap:9px;align-items:center;font-size:12px}.split-row span{font-weight:700}.split-row strong{text-align:right}.track{height:9px;border-radius:99px;background:var(--surface-2);overflow:hidden}.track i{display:block;height:100%;border-radius:inherit;background:var(--mint-strong)}.track i.blue{background:var(--blue)}.track i.amber{background:var(--amber)}.track i.violet{background:var(--violet)}.track i.stone{background:#aaa99f}
     .wide-card{padding:20px;overflow:auto}.table-head{display:flex;justify-content:space-between;gap:15px;align-items:center;margin-bottom:14px}.table-head h2{margin:0;font-size:19px}.search{display:flex;align-items:center;gap:8px;padding:9px 13px;border:1px solid var(--line);border-radius:999px;background:var(--surface);color:var(--muted)}.search input{border:0;outline:0;background:transparent;width:150px;color:var(--ink)}table{width:100%;border-collapse:collapse;min-width:780px}th{text-align:left;font-size:10px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);padding:10px 11px;border-bottom:1px solid var(--line)}td{padding:13px 11px;border-bottom:1px solid rgba(213,210,200,.7);font-size:13px;vertical-align:middle}tr:last-child td{border-bottom:0}td small{display:block;color:var(--muted);font-size:10px;margin-top:3px}td.money{font-weight:900}.avatar{display:inline-grid;place-items:center;width:29px;height:29px;border-radius:10px;background:var(--mint);margin-right:9px;box-shadow:inset 0 1px rgba(255,255,255,.7)}.avatar.blue{background:var(--blue)}.avatar.amber{background:var(--amber)}.avatar.violet{background:var(--violet)}.avatar.stone{background:#c9c7be}.pill{display:inline-flex;align-items:center;border-radius:99px;padding:5px 9px;font-size:10px;font-weight:900;background:var(--surface-2);white-space:nowrap}.pill.success{background:var(--mint-soft);color:#2f7258}.pill.planned{background:#e5eef3;color:#4f7187}.pill.muted{color:var(--muted)}.status-dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--mint-strong);margin-right:8px}.status-dot.baseline{background:var(--amber)}
     .timeline{display:grid;gap:10px}.timeline-item{display:grid;grid-template-columns:48px 1fr auto;align-items:center;gap:14px;padding:12px;border:1px solid var(--line);border-radius:16px;background:var(--surface)}.timeline-item.completed{opacity:.72}.date-tile{width:48px;height:50px;border-radius:13px;display:grid;place-items:center;align-content:center;background:var(--surface-2);line-height:1}.date-tile strong{font-size:20px}.date-tile span{font-size:9px;color:var(--muted);text-transform:uppercase;margin-top:4px}.timeline-copy{display:grid}.timeline-copy small{color:var(--muted);font-size:10px}.timeline-copy strong{font-size:14px;margin:2px 0}.timeline-copy span{font-size:11px;color:var(--muted)}
-    .tax-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}.tax-hero{padding:25px;min-height:280px;display:flex;flex-direction:column}.tax-number{font-size:clamp(44px,6vw,78px);letter-spacing:-.065em;margin:28px 0 4px}.tax-breakdown{margin-top:auto;display:grid;gap:11px}.tax-row{display:flex;justify-content:space-between;border-top:1px solid var(--line);padding-top:11px;font-size:13px}.tax-row span{color:var(--muted)}.note{padding:14px;border-radius:15px;background:#f6edce;color:#6f5b1f;font-size:12px;line-height:1.55}.empty{padding:28px;text-align:center;color:var(--muted)}
+    .tax-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}.funnel-list{display:grid;gap:13px}.funnel-row{display:grid;grid-template-columns:92px minmax(80px,1fr) 34px;gap:10px;align-items:center;font-size:12px}.funnel-row span{font-weight:750}.funnel-row strong{text-align:right}.lead-week-chart{height:210px;display:flex;align-items:flex-end;gap:12px;padding:24px 5px 0;border-bottom:1px solid var(--line);overflow-x:auto;background-image:linear-gradient(rgba(62,63,57,.06) 1px,transparent 1px);background-size:100% 44px}.lead-week-column{height:100%;flex:0 0 82px;display:flex;align-items:center;justify-content:flex-end;flex-direction:column}.lead-week-values{display:flex;gap:12px;font-size:10px;font-weight:850;margin-bottom:6px}.lead-week-bars{height:132px;display:flex;align-items:flex-end;gap:5px}.lead-week-bars i{display:block;width:25px;border-radius:10px 10px 3px 3px}.lead-week-bars .all{background:var(--blue)}.lead-week-bars .won{background:var(--mint-strong)}.lead-week-column strong{font-size:11px;margin-top:8px}.lead-week-column small{font-size:9px;color:var(--muted)}.score-pill{display:inline-flex;padding:5px 8px;border-radius:99px;background:#e5eef3;color:#4f7187;font-size:10px;font-weight:900}.pill.lead-won{background:var(--mint-soft);color:#2f7258}.pill.lead-lost,.pill.lead-ignored{background:#f3e6e2;color:#8b5f55}.pill.lead-new{background:#f6edce;color:#6f5b1f}.lead-actions-cell{display:flex;gap:5px;flex-wrap:wrap}.mini-action{border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:999px;padding:5px 8px;text-decoration:none;font:inherit;font-size:9px;font-weight:850;cursor:pointer}.mini-action.success-action{background:var(--mint-soft);border-color:#b8e8d5}.tax-hero{padding:25px;min-height:280px;display:flex;flex-direction:column}.tax-number{font-size:clamp(44px,6vw,78px);letter-spacing:-.065em;margin:28px 0 4px}.tax-breakdown{margin-top:auto;display:grid;gap:11px}.tax-row{display:flex;justify-content:space-between;border-top:1px solid var(--line);padding-top:11px;font-size:13px}.tax-row span{color:var(--muted)}.note{padding:14px;border-radius:15px;background:#f6edce;color:#6f5b1f;font-size:12px;line-height:1.55}.empty{padding:28px;text-align:center;color:var(--muted)}
     @media(max-width:1100px){.shell{grid-template-columns:82px minmax(0,1fr)}.sidebar{padding:22px 12px}.brand-copy,.nav button span,.sync-card,.account{display:none}.brand{justify-content:center}.nav button{justify-content:center;padding:12px}.kpis{grid-template-columns:repeat(2,1fr)}}
     @media(max-width:780px){body{background-size:28px 28px}.shell{display:block;width:100%;margin:0;border:0;border-radius:0;min-height:100vh}.sidebar{position:sticky;top:0;z-index:8;display:flex;flex-direction:row;align-items:center;padding:9px 12px;border-right:0;border-bottom:1px solid var(--line);overflow:auto}.brand{padding:0}.brand-mark{width:36px;height:36px}.nav{display:flex;gap:4px}.nav button{padding:9px}.top-actions .button:not(.primary){display:none}main{padding:22px 14px 80px}.topbar{align-items:flex-end}.topbar h1{font-size:36px}.topbar p{font-size:12px}.kpis{grid-template-columns:1fr 1fr;gap:10px}.kpi{min-height:125px;padding:14px}.kpi strong{font-size:26px}.content-grid,.tax-grid{grid-template-columns:1fr}.section{padding:16px}.timeline-item{grid-template-columns:44px 1fr}.timeline-item>.pill{grid-column:2}.chart{gap:10px}.table-head{align-items:flex-start;flex-direction:column}.search{width:100%}.search input{width:100%}}
     @media(max-width:480px){.kpis{grid-template-columns:1fr}.topbar h1{font-size:32px}.button.primary{padding:9px 12px}.topbar{gap:10px}.chart{height:190px}.bar-column{flex-basis:62px;min-width:62px}.split-row{grid-template-columns:60px 1fr 62px}}
@@ -329,30 +423,35 @@ function renderDashboard(data: Awaited<ReturnType<typeof dashboardData>>, email:
 <body>
   <div class="shell">
     <aside class="sidebar">
-      <div class="brand"><div class="brand-mark">T</div><div class="brand-copy"><strong>Tutoring OS</strong><span>2026 · live</span></div></div>
+      <div class="brand"><div class="brand-mark">B</div><div class="brand-copy"><strong>Business OS</strong><span>doučování · 2026</span></div></div>
       <nav class="nav" aria-label="Hlavní navigace">
         <button class="active" data-target="overview" title="Přehled"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="2"/><rect x="14" y="3" width="7" height="7" rx="2"/><rect x="3" y="14" width="7" height="7" rx="2"/><rect x="14" y="14" width="7" height="7" rx="2"/></svg><span>Přehled</span></button>
         <button data-target="students" title="Studenti"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/></svg><span>Studenti</span></button>
         <button data-target="finance" title="Finance"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3v18h18"/><path d="m7 16 4-5 4 3 5-7"/></svg><span>Finance</span></button>
         <button data-target="calendar" title="Kalendář"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M16 3v4M8 3v4M3 11h18"/></svg><span>Kalendář</span></button>
+        <button data-target="leads" title="Leady"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 20v-7M10 20V9M16 20V4M22 20H2"/><path d="m4 9 5-4 5 2 6-5"/></svg><span>Leady</span></button>
         <button data-target="tax" title="Daně"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2h9l5 5v15H6z"/><path d="M14 2v6h6M9 13h6M9 17h6"/></svg><span>Daně</span></button>
       </nav>
       <div class="sync-card"><div class="sync-head"><span class="sync-dot"></span>Kalendář synchronizován</div><p>${esc(sync ? fullDateLabel(sync.last_synced_at) : "Čeká na první synchronizaci")}<br>${completedEvents.length} dokončeno · ${plannedEvents.length} plánováno</p></div>
       <div class="account" title="${esc(email)}">${esc(email)}</div>
     </aside>
     <main>
-      <header class="topbar"><div><div class="eyebrow">Administrace · podnikatelská evidence</div><h1>Dobré odpoledne.</h1><p>Finance, studenti a kalendář na jednom místě.</p></div><div class="top-actions"><a class="button" href="/student-portal/admin">Studentské zóny</a><button class="button primary" type="button" data-target="calendar">Další lekce · ${esc(plannedEvents[0] ? dateLabel(plannedEvents[0].starts_at, true) : "žádná")}</button></div></header>
+      <header class="topbar"><div><div class="eyebrow">Administrace · Business OS</div><h1>Podnikání v jednom přehledu.</h1><p>Příjmy, studenti, kalendář, leady a daňová evidence nad jednou databází.</p></div><div class="top-actions"><a class="button" href="/student-portal/admin">Studentské zóny</a><button class="button primary" type="button" data-target="calendar">Další lekce · ${esc(plannedEvents[0] ? dateLabel(plannedEvents[0].starts_at, true) : "žádná")}</button></div></header>
 
       <section class="view active" id="overview">
         <div class="kpis">
-          <article class="card kpi"><div class="kpi-top"><span class="kpi-label">Příjmy 2026</span><span class="icon-box mint">↗</span></div><strong>${esc(money(revenue))}</strong><small><span class="delta">100 % uhrazeno</span> · převodem</small></article>
-          <article class="card kpi"><div class="kpi-top"><span class="kpi-label">Odučeno</span><span class="icon-box">◷</span></div><strong>${esc(hours(totalMinutes))}</strong><small>${lessons.length} evidovaných lekcí</small></article>
+          <article class="card kpi"><div class="kpi-top"><span class="kpi-label">Příjmy 2026</span><span class="icon-box mint">↗</span></div><strong>${esc(money(revenue))}</strong><small>${esc(hours(totalMinutes))} odučeno · ${paidLessons.length} úhrad</small></article>
           <article class="card kpi"><div class="kpi-top"><span class="kpi-label">Aktivní studenti</span><span class="icon-box">◎</span></div><strong>${activeStudents}</strong><small>${students.length} profilů celkem</small></article>
-          <article class="card kpi"><div class="kpi-top"><span class="kpi-label">Neuhrazeno</span><span class="icon-box mint">✓</span></div><strong>${esc(money(unpaid))}</strong><small>Všechny dokončené lekce spárovány</small></article>
+          <article class="card kpi"><div class="kpi-top"><span class="kpi-label">Leady · 30 dní</span><span class="icon-box">⌁</span></div><strong>${leadNew30d}</strong><small>${leadContacted.length} kontaktovaných celkem</small></article>
+          <article class="card kpi"><div class="kpi-top"><span class="kpi-label">Lead → klient</span><span class="icon-box mint">✓</span></div><strong>${leadConversion} %</strong><small>${leadWon.length} získaných · close rate ${leadCloseRate} %</small></article>
         </div>
         <div class="content-grid">
           <article class="card section"><div class="section-head"><div><h2>Vývoj příjmů</h2><p>Uhrazené lekce po týdnech · pondělí až neděle</p></div><span class="chip">Posledních ${weekRows.length} týdnů</span></div><div class="chart">${weekBars}</div></article>
           <article class="card section"><div class="section-head"><div><h2>Příjmy podle studentů</h2><p>Bez historického baseline 4.–16. 8.</p></div></div><div class="split-list">${studentBars}</div><div class="note" style="margin-top:20px"><strong>Historický baseline:</strong> 10 hodin a 4 100 Kč zůstává správně nealokováno, protože původní data neobsahují konkrétní studenty.</div></article>
+        </div>
+        <div class="content-grid">
+          <article class="card section"><div class="section-head"><div><h2>Lead funnel</h2><p>Aktuální stav akvizice ze zachycených relevantních poptávek</p></div><a class="chip" href="#leads" data-target="leads">Detail leadů</a></div><div class="funnel-list">${leadFunnel}</div><div class="note" style="margin-top:20px">Konverze lead → klient: <strong>${leadConversion} %</strong> · odpovězenost: <strong>${leadReplyRate} %</strong> · průměrné skóre: <strong>${averageLeadScore}/100</strong>.</div></article>
+          <article class="card section"><div class="section-head"><div><h2>Daňový snapshot</h2><p>Pracovní evidence pro rok 2026</p></div><a class="chip" href="#tax" data-target="tax">Detail daní</a></div><div class="tax-breakdown"><div class="tax-row"><span>Příjmy</span><strong>${esc(money(revenue))}</strong></div><div class="tax-row"><span>60% paušál</span><strong>− ${esc(money(allowance))}</strong></div><div class="tax-row"><span>Pracovní základ</span><strong>${esc(money(estimatedTaxBase))}</strong></div><div class="tax-row"><span>Skutečné evidované výdaje</span><strong>${esc(money(deductibleExpenses))}</strong></div></div></article>
         </div>
         <article class="card wide-card"><div class="table-head"><div><h2>Studenti</h2><span style="font-size:12px;color:var(--muted)">Poslední a další lekce, hodiny a příjmy</span></div><label class="search">⌕ <input id="studentSearch" type="search" placeholder="Hledat studenta"></label></div><table><thead><tr><th>Student</th><th>Stav</th><th>Sazba</th><th>Poslední</th><th>Další</th><th>Odučeno</th><th>Příjmy</th></tr></thead><tbody id="studentRows">${studentRows}</tbody></table></article>
       </section>
@@ -362,6 +461,20 @@ function renderDashboard(data: Awaited<ReturnType<typeof dashboardData>>, email:
       <section class="view" id="finance"><div class="kpis"><article class="card kpi"><span class="kpi-label">Příjmy</span><strong>${esc(money(revenue))}</strong><small>${paidLessons.length} evidovaných úhrad</small></article><article class="card kpi"><span class="kpi-label">Výdaje</span><strong>${esc(money(deductibleExpenses))}</strong><small>${expenses.length ? expenses.length + " záznamů" : "Zatím bez záznamů"}</small></article><article class="card kpi"><span class="kpi-label">Pohledávky</span><strong>${esc(money(unpaid))}</strong><small>Žádná po splatnosti</small></article><article class="card kpi"><span class="kpi-label">Průměr / hodina</span><strong>${esc(money(Math.round(revenue / Math.max(1, totalMinutes / 60))))}</strong><small>Včetně historického baseline</small></article></div><article class="card wide-card"><div class="table-head"><div><h2>Daňová evidence příjmů</h2><span style="font-size:12px;color:var(--muted)">Dokončená lekce = úhrada převodem v den lekce</span></div><span class="chip">Google ID + student bez duplicit</span></div><table><thead><tr><th>Datum</th><th>Plátce / zdroj</th><th>Délka</th><th>Částka</th><th>Úhrada</th></tr></thead><tbody>${lessonRows}</tbody></table></article></section>
 
       <section class="view" id="calendar"><div class="content-grid"><article class="card section"><div class="section-head"><div><h2>Časová osa · ${esc(monthName(currentMonth))}</h2><p>Dokončené a budoucí lekce z Google Calendar</p></div><span class="chip">${timelineEvents.length} událostí</span></div><div class="timeline">${timeline || '<div class="empty">V tomto měsíci nejsou žádné lekce.</div>'}</div></article><article class="card section"><div class="section-head"><div><h2>Stav synchronizace</h2><p>Google event ID je unikátní klíč</p></div><span class="sync-dot"></span></div><div class="tax-breakdown"><div class="tax-row"><span>Dokončeno</span><strong>${completedEvents.length}</strong></div><div class="tax-row"><span>Plánováno</span><strong>${plannedEvents.length}</strong></div><div class="tax-row"><span>Duplicitní lekce</span><strong>0</strong></div><div class="tax-row"><span>Poslední sync</span><strong>${esc(sync ? dateLabel(sync.last_synced_at, true) : "—")}</strong></div></div><div class="note" style="margin-top:20px">Budoucí události jsou pouze v časové ose. Do lekcí a příjmů se zapíší až po skončení.</div></article></div></section>
+
+      <section class="view" id="leads">
+        <div class="kpis">
+          <article class="card kpi"><span class="kpi-label">Relevantní leady</span><strong>${leadEligible.length}</strong><small>${leadNew30d} za posledních 30 dní</small></article>
+          <article class="card kpi"><span class="kpi-label">Odpovězenost</span><strong>${leadReplyRate} %</strong><small>${leadContacted.length} kontaktovaných</small></article>
+          <article class="card kpi"><span class="kpi-label">Získaní klienti</span><strong>${leadWon.length}</strong><small>${leadLost.length} nezískaných</small></article>
+          <article class="card kpi"><span class="kpi-label">Close rate</span><strong>${leadCloseRate} %</strong><small>z uzavřených leadů</small></article>
+        </div>
+        <div class="content-grid">
+          <article class="card section"><div class="section-head"><div><h2>Úspěšnost leadů po týdnech</h2><p>Kohorta podle týdne prvního zachycení · modře leady, zeleně získané</p></div><span class="chip">8 týdnů</span></div><div class="lead-week-chart">${leadWeekBars}</div></article>
+          <article class="card section"><div class="section-head"><div><h2>Funnel</h2><p>Od relevantní poptávky po klienta</p></div><a class="chip" href="/student-portal/admin/tutoring/leads/">Lead inbox</a></div><div class="funnel-list">${leadFunnel}</div><div class="note" style="margin-top:20px">Lead → klient <strong>${leadConversion} %</strong>. Close rate počítá pouze leady označené jako získané nebo nezískané.</div></article>
+        </div>
+        <article class="card wide-card"><div class="table-head"><div><h2>Poslední leady</h2><span style="font-size:12px;color:var(--muted)">Stav lze měnit přímo zde; detail a návrh odpovědi zůstává v Lead inboxu.</span></div><a class="button" href="/student-portal/admin/tutoring/leads/">Otevřít Lead inbox</a></div><table><thead><tr><th>Poptávka</th><th>Skóre</th><th>Stav</th><th>Zachyceno</th><th>Akce</th></tr></thead><tbody>${leadRows || '<tr><td colspan="5" class="empty">Zatím nejsou uložené leady.</td></tr>'}</tbody></table></article>
+      </section>
 
       <section class="view" id="tax"><div class="tax-grid"><article class="card tax-hero"><div class="section-head"><div><h2>Odhad základu daně</h2><p>Pracovní výpočet s 60% výdajovým paušálem</p></div><span class="chip">2026</span></div><strong class="tax-number">${esc(money(estimatedTaxBase))}</strong><small style="color:var(--muted)">Před dalšími úpravami a daňovými slevami</small><div class="tax-breakdown"><div class="tax-row"><span>Příjmy</span><strong>${esc(money(revenue))}</strong></div><div class="tax-row"><span>Výdajový paušál · 60 %</span><strong>− ${esc(money(allowance))}</strong></div><div class="tax-row"><span>Evidované skutečné výdaje</span><strong>${esc(money(deductibleExpenses))}</strong></div></div></article><article class="card tax-hero"><div class="section-head"><div><h2>Kontrola evidence</h2><p>Podklady připravené pro přiznání</p></div></div><div class="tax-breakdown"><div class="tax-row"><span>Lekce s příjmem</span><strong>${paidLessons.length} / ${lessons.length}</strong></div><div class="tax-row"><span>Neuhrazené položky</span><strong>${esc(money(unpaid))}</strong></div><div class="tax-row"><span>Historický baseline</span><strong>10 h · 4 100 Kč</strong></div><div class="tax-row"><span>Google ID duplicity</span><strong>0</strong></div></div><div class="note" style="margin-top:auto"><strong>Důležité:</strong> výdajový paušál je pracovní nastavení. Před podáním přiznání je vhodné ověřit režim a aktuální pravidla s daňovým poradcem.</div></article></div></section>
     </main>
@@ -373,6 +486,7 @@ function renderDashboard(data: Awaited<ReturnType<typeof dashboardData>>, email:
     buttons.forEach(button=>button.addEventListener('click',()=>show(button.dataset.target)));
     const initial=location.hash.slice(1);if(views.some(v=>v.id===initial))show(initial);
     const search=document.getElementById('studentSearch');if(search)search.addEventListener('input',()=>{const query=search.value.trim().toLocaleLowerCase('cs');document.querySelectorAll('#studentRows tr').forEach(row=>row.hidden=!row.textContent.toLocaleLowerCase('cs').includes(query))});
+    document.querySelectorAll('[data-lead-status]').forEach(button=>button.addEventListener('click',async()=>{const row=button.closest('[data-lead-id]');if(!row)return;button.disabled=true;try{const response=await fetch('/student-portal/api/admin/tutoring/leads/status',{method:'POST',headers:{'Content-Type':'application/json','X-Requested-With':'XMLHttpRequest'},body:JSON.stringify({id:row.dataset.leadId,status:button.dataset.leadStatus})});if(!response.ok)throw new Error('lead status update failed');location.hash='leads';location.reload()}catch{button.disabled=false}}));
   </script>
 </body>
 </html>`);
