@@ -219,6 +219,12 @@ def patch_public_entrypoint() -> None:
     if old_note not in html:
         raise RuntimeError("Expected student-zone login note was not found")
     html = html.replace(old_note, new_note)
+    # The student portal is private and must not be treated as a search-index candidate.
+    # Keep the user-facing links, but discourage crawlers from following them.
+    html = html.replace(
+        f'href="{PORTAL_URL}"',
+        f'href="{PORTAL_URL}" rel="nofollow"',
+    )
     index_path.write_text(html, encoding="utf-8")
 
 
