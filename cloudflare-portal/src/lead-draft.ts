@@ -1,5 +1,7 @@
 const AUTO_DRAFT_THRESHOLD = 70;
 const PUSH_THRESHOLD = 65;
+const DRAFT_TEMPLATE_VERSION = "friendly-v2";
+const WEBSITE_URL = "https://vojtechsteidl.eu/";
 const NTFY_BASE_URL = "https://ntfy.sh";
 
 type DraftCandidate = {
@@ -60,31 +62,34 @@ function subjectPhrase(subject: string): string {
 
 function buildDraft(lead: DraftCandidate): { text: string; templateKey: string } {
   const text = normalize(`${lead.title} ${lead.description}`);
-  const mode = lead.is_online ? "online doučování" : "doučování";
   const subject = subjectPhrase(lead.subject);
 
   let templateKey = "general";
-  let focus = "Můžeme se zaměřit přesně na témata, která teď dělají největší problém, a postupně je převést do samostatného řešení úloh.";
+  let focus = "Můžeme se zaměřit hlavně na to, co ti teď dělá největší problém, projít konkrétní příklady a postupně to poskládat tak, aby ses v tom uměl/a orientovat i samostatně.";
 
   if (/matur/.test(text)) {
     templateKey = "maturita";
-    focus = "Při přípravě k maturitě můžeme postupovat cíleně podle problematických okruhů a typových úloh a současně hlídat postup, přesnost i čas.";
+    focus = "U maturity bychom šli hlavně po typových úlohách, slabších okruzích a strategii řešení pod časem, aby ses nezasekával/a na věcech, které se dají natrénovat.";
   } else if (/prijim|prijimac/.test(text)) {
     templateKey = "prijimacky";
-    focus = "U přijímaček můžeme systematicky pracovat s typovými úlohami CERMAT, slabšími okruhy i strategií řešení pod časem.";
+    focus = "U přijímaček můžeme cíleně projít typové úlohy CERMAT, slabší témata a hlavně to, kde zbytečně utíkají body.";
   } else if (/\bvs\b|vysok|univerzit|fakult|zapocet|zkousk/.test(text)) {
     templateKey = "university";
-    focus = "U vysokoškolské látky můžeme jít i více do principu a odvození, aby řešení nestálo jen na memorování postupů.";
+    focus = "U VŠ látky můžeme jít víc do principu a souvislostí, ať se neopíráš jen o naučený postup a víš, proč ten výpočet funguje.";
   } else if (/reparat/.test(text)) {
     templateKey = "reparat";
-    focus = "U přípravy na reparát bychom nejdřív rychle identifikovali kritická témata a potom šli po úlohách s největším dopadem na výsledek.";
+    focus = "U reparátu bychom nejdřív rychle vytáhli témata, která mají největší dopad na výsledek, a pak je procvičili na konkrétních úlohách.";
   } else if (/dlouhodob|pravideln|kazd(y|ou)\s+tyden|1x\s*tydn|jednou\s+tydn|cely\s+skolni/.test(text)) {
     templateKey = "long-term";
-    focus = "U pravidelné spolupráce můžeme průběžně navazovat na školní výuku, doplňovat mezery a držet stabilní tempo bez nárazového dohánění.";
+    focus = "Pokud hledáš pravidelné doučování, můžeme navazovat na školu, průběžně řešit aktuální látku a zároveň doplňovat mezery, aby se to nehromadilo.";
   }
 
-  const draft = `Dobrý den, rád bych reagoval na Vaši poptávku a nabídl ${mode} ${subject}. Jsem absolvent aplikované fyziky na MUNI a matematiku i fyziku dlouhodobě doučuji. ${focus} Výuku vedu tak, aby student látce skutečně porozuměl a uměl postup samostatně použít, ne jen mechanicky počítal příklady. Pokud je poptávka stále aktuální, rád se domluvím na prvním termínu.\n\nVojtěch`;
-  return { text: draft, templateKey };
+  const onlineNote = lead.is_online
+    ? "Online forma mi funguje dobře — sdílíme zápis i příklady a všechno můžeme řešit rovnou společně."
+    : "Pokud nejsi z Jihlavy nebo okolí, klidně bych zkusil online formu; u matematiky i fyziky mi funguje dobře.";
+
+  const draft = `Ahoj, zahlédl jsem tvoji poptávku na doučování ${subject} a myslím, že bych ti s tím mohl pomoct. Matematiku a fyziku doučuju dlouhodobě a mám vystudovanou aplikovanou fyziku na MUNI. ${focus} ${onlineNote}\n\nJestli ti to dává smysl, můžeme si dát první hodinu a uvidíš, jestli ti můj způsob vysvětlování sedí. Pak se případně domluvíme pravidelně.\n\nVíce o mně a doučování najdeš tady: ${WEBSITE_URL}\n\nKdyž budeš chtít, napiš a můžeme rovnou vymyslet termín.\n\nVojtěch`;
+  return { text: draft, templateKey: `${DRAFT_TEMPLATE_VERSION}:${templateKey}` };
 }
 
 export async function ensureLeadDrafts(env: Env): Promise<number> {
@@ -92,20 +97,25 @@ export async function ensureLeadDrafts(env: Env): Promise<number> {
       FROM tutoring_leads l
       LEFT JOIN tutoring_lead_drafts d ON d.lead_id = l.id
      WHERE l.score >= ?1
-       AND d.lead_id IS NULL
+       AND (d.lead_id IS NULL OR d.template_key NOT LIKE ?2)
        AND l.status NOT IN ('ignored', 'lost')
      ORDER BY datetime(l.first_seen_at) DESC
      LIMIT 80`)
-    .bind(AUTO_DRAFT_THRESHOLD)
+    .bind(AUTO_DRAFT_THRESHOLD, `${DRAFT_TEMPLATE_VERSION}:%`)
     .all<DraftCandidate>();
 
   let created = 0;
   for (const lead of candidates.results || []) {
     const draft = buildDraft(lead);
-    const result = await env.DB.prepare(`INSERT OR IGNORE INTO tutoring_lead_drafts
+    const result = await env.DB.prepare(`INSERT INTO tutoring_lead_drafts
       (lead_id, draft_text, template_key, generated_at)
-      VALUES (?1, ?2, ?3, ?4)`)
-      .bind(lead.id, draft.text, draft.templateKey, new Date().toISOString())
+      VALUES (?1, ?2, ?3, ?4)
+      ON CONFLICT(lead_id) DO UPDATE SET
+        draft_text=excluded.draft_text,
+        template_key=excluded.template_key,
+        generated_at=excluded.generated_at
+      WHERE tutoring_lead_drafts.template_key NOT LIKE ?5`)
+      .bind(lead.id, draft.text, draft.templateKey, new Date().toISOString(), `${DRAFT_TEMPLATE_VERSION}:%`)
       .run();
     if (Number(result.meta.changes || 0) > 0) created += 1;
   }
