@@ -52,6 +52,7 @@ function privateHeaders(headers = new Headers()): Headers {
   securityHeaders(headers);
   headers.set("Cache-Control", "private, no-store, max-age=0");
   headers.set("Pragma", "no-cache");
+  headers.set("X-Robots-Tag", "noindex, nofollow, noarchive");
   return headers;
 }
 
@@ -514,11 +515,11 @@ async function mainDomainPortal(
   url: URL,
 ): Promise<Response> {
   if (url.pathname === "/student-portal.html") {
-    return Response.redirect("https://vojtechsteidl.eu/student-portal/", 302);
+    return Response.redirect("https://vojtechsteidl.eu/student-portal/", 301);
   }
 
   if (url.pathname === PORTAL_PREFIX) {
-    return Response.redirect("https://vojtechsteidl.eu/student-portal/", 302);
+    return Response.redirect("https://vojtechsteidl.eu/student-portal/", 301);
   }
 
   if (
@@ -588,7 +589,7 @@ async function legacyPortalHost(
   url: URL,
 ): Promise<Response> {
   if (url.pathname === "/" || url.pathname === "/student-portal.html") {
-    return Response.redirect("https://vojtechsteidl.eu/student-portal/", 302);
+    return Response.redirect("https://vojtechsteidl.eu/student-portal/", 301);
   }
 
   if (url.pathname.startsWith("/students/")) {
