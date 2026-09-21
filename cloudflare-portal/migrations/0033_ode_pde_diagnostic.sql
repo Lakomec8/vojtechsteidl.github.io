@@ -24,7 +24,7 @@ VALUES
     'diferencialni-rovnice-ode-pde-v1-q1',
     'diferencialni-rovnice-ode-pde-v1',
     1,
-    '{"instruction":"Která funkce je obecným řešením diferenciální rovnice?","math":"y''=0","category":"ODE — význam řešení","hint":"Hledej funkci, jejíž druhá derivace je nulová."}',
+    '{"instruction":"Která funkce je obecným řešením diferenciální rovnice?","math":"y''''=0","category":"ODE — význam řešení","hint":"Hledej funkci, jejíž druhá derivace je nulová."}',
     '[{"id":"a","label":"[[math:y=C_1x+C_2]]"},{"id":"b","label":"[[math:y=Ce^x]]"},{"id":"c","label":"[[math:y=Cx^2]]"},{"id":"d","label":"[[math:y=\\\\sin x+C]]"}]',
     'a',
     'Je-li [[math:y''''=0]], pak [[math:y''=C_1]] a po další integraci [[math:y=C_1x+C_2]]. Rovnice druhého řádu proto obsahuje dvě integrační konstanty.',
