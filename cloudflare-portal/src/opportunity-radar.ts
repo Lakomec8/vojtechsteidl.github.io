@@ -42,7 +42,7 @@ type CountRow = { count: number };
 async function counts(env: Env): Promise<{ tutoring: number; tutoringHot: number; eu: number; euHigh: number }> {
   const [tutoring, tutoringHot, eu, euHigh] = await Promise.all([
     env.DB.prepare("SELECT COUNT(*) AS count FROM tutoring_leads WHERE status IN ('new','reviewed')").first<CountRow>(),
-    env.DB.prepare("SELECT COUNT(*) AS count FROM tutoring_leads WHERE status IN ('new','reviewed') AND score >= 65").first<CountRow>(),
+    env.DB.prepare("SELECT COUNT(*) AS count FROM tutoring_leads WHERE status IN ('new','reviewed') AND score >= 75").first<CountRow>(),
     env.DB.prepare("SELECT COUNT(*) AS count FROM eu_opportunities WHERE status IN ('new','reviewed')").first<CountRow>(),
     env.DB.prepare("SELECT COUNT(*) AS count FROM eu_opportunities WHERE status IN ('new','reviewed') AND score >= 75").first<CountRow>(),
   ]);
@@ -78,7 +78,7 @@ function render(data: Awaited<ReturnType<typeof counts>>, email: string): Respon
     <article class="card">
       <h2>Tutoring</h2><p>České a postupně i mezinárodní poptávky na matematiku a fyziku.</p>
       <div class="meta"><span class="pill live">AUTO · 5 min</span><span class="pill blue">Doučuji.eu</span></div>
-      <div class="stats"><div class="stat"><strong>${esc(data.tutoring)}</strong><span>aktivní</span></div><div class="stat"><strong>${esc(data.tutoringHot)}</strong><span>score ≥ 65</span></div></div>
+      <div class="stats"><div class="stat"><strong>${esc(data.tutoring)}</strong><span>aktivní</span></div><div class="stat"><strong>${esc(data.tutoringHot)}</strong><span>score ≥ 75</span></div></div>
       <div class="actions"><a class="button primary" href="${TUTORING_LEADS_PATH}">Otevřít leady</a></div>
     </article>
 

@@ -4,7 +4,7 @@ export const LEAD_PUSH_APP_PATH = "/student-portal/admin/tutoring/leads/push";
 export const LEAD_PUSH_TEST_API_PATH = "/student-portal/api/admin/tutoring/leads/push/test";
 
 const NTFY_BASE_URL = "https://ntfy.sh";
-const ALERT_THRESHOLD = 65;
+const ALERT_THRESHOLD = 75;
 
 type LeadPushSettings = {
   topic: string;
@@ -125,7 +125,7 @@ export async function runLeadPush(env: Env): Promise<{ sent: number; failed: num
       `Lead Alert · ${lead.score}/100`,
       body,
       lead.source_url,
-      lead.score >= 85,
+      lead.score >= 90,
     );
     if (ok) {
       sent += 1;

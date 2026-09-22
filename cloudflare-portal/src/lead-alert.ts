@@ -6,7 +6,8 @@ export const LEAD_STATUS_API_PATH = "/student-portal/api/admin/tutoring/leads/st
 
 const DOUCUJI_SOURCE = "doucuji";
 const DOUCUJI_FEED_URL = "https://www.doucuji.eu/poptavky-na-doucovani";
-const ALERT_THRESHOLD = 65;
+const ALERT_THRESHOLD = 75;
+const REFERENCE_RATE_CZK = 450;
 const PRAGUE_TIME_ZONE = "Europe/Prague";
 
 type LeadEnv = Env & {
@@ -43,6 +44,9 @@ type LeadRow = {
   first_seen_at: string;
   last_seen_at: string;
   alerted_at: string | null;
+  trial_status: string | null;
+  trial_label: string | null;
+  trial_week: string | null;
 };
 
 type LeadRunRow = {
@@ -61,6 +65,39 @@ export type LeadRunResult = {
   relevant: number;
   inserted: number;
   alerted: number;
+};
+
+type FunnelRow = {
+  leads: number;
+  replied: number;
+  won: number;
+  lost: number;
+  online: number;
+  avg_score: number | null;
+};
+
+type TrialStatsRow = {
+  trials: number;
+  converted: number;
+};
+
+type SubjectStatRow = {
+  subject: string;
+  count: number;
+};
+
+type SourceStatRow = {
+  source: string;
+  leads: number;
+  replied: number;
+  won: number;
+  avg_score: number | null;
+};
+
+type OpportunityStatsRow = {
+  active: number;
+  high: number;
+  recent: number;
 };
 
 function responseHeaders(contentType: string): Headers {
@@ -135,6 +172,46 @@ function stripHtml(value: string): string {
       .replace(/<(br|\/p|\/div|\/li|\/h\d)\b[^>]*>/gi, " ")
       .replace(/<[^>]+>/g, " "),
   ).replace(/\s+/g, " ").trim();
+}
+
+function extractHourlyPrice(value: string): number | null {
+  const text = normalize(value);
+  const patterns = [
+    /(\d{3,4})\s*kc\s*(?:\/\s*(?:h|hod|hodinu)|(?:za|na)\s*hod)/g,
+    /(?:cena|rozpocet|budget)[^0-9]{0,24}(\d{3,4})\s*kc/g,
+  ];
+  for (const pattern of patterns) {
+    const match = pattern.exec(text);
+    if (!match) continue;
+    const amount = Number(match[1]);
+    if (amount >= 250 && amount <= 1500) return amount;
+  }
+  return null;
+}
+
+function estimateWeeklyHours(value: string): number {
+  const text = normalize(value);
+  const explicit = text.match(/\b([1-7])\s*[x×]\s*(?:za\s*)?(?:tyd|tyden)/);
+  if (explicit) return Number(explicit[1]);
+  const explicitWords = text.match(/\b([1-7])\s*(?:krat|x)\s*(?:za\s*)?(?:tyd|tyden)/);
+  if (explicitWords) return Number(explicitWords[1]);
+  if (/intenziv/.test(text)) return 2;
+  if (/pravideln|dlouhodob|kazd(?:y|ou)\s+tyden|jednou\s+tydn|1x\s*tydn/.test(text)) return 1;
+  return 0;
+}
+
+function estimateMonthlyValue(lead: LeadRow): number {
+  const weeklyHours = estimateWeeklyHours(`${lead.title} ${lead.description}`);
+  if (!weeklyHours) return 0;
+  const detectedRate = extractHourlyPrice(`${lead.title} ${lead.description}`) || REFERENCE_RATE_CZK;
+  return Math.round(weeklyHours * 4.33 * detectedRate);
+}
+
+function median(values: number[]): number | null {
+  if (!values.length) return null;
+  const sorted = [...values].sort((a, b) => a - b);
+  const middle = Math.floor(sorted.length / 2);
+  return sorted.length % 2 ? sorted[middle] : Math.round((sorted[middle - 1] + sorted[middle]) / 2);
 }
 
 function scoreLead(title: string, description: string): { score: number; subject: string; isOnline: boolean } {
@@ -363,6 +440,14 @@ function sourceLabel(source: string): string {
   return source === DOUCUJI_SOURCE ? "Doučuji.eu" : source;
 }
 
+function moneyLabel(value: number): string {
+  return `${new Intl.NumberFormat("cs-CZ", { maximumFractionDigits: 0 }).format(value)} Kč`;
+}
+
+function percent(value: number, total: number): number {
+  return total > 0 ? Math.round((value / total) * 100) : 0;
+}
+
 function statusLabel(status: string): string {
   return ({
     new: "Nový",
@@ -380,13 +465,56 @@ async function leadDashboardData(env: LeadEnv): Promise<{
   new24h: number;
   hot24h: number;
   notificationsConfigured: boolean;
+  funnel7: FunnelRow;
+  funnel30: FunnelRow;
+  trials7: TrialStatsRow;
+  trials30: TrialStatsRow;
+  previous7: number;
+  subjects30: SubjectStatRow[];
+  sources30: SourceStatRow[];
+  opportunityStats: OpportunityStatsRow;
+  priceMedian: number | null;
+  priceSamples: number;
+  pipelineMonthlyValue: number;
 }> {
-  const [leads, run, new24h, hot24h] = await Promise.all([
-    env.DB.prepare(`SELECT id, source, external_id, title, description, location, is_online, subject,
-                           published_label, source_url, score, status, first_seen_at, last_seen_at, alerted_at
-                      FROM tutoring_leads
-                     ORDER BY CASE status WHEN 'new' THEN 0 WHEN 'reviewed' THEN 1 ELSE 2 END,
-                              score DESC, datetime(first_seen_at) DESC
+  const funnelSql = (days: number) => `SELECT
+      COUNT(*) AS leads,
+      SUM(CASE WHEN status IN ('replied','won') THEN 1 ELSE 0 END) AS replied,
+      SUM(CASE WHEN status = 'won' THEN 1 ELSE 0 END) AS won,
+      SUM(CASE WHEN status = 'lost' THEN 1 ELSE 0 END) AS lost,
+      SUM(CASE WHEN is_online = 1 THEN 1 ELSE 0 END) AS online,
+      AVG(score) AS avg_score
+    FROM tutoring_leads
+    WHERE datetime(first_seen_at) >= datetime('now', '-${days} day')`;
+
+  const trialSql = (days: number) => `SELECT
+      COUNT(*) AS trials,
+      SUM(CASE WHEN t.status = 'converted' THEN 1 ELSE 0 END) AS converted
+    FROM tutoring_lead_trials t
+    JOIN tutoring_leads l ON l.id = t.lead_id
+    WHERE datetime(l.first_seen_at) >= datetime('now', '-${days} day')`;
+
+  const [
+    leads,
+    run,
+    new24h,
+    hot24h,
+    funnel7Raw,
+    funnel30Raw,
+    trials7Raw,
+    trials30Raw,
+    previous7,
+    subjects30,
+    sources30,
+    opportunityStatsRaw,
+  ] = await Promise.all([
+    env.DB.prepare(`SELECT l.id, l.source, l.external_id, l.title, l.description, l.location, l.is_online, l.subject,
+                           l.published_label, l.source_url, l.score, l.status, l.first_seen_at, l.last_seen_at, l.alerted_at,
+                           t.status AS trial_status, t.prospect_label AS trial_label, t.scheduled_week AS trial_week
+                      FROM tutoring_leads l
+                      LEFT JOIN tutoring_lead_trials t ON t.lead_id = l.id
+                     ORDER BY CASE l.status WHEN 'new' THEN 0 WHEN 'reviewed' THEN 1 ELSE 2 END,
+                              l.score DESC, datetime(l.first_seen_at) DESC
                      LIMIT 120`).all<LeadRow>(),
     env.DB.prepare(`SELECT source, run_at, status, fetched_count, new_count, relevant_count, message
                       FROM tutoring_lead_runs
@@ -397,14 +525,103 @@ async function leadDashboardData(env: LeadEnv): Promise<{
       .first<{ count: number }>(),
     env.DB.prepare("SELECT COUNT(*) AS count FROM tutoring_leads WHERE score >= ?1 AND datetime(first_seen_at) >= datetime('now', '-1 day')")
       .bind(ALERT_THRESHOLD).first<{ count: number }>(),
+    env.DB.prepare(funnelSql(7)).first<FunnelRow>(),
+    env.DB.prepare(funnelSql(30)).first<FunnelRow>(),
+    env.DB.prepare(trialSql(7)).first<TrialStatsRow>(),
+    env.DB.prepare(trialSql(30)).first<TrialStatsRow>(),
+    env.DB.prepare(`SELECT COUNT(*) AS count
+                       FROM tutoring_leads
+                      WHERE datetime(first_seen_at) >= datetime('now', '-14 day')
+                        AND datetime(first_seen_at) < datetime('now', '-7 day')`).first<{ count: number }>(),
+    env.DB.prepare(`SELECT COALESCE(NULLIF(subject, ''), 'Ostatní') AS subject, COUNT(*) AS count
+                       FROM tutoring_leads
+                      WHERE datetime(first_seen_at) >= datetime('now', '-30 day')
+                      GROUP BY COALESCE(NULLIF(subject, ''), 'Ostatní')
+                      ORDER BY count DESC
+                      LIMIT 5`).all<SubjectStatRow>(),
+    env.DB.prepare(`SELECT source,
+                           COUNT(*) AS leads,
+                           SUM(CASE WHEN status IN ('replied','won') THEN 1 ELSE 0 END) AS replied,
+                           SUM(CASE WHEN status = 'won' THEN 1 ELSE 0 END) AS won,
+                           AVG(score) AS avg_score
+                      FROM tutoring_leads
+                     WHERE datetime(first_seen_at) >= datetime('now', '-30 day')
+                     GROUP BY source
+                     ORDER BY leads DESC`).all<SourceStatRow>(),
+    env.DB.prepare(`SELECT
+        COUNT(*) AS active,
+        SUM(CASE WHEN score >= 75 THEN 1 ELSE 0 END) AS high,
+        SUM(CASE WHEN datetime(first_seen_at) >= datetime('now', '-7 day') THEN 1 ELSE 0 END) AS recent
+      FROM eu_opportunities
+      WHERE status IN ('new','reviewed')`).first<OpportunityStatsRow>(),
   ]);
 
+  const leadRows = leads.results || [];
+  const thirtyDaysAgo = Date.now() - 30 * 24 * 60 * 60 * 1000;
+  const recentLeadRows = leadRows.filter((lead) => {
+    const seen = Date.parse(lead.first_seen_at);
+    return Number.isFinite(seen) && seen >= thirtyDaysAgo;
+  });
+  const prices = recentLeadRows
+    .map((lead) => extractHourlyPrice(`${lead.title} ${lead.description}`))
+    .filter((value): value is number => value !== null);
+  const pipelineMonthlyValue = leadRows
+    .filter((lead) => ["new", "reviewed", "replied"].includes(lead.status))
+    .reduce((sum, lead) => sum + estimateMonthlyValue(lead), 0);
+
+  const funnel7 = funnel7Raw || { leads: 0, replied: 0, won: 0, lost: 0, online: 0, avg_score: null };
+  const funnel30 = funnel30Raw || { leads: 0, replied: 0, won: 0, lost: 0, online: 0, avg_score: null };
+  const trials7 = trials7Raw || { trials: 0, converted: 0 };
+  const trials30 = trials30Raw || { trials: 0, converted: 0 };
+  const opportunityStats = opportunityStatsRaw || { active: 0, high: 0, recent: 0 };
+
   return {
-    leads: leads.results || [],
+    leads: leadRows,
     run,
     new24h: Number(new24h?.count || 0),
     hot24h: Number(hot24h?.count || 0),
     notificationsConfigured: Boolean(env.LEAD_ALERT_NTFY_URL?.trim()),
+    funnel7: {
+      leads: Number(funnel7.leads || 0),
+      replied: Number(funnel7.replied || 0),
+      won: Number(funnel7.won || 0),
+      lost: Number(funnel7.lost || 0),
+      online: Number(funnel7.online || 0),
+      avg_score: funnel7.avg_score == null ? null : Number(funnel7.avg_score),
+    },
+    funnel30: {
+      leads: Number(funnel30.leads || 0),
+      replied: Number(funnel30.replied || 0),
+      won: Number(funnel30.won || 0),
+      lost: Number(funnel30.lost || 0),
+      online: Number(funnel30.online || 0),
+      avg_score: funnel30.avg_score == null ? null : Number(funnel30.avg_score),
+    },
+    trials7: {
+      trials: Number(trials7.trials || 0),
+      converted: Number(trials7.converted || 0),
+    },
+    trials30: {
+      trials: Number(trials30.trials || 0),
+      converted: Number(trials30.converted || 0),
+    },
+    previous7: Number(previous7?.count || 0),
+    subjects30: (subjects30.results || []).map((row) => ({ subject: row.subject, count: Number(row.count || 0) })),
+    sources30: (sources30.results || []).map((row) => ({
+      source: row.source,
+      leads: Number(row.leads || 0),
+      replied: Number(row.replied || 0),
+      won: Number(row.won || 0),
+      avg_score: row.avg_score == null ? null : Number(row.avg_score),
+    })),
+    opportunityStats: {
+      active: Number(opportunityStats.active || 0),
+      high: Number(opportunityStats.high || 0),
+      recent: Number(opportunityStats.recent || 0),
+    },
+    priceMedian: median(prices),
+    priceSamples: prices.length,
+    pipelineMonthlyValue,
   };
 }
 
@@ -413,20 +630,41 @@ function renderLeadDashboard(
   email: string,
 ): Response {
   const hot = data.leads.filter((lead) => lead.score >= ALERT_THRESHOLD && !["ignored", "lost"].includes(lead.status));
+  const weekAgo = Date.now() - 7 * 24 * 60 * 60 * 1000;
+  const hot7d = data.leads.filter((lead) => {
+    const seen = Date.parse(lead.first_seen_at);
+    return Number.isFinite(seen) && seen >= weekAgo && lead.score >= ALERT_THRESHOLD;
+  }).length;
+  const onlineShare30 = percent(data.funnel30.online, data.funnel30.leads);
+  const responseRate30 = percent(data.funnel30.replied, data.funnel30.leads);
+  const conversion30 = percent(Math.max(data.funnel30.won, data.trials30.converted), data.funnel30.leads);
+  const trendPercent = data.previous7 > 0
+    ? Math.round(((data.funnel7.leads - data.previous7) / data.previous7) * 100)
+    : null;
+  const trendLabel = trendPercent == null
+    ? (data.funnel7.leads ? "nový baseline" : "bez dat")
+    : `${trendPercent >= 0 ? "+" : ""}${trendPercent}% vs. předchozích 7 dní`;
+  const subjectMax = Math.max(1, ...data.subjects30.map((row) => row.count));
+  const subjectRows = data.subjects30.map((row) => `<div class="subject-row"><span>${esc(row.subject)}</span><div class="bar"><i style="width:${Math.max(8, Math.round((row.count / subjectMax) * 100))}%"></i></div><strong>${esc(row.count)}</strong></div>`).join("");
+  const sourceRows = data.sources30.map((row) => `<div class="source-row"><strong>${esc(sourceLabel(row.source))}</strong><span>${esc(row.leads)} leadů</span><span>${esc(percent(row.replied, row.leads))}% odpovězeno</span><span>${esc(row.won)} získáno</span><span>avg ${esc(row.avg_score == null ? "—" : Math.round(row.avg_score))}/100</span></div>`).join("");
+
   const rows = data.leads.map((lead) => {
     const description = lead.description.length > 430 ? `${lead.description.slice(0, 430)}…` : lead.description;
-    const scoreClass = lead.score >= 85 ? "hot" : lead.score >= ALERT_THRESHOLD ? "good" : "normal";
+    const scoreClass = lead.score >= 90 ? "hot" : lead.score >= ALERT_THRESHOLD ? "good" : "normal";
+    const monthlyValue = estimateMonthlyValue(lead);
     return `<article class="lead-card" data-lead-id="${esc(lead.id)}">
       <div class="score ${scoreClass}"><strong>${esc(lead.score)}</strong><span>/100</span></div>
       <div class="lead-main">
-        <div class="lead-meta"><span class="source">${esc(sourceLabel(lead.source))}</span><span>${esc(lead.subject || "Relevantní")}</span>${lead.is_online ? '<span class="online">Online</span>' : ""}<span>${esc(lead.published_label || dateLabel(lead.first_seen_at))}</span></div>
+        <div class="lead-meta"><span class="source">${esc(sourceLabel(lead.source))}</span><span>${esc(lead.subject || "Relevantní")}</span>${lead.is_online ? '<span class="online">Online</span>' : ""}${lead.trial_status ? `<span class="trial">Zkušební · ${esc(lead.trial_label || lead.trial_status)}</span>` : ""}<span>${esc(lead.published_label || dateLabel(lead.first_seen_at))}</span></div>
         <h2>${esc(lead.title)}</h2>
         <p>${esc(description)}</p>
-        <div class="lead-footer"><span class="status status-${esc(lead.status)}">${esc(statusLabel(lead.status))}</span><span>Poprvé zachyceno ${esc(dateLabel(lead.first_seen_at))}</span>${lead.alerted_at ? '<span>Push odeslán</span>' : ""}</div>
+        <div class="lead-footer"><span class="status status-${esc(lead.status)}">${esc(statusLabel(lead.status))}</span><span>Poprvé zachyceno ${esc(dateLabel(lead.first_seen_at))}</span>${monthlyValue ? `<span>Potenciál ~${esc(moneyLabel(monthlyValue))}/měs.</span>` : ""}${lead.alerted_at ? '<span>Push odeslán</span>' : ""}</div>
       </div>
       <div class="lead-actions">
         <a class="button primary" href="${esc(lead.source_url)}" target="_blank" rel="noopener noreferrer">Otevřít poptávku ↗</a>
         <button class="button" type="button" data-status="replied">Odpovězeno</button>
+        <button class="button" type="button" data-status="won">Získáno</button>
+        <button class="button" type="button" data-status="lost">Nezískáno</button>
         <button class="button ghost" type="button" data-status="ignored">Ignorovat</button>
       </div>
     </article>`;
@@ -443,24 +681,77 @@ function renderLeadDashboard(
   <meta name="robots" content="noindex,nofollow">
   <title>Lead Alert · Tutoring OS</title>
   <style>
-    :root{--ink:#272823;--muted:#73756d;--paper:#f2f0e9;--surface:#fbfaf6;--surface-2:#e9e7df;--line:#d5d2c8;--mint:#9ee8ca;--mint-strong:#68d5aa;--mint-soft:#dff7ed;--amber:#e7c86f;--red:#e4867f;--shadow:0 18px 38px rgba(55,52,43,.12),0 3px 8px rgba(55,52,43,.08);--shadow-soft:0 8px 18px rgba(55,52,43,.09);font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:var(--ink);background:var(--paper)}
-    *{box-sizing:border-box}body{margin:0;min-height:100vh;background-color:var(--paper);background-image:linear-gradient(rgba(62,63,57,.055) 1px,transparent 1px),linear-gradient(90deg,rgba(62,63,57,.055) 1px,transparent 1px);background-size:36px 36px}.shell{width:min(1240px,calc(100% - 32px));margin:24px auto 60px}.topbar{display:flex;justify-content:space-between;gap:20px;align-items:flex-start;margin-bottom:18px}.eyebrow{font-size:11px;font-weight:900;letter-spacing:.13em;text-transform:uppercase;color:#557765}.topbar h1{font-size:clamp(34px,5vw,60px);line-height:1;letter-spacing:-.055em;margin:8px 0}.topbar p{margin:0;color:var(--muted)}.top-actions{display:flex;gap:8px;flex-wrap:wrap}.button{display:inline-flex;align-items:center;justify-content:center;border:1px solid var(--line);border-radius:999px;padding:9px 14px;color:var(--ink);background:var(--surface);text-decoration:none;font-weight:800;font-size:12px;box-shadow:var(--shadow-soft);cursor:pointer}.button.primary{background:var(--mint);border-color:#83dcb9}.button.ghost{background:transparent;box-shadow:none}.button:disabled{opacity:.55;cursor:wait}.kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin:18px 0}.card{background:rgba(251,250,246,.94);border:1px solid var(--line);border-radius:22px;box-shadow:var(--shadow-soft)}.kpi{padding:17px;min-height:120px;display:flex;flex-direction:column}.kpi span{font-size:11px;color:var(--muted);font-weight:800}.kpi strong{font-size:32px;letter-spacing:-.04em;margin-top:auto}.sync-line{display:flex;align-items:center;gap:8px}.dot{width:9px;height:9px;border-radius:50%;background:var(--mint-strong);box-shadow:0 0 0 4px var(--mint-soft)}.dot.error{background:var(--red);box-shadow:0 0 0 4px #f7dfdd}.notice{padding:14px 16px;margin-bottom:16px;border-radius:16px;background:#f6edce;color:#6f5b1f;border:1px solid #ead797;font-size:12px;line-height:1.5}.notice strong{color:#594714}.list{display:grid;gap:11px}.lead-card{display:grid;grid-template-columns:76px minmax(0,1fr) 150px;gap:16px;padding:17px;background:rgba(251,250,246,.96);border:1px solid var(--line);border-radius:22px;box-shadow:var(--shadow-soft)}.score{width:67px;height:67px;border-radius:18px;background:var(--surface-2);display:grid;place-items:center;align-content:center}.score strong{font-size:25px;line-height:1}.score span{font-size:10px;color:var(--muted)}.score.good{background:var(--mint-soft);color:#2f7258}.score.hot{background:#d4f3e5;color:#24684d;box-shadow:inset 0 0 0 1px #8fd9ba}.lead-meta{display:flex;gap:7px;flex-wrap:wrap;color:var(--muted);font-size:10px;font-weight:800}.lead-meta span{padding:4px 7px;border-radius:99px;background:var(--surface-2)}.lead-meta .source{background:#e5eef3;color:#4f7187}.lead-meta .online{background:var(--mint-soft);color:#347c61}.lead-main h2{font-size:18px;margin:9px 0 6px;letter-spacing:-.02em}.lead-main p{font-size:12px;line-height:1.55;color:#5f615a;margin:0}.lead-footer{display:flex;gap:10px;flex-wrap:wrap;margin-top:11px;color:var(--muted);font-size:10px}.status{font-weight:900}.status-new{color:#2f7258}.status-replied{color:#4f7187}.status-ignored{color:#8b695f}.lead-actions{display:flex;flex-direction:column;gap:7px;justify-content:center}.empty{padding:42px;text-align:center;color:var(--muted)}.account{margin-top:24px;color:var(--muted);font-size:10px;text-align:right}.section-head{display:flex;justify-content:space-between;align-items:end;gap:16px;margin:26px 0 10px}.section-head h2{margin:0;font-size:20px}.section-head span{font-size:11px;color:var(--muted)}
+    :root{--ink:#272823;--muted:#73756d;--paper:#f2f0e9;--surface:#fbfaf6;--surface-2:#e9e7df;--line:#d5d2c8;--mint:#9ee8ca;--mint-strong:#68d5aa;--mint-soft:#dff7ed;--amber:#e7c86f;--red:#e4867f;--blue:#e5eef3;--shadow:0 18px 38px rgba(55,52,43,.12),0 3px 8px rgba(55,52,43,.08);--shadow-soft:0 8px 18px rgba(55,52,43,.09);font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:var(--ink);background:var(--paper)}
+    *{box-sizing:border-box}body{margin:0;min-height:100vh;background-color:var(--paper);background-image:linear-gradient(rgba(62,63,57,.055) 1px,transparent 1px),linear-gradient(90deg,rgba(62,63,57,.055) 1px,transparent 1px);background-size:36px 36px}.shell{width:min(1240px,calc(100% - 32px));margin:24px auto 60px}.topbar{display:flex;justify-content:space-between;gap:20px;align-items:flex-start;margin-bottom:18px}.eyebrow{font-size:11px;font-weight:900;letter-spacing:.13em;text-transform:uppercase;color:#557765}.topbar h1{font-size:clamp(34px,5vw,60px);line-height:1;letter-spacing:-.055em;margin:8px 0}.topbar p{margin:0;color:var(--muted)}.top-actions{display:flex;gap:8px;flex-wrap:wrap}.button{display:inline-flex;align-items:center;justify-content:center;border:1px solid var(--line);border-radius:999px;padding:9px 14px;color:var(--ink);background:var(--surface);text-decoration:none;font-weight:800;font-size:12px;box-shadow:var(--shadow-soft);cursor:pointer}.button.primary{background:var(--mint);border-color:#83dcb9}.button.ghost{background:transparent;box-shadow:none}.button:disabled{opacity:.55;cursor:wait}.kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin:18px 0}.card{background:rgba(251,250,246,.94);border:1px solid var(--line);border-radius:22px;box-shadow:var(--shadow-soft)}.kpi{padding:17px;min-height:120px;display:flex;flex-direction:column}.kpi span{font-size:11px;color:var(--muted);font-weight:800}.kpi strong{font-size:32px;letter-spacing:-.04em;margin-top:auto}.sync-line{display:flex;align-items:center;gap:8px}.dot{width:9px;height:9px;border-radius:50%;background:var(--mint-strong);box-shadow:0 0 0 4px var(--mint-soft)}.dot.error{background:var(--red);box-shadow:0 0 0 4px #f7dfdd}.notice{padding:14px 16px;margin-bottom:16px;border-radius:16px;background:#f6edce;color:#6f5b1f;border:1px solid #ead797;font-size:12px;line-height:1.5}.notice strong{color:#594714}.list{display:grid;gap:11px}.lead-card{display:grid;grid-template-columns:76px minmax(0,1fr) 150px;gap:16px;padding:17px;background:rgba(251,250,246,.96);border:1px solid var(--line);border-radius:22px;box-shadow:var(--shadow-soft)}.score{width:67px;height:67px;border-radius:18px;background:var(--surface-2);display:grid;place-items:center;align-content:center}.score strong{font-size:25px;line-height:1}.score span{font-size:10px;color:var(--muted)}.score.good{background:var(--mint-soft);color:#2f7258}.score.hot{background:#d4f3e5;color:#24684d;box-shadow:inset 0 0 0 1px #8fd9ba}.lead-meta{display:flex;gap:7px;flex-wrap:wrap;color:var(--muted);font-size:10px;font-weight:800}.lead-meta span{padding:4px 7px;border-radius:99px;background:var(--surface-2)}.lead-meta .source{background:#e5eef3;color:#4f7187}.lead-meta .online{background:var(--mint-soft);color:#347c61}.lead-meta .trial{background:#f6edce;color:#725d1f}.lead-main h2{font-size:18px;margin:9px 0 6px;letter-spacing:-.02em}.lead-main p{font-size:12px;line-height:1.55;color:#5f615a;margin:0}.lead-footer{display:flex;gap:10px;flex-wrap:wrap;margin-top:11px;color:var(--muted);font-size:10px}.status{font-weight:900}.status-new{color:#2f7258}.status-replied{color:#4f7187}.status-won{color:#2f7258}.status-lost,.status-ignored{color:#8b695f}.lead-actions{display:flex;flex-direction:column;gap:7px;justify-content:center}.empty{padding:42px;text-align:center;color:var(--muted)}.account{margin-top:24px;color:var(--muted);font-size:10px;text-align:right}.section-head{display:flex;justify-content:space-between;align-items:end;gap:16px;margin:26px 0 10px}.section-head h2{margin:0;font-size:20px}.section-head span{font-size:11px;color:var(--muted)}.analytics{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin:0 0 18px}.analytics-card{padding:17px;min-height:190px}.analytics-card h3{margin:0 0 4px;font-size:15px}.analytics-card .big{font-size:30px;letter-spacing:-.04em;font-weight:900}.analytics-card .sub{font-size:10px;color:var(--muted);font-weight:800}.trend{display:inline-flex;margin-top:7px;padding:5px 8px;border-radius:99px;background:var(--mint-soft);color:#347c61;font-size:10px;font-weight:900}.funnel{display:grid;grid-template-columns:repeat(4,1fr);gap:5px;margin-top:15px}.funnel-step{padding:9px 6px;border-radius:12px;background:var(--surface-2);text-align:center}.funnel-step strong{display:block;font-size:19px}.funnel-step span{font-size:8px;color:var(--muted);font-weight:900;text-transform:uppercase}.subject-list{display:grid;gap:6px;margin-top:12px}.subject-row{display:grid;grid-template-columns:minmax(72px,1fr) 1.5fr 24px;gap:7px;align-items:center;font-size:9px;color:var(--muted)}.subject-row>span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.bar{height:7px;background:var(--surface-2);border-radius:99px;overflow:hidden}.bar i{display:block;height:100%;background:var(--mint-strong);border-radius:99px}.subject-row strong{text-align:right;color:var(--ink)}.mini-stats{display:flex;gap:14px;flex-wrap:wrap;margin-top:12px}.mini-stat strong{display:block;font-size:20px}.mini-stat span{font-size:9px;color:var(--muted);font-weight:800}.source-performance{padding:14px 17px;margin:0 0 18px}.source-performance h3{font-size:12px;margin:0 0 9px;text-transform:uppercase;letter-spacing:.08em;color:#557765}.source-row{display:flex;gap:12px;flex-wrap:wrap;align-items:center;font-size:10px;color:var(--muted)}.source-row strong{color:var(--ink)}.market-link{margin-top:13px}.market-link .button{box-shadow:none}.muted-note{font-size:9px;color:var(--muted);line-height:1.4;margin-top:8px}
+    @media(max-width:1050px){.analytics{grid-template-columns:1fr 1fr}}
     @media(max-width:850px){.kpis{grid-template-columns:1fr 1fr}.lead-card{grid-template-columns:60px 1fr}.score{width:55px;height:55px}.lead-actions{grid-column:2;flex-direction:row;flex-wrap:wrap;justify-content:flex-start}.topbar{flex-direction:column}.lead-actions .button{width:auto}}
-    @media(max-width:520px){.shell{width:min(100% - 20px,1240px);margin-top:14px}.kpis{grid-template-columns:1fr 1fr}.kpi{min-height:105px}.lead-card{grid-template-columns:1fr}.score{width:auto;height:auto;display:flex;gap:4px;justify-content:flex-start;background:transparent!important;box-shadow:none!important}.lead-actions{grid-column:1}.topbar h1{font-size:38px}}
+    @media(max-width:520px){.shell{width:min(100% - 20px,1240px);margin-top:14px}.kpis,.analytics{grid-template-columns:1fr}.kpi{min-height:105px}.lead-card{grid-template-columns:1fr}.score{width:auto;height:auto;display:flex;gap:4px;justify-content:flex-start;background:transparent!important;box-shadow:none!important}.lead-actions{grid-column:1}.topbar h1{font-size:38px}}
   </style>
 </head>
 <body>
   <main class="shell">
     <header class="topbar">
-      <div><div class="eyebrow">Tutoring OS · akvizice</div><h1>Lead Alert</h1><p>Veřejné poptávky z Doučuji.eu · serverová kontrola každých 5 minut.</p></div>
+      <div><div class="eyebrow">Tutoring OS · acquisition intelligence</div><h1>Lead Alert</h1><p>Leady, mini‑CRM a market radar v jednom místě · Doučuji.eu se kontroluje každých 5 minut.</p></div>
       <div class="top-actions"><a class="button" href="/student-portal/admin/tutoring/">← Tutoring OS</a><button id="refresh" class="button primary" type="button">Zkontrolovat teď</button></div>
     </header>
 
     <section class="kpis">
       <article class="card kpi"><span>Monitoring</span><strong class="sync-line"><i class="dot ${runClass}"></i>${esc(runState)}</strong><small>${esc(data.run ? `Poslední check ${dateLabel(data.run.run_at)}` : "Cron se aktivuje po nasazení")}</small></article>
-      <article class="card kpi"><span>Relevantní · 24 h</span><strong>${esc(data.new24h)}</strong><small>Matematika / fyzika</small></article>
-      <article class="card kpi"><span>Hot leady · 24 h</span><strong>${esc(data.hot24h)}</strong><small>Skóre ≥ ${ALERT_THRESHOLD}</small></article>
-      <article class="card kpi"><span>Aktivní hot leady</span><strong>${esc(hot.length)}</strong><small>Neignorované / neztracené</small></article>
+      <article class="card kpi"><span>Leady · 7 dní</span><strong>${esc(data.funnel7.leads)}</strong><small>${esc(trendLabel)}</small></article>
+      <article class="card kpi"><span>HOT · 7 dní</span><strong>${esc(hot7d)}</strong><small>Skóre ≥ ${ALERT_THRESHOLD}</small></article>
+      <article class="card kpi"><span>Pipeline value</span><strong>${esc(moneyLabel(data.pipelineMonthlyValue))}</strong><small>měsíční odhad z rozpoznané pravidelnosti</small></article>
+    </section>
+
+    <section class="analytics">
+      <article class="card analytics-card">
+        <h3>Poptávka · 30 dní</h3>
+        <div class="big">${esc(data.funnel30.leads)}</div>
+        <div class="sub">${esc(onlineShare30)} % online · avg score ${esc(data.funnel30.avg_score == null ? "—" : Math.round(data.funnel30.avg_score))}/100</div>
+        <span class="trend">${esc(trendLabel)}</span>
+        <div class="subject-list">${subjectRows || '<div class="muted-note">Zatím málo dat pro rozpad podle předmětu.</div>'}</div>
+      </article>
+
+      <article class="card analytics-card">
+        <h3>Acquisition funnel · 30 dní</h3>
+        <div class="funnel">
+          <div class="funnel-step"><strong>${esc(data.funnel30.leads)}</strong><span>Leady</span></div>
+          <div class="funnel-step"><strong>${esc(data.funnel30.replied)}</strong><span>Odpověď</span></div>
+          <div class="funnel-step"><strong>${esc(data.trials30.trials)}</strong><span>Trial</span></div>
+          <div class="funnel-step"><strong>${esc(Math.max(data.funnel30.won, data.trials30.converted))}</strong><span>Student</span></div>
+        </div>
+        <div class="mini-stats">
+          <div class="mini-stat"><strong>${esc(responseRate30)} %</strong><span>response rate</span></div>
+          <div class="mini-stat"><strong>${esc(conversion30)} %</strong><span>lead → student</span></div>
+          <div class="mini-stat"><strong>${esc(data.funnel30.lost)}</strong><span>lost</span></div>
+        </div>
+      </article>
+
+      <article class="card analytics-card">
+        <h3>Price & value radar</h3>
+        <div class="big">${esc(data.priceMedian == null ? "—" : moneyLabel(data.priceMedian))}</div>
+        <div class="sub">${data.priceSamples ? `medián z ${esc(data.priceSamples)} rozpoznaných cenových signálů` : "v poptávkách zatím nejsou spolehlivé cenové signály"}</div>
+        <div class="mini-stats">
+          <div class="mini-stat"><strong>${esc(moneyLabel(data.pipelineMonthlyValue))}</strong><span>potenciální MRR</span></div>
+          <div class="mini-stat"><strong>${esc(moneyLabel(REFERENCE_RATE_CZK))}</strong><span>fallback sazba / h</span></div>
+        </div>
+        <div class="muted-note">MRR se odhaduje jen tam, kde text poptávky obsahuje rozpoznatelnou pravidelnost. Nejasné leady se do odhadu nezapočítávají.</div>
+      </article>
+
+      <article class="card analytics-card">
+        <h3>Jobs & side‑income radar</h3>
+        <div class="big">${esc(data.opportunityStats.high)}</div>
+        <div class="sub">aktivních příležitostí se score ≥ 75</div>
+        <div class="mini-stats">
+          <div class="mini-stat"><strong>${esc(data.opportunityStats.active)}</strong><span>aktivní EU</span></div>
+          <div class="mini-stat"><strong>${esc(data.opportunityStats.recent)}</strong><span>nové · 7 dní</span></div>
+        </div>
+        <div class="market-link"><a class="button" href="/student-portal/admin/opportunities/">Otevřít Opportunity Radar →</a></div>
+      </article>
+    </section>
+
+    <section class="card source-performance">
+      <h3>Source performance · 30 dní</h3>
+      ${sourceRows || '<div class="muted-note">Zatím bez dostatečných dat.</div>'}
     </section>
 
     ${data.notificationsConfigured
