@@ -18,7 +18,8 @@ CREATE TABLE IF NOT EXISTS side_income_opportunities (
     CHECK (status IN ('new','reviewed','applied','won','lost','ignored')),
   is_active INTEGER NOT NULL DEFAULT 1 CHECK (is_active IN (0, 1)),
   first_seen_at TEXT NOT NULL,
-  last_seen_at TEXT NOT NULL
+  last_seen_at TEXT NOT NULL,
+  alerted_at TEXT
 );
 
 CREATE INDEX IF NOT EXISTS idx_side_income_score
