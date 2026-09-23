@@ -561,11 +561,22 @@ async function leadDashboardData(env: LeadEnv): Promise<{
                      GROUP BY source
                      ORDER BY leads DESC`).all<SourceStatRow>(),
     env.DB.prepare(`SELECT
-        COUNT(*) AS active,
-        SUM(CASE WHEN score >= 75 THEN 1 ELSE 0 END) AS high,
-        SUM(CASE WHEN datetime(first_seen_at) >= datetime('now', '-7 day') THEN 1 ELSE 0 END) AS recent
-      FROM eu_opportunities
-      WHERE status IN ('new','reviewed')`).first<OpportunityStatsRow>(),
+        SUM(active) AS active,
+        SUM(high) AS high,
+        SUM(recent) AS recent
+      FROM (
+        SELECT COUNT(*) AS active,
+               SUM(CASE WHEN score >= 75 THEN 1 ELSE 0 END) AS high,
+               SUM(CASE WHEN datetime(first_seen_at) >= datetime('now', '-7 day') THEN 1 ELSE 0 END) AS recent
+          FROM eu_opportunities
+         WHERE status IN ('new','reviewed')
+        UNION ALL
+        SELECT COUNT(*) AS active,
+               SUM(CASE WHEN score >= 75 THEN 1 ELSE 0 END) AS high,
+               SUM(CASE WHEN datetime(first_seen_at) >= datetime('now', '-7 day') THEN 1 ELSE 0 END) AS recent
+          FROM side_income_opportunities
+         WHERE is_active = 1 AND status IN ('new','reviewed','applied')
+      )`).first<OpportunityStatsRow>(),
   ]);
 
   const outbound = await env.DB.prepare(`SELECT id, campaign, target_type, organization, status, sent_at, updated_at, note
@@ -763,7 +774,7 @@ function renderLeadDashboard(
         <div class="big">${esc(data.opportunityStats.high)}</div>
         <div class="sub">aktivních příležitostí se score ≥ 75</div>
         <div class="mini-stats">
-          <div class="mini-stat"><strong>${esc(data.opportunityStats.active)}</strong><span>aktivní EU</span></div>
+          <div class="mini-stat"><strong>${esc(data.opportunityStats.active)}</strong><span>EU + side-income</span></div>
           <div class="mini-stat"><strong>${esc(data.opportunityStats.recent)}</strong><span>nové · 7 dní</span></div>
         </div>
         <div class="market-link"><a class="button" href="/student-portal/admin/opportunities/">Otevřít Opportunity Radar →</a></div>

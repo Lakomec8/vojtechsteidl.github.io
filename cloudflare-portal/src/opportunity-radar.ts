@@ -4,6 +4,7 @@ export const OPPORTUNITY_RADAR_PATH = "/student-portal/admin/opportunities";
 
 const TUTORING_LEADS_PATH = "/student-portal/admin/tutoring/leads/";
 const EU_OPPORTUNITIES_PATH = "/student-portal/admin/opportunities/eu/";
+const SIDE_INCOME_PATH = "/student-portal/admin/opportunities/side-income/";
 
 function esc(value: unknown): string {
   return String(value ?? "").replace(/[&<>"']/g, (character) => ({
@@ -39,18 +40,24 @@ async function requireAdmin(request: Request, env: Env): Promise<string> {
 
 type CountRow = { count: number };
 
-async function counts(env: Env): Promise<{ tutoring: number; tutoringHot: number; eu: number; euHigh: number }> {
-  const [tutoring, tutoringHot, eu, euHigh] = await Promise.all([
+async function counts(env: Env): Promise<{ tutoring: number; tutoringHot: number; eu: number; euHigh: number; side: number; sideHigh: number; platforms: number }> {
+  const [tutoring, tutoringHot, eu, euHigh, side, sideHigh, platforms] = await Promise.all([
     env.DB.prepare("SELECT COUNT(*) AS count FROM tutoring_leads WHERE status IN ('new','reviewed')").first<CountRow>(),
     env.DB.prepare("SELECT COUNT(*) AS count FROM tutoring_leads WHERE status IN ('new','reviewed') AND score >= 75").first<CountRow>(),
     env.DB.prepare("SELECT COUNT(*) AS count FROM eu_opportunities WHERE status IN ('new','reviewed')").first<CountRow>(),
     env.DB.prepare("SELECT COUNT(*) AS count FROM eu_opportunities WHERE status IN ('new','reviewed') AND score >= 75").first<CountRow>(),
+    env.DB.prepare("SELECT COUNT(*) AS count FROM side_income_opportunities WHERE is_active = 1 AND status IN ('new','reviewed','applied')").first<CountRow>(),
+    env.DB.prepare("SELECT COUNT(*) AS count FROM side_income_opportunities WHERE is_active = 1 AND status IN ('new','reviewed','applied') AND score >= 75").first<CountRow>(),
+    env.DB.prepare("SELECT COUNT(*) AS count FROM side_income_platform_profiles WHERE status IN ('registered','active')").first<CountRow>(),
   ]);
   return {
     tutoring: Number(tutoring?.count || 0),
     tutoringHot: Number(tutoringHot?.count || 0),
     eu: Number(eu?.count || 0),
     euHigh: Number(euHigh?.count || 0),
+    side: Number(side?.count || 0),
+    sideHigh: Number(sideHigh?.count || 0),
+    platforms: Number(platforms?.count || 0),
   };
 }
 
@@ -90,8 +97,15 @@ function render(data: Awaited<ReturnType<typeof counts>>, email: string): Respon
     </article>
 
     <article class="card">
-      <h2>Industry Expert Networks</h2><p>Krátké placené konzultace a research calls. Příležitosti jsou neveřejné, takže nejvyšší hodnotu má kvalitní registrace a rychlá reakce na invitation.</p>
-      <div class="meta"><span class="pill manual">PROFILE-BASED</span><span class="pill blue">GLG · Guidepoint · AlphaSights</span></div>
+      <h2>Side-income Radar</h2><p>AI expert work, placené research projekty, expert networks a flexibilní kontrakty mimo běžné pracovní portály.</p>
+      <div class="meta"><span class="pill live">AUTO · 3 h</span><span class="pill blue">Alignerr · Mercor · Maven</span><span class="pill manual">PROFILE NETWORKS</span></div>
+      <div class="stats"><div class="stat"><strong>${esc(data.side)}</strong><span>aktivní</span></div><div class="stat"><strong>${esc(data.sideHigh)}</strong><span>score ≥ 75</span></div><div class="stat"><strong>${esc(data.platforms)}</strong><span>profilů aktivováno</span></div></div>
+      <div class="actions"><a class="button primary" href="${SIDE_INCOME_PATH}">Otevřít Side-income Radar</a></div>
+    </article>
+
+    <article class="card">
+      <h2>Industry Expert Networks</h2><p>Neveřejné invitation-based konzultace. Registrace a stav profilů se teď sleduje přímo v Side-income Radaru.</p>
+      <div class="meta"><span class="pill manual">PROFILE-BASED</span><span class="pill blue">Guidepoint · Atheneum · Third Bridge · GLG · další</span></div>
       <div class="actions">
         <a class="button primary" target="_blank" rel="noopener noreferrer" href="https://glginsights.com/network-members/">GLG ↗</a>
         <a class="button" target="_blank" rel="noopener noreferrer" href="https://www.guidepoint.com/advisors/">Guidepoint ↗</a>

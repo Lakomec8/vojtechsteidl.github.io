@@ -25,6 +25,12 @@ import {
   addOpportunityRadarLink,
   handleOpportunityRadarRequest,
 } from "./opportunity-radar";
+import {
+  addSideIncomeLink,
+  addSideIncomeSummaryToLeadDashboard,
+  handleSideIncomeRequest,
+  runSideIncomeScan,
+} from "./side-income-radar";
 
 type WorkerRequest = Parameters<typeof tutoringCronWorker.fetch>[0];
 type LeadEnv = Env & {
@@ -203,6 +209,9 @@ export default {
   async fetch(request: Request, env: LeadEnv): Promise<Response> {
     const url = new URL(request.url);
 
+    const sideIncomeResponse = await handleSideIncomeRequest(request, env);
+    if (sideIncomeResponse) return sideIncomeResponse;
+
     const radarResponse = await handleOpportunityRadarRequest(request, env);
     if (radarResponse) return radarResponse;
 
@@ -227,7 +236,9 @@ export default {
         const ordered = await orderLeadDashboard(withPush, env, url.searchParams.get("resolved") === "1");
         const withDrafts = await addLeadDraftsToDashboard(ordered, env);
         const withEu = await addEuOpportunitiesLink(withDrafts);
-        const withRadar = await addOpportunityRadarLink(withEu);
+        const withSideIncome = await addSideIncomeLink(withEu);
+        const withSideIncomeSummary = await addSideIncomeSummaryToLeadDashboard(withSideIncome, env);
+        const withRadar = await addOpportunityRadarLink(withSideIncomeSummary);
         return clarifyMonitoringState(withRadar, env);
       }
       return leadResponse;
@@ -237,7 +248,8 @@ export default {
     if (request.method === "GET" && url.pathname === TUTORING_APP_PATH) {
       const withLeadAlert = await addLeadAlertLink(response);
       const withEu = await addEuOpportunitiesLink(withLeadAlert);
-      return addOpportunityRadarLink(withEu);
+      const withSideIncome = await addSideIncomeLink(withEu);
+      return addOpportunityRadarLink(withSideIncome);
     }
     return response;
   },
@@ -261,6 +273,17 @@ export default {
         runEuOpportunityScan(env).catch((error) => {
           console.error(JSON.stringify({
             event: "eu_opportunity_scheduled_error",
+            message: error instanceof Error ? error.message : "unknown",
+          }));
+        }),
+      );
+    }
+
+    if (minute === 0 && hour % 3 === 1) {
+      ctx.waitUntil(
+        runSideIncomeScan(env).catch((error) => {
+          console.error(JSON.stringify({
+            event: "side_income_scheduled_error",
             message: error instanceof Error ? error.message : "unknown",
           }));
         }),
