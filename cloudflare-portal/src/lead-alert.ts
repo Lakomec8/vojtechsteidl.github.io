@@ -100,6 +100,17 @@ type OpportunityStatsRow = {
   recent: number;
 };
 
+type OutboundRow = {
+  id: string;
+  campaign: string;
+  target_type: "company" | "university";
+  organization: string;
+  status: string;
+  sent_at: string | null;
+  updated_at: string;
+  note: string;
+};
+
 function responseHeaders(contentType: string): Headers {
   const headers = privateHeaders();
   headers.set("Content-Type", contentType);
@@ -476,6 +487,7 @@ async function leadDashboardData(env: LeadEnv): Promise<{
   priceMedian: number | null;
   priceSamples: number;
   pipelineMonthlyValue: number;
+  outbound: OutboundRow[];
 }> {
   const funnelSql = (days: number) => `SELECT
       COUNT(*) AS leads,
@@ -556,6 +568,10 @@ async function leadDashboardData(env: LeadEnv): Promise<{
       WHERE status IN ('new','reviewed')`).first<OpportunityStatsRow>(),
   ]);
 
+  const outbound = await env.DB.prepare(`SELECT id, campaign, target_type, organization, status, sent_at, updated_at, note
+      FROM tutoring_outbound_contacts
+     ORDER BY CASE target_type WHEN 'company' THEN 0 ELSE 1 END, organization COLLATE NOCASE`).all<OutboundRow>();
+
   const leadRows = leads.results || [];
   const thirtyDaysAgo = Date.now() - 30 * 24 * 60 * 60 * 1000;
   const recentLeadRows = leadRows.filter((lead) => {
@@ -622,6 +638,7 @@ async function leadDashboardData(env: LeadEnv): Promise<{
     priceMedian: median(prices),
     priceSamples: prices.length,
     pipelineMonthlyValue,
+    outbound: outbound.results || [],
   };
 }
 
@@ -647,6 +664,9 @@ function renderLeadDashboard(
   const subjectMax = Math.max(1, ...data.subjects30.map((row) => row.count));
   const subjectRows = data.subjects30.map((row) => `<div class="subject-row"><span>${esc(row.subject)}</span><div class="bar"><i style="width:${Math.max(8, Math.round((row.count / subjectMax) * 100))}%"></i></div><strong>${esc(row.count)}</strong></div>`).join("");
   const sourceRows = data.sources30.map((row) => `<div class="source-row"><strong>${esc(sourceLabel(row.source))}</strong><span>${esc(row.leads)} leadů</span><span>${esc(percent(row.replied, row.leads))}% odpovězeno</span><span>${esc(row.won)} získáno</span><span>avg ${esc(row.avg_score == null ? "—" : Math.round(row.avg_score))}/100</span></div>`).join("");
+  const companiesOutbound = data.outbound.filter((row) => row.target_type === "company");
+  const universitiesOutbound = data.outbound.filter((row) => row.target_type === "university");
+  const outboundList = (items: OutboundRow[]) => items.map((row) => `<div class="outbound-row"><span class="outbound-org">${esc(row.organization)}</span><span class="outbound-date">${esc(row.sent_at || "—")}</span><strong class="outbound-status">${esc(row.status === "written" ? "Napsáno" : row.status)}</strong></div>`).join("");
 
   const rows = data.leads.map((lead) => {
     const description = lead.description.length > 430 ? `${lead.description.slice(0, 430)}…` : lead.description;
@@ -683,7 +703,8 @@ function renderLeadDashboard(
   <style>
     :root{--ink:#272823;--muted:#73756d;--paper:#f2f0e9;--surface:#fbfaf6;--surface-2:#e9e7df;--line:#d5d2c8;--mint:#9ee8ca;--mint-strong:#68d5aa;--mint-soft:#dff7ed;--amber:#e7c86f;--red:#e4867f;--blue:#e5eef3;--shadow:0 18px 38px rgba(55,52,43,.12),0 3px 8px rgba(55,52,43,.08);--shadow-soft:0 8px 18px rgba(55,52,43,.09);font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:var(--ink);background:var(--paper)}
     *{box-sizing:border-box}body{margin:0;min-height:100vh;background-color:var(--paper);background-image:linear-gradient(rgba(62,63,57,.055) 1px,transparent 1px),linear-gradient(90deg,rgba(62,63,57,.055) 1px,transparent 1px);background-size:36px 36px}.shell{width:min(1240px,calc(100% - 32px));margin:24px auto 60px}.topbar{display:flex;justify-content:space-between;gap:20px;align-items:flex-start;margin-bottom:18px}.eyebrow{font-size:11px;font-weight:900;letter-spacing:.13em;text-transform:uppercase;color:#557765}.topbar h1{font-size:clamp(34px,5vw,60px);line-height:1;letter-spacing:-.055em;margin:8px 0}.topbar p{margin:0;color:var(--muted)}.top-actions{display:flex;gap:8px;flex-wrap:wrap}.button{display:inline-flex;align-items:center;justify-content:center;border:1px solid var(--line);border-radius:999px;padding:9px 14px;color:var(--ink);background:var(--surface);text-decoration:none;font-weight:800;font-size:12px;box-shadow:var(--shadow-soft);cursor:pointer}.button.primary{background:var(--mint);border-color:#83dcb9}.button.ghost{background:transparent;box-shadow:none}.button:disabled{opacity:.55;cursor:wait}.kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin:18px 0}.card{background:rgba(251,250,246,.94);border:1px solid var(--line);border-radius:22px;box-shadow:var(--shadow-soft)}.kpi{padding:17px;min-height:120px;display:flex;flex-direction:column}.kpi span{font-size:11px;color:var(--muted);font-weight:800}.kpi strong{font-size:32px;letter-spacing:-.04em;margin-top:auto}.sync-line{display:flex;align-items:center;gap:8px}.dot{width:9px;height:9px;border-radius:50%;background:var(--mint-strong);box-shadow:0 0 0 4px var(--mint-soft)}.dot.error{background:var(--red);box-shadow:0 0 0 4px #f7dfdd}.notice{padding:14px 16px;margin-bottom:16px;border-radius:16px;background:#f6edce;color:#6f5b1f;border:1px solid #ead797;font-size:12px;line-height:1.5}.notice strong{color:#594714}.list{display:grid;gap:11px}.lead-card{display:grid;grid-template-columns:76px minmax(0,1fr) 150px;gap:16px;padding:17px;background:rgba(251,250,246,.96);border:1px solid var(--line);border-radius:22px;box-shadow:var(--shadow-soft)}.score{width:67px;height:67px;border-radius:18px;background:var(--surface-2);display:grid;place-items:center;align-content:center}.score strong{font-size:25px;line-height:1}.score span{font-size:10px;color:var(--muted)}.score.good{background:var(--mint-soft);color:#2f7258}.score.hot{background:#d4f3e5;color:#24684d;box-shadow:inset 0 0 0 1px #8fd9ba}.lead-meta{display:flex;gap:7px;flex-wrap:wrap;color:var(--muted);font-size:10px;font-weight:800}.lead-meta span{padding:4px 7px;border-radius:99px;background:var(--surface-2)}.lead-meta .source{background:#e5eef3;color:#4f7187}.lead-meta .online{background:var(--mint-soft);color:#347c61}.lead-meta .trial{background:#f6edce;color:#725d1f}.lead-main h2{font-size:18px;margin:9px 0 6px;letter-spacing:-.02em}.lead-main p{font-size:12px;line-height:1.55;color:#5f615a;margin:0}.lead-footer{display:flex;gap:10px;flex-wrap:wrap;margin-top:11px;color:var(--muted);font-size:10px}.status{font-weight:900}.status-new{color:#2f7258}.status-replied{color:#4f7187}.status-won{color:#2f7258}.status-lost,.status-ignored{color:#8b695f}.lead-actions{display:flex;flex-direction:column;gap:7px;justify-content:center}.empty{padding:42px;text-align:center;color:var(--muted)}.account{margin-top:24px;color:var(--muted);font-size:10px;text-align:right}.section-head{display:flex;justify-content:space-between;align-items:end;gap:16px;margin:26px 0 10px}.section-head h2{margin:0;font-size:20px}.section-head span{font-size:11px;color:var(--muted)}.analytics{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin:0 0 18px}.analytics-card{padding:17px;min-height:190px}.analytics-card h3{margin:0 0 4px;font-size:15px}.analytics-card .big{font-size:30px;letter-spacing:-.04em;font-weight:900}.analytics-card .sub{font-size:10px;color:var(--muted);font-weight:800}.trend{display:inline-flex;margin-top:7px;padding:5px 8px;border-radius:99px;background:var(--mint-soft);color:#347c61;font-size:10px;font-weight:900}.funnel{display:grid;grid-template-columns:repeat(4,1fr);gap:5px;margin-top:15px}.funnel-step{padding:9px 6px;border-radius:12px;background:var(--surface-2);text-align:center}.funnel-step strong{display:block;font-size:19px}.funnel-step span{font-size:8px;color:var(--muted);font-weight:900;text-transform:uppercase}.subject-list{display:grid;gap:6px;margin-top:12px}.subject-row{display:grid;grid-template-columns:minmax(72px,1fr) 1.5fr 24px;gap:7px;align-items:center;font-size:9px;color:var(--muted)}.subject-row>span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.bar{height:7px;background:var(--surface-2);border-radius:99px;overflow:hidden}.bar i{display:block;height:100%;background:var(--mint-strong);border-radius:99px}.subject-row strong{text-align:right;color:var(--ink)}.mini-stats{display:flex;gap:14px;flex-wrap:wrap;margin-top:12px}.mini-stat strong{display:block;font-size:20px}.mini-stat span{font-size:9px;color:var(--muted);font-weight:800}.source-performance{padding:14px 17px;margin:0 0 18px}.source-performance h3{font-size:12px;margin:0 0 9px;text-transform:uppercase;letter-spacing:.08em;color:#557765}.source-row{display:flex;gap:12px;flex-wrap:wrap;align-items:center;font-size:10px;color:var(--muted)}.source-row strong{color:var(--ink)}.market-link{margin-top:13px}.market-link .button{box-shadow:none}.muted-note{font-size:9px;color:var(--muted);line-height:1.4;margin-top:8px}
-    @media(max-width:1050px){.analytics{grid-template-columns:1fr 1fr}}
+    .outbound-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:0 0 18px}.outbound-card{padding:17px}.outbound-card h3{margin:0 0 4px;font-size:15px}.outbound-card>p{margin:0 0 12px;color:var(--muted);font-size:10px}.outbound-list{display:grid;gap:5px}.outbound-row{display:grid;grid-template-columns:minmax(0,1fr) 82px 82px;gap:8px;align-items:center;padding:8px 10px;border-radius:12px;background:var(--surface-2);font-size:10px}.outbound-org{font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.outbound-date{color:var(--muted);text-align:right}.outbound-status{display:inline-flex;justify-content:center;padding:4px 7px;border-radius:99px;background:var(--mint-soft);color:#347c61;font-size:9px}.outbound-note{font-size:10px;color:var(--muted);font-weight:800}
+    @media(max-width:1050px){.analytics{grid-template-columns:1fr 1fr}.outbound-grid{grid-template-columns:1fr}}
     @media(max-width:850px){.kpis{grid-template-columns:1fr 1fr}.lead-card{grid-template-columns:60px 1fr}.score{width:55px;height:55px}.lead-actions{grid-column:2;flex-direction:row;flex-wrap:wrap;justify-content:flex-start}.topbar{flex-direction:column}.lead-actions .button{width:auto}}
     @media(max-width:520px){.shell{width:min(100% - 20px,1240px);margin-top:14px}.kpis,.analytics{grid-template-columns:1fr}.kpi{min-height:105px}.lead-card{grid-template-columns:1fr}.score{width:auto;height:auto;display:flex;gap:4px;justify-content:flex-start;background:transparent!important;box-shadow:none!important}.lead-actions{grid-column:1}.topbar h1{font-size:38px}}
   </style>
@@ -757,6 +778,20 @@ function renderLeadDashboard(
     ${data.notificationsConfigured
       ? '<div class="notice"><strong>Push kanál je aktivní.</strong> Nový lead se skóre nad limitem se pošle ihned po zachycení.</div>'
       : '<div class="notice"><strong>Serverový monitoring je nezávislý na ChatGPT a poběží 24/7.</strong> Externí push kanál zatím není nakonfigurován; leady se ukládají sem. Kód má připravený bezpečný webhook přes Cloudflare secret, takže push lze dopnout bez změny crawleru.</div>'}
+
+    <div class="section-head"><div><h2>Outbound kampaně</h2><span>${esc(data.outbound.length)} kontaktů · ${esc(companiesOutbound.length)} firem · ${esc(universitiesOutbound.length)} VŠ/fakult</span></div><span class="outbound-note">Napsáno = mail skutečně odeslán</span></div>
+    <section class="outbound-grid">
+      <article class="card outbound-card">
+        <h3>Doučování jako benefit · firmy</h3>
+        <p>HR / zaměstnanecké benefity · personalizovaná regionální kampaň</p>
+        <div class="outbound-list">${outboundList(companiesOutbound)}</div>
+      </article>
+      <article class="card outbound-card">
+        <h3>Podpora prváků · vysoké školy</h3>
+        <p>Studijní oddělení / fakulty · externí individuální podpora</p>
+        <div class="outbound-list">${outboundList(universitiesOutbound)}</div>
+      </article>
+    </section>
 
     <div class="section-head"><div><h2>Nejnovější leady</h2><span>${esc(data.leads.length)} uložených záznamů</span></div><span>Doučuji.eu aktivní · Bazoš automatizace vypnuta kvůli podmínkám platformy</span></div>
     <section class="list" id="leadList">${rows || '<article class="card empty">Zatím nebyla zachycena relevantní poptávka. Po prvním cron checku se data objeví automaticky.</article>'}</section>
