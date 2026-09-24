@@ -230,7 +230,7 @@ function scoreOpportunity(
   body: string,
   pay: ReturnType<typeof extractPay>,
 ): { score: number; reason: string; isRemote: boolean; location: string | null } {
-  const text = normalize(\`${title} ${body}\`);
+  const text = normalize(`${title} ${body}`);
   let score = 10 + source.boost;
   const reasons: string[] = [];
 
@@ -368,7 +368,7 @@ function scoreOpportunity(
 }
 
 function opportunityLane(row: OpportunityRow): "career" | "side" {
-  const text = normalize(\`${row.title} ${row.summary}\`);
+  const text = normalize(`${row.title} ${row.summary}`);
   const pm = /project management|project manager|technical project manager|program manager|programme manager|program management|programme management|pmo|project delivery|project lead/.test(text);
   const flexible = /freelance|contract|contractor|part[- ]time|project-based|one-time|hourly|expert call|expert interview|ai training|ai trainer|model evaluation|ai evaluation|tutor|tutoring/.test(text);
   return pm && !flexible ? "career" : "side";
