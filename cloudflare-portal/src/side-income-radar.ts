@@ -6,8 +6,9 @@ export const SIDE_INCOME_STATUS_API_PATH = "/student-portal/api/admin/opportunit
 export const SIDE_INCOME_PLATFORM_API_PATH = "/student-portal/api/admin/opportunities/side-income/platform";
 
 const PRAGUE_TIME_ZONE = "Europe/Prague";
-const HOT_THRESHOLD = 75;
-const PUSH_THRESHOLD = 82;
+const MIN_VISIBLE_SCORE = 65;
+const HOT_THRESHOLD = 80;
+const PUSH_THRESHOLD = 88;
 
 const AUTOMATED_SOURCES = [
   {
@@ -230,36 +231,60 @@ function scoreOpportunity(
   pay: ReturnType<typeof extractPay>,
 ): { score: number; reason: string; isRemote: boolean; location: string | null } {
   const text = normalize(`${title} ${body}`);
-  let score = 18 + source.boost;
+  let score = 10 + source.boost;
   const reasons: string[] = [];
 
-  if (/mathemat|\bmath\b|physics|applied physics|calculus|algebra|statistics|quantitative/.test(text)) {
-    score += 30;
-    reasons.push("silný math/physics fit");
+  // Verified experience gates:
+  // 1) professional experience = project / programme management
+  // 2) proven side activity = mathematics / physics tutoring
+  // Domain words such as engineering, energy or automotive are context only.
+  const hasPmCore = /project management|project manager|technical project manager|program manager|programme manager|program management|programme management|pmo|project delivery|project lead/.test(text);
+  const hasPmAdjacent = /project coordinator|project planner|project controller|scrum master/.test(text);
+  const hasMathPhysics = /mathemat|\bmath\b|physics|applied physics|calculus|algebra|statistics|quantitative/.test(text);
+  const hasTutoring = /tutor|tutoring|teacher|teaching|instructor|education|student support|academic support/.test(text);
+  const hasAiEvaluation = /ai training|ai trainer|model evaluation|ai evaluation|rlhf|grading|rubric|reasoning evaluator|reasoning expert/.test(text);
+  const hasIndustryDomain = /automotive|manufactur|industrial|production|supplier|mobility|quality|supply chain|engineering/.test(text);
+  const hasEnergyDomain = /energy|battery|batteries|data center|datacentre|cooling|power|grid|hydrogen|thermal/.test(text);
+  const hasExpertFormat = /consult|advisory|expert interview|expert call|research interview|market research|survey|subject matter expert/.test(text);
+
+  if (hasPmCore) {
+    score += 40;
+    reasons.push("přímý fit: project/program management");
+  } else if (hasPmAdjacent) {
+    score += 28;
+    reasons.push("blízké PM zkušenosti");
   }
-  if (/ai training|ai trainer|model evaluation|ai evaluation|rlhf|grading|rubric|annotation|labeling|reasoning/.test(text)) {
-    score += 17;
-    reasons.push("AI evaluation/training");
+
+  if (hasMathPhysics) {
+    score += 36;
+    reasons.push("přímý fit: matematika/fyzika");
   }
-  if (/project management|project manager|program management|programme management|pmo|operations manager|project delivery/.test(text)) {
-    score += 25;
-    reasons.push("project/program management");
+  if (hasTutoring && hasMathPhysics) {
+    score += 18;
+    reasons.push("odpovídá praxi v doučování");
   }
-  if (/automotive|manufactur|industrial|production|supplier|mobility|quality|supply chain|engineering/.test(text)) {
-    score += 23;
-    reasons.push("industry/engineering");
-  }
-  if (/energy|battery|batteries|data center|datacentre|cooling|power|grid|hydrogen|thermal/.test(text)) {
-    score += 13;
-    reasons.push("energy/data-centre");
-  }
-  if (/consult|advisory|expert interview|expert call|research interview|market research|survey|subject matter expert/.test(text)) {
-    score += 12;
-    reasons.push("paid expert/research");
-  }
-  if (/management consulting|business operations|business strategy|process improvement|lean/.test(text)) {
+
+  // AI work is attractive only when it uses an already demonstrated track.
+  if (hasAiEvaluation && (hasMathPhysics || hasPmCore || hasPmAdjacent)) {
     score += 14;
-    reasons.push("business/operations");
+    reasons.push("AI evaluation nad známou doménou");
+  } else if (hasAiEvaluation) {
+    score -= 8;
+    reasons.push("AI role bez doložené doménové výhody");
+  }
+
+  // Industry is a domain multiplier, never a standalone qualification.
+  if (hasIndustryDomain && (hasPmCore || hasPmAdjacent)) {
+    score += 14;
+    reasons.push("PM + automotive/manufacturing fit");
+  }
+  if (hasEnergyDomain && (hasPmCore || hasPmAdjacent)) {
+    score += 8;
+    reasons.push("PM + energy/data-centre kontext");
+  }
+  if (hasExpertFormat && (hasPmCore || hasPmAdjacent) && hasIndustryDomain) {
+    score += 10;
+    reasons.push("expert/advisory na PM praxi");
   }
 
   const isRemote = /remote|work from anywhere|work from home|fully remote|worldwide|global/.test(text);
@@ -267,28 +292,65 @@ function scoreOpportunity(
     score += 10;
     reasons.push("remote");
   }
-  if (/freelance|contract|contractor|flexible|part[- ]time|project-based|one-time/.test(text)) {
-    score += 8;
+
+  const flexible = /freelance|contract|contractor|flexible|part[- ]time|project-based|one-time|hourly/.test(text);
+  if (flexible) {
+    score += 9;
     reasons.push("flexibilní forma");
   }
 
   const hourly = pay.unit && /hour|hr/.test(pay.unit);
   const effectivePay = pay.max ?? pay.min;
   if (hourly && effectivePay != null) {
-    if (effectivePay >= 75) score += 16;
-    else if (effectivePay >= 50) score += 12;
-    else if (effectivePay >= 30) score += 8;
-    else if (effectivePay < 20) score -= 8;
-    reasons.push("transparentní sazba");
+    if (effectivePay >= 75) score += 18;
+    else if (effectivePay >= 50) score += 14;
+    else if (effectivePay >= 35) score += 8;
+    else if (effectivePay < 25) score -= 12;
+    reasons.push("transparentní hodinová sazba");
+  }
+
+  // Hard mismatch: attractive topic, but role belongs to a profession with no demonstrated work history.
+  const unsupportedProfession =
+    /software engineer|software developer|frontend|front-end|backend|back-end|full[- ]stack|data scientist|data engineer|machine learning engineer|ml engineer|electrical engineer|mechanical engineer|civil engineer|design engineer|accountant|financial analyst|investment analyst|marketing manager|sales manager|account executive|recruiter|ux designer|product designer|product manager|product owner|lawyer|attorney|medical doctor|physician|nurse/.test(text);
+  if (unsupportedProfession && !hasPmCore && !hasPmAdjacent && !(hasMathPhysics && hasTutoring)) {
+    score -= 45;
+    reasons.push("mimo doloženou profesní praxi");
+  }
+
+  if (/management consulting|business operations|business strategy/.test(text) && !hasPmCore && !hasPmAdjacent) {
+    score -= 18;
+    reasons.push("obecný consulting/ops bez přímého PM fitu");
+  }
+
+  if (/chief\b|vice president|\bvp\b|director\b|head of\b|10\+?\s*years|8\+?\s*years/.test(text)) {
+    score -= 18;
+    reasons.push("pravděpodobný seniority mismatch");
   }
 
   if (/us only|u\.s\. only|united states only|canada only|india only|australia only/.test(text)) {
-    score -= 48;
+    score -= 55;
     reasons.push("geografické omezení");
   }
-  if (/masters\/phds|master'?s.*phd|phd.*required|phd holder|required.*phd/.test(text)) {
-    score -= 14;
-    reasons.push("credential gate");
+
+  const relevantDegreeGate =
+    /(?:master'?s|msc|phd).{0,45}(?:math|physics|statistics|computer science|engineering).{0,25}(?:required|must|only)|(?:required|must).{0,25}(?:master'?s|msc|phd).{0,45}(?:math|physics|statistics|computer science|engineering)/.test(text);
+  if (relevantDegreeGate) {
+    score -= 30;
+    reasons.push("požadován vyšší relevantní titul");
+  } else if (/phd.*required|required.*phd|phd holder|phd only/.test(text)) {
+    score -= 38;
+    reasons.push("PhD gate");
+  }
+
+  if (/expert python|advanced python|strong programming|production[- ]grade code|professional software development/.test(text) && !hasPmCore && !hasPmAdjacent) {
+    score -= 16;
+    reasons.push("příliš silný coding requirement");
+  }
+
+  // If neither demonstrated track is present, keep the item out of the main feed.
+  if (!hasPmCore && !hasPmAdjacent && !hasMathPhysics) {
+    score -= 28;
+    reasons.push("chybí vazba na PM nebo math/physics");
   }
 
   const location =
@@ -299,9 +361,34 @@ function scoreOpportunity(
 
   return {
     score: Math.max(1, Math.min(100, score)),
-    reason: reasons.slice(0, 4).join(" · ") || "obecný side-income fit",
+    reason: reasons.slice(0, 4).join(" · ") || "bez dostatečného fitu",
     isRemote,
     location,
+  };
+}
+
+function opportunityLane(row: OpportunityRow): "career" | "side" {
+  const text = normalize(`${row.title} ${row.summary}`);
+  const pm = /project management|project manager|technical project manager|program manager|programme manager|program management|programme management|pmo|project delivery|project lead/.test(text);
+  const flexible = /freelance|contract|contractor|part[- ]time|project-based|one-time|hourly|expert call|expert interview|ai training|ai trainer|model evaluation|ai evaluation|tutor|tutoring/.test(text);
+  return pm && !flexible ? "career" : "side";
+}
+
+function rescoreStoredOpportunity(row: OpportunityRow): OpportunityRow {
+  const source = AUTOMATED_SOURCES.find((item) => item.source === row.source);
+  if (!source) return row;
+  const scored = scoreOpportunity(source, row.title, row.summary, {
+    min: row.pay_min,
+    max: row.pay_max,
+    currency: row.pay_currency,
+    unit: row.pay_unit,
+  });
+  return {
+    ...row,
+    score: scored.score,
+    fit_reason: scored.reason,
+    is_remote: scored.isRemote ? 1 : row.is_remote,
+    location: scored.location ?? row.location,
   };
 }
 
@@ -582,7 +669,7 @@ async function dashboardData(env: SideIncomeEnv): Promise<{
                      ORDER BY source`).all<RunRow>(),
   ]);
   return {
-    opportunities: opportunities.results || [],
+    opportunities: (opportunities.results || []).map(rescoreStoredOpportunity),
     platforms: platforms.results || [],
     runs: runs.results || [],
   };
@@ -591,10 +678,12 @@ async function dashboardData(env: SideIncomeEnv): Promise<{
 function opportunityCard(row: OpportunityRow): string {
   const scoreClass = row.score >= 90 ? "hot" : row.score >= HOT_THRESHOLD ? "good" : "normal";
   const summary = row.summary.length > 460 ? `${row.summary.slice(0, 460)}…` : row.summary;
+  const lane = opportunityLane(row);
+  const laneLabel = lane === "career" ? "Career fit · PM" : "Side income";
   return `<article class="op-card" data-opportunity-id="${esc(row.id)}">
     <div class="score ${scoreClass}"><strong>${esc(row.score)}</strong><span>/100</span></div>
     <div class="op-main">
-      <div class="meta"><span class="source">${esc(row.source_label)}</span><span>${esc(row.category)}</span>${row.is_remote ? '<span class="remote">Remote</span>' : ""}<span>${esc(payLabel(row))}</span></div>
+      <div class="meta"><span class="source">${esc(row.source_label)}</span><span>${esc(laneLabel)}</span><span>${esc(row.category)}</span>${row.is_remote ? '<span class="remote">Remote</span>' : ""}<span>${esc(payLabel(row))}</span></div>
       <h2>${esc(row.title)}</h2>
       <p>${esc(summary)}</p>
       <div class="fit">${esc(row.fit_reason)}</div>
@@ -611,7 +700,11 @@ function opportunityCard(row: OpportunityRow): string {
 }
 
 function renderDashboard(data: Awaited<ReturnType<typeof dashboardData>>, email: string, showArchive: boolean): Response {
-  const active = data.opportunities.filter((row) => row.is_active && !["lost", "ignored"].includes(row.status));
+  const active = data.opportunities.filter((row) =>
+    row.is_active &&
+    row.score >= MIN_VISIBLE_SCORE &&
+    !["lost", "ignored"].includes(row.status)
+  );
   const archive = data.opportunities.length - active.length;
   const visible = showArchive ? data.opportunities : active;
   const hot = active.filter((row) => row.score >= HOT_THRESHOLD).length;
@@ -657,18 +750,18 @@ function renderDashboard(data: Awaited<ReturnType<typeof dashboardData>>, email:
 </head>
 <body><main class="shell">
   <header class="top">
-    <div><div class="eyebrow">Lead Alert · side income</div><h1>Side-income Radar</h1><p>Automatické veřejné feedy + přehled profilových platforem, které by jinak snadno zůstaly mimo radar. Scoring preferuje matematiku/fyziku, AI evaluation, technical PM, automotive/manufacturing, energy a dobře placené flexibilní kontrakty.</p></div>
+    <div><div class="eyebrow">Lead Alert · career + side income</div><h1>Career &amp; Side-income Radar</h1><p>Tvrdý fit podle skutečné praxe: primárně project/program management, sekundárně doučování matematiky a fyziky. Automotive, engineering, energy a AI zvyšují skóre jen tehdy, když navazují na jeden z těchto dvou ověřených tracků.</p></div>
     <div class="top-actions">${archiveToggle}<a class="button" href="/student-portal/admin/tutoring/leads/">← Lead Alert</a><button id="refresh" class="button primary" type="button">Zkontrolovat teď</button></div>
   </header>
 
   <section class="kpis">
-    <article class="card kpi"><span>Aktivní opportunities</span><strong>${esc(active.length)}</strong><small>veřejné zdroje</small></article>
+    <article class="card kpi"><span>Relevantní opportunities</span><strong>${esc(active.length)}</strong><small>score ≥ ${MIN_VISIBLE_SCORE} · ostatní skryté</small></article>
     <article class="card kpi"><span>HOT</span><strong>${esc(hot)}</strong><small>score ≥ ${HOT_THRESHOLD}</small></article>
     <article class="card kpi"><span>Nové · 7 dní</span><strong>${esc(new7d)}</strong><small>relevantní side-income</small></article>
     <article class="card kpi"><span>Platformy aktivované</span><strong>${esc(platformActive)}</strong><small>registered / active</small></article>
   </section>
 
-  <div class="section-head"><div><h2>${showArchive ? "Všechny opportunities" : "Aktivní opportunities"}</h2><span>${visible.length} zobrazených</span></div><span>Auto: Alignerr · Mercor · Maven</span></div>
+  <div class="section-head"><div><h2>${showArchive ? "Všechny opportunities" : "Relevantní opportunities"}</h2><span>${visible.length} zobrazených · hlavní feed začíná na ${MIN_VISIBLE_SCORE}/100</span></div><span>PM praxe + math/physics tutoring · Auto: Alignerr · Mercor · Maven</span></div>
   <section class="list">${visible.map(opportunityCard).join("") || '<article class="card empty">Zatím žádná uložená side-income opportunity. Spusť „Zkontrolovat teď“.</article>'}</section>
 
   <div class="section-head"><div><h2>Platform coverage</h2><span>Co už je napojené a kde je potřeba profil / ruční search</span></div><span>AUTO · PROFILE · SEARCH</span></div>
