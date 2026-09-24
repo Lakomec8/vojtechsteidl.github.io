@@ -4,6 +4,8 @@ export const SIDE_INCOME_APP_PATH = "/student-portal/admin/opportunities/side-in
 export const SIDE_INCOME_REFRESH_API_PATH = "/student-portal/api/admin/opportunities/side-income/refresh";
 export const SIDE_INCOME_STATUS_API_PATH = "/student-portal/api/admin/opportunities/side-income/status";
 export const SIDE_INCOME_PLATFORM_API_PATH = "/student-portal/api/admin/opportunities/side-income/platform";
+export const SIDE_INCOME_MILESTONE_API_PATH = "/student-portal/api/admin/opportunities/side-income/milestone";
+export const SIDE_INCOME_METRICS_API_PATH = "/student-portal/api/admin/opportunities/side-income/metrics";
 
 const PRAGUE_TIME_ZONE = "Europe/Prague";
 const MIN_VISIBLE_SCORE = 65;
@@ -78,6 +80,13 @@ type OpportunityRow = {
   first_seen_at: string;
   last_seen_at: string;
   alerted_at: string | null;
+  applied_at: string | null;
+  response_at: string | null;
+  interview_at: string | null;
+  won_at: string | null;
+  time_invested_hours: number;
+  realized_revenue_czk: number;
+  outcome_note: string | null;
 };
 
 type PlatformRow = {
@@ -652,7 +661,9 @@ async function dashboardData(env: SideIncomeEnv): Promise<{
   const [opportunities, platforms, runs] = await Promise.all([
     env.DB.prepare(`SELECT id, source, source_label, category, title, summary, source_url, location,
                            is_remote, pay_min, pay_max, pay_currency, pay_unit, fit_reason, score,
-                           status, is_active, first_seen_at, last_seen_at, alerted_at
+                           status, is_active, first_seen_at, last_seen_at, alerted_at,
+                           applied_at, response_at, interview_at, won_at,
+                           time_invested_hours, realized_revenue_czk, outcome_note
                       FROM side_income_opportunities
                      ORDER BY is_active DESC,
                               CASE status WHEN 'new' THEN 0 WHEN 'reviewed' THEN 1 WHEN 'applied' THEN 2 ELSE 3 END,
@@ -680,6 +691,13 @@ function opportunityCard(row: OpportunityRow): string {
   const summary = row.summary.length > 460 ? `${row.summary.slice(0, 460)}…` : row.summary;
   const lane = opportunityLane(row);
   const laneLabel = lane === "career" ? "Career fit · PM" : "Side income";
+  const effectiveRate = row.time_invested_hours > 0 ? row.realized_revenue_czk / row.time_invested_hours : 0;
+  const funnel = [
+    row.applied_at ? "Applied" : null,
+    row.response_at ? "Response" : null,
+    row.interview_at ? "Interview" : null,
+    row.won_at || row.status === "won" ? "Won" : null,
+  ].filter(Boolean).join(" → ");
   return `<article class="op-card" data-opportunity-id="${esc(row.id)}">
     <div class="score ${scoreClass}"><strong>${esc(row.score)}</strong><span>/100</span></div>
     <div class="op-main">
@@ -688,12 +706,17 @@ function opportunityCard(row: OpportunityRow): string {
       <p>${esc(summary)}</p>
       <div class="fit">${esc(row.fit_reason)}</div>
       <div class="footer"><span class="status status-${esc(row.status)}">${esc(statusLabel(row.status))}</span><span>${row.location ? esc(row.location) : "Lokalita neuvedena"}</span><span>Aktualizováno ${esc(dateLabel(row.last_seen_at))}</span>${row.alerted_at ? "<span>Push odeslán</span>" : ""}</div>
+      ${funnel ? `<div class="learning-line"><strong>${esc(funnel)}</strong>${row.realized_revenue_czk > 0 ? `<span>${esc(Math.round(row.realized_revenue_czk).toLocaleString("cs-CZ"))} Kč realized${effectiveRate > 0 ? ` · ${esc(Math.round(effectiveRate).toLocaleString("cs-CZ"))} Kč/h effective` : ""}</span>` : ""}</div>` : ""}
+      ${row.outcome_note ? `<div class="outcome-note">${esc(row.outcome_note)}</div>` : ""}
     </div>
     <div class="actions">
       <a class="button primary" href="${esc(row.source_url)}" target="_blank" rel="noopener noreferrer">Otevřít ↗</a>
       <button class="button" type="button" data-status="reviewed">Zkontrolováno</button>
       <button class="button" type="button" data-status="applied">Přihlášeno</button>
+      <button class="button" type="button" data-milestone="response">Odpověď</button>
+      <button class="button" type="button" data-milestone="interview">Interview</button>
       <button class="button" type="button" data-status="won">Získáno</button>
+      <button class="button" type="button" data-metrics>Výsledek / čas</button>
       <button class="button ghost" type="button" data-status="ignored">Ignorovat</button>
     </div>
   </article>`;
@@ -710,6 +733,16 @@ function renderDashboard(data: Awaited<ReturnType<typeof dashboardData>>, email:
   const hot = active.filter((row) => row.score >= HOT_THRESHOLD).length;
   const new7d = active.filter((row) => Date.parse(row.first_seen_at) >= Date.now() - 7 * 86_400_000).length;
   const platformActive = data.platforms.filter((row) => ["registered", "active"].includes(row.status)).length;
+  const applied = data.opportunities.filter((row) => row.applied_at || ["applied","won"].includes(row.status)).length;
+  const responses = data.opportunities.filter((row) => row.response_at).length;
+  const interviews = data.opportunities.filter((row) => row.interview_at).length;
+  const wins = data.opportunities.filter((row) => row.won_at || row.status === "won").length;
+  const realizedRevenue = data.opportunities.reduce((sum, row) => sum + Number(row.realized_revenue_czk || 0), 0);
+  const investedHours = data.opportunities.reduce((sum, row) => sum + Number(row.time_invested_hours || 0), 0);
+  const effectiveRate = investedHours > 0 ? realizedRevenue / investedHours : 0;
+  const responseRate = applied > 0 ? Math.round((responses / applied) * 100) : 0;
+  const interviewRate = responses > 0 ? Math.round((interviews / responses) * 100) : 0;
+  const winRate = interviews > 0 ? Math.round((wins / interviews) * 100) : 0;
   const runMap = new Map(data.runs.map((row) => [row.source, row]));
 
   const platformCards = data.platforms.map((row) => {
@@ -745,7 +778,7 @@ function renderDashboard(data: Awaited<ReturnType<typeof dashboardData>>, email:
   <title>Side-income Radar</title>
   <style>
     :root{--ink:#272823;--muted:#73756d;--paper:#f2f0e9;--surface:#fbfaf6;--surface-2:#e9e7df;--line:#d5d2c8;--mint:#9ee8ca;--mint-soft:#dff7ed;--blue:#e5eef3;--amber:#f6edce;--red:#f7dfdd;--shadow:0 8px 18px rgba(55,52,43,.09);font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:var(--ink);background:var(--paper)}
-    *{box-sizing:border-box}body{margin:0;min-height:100vh;background-image:linear-gradient(rgba(62,63,57,.055) 1px,transparent 1px),linear-gradient(90deg,rgba(62,63,57,.055) 1px,transparent 1px);background-size:36px 36px}.shell{width:min(1260px,calc(100% - 32px));margin:24px auto 60px}.top{display:flex;justify-content:space-between;gap:18px;align-items:flex-start}.eyebrow{font-size:11px;font-weight:900;letter-spacing:.13em;text-transform:uppercase;color:#557765}.top h1{font-size:clamp(38px,6vw,68px);line-height:.96;letter-spacing:-.055em;margin:9px 0 8px}.top p{margin:0;color:var(--muted);max-width:760px;line-height:1.55}.top-actions,.actions,.platform-actions{display:flex;gap:8px;flex-wrap:wrap}.button{display:inline-flex;align-items:center;justify-content:center;border:1px solid var(--line);border-radius:999px;padding:9px 14px;color:var(--ink);background:var(--surface);text-decoration:none;font-weight:800;font-size:12px;box-shadow:var(--shadow);cursor:pointer}.button.primary{background:var(--mint);border-color:#83dcb9}.button.ghost{background:transparent;box-shadow:none}.button:disabled{opacity:.55;cursor:wait}.kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin:20px 0}.card{background:rgba(251,250,246,.95);border:1px solid var(--line);border-radius:22px;box-shadow:var(--shadow)}.kpi{padding:17px;min-height:112px;display:flex;flex-direction:column}.kpi span{font-size:10px;color:var(--muted);font-weight:800}.kpi strong{font-size:32px;letter-spacing:-.04em;margin-top:auto}.section-head{display:flex;justify-content:space-between;gap:16px;align-items:end;margin:26px 0 10px}.section-head h2{margin:0;font-size:20px}.section-head span{font-size:10px;color:var(--muted)}.list{display:grid;gap:11px}.op-card{display:grid;grid-template-columns:76px minmax(0,1fr) 154px;gap:16px;padding:17px;background:rgba(251,250,246,.96);border:1px solid var(--line);border-radius:22px;box-shadow:var(--shadow)}.score{width:67px;height:67px;border-radius:18px;background:var(--surface-2);display:grid;place-items:center;align-content:center}.score strong{font-size:25px;line-height:1}.score span{font-size:10px;color:var(--muted)}.score.good{background:var(--mint-soft);color:#2f7258}.score.hot{background:#d4f3e5;color:#24684d;box-shadow:inset 0 0 0 1px #8fd9ba}.meta{display:flex;gap:7px;flex-wrap:wrap;color:var(--muted);font-size:10px;font-weight:800}.meta span{padding:4px 7px;border-radius:99px;background:var(--surface-2)}.meta .source{background:var(--blue);color:#4f7187}.meta .remote{background:var(--mint-soft);color:#347c61}.op-main h2{font-size:18px;margin:9px 0 6px}.op-main p{font-size:12px;line-height:1.55;color:#5f615a;margin:0}.fit{display:inline-flex;margin-top:9px;padding:5px 8px;border-radius:99px;background:var(--amber);color:#725d1f;font-size:9px;font-weight:900}.footer{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px;color:var(--muted);font-size:10px}.status{font-weight:900}.status-new,.status-won{color:#2f7258}.status-applied{color:#4f7187}.status-ignored,.status-lost{color:#8b695f}.actions{flex-direction:column;justify-content:center}.platform-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.platform-card{background:rgba(251,250,246,.96);border:1px solid var(--line);border-radius:18px;padding:14px;box-shadow:var(--shadow)}.platform-head{display:flex;gap:10px;justify-content:space-between}.platform-head strong{display:block}.platform-head span{display:block;margin-top:2px;font-size:9px;color:var(--muted)}.platform-badges{display:flex;gap:5px;flex-wrap:wrap;justify-content:flex-end}.pill{font-style:normal;padding:4px 6px;border-radius:99px;background:var(--surface-2);font-size:8px;font-weight:900}.mode-auto,.priority-high{background:var(--mint-soft);color:#347c61}.mode-profile{background:var(--blue);color:#4f7187}.mode-search,.priority-experiment{background:var(--amber);color:#725d1f}.platform-card p{font-size:10px;line-height:1.45;color:var(--muted);min-height:30px}.platform-card small{display:block;font-size:9px;color:var(--muted);margin:7px 0 10px}.platform-actions select{border:1px solid var(--line);border-radius:999px;background:var(--surface);padding:8px 10px;font-weight:800;font-size:10px;color:var(--ink)}.empty{padding:40px;text-align:center;color:var(--muted)}.account{margin-top:24px;text-align:right;color:var(--muted);font-size:10px}@media(max-width:920px){.platform-grid{grid-template-columns:1fr}.op-card{grid-template-columns:60px 1fr}.actions{grid-column:2;flex-direction:row;justify-content:flex-start}.top{flex-direction:column}}@media(max-width:560px){.kpis{grid-template-columns:1fr 1fr}.op-card{grid-template-columns:1fr}.score{width:auto;height:auto;display:flex;gap:4px;justify-content:flex-start;background:transparent!important;box-shadow:none!important}.actions{grid-column:1}.top h1{font-size:42px}}
+    *{box-sizing:border-box}body{margin:0;min-height:100vh;background-image:linear-gradient(rgba(62,63,57,.055) 1px,transparent 1px),linear-gradient(90deg,rgba(62,63,57,.055) 1px,transparent 1px);background-size:36px 36px}.shell{width:min(1260px,calc(100% - 32px));margin:24px auto 60px}.top{display:flex;justify-content:space-between;gap:18px;align-items:flex-start}.eyebrow{font-size:11px;font-weight:900;letter-spacing:.13em;text-transform:uppercase;color:#557765}.top h1{font-size:clamp(38px,6vw,68px);line-height:.96;letter-spacing:-.055em;margin:9px 0 8px}.top p{margin:0;color:var(--muted);max-width:760px;line-height:1.55}.top-actions,.actions,.platform-actions{display:flex;gap:8px;flex-wrap:wrap}.button{display:inline-flex;align-items:center;justify-content:center;border:1px solid var(--line);border-radius:999px;padding:9px 14px;color:var(--ink);background:var(--surface);text-decoration:none;font-weight:800;font-size:12px;box-shadow:var(--shadow);cursor:pointer}.button.primary{background:var(--mint);border-color:#83dcb9}.button.ghost{background:transparent;box-shadow:none}.button:disabled{opacity:.55;cursor:wait}.kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin:20px 0}.card{background:rgba(251,250,246,.95);border:1px solid var(--line);border-radius:22px;box-shadow:var(--shadow)}.kpi{padding:17px;min-height:112px;display:flex;flex-direction:column}.kpi span{font-size:10px;color:var(--muted);font-weight:800}.kpi strong{font-size:32px;letter-spacing:-.04em;margin-top:auto}.section-head{display:flex;justify-content:space-between;gap:16px;align-items:end;margin:26px 0 10px}.section-head h2{margin:0;font-size:20px}.section-head span{font-size:10px;color:var(--muted)}.list{display:grid;gap:11px}.op-card{display:grid;grid-template-columns:76px minmax(0,1fr) 154px;gap:16px;padding:17px;background:rgba(251,250,246,.96);border:1px solid var(--line);border-radius:22px;box-shadow:var(--shadow)}.score{width:67px;height:67px;border-radius:18px;background:var(--surface-2);display:grid;place-items:center;align-content:center}.score strong{font-size:25px;line-height:1}.score span{font-size:10px;color:var(--muted)}.score.good{background:var(--mint-soft);color:#2f7258}.score.hot{background:#d4f3e5;color:#24684d;box-shadow:inset 0 0 0 1px #8fd9ba}.meta{display:flex;gap:7px;flex-wrap:wrap;color:var(--muted);font-size:10px;font-weight:800}.meta span{padding:4px 7px;border-radius:99px;background:var(--surface-2)}.meta .source{background:var(--blue);color:#4f7187}.meta .remote{background:var(--mint-soft);color:#347c61}.op-main h2{font-size:18px;margin:9px 0 6px}.op-main p{font-size:12px;line-height:1.55;color:#5f615a;margin:0}.fit{display:inline-flex;margin-top:9px;padding:5px 8px;border-radius:99px;background:var(--amber);color:#725d1f;font-size:9px;font-weight:900}.footer{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px;color:var(--muted);font-size:10px}.status{font-weight:900}.status-new,.status-won{color:#2f7258}.status-applied{color:#4f7187}.status-ignored,.status-lost{color:#8b695f}.learning-line{display:flex;gap:10px;flex-wrap:wrap;margin-top:9px;padding:8px 10px;border-radius:12px;background:var(--mint-soft);font-size:9px;color:#347c61}.learning-line span{color:#4e6d61}.outcome-note{margin-top:7px;padding:7px 9px;border-left:3px solid #c8c5bb;background:var(--surface-2);font-size:9px;color:var(--muted)}.actions{flex-direction:column;justify-content:center}.platform-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.platform-card{background:rgba(251,250,246,.96);border:1px solid var(--line);border-radius:18px;padding:14px;box-shadow:var(--shadow)}.platform-head{display:flex;gap:10px;justify-content:space-between}.platform-head strong{display:block}.platform-head span{display:block;margin-top:2px;font-size:9px;color:var(--muted)}.platform-badges{display:flex;gap:5px;flex-wrap:wrap;justify-content:flex-end}.pill{font-style:normal;padding:4px 6px;border-radius:99px;background:var(--surface-2);font-size:8px;font-weight:900}.mode-auto,.priority-high{background:var(--mint-soft);color:#347c61}.mode-profile{background:var(--blue);color:#4f7187}.mode-search,.priority-experiment{background:var(--amber);color:#725d1f}.platform-card p{font-size:10px;line-height:1.45;color:var(--muted);min-height:30px}.platform-card small{display:block;font-size:9px;color:var(--muted);margin:7px 0 10px}.platform-actions select{border:1px solid var(--line);border-radius:999px;background:var(--surface);padding:8px 10px;font-weight:800;font-size:10px;color:var(--ink)}.empty{padding:40px;text-align:center;color:var(--muted)}.account{margin-top:24px;text-align:right;color:var(--muted);font-size:10px}@media(max-width:920px){.platform-grid{grid-template-columns:1fr}.op-card{grid-template-columns:60px 1fr}.actions{grid-column:2;flex-direction:row;justify-content:flex-start}.top{flex-direction:column}}@media(max-width:560px){.kpis{grid-template-columns:1fr 1fr}.op-card{grid-template-columns:1fr}.score{width:auto;height:auto;display:flex;gap:4px;justify-content:flex-start;background:transparent!important;box-shadow:none!important}.actions{grid-column:1}.top h1{font-size:42px}}
   </style>
 </head>
 <body><main class="shell">
@@ -761,6 +794,14 @@ function renderDashboard(data: Awaited<ReturnType<typeof dashboardData>>, email:
     <article class="card kpi"><span>Platformy aktivované</span><strong>${esc(platformActive)}</strong><small>registered / active</small></article>
   </section>
 
+  <div class="section-head"><div><h2>Learning loop</h2><span>Měříme skutečný funnel a ekonomiku času — ne jen počet nalezených nabídek.</span></div><span>Applied → Response → Interview → Won</span></div>
+  <section class="kpis learning-kpis">
+    <article class="card kpi"><span>Applied</span><strong>${esc(applied)}</strong><small>response rate ${esc(responseRate)} %</small></article>
+    <article class="card kpi"><span>Responses</span><strong>${esc(responses)}</strong><small>interview rate ${esc(interviewRate)} %</small></article>
+    <article class="card kpi"><span>Interviews / wins</span><strong>${esc(interviews)} / ${esc(wins)}</strong><small>win rate z interview ${esc(winRate)} %</small></article>
+    <article class="card kpi"><span>Realized / effective</span><strong>${esc(Math.round(realizedRevenue).toLocaleString("cs-CZ"))} Kč</strong><small>${effectiveRate > 0 ? `${esc(Math.round(effectiveRate).toLocaleString("cs-CZ"))} Kč/h · ${esc(investedHours.toFixed(1))} h` : "zatím bez realizovaného výnosu"}</small></article>
+  </section>
+
   <div class="section-head"><div><h2>${showArchive ? "Všechny opportunities" : "Relevantní opportunities"}</h2><span>${visible.length} zobrazených · hlavní feed začíná na ${MIN_VISIBLE_SCORE}/100</span></div><span>PM praxe + math/physics tutoring · Auto: Alignerr · Mercor · Maven</span></div>
   <section class="list">${visible.map(opportunityCard).join("") || '<article class="card empty">Zatím žádná uložená side-income opportunity. Spusť „Zkontrolovat teď“.</article>'}</section>
 
@@ -773,6 +814,8 @@ function renderDashboard(data: Awaited<ReturnType<typeof dashboardData>>, email:
   const refresh=document.getElementById('refresh');
   refresh?.addEventListener('click',async()=>{refresh.disabled=true;refresh.textContent='Kontroluji…';try{const response=await fetch('${SIDE_INCOME_REFRESH_API_PATH}',{method:'POST',headers:{'X-Requested-With':'XMLHttpRequest'}});if(!response.ok)throw new Error();location.reload()}catch{refresh.disabled=false;refresh.textContent='Zkusit znovu'}});
   document.querySelectorAll('[data-status]').forEach(button=>button.addEventListener('click',async()=>{const card=button.closest('[data-opportunity-id]');if(!card)return;button.disabled=true;try{const response=await fetch('${SIDE_INCOME_STATUS_API_PATH}',{method:'POST',headers:{'Content-Type':'application/json','X-Requested-With':'XMLHttpRequest'},body:JSON.stringify({id:card.dataset.opportunityId,status:button.dataset.status})});if(!response.ok)throw new Error();location.reload()}catch{button.disabled=false}}));
+  document.querySelectorAll('[data-milestone]').forEach(button=>button.addEventListener('click',async()=>{const card=button.closest('[data-opportunity-id]');if(!card)return;button.disabled=true;try{const response=await fetch('${SIDE_INCOME_MILESTONE_API_PATH}',{method:'POST',headers:{'Content-Type':'application/json','X-Requested-With':'XMLHttpRequest'},body:JSON.stringify({id:card.dataset.opportunityId,milestone:button.dataset.milestone})});if(!response.ok)throw new Error();location.reload()}catch{button.disabled=false}}));
+  document.querySelectorAll('[data-metrics]').forEach(button=>button.addEventListener('click',async()=>{const card=button.closest('[data-opportunity-id]');if(!card)return;const hoursRaw=prompt('Kolik času jsi do této opportunity celkem investoval (h)?','0');if(hoursRaw===null)return;const revenueRaw=prompt('Kolik už tato opportunity reálně vydělala (Kč)?','0');if(revenueRaw===null)return;const note=prompt('Krátký learning / outcome (volitelné):','')||'';const hours=Number(String(hoursRaw).replace(',','.'));const revenue=Number(String(revenueRaw).replace(/\s/g,'').replace(',','.'));if(!Number.isFinite(hours)||hours<0||!Number.isFinite(revenue)||revenue<0){alert('Neplatná hodnota.');return;}button.disabled=true;try{const response=await fetch('${SIDE_INCOME_METRICS_API_PATH}',{method:'POST',headers:{'Content-Type':'application/json','X-Requested-With':'XMLHttpRequest'},body:JSON.stringify({id:card.dataset.opportunityId,hours,revenue,note})});if(!response.ok)throw new Error();location.reload()}catch{button.disabled=false}}));
   document.querySelectorAll('[data-platform-select]').forEach(select=>select.addEventListener('change',async()=>{const card=select.closest('[data-platform-source]');if(!card)return;select.disabled=true;try{const response=await fetch('${SIDE_INCOME_PLATFORM_API_PATH}',{method:'POST',headers:{'Content-Type':'application/json','X-Requested-With':'XMLHttpRequest'},body:JSON.stringify({source:card.dataset.platformSource,status:select.value})});if(!response.ok)throw new Error()}catch{location.reload()}finally{select.disabled=false}}));
 </script>
 </body></html>`);
@@ -794,8 +837,55 @@ async function statusHandler(request: Request, env: SideIncomeEnv): Promise<Resp
   const id = String(payload.id || "").trim();
   const status = String(payload.status || "").trim();
   if (!id || !["reviewed","applied","won","lost","ignored"].includes(status)) return json({ error: "Invalid status." }, 400);
-  const result = await env.DB.prepare("UPDATE side_income_opportunities SET status = ?2 WHERE id = ?1")
-    .bind(id, status)
+  const now = new Date().toISOString();
+  const result = await env.DB.prepare(`UPDATE side_income_opportunities
+      SET status = ?2,
+          applied_at = CASE WHEN ?2 IN ('applied','won') THEN COALESCE(applied_at, ?3) ELSE applied_at END,
+          won_at = CASE WHEN ?2 = 'won' THEN COALESCE(won_at, ?3) ELSE won_at END
+      WHERE id = ?1`)
+    .bind(id, status, now)
+    .run();
+  if (!Number(result.meta.changes || 0)) return json({ error: "Opportunity not found." }, 404);
+  return json({ ok: true });
+}
+
+async function milestoneHandler(request: Request, env: SideIncomeEnv): Promise<Response> {
+  await requireAdmin(request, env);
+  if (request.method !== "POST") return plain("Method not allowed", 405);
+  if (request.headers.get("x-requested-with") !== "XMLHttpRequest") return plain("Missing request marker", 403);
+  if (!request.headers.get("content-type")?.toLowerCase().includes("application/json")) return plain("JSON required", 415);
+  const payload = await request.json<{ id?: string; milestone?: string }>();
+  const id = String(payload.id || "").trim();
+  const milestone = String(payload.milestone || "").trim();
+  if (!id || !["response","interview"].includes(milestone)) return json({ error: "Invalid milestone." }, 400);
+  const now = new Date().toISOString();
+  const column = milestone === "response" ? "response_at" : "interview_at";
+  const result = await env.DB.prepare(`UPDATE side_income_opportunities
+      SET ${column} = COALESCE(${column}, ?2),
+          applied_at = COALESCE(applied_at, ?2),
+          status = CASE WHEN status IN ('new','reviewed') THEN 'applied' ELSE status END
+      WHERE id = ?1`)
+    .bind(id, now)
+    .run();
+  if (!Number(result.meta.changes || 0)) return json({ error: "Opportunity not found." }, 404);
+  return json({ ok: true });
+}
+
+async function metricsHandler(request: Request, env: SideIncomeEnv): Promise<Response> {
+  await requireAdmin(request, env);
+  if (request.method !== "POST") return plain("Method not allowed", 405);
+  if (request.headers.get("x-requested-with") !== "XMLHttpRequest") return plain("Missing request marker", 403);
+  if (!request.headers.get("content-type")?.toLowerCase().includes("application/json")) return plain("JSON required", 415);
+  const payload = await request.json<{ id?: string; hours?: number; revenue?: number; note?: string }>();
+  const id = String(payload.id || "").trim();
+  const hours = Number(payload.hours);
+  const revenue = Number(payload.revenue);
+  const note = String(payload.note || "").trim().slice(0, 1000);
+  if (!id || !Number.isFinite(hours) || hours < 0 || !Number.isFinite(revenue) || revenue < 0) return json({ error: "Invalid metrics." }, 400);
+  const result = await env.DB.prepare(`UPDATE side_income_opportunities
+      SET time_invested_hours = ?2, realized_revenue_czk = ?3, outcome_note = ?4
+      WHERE id = ?1`)
+    .bind(id, hours, revenue, note || null)
     .run();
   if (!Number(result.meta.changes || 0)) return json({ error: "Opportunity not found." }, 404);
   return json({ ok: true });
@@ -830,6 +920,8 @@ export async function handleSideIncomeRequest(request: Request, env: SideIncomeE
     }
     if (url.pathname === SIDE_INCOME_REFRESH_API_PATH) return refreshHandler(request, env);
     if (url.pathname === SIDE_INCOME_STATUS_API_PATH) return statusHandler(request, env);
+    if (url.pathname === SIDE_INCOME_MILESTONE_API_PATH) return milestoneHandler(request, env);
+    if (url.pathname === SIDE_INCOME_METRICS_API_PATH) return metricsHandler(request, env);
     if (url.pathname === SIDE_INCOME_PLATFORM_API_PATH) return platformHandler(request, env);
     return null;
   } catch (error) {
