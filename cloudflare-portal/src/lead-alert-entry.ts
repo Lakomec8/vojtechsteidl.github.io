@@ -180,12 +180,12 @@ async function orderLeadDashboard(response: Response, env: LeadEnv, showResolved
   );
 
   updated = updated.replace(
-    /<h2>Nejnovější leady<\/h2><span>[^<]*<\/span>/,
-    `<h2>${showResolved ? "Všechny leady" : "Aktivní leady"}</h2><span>${orderedCards.length} zobrazených${!showResolved && hiddenResolved ? ` · ${hiddenResolved} vyřízených skryto` : ""}</span>`,
+    /<h2>Tutoring Radar · Doučuji\.eu<\/h2><span>[^<]*<\/span>/,
+    `<h2>Tutoring Radar · Doučuji.eu</h2><span>${orderedCards.length} ${showResolved ? "zobrazených" : "aktivních"}${!showResolved && hiddenResolved ? ` · ${hiddenResolved} vyřízených skryto` : ""}</span>`,
   );
   updated = updated.replace(
-    "Doučuji.eu aktivní · Bazoš automatizace vypnuta kvůli podmínkám platformy",
-    "Řazení: nejnovější zachycené nahoře · Doučuji.eu aktivní",
+    "Řazení: nejnovější aktivní nahoře · vyřízené jsou schované",
+    showResolved ? "Řazení: nejnovější zachycené nahoře · včetně vyřízených" : "Řazení: nejnovější aktivní nahoře · vyřízené jsou schované",
   );
 
   const toggle = showResolved
