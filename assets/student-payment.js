@@ -16,9 +16,11 @@
     const profile = await response.json();
     const studentId = String(profile.studentId || "").toLowerCase();
     const isGroupStudent = studentId === "adam" || studentId === "krystof";
+    const isEliska = studentId === "eliska";
     const isNatalie = studentId === "natalie";
-    const amount = isGroupStudent ? 300 : isNatalie ? 400 : 450;
-    const qr = isGroupStudent
+    const isThreeHundred = isGroupStudent || isEliska;
+    const amount = isThreeHundred ? 300 : isNatalie ? 400 : 450;
+    const qr = isThreeHundred
       ? "/assets/payment-300.svg?v=20260902-1"
       : isNatalie ? QR_400 : QR_450;
     const lessonLabel = isGroupStudent ? "1 skupinová lekce · 60 min" : "1 lekce";
