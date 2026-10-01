@@ -88,7 +88,7 @@ def patch_public_entrypoint() -> None:
     html = replace_required(
         html,
         '<title>Doučování matematiky a fyziky | Jihlava i online | Vojtěch Steidl</title>',
-        '<title>Doučování matematiky a fyziky | online ČR + Vysočina | Vojtěch Steidl</title>',
+        '<title>Online doučování matematiky a fyziky | Vojtěch Steidl</title>',
         "homepage title",
     )
     html = replace_required(
@@ -100,7 +100,7 @@ def patch_public_entrypoint() -> None:
     html = replace_required(
         html,
         '<meta property="og:title" content="Doučování matematiky a fyziky | Jihlava i online">',
-        '<meta property="og:title" content="Doučování matematiky a fyziky | online ČR + Vysočina">',
+        '<meta property="og:title" content="Doučování matematiky a fyziky | online | ZŠ, SŠ a VŠ">',
         "homepage og title",
     )
 
@@ -135,19 +135,19 @@ def patch_public_entrypoint() -> None:
     html = replace_required(
         html,
         '<meta name="description" content="Individuální doučování matematiky a fyziky v Jihlavě i online. Součástí výuky jsou vlastní materiály a osobní studentská zóna.">',
-        '<meta name="description" content="Individuální i skupinové doučování matematiky a fyziky online po celé ČR a osobně po domluvě u lektora na Vysočině. Diagnostické testy zdarma, VŠ matematika, vlastní materiály a studentská zóna.">',
+        '<meta name="description" content="Online doučování matematiky a fyziky pro ZŠ, SŠ a VŠ. Přijímačky, maturita i zkoušky. 450 Kč / 60 min, diagnostika a úvodní konzultace zdarma.">',
         "homepage service meta description",
     )
     html = replace_required(
         html,
         '<li><a href="#cenik">Ceník</a></li>',
-        '<li><a href="/doucovani-vs-matematiky/">VŠ matematika</a></li><li><a href="/diagnostika/">Diagnostika</a></li><li><a href="/skupinove-doucovani-matematiky/">Skupinové lekce</a></li><li><a href="#cenik">Ceník</a></li>',
+        '<li><a href="/online-doucovani-matematiky/">Online výuka</a></li><li><a href="/doucovani-vs-matematiky/">VŠ matematika</a></li><li><a href="/diagnostika/">Diagnostika</a></li><li><a href="/skupinove-doucovani-matematiky/">Skupinové lekce</a></li><li><a href="#cenik">Ceník</a></li>',
         "university diagnostics and group navigation links",
     )
     html = replace_required(
         html,
         '<p>Individuální výuka doplněná o přehledné zápisy, interaktivní materiály a osobní studentskou zónu, kde má student návaznost mezi jednotlivými hodinami.</p>',
-        '<p>Individuální výuka online po celé ČR a osobně po domluvě na Vysočině, doplněná o přehledné zápisy, diagnostické testy, vlastní materiály a studentskou zónu. Pro VŠ studenty je dostupná také cílená příprava na zápočty a zkoušky.</p>',
+        '<p>Individuální výuka online po celé ČR, doplněná o přehledné zápisy, diagnostické testy, vlastní materiály a studentskou zónu. Pro VŠ studenty je dostupná také cílená příprava na zápočty a zkoušky.</p>',
         "homepage hero positioning",
     )
     html = replace_required(
@@ -185,7 +185,7 @@ def patch_public_entrypoint() -> None:
                     <h2>Skupinové lekce matematiky za 300 Kč na osobu</h2>
                     <p>Pro studenty se stejným cílem sestavuji malé skupiny pro přijímačky na SŠ, maturitu a průběžnou středoškolskou matematiku. Nejdřív sbírám zájemce podle úrovně a časových možností; teprve potom navrhnu společný termín.</p>
                     <div class="school-promo-actions"><a class="school-promo-button" href="/skupinove-doucovani-matematiky/">Zjistit více a přidat se mezi zájemce <i class="fas fa-arrow-right"></i></a></div>
-                    <p class="school-promo-note">300 Kč / osoba / 60 minut · online nebo osobně po domluvě u lektora na Vysočině · vyplnění zájmu je nezávazné</p>
+                    <p class="school-promo-note">300 Kč / osoba / 60 minut · online po celé ČR · vyplnění zájmu je nezávazné</p>
                 </div>
                 <div class="school-promo-points">
                     <div class="school-promo-point"><i class="fas fa-school"></i><span><strong>Přijímačky na SŠ</strong> — typové úlohy, strategie a práce s testem.</span></div>
@@ -280,8 +280,8 @@ def assert_public_artifact() -> None:
     university_html = (DIST / "doucovani-vs-matematiky" / "index.html").read_text(encoding="utf-8")
     if "../test-vs-matematika-1-rocnik/" not in university_html:
         raise RuntimeError("University diagnostic link is missing from university math landing page")
-    if "standardně za studenty nedojíždím" not in university_html:
-        raise RuntimeError("University page must state the in-person travel model accurately")
+    if "Výuka probíhá pouze online" not in university_html:
+        raise RuntimeError("University page must state the online-only model accurately")
 
     required_diagnostics = (
         "diagnostika/index.html",
@@ -308,12 +308,12 @@ def assert_public_artifact() -> None:
         if link not in homepage:
             raise RuntimeError(f"{label} link is missing from deployed homepage")
 
-    if "online po celé ČR" not in homepage or "Vysočině" not in homepage:
-        raise RuntimeError("Homepage positioning does not reflect online-first plus Vysočina model")
+    if "online po celé ČR" not in homepage or "Online po celé ČR" not in homepage:
+        raise RuntimeError("Homepage positioning does not reflect online-only model")
 
     math_page = (DIST / "doucovani-matematiky" / "index.html").read_text(encoding="utf-8")
-    if "standardně za studenty nedojíždím" not in math_page:
-        raise RuntimeError("Local tutoring page must state the no-commuting model accurately")
+    if "Výuka probíhá pouze online" not in math_page:
+        raise RuntimeError("Local tutoring page must state the online-only model accurately")
     if "../doucovani-vs-matematiky/" not in math_page:
         raise RuntimeError("University math internal link is missing from local tutoring page")
 
