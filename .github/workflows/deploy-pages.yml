@@ -71,7 +71,7 @@ jobs:
           grep -q 'doucovani-vs-matematiky' .public-site/sitemap.xml
           grep -q 'online-doucovani-matematiky' .public-site/sitemap.xml
           grep -q 'priprava-na-prijimacky-z-matematiky' .public-site/sitemap.xml
-          grep -q 'standardně za studenty nedojíždím' .public-site/doucovani-matematiky/index.html
+          grep -q 'Výuka probíhá pouze online' .public-site/doucovani-matematiky/index.html
           grep -q 'test-vs-matematika-1-rocnik' .public-site/doucovani-vs-matematiky/index.html
           grep -q 'test-prijimacky-9-matematika' .public-site/priprava-na-prijimacky-z-matematiky/index.html
 
