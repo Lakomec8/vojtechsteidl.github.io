@@ -2,6 +2,7 @@
 """Patch the built public navigation so it never wraps and remains usable on subpages."""
 
 from pathlib import Path
+import re
 
 DIST = Path(__file__).resolve().parents[1] / ".public-site"
 STYLE_PATH = DIST / "style.css"
@@ -110,7 +111,10 @@ for page in DIST.rglob("*.html"):
         html = html.replace('<ul class="nav-links">', '<ul class="nav-links" id="navLinks">', 1)
         changed = True
 
-    if 'class="hamburger"' in html and 'id="navLinks"' in html and 'data-responsive-nav' not in html and '</body>' in html:
+    # The homepage and PDF gallery already bind their own menu handler.
+    # A second toggle listener would immediately close the menu on every click.
+    has_menu_handler = re.search(r"hamburger\s*\.\s*addEventListener\s*\(\s*['\"]click['\"]", html)
+    if 'class="hamburger"' in html and 'id="navLinks"' in html and not has_menu_handler and 'data-responsive-nav' not in html and '</body>' in html:
         html = html.replace('</body>', NAV_SCRIPT + '</body>', 1)
         changed = True
 
