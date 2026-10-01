@@ -1218,3 +1218,9 @@ footer p {
     text-align: center;
 }
 
+
+/* Study goals: three clear entry points into tutoring. */
+.goal-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1.25rem}
+.goal-card{padding:1.65rem;border:1px solid #dbe6f2;border-radius:18px;background:#fff;box-shadow:0 8px 24px rgba(15,23,42,.05)}
+.goal-card h3{color:#102a43;margin-bottom:.65rem}.goal-card p{color:#64748b;line-height:1.65}.goal-card a{display:inline-block;margin-top:1rem;font-weight:800;color:#1d4ed8;text-decoration:none}.goal-card a:hover{text-decoration:underline}
+@media(max-width:760px){.goal-grid{grid-template-columns:1fr}}

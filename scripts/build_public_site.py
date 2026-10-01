@@ -153,7 +153,7 @@ def patch_public_entrypoint() -> None:
     html = replace_required(
         html,
         '<div class="hero-actions"><a href="#kontakt" class="cta-button">Domluvit úvodní konzultaci zdarma <i class="fas fa-arrow-right"></i></a><a href="https://vojtechsteidl.eu/student-portal/" class="cta-button cta-button-secondary"><i class="fas fa-user-lock"></i> Vstoupit do studentské zóny</a></div>',
-        '<div class="hero-actions"><a href="#kontakt" class="cta-button">Domluvit úvodní konzultaci zdarma <i class="fas fa-arrow-right"></i></a><a href="/doucovani-vs-matematiky/" class="cta-button cta-button-secondary"><i class="fas fa-square-root-variable"></i> VŠ matematika</a><a href="/diagnostika/" class="cta-button cta-button-secondary"><i class="fas fa-chart-line"></i> Diagnostika zdarma</a><a href="/skupinove-doucovani-matematiky/" class="cta-button cta-button-secondary"><i class="fas fa-users"></i> Skupinové lekce od 300 Kč</a><a href="https://vojtechsteidl.eu/student-portal/" class="cta-button cta-button-secondary"><i class="fas fa-user-lock"></i> Studentská zóna</a></div>',
+        '<div class="hero-actions"><a href="#kontakt" class="cta-button">Domluvit úvodní konzultaci zdarma <i class="fas fa-arrow-right"></i></a><a href="/diagnostika/" class="cta-button cta-button-secondary"><i class="fas fa-chart-line"></i> Diagnostika zdarma</a></div>',
         "homepage hero actions",
     )
 
@@ -237,6 +237,14 @@ def patch_maturita_diagnostic_feedback() -> None:
             raise RuntimeError("Maturita diagnostic page has no closing body tag")
         html = html.replace("</body>", script + "\n</body>", 1)
     path.write_text(html, encoding="utf-8")
+
+
+def add_lead_attribution() -> None:
+    script = '<script src="/assets/lead-attribution.js" defer></script>'
+    for path in DIST.rglob("*.html"):
+        html = path.read_text(encoding="utf-8")
+        if "</head>" in html and script not in html:
+            path.write_text(html.replace("</head>", script + "\n</head>", 1), encoding="utf-8")
 
 
 def assert_public_artifact() -> None:
@@ -337,5 +345,6 @@ for relative in PUBLIC_DIRECTORIES:
 
 patch_public_entrypoint()
 patch_maturita_diagnostic_feedback()
+add_lead_attribution()
 assert_public_artifact()
 print(f"Built hardened public site at {DIST}")
