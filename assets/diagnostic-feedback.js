@@ -91,7 +91,9 @@
       'Můj cíl / termín:',
       'Co mi dělá největší problém:',
       '',
-      'Děkuji.'
+      'Děkuji.',
+      '',
+      ...(window.LeadAttribution?.summaryLines() || [])
     ].join('\n');
     return `mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
   }
