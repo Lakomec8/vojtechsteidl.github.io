@@ -474,10 +474,10 @@
   }
 
   function resultFeedback(percent) {
-    if (percent >= 85) return "Výborný výsledek. Základ pro přijímačkové rovnice je velmi pevný.";
+    if (percent >= 85) return "Výborný výsledek. Základy této látky zvládáš velmi dobře.";
     if (percent >= 65) return "Dobrý základ. Zaměř se na nejslabší oblast a pak test zopakuj.";
     if (percent >= 45) return "Část postupů funguje, ale některé typy úloh ještě potřebují upevnit.";
-    return "Vyplatí se vrátit k postupu po jednotlivých krocích a procvičit základní typy rovnic.";
+    return "Vyplatí se vrátit k postupu po jednotlivých krocích a procvičit základy této látky.";
   }
 
   function renderAnswerLine(label, value, className = "") {
