@@ -4,12 +4,12 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Aktuální skupiny a kapacita | Doučování matematiky | Vojtěch Steidl</title>
-  <meta name="description" content="Skupinové doučování matematiky v malých skupinách 3–5 studentů za 300 Kč na osobu. Přijímačky na SŠ, maturita a středoškolská matematika online po celé ČR.">
+  <meta name="description" content="Aktuální volné sloty pro malé skupinové doučování matematiky. Konkrétní termín, kapacita a start od 2 studentů. Přijímačky, SŠ a VŠ matematika online.">
   <meta name="keywords" content="skupinové doučování matematiky, skupinové doučování Jihlava, skupinové doučování online, příprava na přijímačky matematika, skupinová příprava na maturitu, doučování matematiky ve skupině">
   <meta name="robots" content="index,follow">
   <link rel="canonical" href="https://vojtechsteidl.eu/skupinove-doucovani-matematiky/">
   <meta property="og:title" content="Skupinové doučování matematiky | 300 Kč za osobu">
-  <meta property="og:description" content="Malé skupiny 3–5 studentů se stejným cílem. Přijímačky, maturita a středoškolská matematika online po celé ČR.">
+  <meta property="og:description" content="Konkrétní volné sloty, jasná kapacita a start od 2 studentů. Malé online skupiny pro přijímačky, SŠ a VŠ matematiku.">
   <meta property="og:url" content="https://vojtechsteidl.eu/skupinove-doucovani-matematiky/">
   <meta property="og:type" content="website">
   <meta property="og:image" content="https://vojtechsteidl.eu/foto.jpg">
@@ -42,6 +42,10 @@
     .track-status::before{content:"";width:7px;height:7px;border-radius:50%;background:#60a5fa;box-shadow:0 0 0 4px #dbeafe}
     .track-capacity{color:#0f172a;font-size:.82rem;font-weight:850}
     .track-schedule{margin-top:.7rem!important;color:#64748b!important;font-size:.86rem}
+    .slot-box{margin-top:1rem;padding:.9rem 1rem;border:1px solid #bfdbfe;border-radius:12px;background:#eff6ff}
+    .slot-box .slot-label{display:block;margin-bottom:.22rem;color:#2563eb;font-size:.7rem;font-weight:850;letter-spacing:.06em;text-transform:uppercase}
+    .slot-box strong{color:#102a43;font-size:1.05rem}
+    .track-start-note{margin-top:.7rem!important;color:#475569!important;font-size:.84rem!important;line-height:1.5}
     .track-action{display:inline-flex;margin-top:1rem;color:#1d4ed8;font-size:.9rem;font-weight:850;text-decoration:none}
     .track-action:hover{text-decoration:underline}
     .capacity-updated{font-size:.8rem!important;color:#94a3b8!important}
@@ -79,23 +83,23 @@
       <div class="wrap hero-grid">
         <div>
           <div class="crumbs"><a href="../">Domů</a> / Skupinové doučování matematiky</div>
-          <h1>Aktuální skupiny a volná místa.</h1>
-          <p>Individuální kapacita je nyní téměř plná. Nová místa proto otevírám především v malých online skupinách podle společného cíle, úrovně a tématu.</p>
-          <div class="hero-badges"><span class="hero-badge">3–5 studentů</span><span class="hero-badge">300 Kč / osoba</span><span class="hero-badge">60 minut</span><span class="hero-badge">Online po celé ČR</span></div>
-          <div class="actions"><a class="btn" href="#zajem">Přidat se mezi zájemce</a><a class="btn secondary" href="#skupiny">Vybrat typ skupiny</a></div>
+          <h1>Vyberte rovnou konkrétní skupinový termín.</h1>
+          <p>Individuální kapacita je nyní téměř plná. Proto níže zveřejňuji konkrétní pravidelné sloty, ve kterých může nová malá skupina začít bez dlouhého čekání na neurčitý termín.</p>
+          <div class="hero-badges"><span class="hero-badge">start od 2 studentů</span><span class="hero-badge">max. 4–5 studentů</span><span class="hero-badge">300 Kč / osoba</span><span class="hero-badge">60 minut</span></div>
+          <div class="actions"><a class="btn" href="#skupiny">Vybrat konkrétní termín</a><a class="btn secondary" href="#zajem">Navrhnout jiný termín</a></div>
         </div>
         <aside class="price-card" aria-label="Cena skupinové lekce">
           <span>Skupinová lekce</span>
           <strong>300 Kč <small>/ osoba</small></strong>
-          <p>Cena za 60 minut. Termín navrhnu ve chvíli, kdy se sejdou studenti se stejným cílem a kompatibilními časovými možnostmi.</p>
-          <div class="price-points"><div class="price-point">malá skupina 3–5 studentů</div><div class="price-point">vlastní materiály k probíraným tématům</div><div class="price-point">společný cíl a podobná úroveň</div></div>
+          <p>Cena za 60 minut. Každý zveřejněný slot je už volný v mém kalendáři; skupina může začít od dvou kompatibilních studentů.</p>
+          <div class="price-points"><div class="price-point">start od 2 studentů</div><div class="price-point">max. 4 studenti, u VŠ až 5</div><div class="price-point">konkrétní pravidelný termín</div></div>
         </aside>
       </div>
     </section>
 
     <section class="section" id="skupiny">
       <div class="wrap">
-        <div class="section-heading"><p class="eyebrow">Aktuální kapacita</p><h2>Skupiny podle cíle a tématu.</h2><p>Dokud nejsou místa potvrzena se stávajícími studenty, zobrazuji pouze kapacitu a stav „Sbíráme zájem“. Jakmile je skupina potvrzená, uvidíte zde skutečné obsazení.</p><p class="capacity-updated" id="capacityUpdated"></p></div>
+        <div class="section-heading"><p class="eyebrow">Aktuální kapacita</p><h2>Konkrétní volné sloty.</h2><p>Každý termín níže je reálně volný pro pravidelnou skupinu. Skupina startuje od 2 kompatibilních studentů; jakmile budou místa potvrzena, zobrazí se i skutečná obsazenost.</p><p class="capacity-updated" id="capacityUpdated"></p></div>
         <div class="tracks" id="groupTracks"><p class="capacity-loading">Načítám aktuální skupiny…</p></div>
         </div>
       </div>
@@ -103,8 +107,8 @@
 
     <section class="section alt">
       <div class="wrap">
-        <div class="section-heading"><p class="eyebrow">Jak vznikne konkrétní termín</p><h2>Nejdřív sbírám kompatibilní zájemce. Až potom otevírám skupinu.</h2><p>Není potřeba přizpůsobovat se předem vypsanému termínu, který většině studentů nesedí. Nejprve zjistím, kdo řeší stejný cíl a kdy může.</p></div>
-        <div class="how-grid"><div class="step"><strong>Vyplníš zájem</strong><p>Vybereš cíl, ročník, preferovanou formu a možné dny.</p></div><div class="step"><strong>Porovnám úroveň</strong><p>Do jedné skupiny dávám studenty, pro které bude tempo výuky smysluplné.</p></div><div class="step"><strong>Navrhnu termín</strong><p>Jakmile se potkají 3–5 kompatibilních studentů, pošlu návrh společného času.</p></div><div class="step"><strong>Skupina začne</strong><p>Po potvrzení termínu probíhá výuka za 300 Kč na osobu a 60 minut.</p></div></div>
+        <div class="section-heading"><p class="eyebrow">Jak rychle lze začít</p><h2>Termín už existuje. Potřebujeme jen kompatibilní dvojici.</h2><p>Nečekáte, až se jednou vytvoří nějaká třída. Vyberete konkrétní volný slot a já ověřím, zda k němu mohu přiřadit dalšího studenta se stejným cílem a úrovní.</p></div>
+        <div class="how-grid"><div class="step"><strong>Vyberete slot</strong><p>Zvolíte konkrétní termín, který vám vyhovuje.</p></div><div class="step"><strong>Ověřím úroveň</strong><p>Krátce ověřím téma a úroveň, aby společné tempo dávalo smysl.</p></div><div class="step"><strong>Potvrdím start</strong><p>Jakmile jsou v termínu 2 kompatibilní studenti, skupina může začít.</p></div><div class="step"><strong>Pravidelně pokračujeme</strong><p>Slot zůstává stejný; maximální kapacita je 4–5 studentů.</p></div></div>
       </div>
     </section>
 
@@ -118,16 +122,16 @@
     <section class="section alt">
       <div class="wrap">
         <div class="waitlist-band">
-          <h2>VŠ matematika, reparát nebo jiné téma?</h2>
-          <p>Tyto skupiny nevypisuji genericky dopředu, protože obsah se mezi školami a obory výrazně liší. Zájem ale sbírám. Pokud se sejdou studenti se stejným předmětem nebo podobným sylabem, můžeme otevřít další skupinu.</p>
-          <div class="waitlist-note"><strong>Typický příklad:</strong> několik studentů stejného oboru potřebuje zvládnout Matematiku 1 nebo stejnou zkoušku. V takovém případě dává skupinový formát velmi dobrý smysl.</div>
+          <h2>Nehodí se vám žádný z vypsaných slotů?</h2>
+          <p>Napište mi ročník, téma a 2–3 časy, které vám vyhovují. Pokud mám v kalendáři další použitelný blok nebo studenta se stejnou látkou, navrhnu nový konkrétní termín.</p>
+          <div class="waitlist-note"><strong>Cíl:</strong> nečekat na neurčitou „budoucí skupinu“, ale co nejrychleji najít konkrétní čas, ve kterém může výuka reálně začít.</div>
         </div>
       </div>
     </section>
 
     <section class="section" id="zajem">
       <div class="wrap">
-        <div class="section-heading"><p class="eyebrow">Nezávazná čekací listina</p><h2>Mám zájem o místo ve skupině</h2><p>Vyplnění formuláře není rezervace ani závazná objednávka. Slouží k tomu, abych mohl spojit studenty se stejným cílem a navrhnout vhodnou skupinu.</p></div>
+        <div class="section-heading"><p class="eyebrow">Ověření místa</p><h2>Chci tento slot / potřebuji jiný termín</h2><p>Vyberte skupinu a termín. Ověřím kompatibilitu a dám vám konkrétní odpověď, zda lze začít v daném slotu, nebo navrhnu nejbližší alternativu.</p></div>
         <form id="groupForm">
           <div class="form-grid">
             <div class="form-group"><label for="groupName">Jméno</label><input id="groupName" name="name" type="text" autocomplete="name" required></div>
@@ -140,7 +144,7 @@
           </div>
           <input type="hidden" name="service" value="skupinove-doucovani-matematiky">
           <label class="consent"><input type="checkbox" required><span>Souhlasím se zpracováním údajů za účelem vyřízení této nezávazné poptávky.</span></label>
-          <button class="submit" type="submit">Přidat se mezi zájemce</button>
+          <button class="submit" type="submit">Ověřit místo ve skupině</button>
           <p class="form-status" id="groupFormStatus" aria-live="polite"></p>
         </form>
       </div>
@@ -149,7 +153,7 @@
     <section class="section alt">
       <div class="wrap">
         <div class="section-heading"><p class="eyebrow">Časté otázky</p><h2>Jak skupinové doučování funguje</h2></div>
-        <div class="faq"><article class="faq-item"><h3>Kolik studentů je ve skupině?</h3><p>Cílově 3–5 studentů. Skupina se otevře tehdy, když se sejdou studenti s kompatibilním cílem, úrovní a časovými možnostmi.</p></article><article class="faq-item"><h3>Kolik stojí jedna lekce?</h3><p>300 Kč za osobu za 60 minut skupinové lekce.</p></article><article class="faq-item"><h3>Musím se po vyplnění formuláře přihlásit?</h3><p>Ne. Formulář je nezávazný. Nejdřív pošlu návrh skupiny a termínu; teprve potom se rozhodnete, zda vám vyhovuje.</p></article><article class="faq-item"><h3>Je možné skupinu absolvovat online?</h3><p>Ano. Všechny skupinové lekce probíhají online.</p></article><article class="faq-item"><h3>Co když je moje úroveň výrazně jiná než u ostatních?</h3><p>V takovém případě je lepší počkat na jinou skupinu nebo zvolit individuální lekci. Cílem není naplnit skupinu za každou cenu, ale udržet společné tempo.</p></article></div>
+        <div class="faq"><article class="faq-item"><h3>Kolik studentů je ve skupině?</h3><p>Skupina startuje od 2 studentů. Standardní maximum jsou 4 studenti; u některých VŠ skupin až 5.</p></article><article class="faq-item"><h3>Kolik stojí jedna lekce?</h3><p>300 Kč za osobu za 60 minut skupinové lekce.</p></article><article class="faq-item"><h3>Musím se po vyplnění formuláře přihlásit?</h3><p>Ne. Formulář je nezávazný. Pokud zvolíte konkrétní vypsaný slot, ověřím jeho dostupnost a kompatibilitu skupiny; případně navrhnu nejbližší alternativu.</p></article><article class="faq-item"><h3>Je možné skupinu absolvovat online?</h3><p>Ano. Všechny skupinové lekce probíhají online.</p></article><article class="faq-item"><h3>Co když je moje úroveň výrazně jiná než u ostatních?</h3><p>V takovém případě je lepší počkat na jinou skupinu nebo zvolit individuální lekci. Cílem není naplnit skupinu za každou cenu, ale udržet společné tempo.</p></article></div>
       </div>
     </section>
 
@@ -177,25 +181,35 @@
         groupTracks.innerHTML=(data.groups||[]).map(group=>{
           const occupancy=Number.isInteger(group.confirmed)
             ? `${group.confirmed} / ${group.capacity} míst obsazeno`
-            : `Kapacita ${group.capacity} míst`;
+            : `max. ${group.capacity} studentů · start od ${group.minStart||2}`;
+          const state=Number.isInteger(group.confirmed) && group.confirmed >= (group.minStart||2)
+            ? 'Může začít ihned'
+            : (Number.isInteger(group.confirmed) && group.confirmed === (group.minStart||2)-1
+                ? '1 další student → start'
+                : (group.statusLabel||'Volný slot'));
           const topics=(group.topics||[]).map(topic=>`<li>${escapeHtml(topic)}</li>`).join('');
           return `<article class="track-card" id="${escapeHtml(group.id)}">
             <span class="tag">${escapeHtml(group.category)}</span>
             <h3>${escapeHtml(group.title)}</h3>
             <p>${escapeHtml(group.subtitle)}</p>
+            <div class="slot-box"><span class="slot-label">Pravidelný slot</span><strong>${escapeHtml(group.schedule)}</strong></div>
+            <div class="track-meta"><span class="track-status">${escapeHtml(state)}</span><span class="track-capacity">${escapeHtml(occupancy)}</span></div>
+            <p class="track-start-note">${escapeHtml(group.startNote||'')}</p>
             <ul>${topics}</ul>
-            <div class="track-meta"><span class="track-status">${escapeHtml(group.statusLabel||'Sbíráme zájem')}</span><span class="track-capacity">${escapeHtml(occupancy)}</span></div>
-            <p class="track-schedule">${escapeHtml(group.schedule||'Termín podle skupiny')}</p>
-            <a class="track-action" href="#zajem" data-group-value="${escapeHtml(group.formValue||'')}">Mám zájem o tuto skupinu →</a>
+            <a class="track-action" href="#zajem" data-group-value="${escapeHtml(group.formValue||'')}" data-group-slot="${escapeHtml(group.schedule||'')}">Ověřit tento termín →</a>
           </article>`;
         }).join('');
         groupTracks.querySelectorAll('[data-group-value]').forEach(link=>link.addEventListener('click',()=>{
           if(groupGoal&&link.dataset.groupValue) groupGoal.value=link.dataset.groupValue;
+          const days=document.getElementById('groupDays');
+          if(days&&link.dataset.groupSlot) days.value=link.dataset.groupSlot;
         }));
         const requested=new URLSearchParams(location.search).get('group');
         if(requested){
           const selected=(data.groups||[]).find(group=>group.id===requested);
           if(selected&&groupGoal) groupGoal.value=selected.formValue;
+          const days=document.getElementById('groupDays');
+          if(selected&&days) days.value=selected.schedule||'';
         }
       })
       .catch(()=>{groupTracks.innerHTML='<p class="capacity-loading">Aktuální stav skupin se nepodařilo načíst. Použijte prosím formulář níže a napište požadované téma.</p>';});
@@ -211,7 +225,7 @@
         const response=await fetch('https://api.web3forms.com/submit',{method:'POST',body:formData});
         const data=await response.json();
         if(!data.success)throw new Error('submit-failed');
-        groupForm.reset();status.textContent='Děkuji. Zájem jsem obdržel a ozvu se, jakmile budu mít vhodnou skupinu nebo návrh termínu.';status.classList.add('success');
+        groupForm.reset();status.textContent='Děkuji. Požadovaný slot jsem obdržel. Ozvu se s konkrétním potvrzením nebo nejbližší alternativou.';status.classList.add('success');
       }catch(error){status.textContent='Formulář se nepodařilo odeslat. Napište mi prosím na vojtasteidl@seznam.cz.';status.classList.add('error');}
       finally{button.disabled=false;button.textContent=original;}
     });
