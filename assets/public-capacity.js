@@ -24,7 +24,7 @@
       return `<a class="compact-capacity-card" href="/skupinove-doucovani-matematiky/">
         <small>${esc(when)}</small>
         <strong>${esc(slot.title)}</strong>
-        <span>${Number(slot.people)}/${Number(slot.capacity)} míst</span>
+        <span>${slot.flexible ? "Volno" : `${Number(slot.people)}/${Number(slot.capacity)} míst`}</span>
       </a>`;
     }).join("");
     compactEl.dataset.live = "true";
@@ -33,9 +33,10 @@
   function selectSlot(slot) {
     if (!selection || !selectedTitle || !selectedMeta || !selectedId || !selectedInfo) return;
     selectedTitle.textContent = slot.title;
-    selectedMeta.textContent = [slot.day, slot.time, `${slot.people}/${slot.capacity} míst`].filter(Boolean).join(" · ");
+    const capacityText = slot.flexible ? "" : `${slot.people}/${slot.capacity} míst`;
+    selectedMeta.textContent = [slot.day, slot.time, capacityText].filter(Boolean).join(" · ");
     selectedId.value = slot.id;
-    selectedInfo.value = [slot.day, slot.time, slot.title, `${slot.people}/${slot.capacity}`].filter(Boolean).join(" | ");
+    selectedInfo.value = [slot.day, slot.time, slot.title, capacityText].filter(Boolean).join(" | ");
     selection.hidden = false;
     selection.scrollIntoView({ behavior: "smooth", block: "nearest" });
   }
@@ -47,7 +48,7 @@
       const daySlots = slots.filter((slot) => slot.day === day);
       const body = daySlots.length ? daySlots.map((slot) => {
         const state = slot.kind === "free" ? "free" : slot.kind === "full" ? "full" : "join";
-        const action = state === "free" ? "Vybrat slot" : state === "full" ? "Plno" : "Přidat se";
+        const action = state === "free" ? (slot.flexible ? "Domluvit" : "Vybrat slot") : state === "full" ? "Plno" : "Přidat se";
         const control = state === "full"
           ? '<span class="calendar-slot-action disabled">Plno</span>'
           : `<button type="button" class="calendar-slot-action" data-public-slot-id="${esc(slot.id)}">${esc(action)}</button>`;
@@ -55,7 +56,7 @@
         return `<article class="calendar-slot ${state}">
           ${time}
           <strong>${esc(slot.title)}</strong>
-          <div class="calendar-slot-foot"><span>${Number(slot.people)}/${Number(slot.capacity)}</span>${control}</div>
+          <div class="calendar-slot-foot">${slot.flexible ? "" : `<span>${Number(slot.people)}/${Number(slot.capacity)}</span>`}${control}</div>
         </article>`;
       }).join("") : '<div class="calendar-empty">—</div>';
       return `<section class="calendar-day"><h3>${esc(day)}</h3><div class="calendar-day-slots">${body}</div></section>`;
