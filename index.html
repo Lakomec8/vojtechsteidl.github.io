@@ -610,7 +610,7 @@
 
         const escapeHtml=value=>String(value??'').replace(/[&<>"']/g,char=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[char]));
 
-        let slots=[{"id":"mon-1630","day":"Pondělí","weekday":1,"time":"16:30–17:30","title":"CERMAT přijímačky","people":2,"capacity":4,"kind":"join"},{"id":"tue-1300","day":"Úterý","weekday":2,"time":"13:00–15:00","title":"VŠ matematika","people":1,"capacity":4,"kind":"join"},{"id":"tue-1515","day":"Úterý","weekday":2,"time":"15:15–16:15","title":"Volný slot","people":0,"capacity":4,"kind":"free"},{"id":"tue-1630","day":"Úterý","weekday":2,"time":"16:30–17:30","title":"Volný slot","people":0,"capacity":4,"kind":"free"},{"id":"tue-1730","day":"Úterý","weekday":2,"time":"17:30–18:30","title":"CERMAT přijímačky","people":1,"capacity":4,"kind":"join"},{"id":"wed-1600","day":"Středa","weekday":3,"time":"16:00–17:00","title":"2. ročník SŠ","people":1,"capacity":4,"kind":"join"},{"id":"wed-1700","day":"Středa","weekday":3,"time":"17:00–18:00","title":"Příprava na maturitu","people":1,"capacity":4,"kind":"join"},{"id":"wed-1900","day":"Středa","weekday":3,"time":"19:00–20:00","title":"9. ročník · AJ kurikulum","people":1,"capacity":4,"kind":"join"},{"id":"thu-flex","day":"Čtvrtek","weekday":4,"time":"","title":"Volno","people":0,"capacity":4,"kind":"free","flexible":true},{"id":"fri-1400","day":"Pátek","weekday":5,"time":"14:00–15:00","title":"VŠ matematika","people":1,"capacity":4,"kind":"join"},{"id":"fri-1515","day":"Pátek","weekday":5,"time":"15:15–16:15","title":"Volný slot","people":0,"capacity":4,"kind":"free"},{"id":"fri-1630","day":"Pátek","weekday":5,"time":"16:30–17:30","title":"Volný slot","people":0,"capacity":4,"kind":"free"}];
+        let slots=[{"id":"mon-1630","day":"Pondělí","weekday":1,"time":"16:30–17:30","title":"CERMAT přijímačky","people":2,"capacity":4,"kind":"join"},{"id":"mon-1745","day":"Pondělí","weekday":1,"time":"17:45–18:45","title":"Volný slot","people":0,"capacity":4,"kind":"free"},{"id":"tue-1300","day":"Úterý","weekday":2,"time":"13:00–15:00","title":"VŠ matematika","people":1,"capacity":4,"kind":"join"},{"id":"tue-1515","day":"Úterý","weekday":2,"time":"15:15–16:15","title":"Volný slot","people":0,"capacity":4,"kind":"free"},{"id":"tue-1630","day":"Úterý","weekday":2,"time":"16:30–17:30","title":"Volný slot","people":0,"capacity":4,"kind":"free"},{"id":"tue-1730","day":"Úterý","weekday":2,"time":"17:30–18:30","title":"CERMAT přijímačky","people":1,"capacity":4,"kind":"join"},{"id":"wed-1600","day":"Středa","weekday":3,"time":"16:00–17:00","title":"2. ročník SŠ","people":1,"capacity":4,"kind":"join"},{"id":"wed-1700","day":"Středa","weekday":3,"time":"17:00–18:00","title":"Příprava na maturitu","people":1,"capacity":4,"kind":"join"},{"id":"wed-1900","day":"Středa","weekday":3,"time":"19:00–20:00","title":"9. ročník · AJ kurikulum","people":1,"capacity":4,"kind":"join"},{"id":"thu-flex","day":"Čtvrtek","weekday":4,"time":"","title":"Volno","people":0,"capacity":4,"kind":"free","flexible":true},{"id":"fri-1400","day":"Pátek","weekday":5,"time":"14:00–15:00","title":"VŠ matematika","people":1,"capacity":4,"kind":"join"},{"id":"fri-1515","day":"Pátek","weekday":5,"time":"15:15–16:15","title":"Volný slot","people":0,"capacity":4,"kind":"free"},{"id":"fri-1630","day":"Pátek","weekday":5,"time":"16:30–17:30","title":"Volný slot","people":0,"capacity":4,"kind":"free"}];
         const dayOrder=['Pondělí','Úterý','Středa','Čtvrtek','Pátek'];
 
         const selectSlot=(slot)=>{
@@ -632,21 +632,39 @@
 
         const renderCalendar=(freshSlots)=>{
           slots=freshSlots;
+          const abbreviations={'Pondělí':'PO','Úterý':'ÚT','Středa':'ST','Čtvrtek':'ČT','Pátek':'PÁ'};
           calendarEl.innerHTML=dayOrder.map(day=>{
             const daySlots=slots.filter(slot=>slot.day===day);
-            return `<section class="calendar-day"><h3>${escapeHtml(day)}</h3><div class="calendar-day-slots">${daySlots.length?daySlots.map(slot=>{
+            const flexible=daySlots.length===1&&daySlots[0].flexible;
+            const countLabel=flexible?'volno':`${daySlots.length} ${daySlots.length===1?'slot':daySlots.length>=2&&daySlots.length<=4?'sloty':'slotů'}`;
+            const body=daySlots.length?daySlots.map(slot=>{
               const state=slot.kind==='free'?'free':(slot.kind==='full'?'full':'join');
-              const action=state==='free'?(slot.flexible?'Domluvit':'Vybrat slot'):(state==='full'?'Plno':'Přidat se');
-              const time=slot.time?`<div class="calendar-slot-time">${escapeHtml(slot.time)}</div>`:'';
+              const action=state==='free'?(slot.flexible?'Domluvit →':'Vybrat →'):(state==='full'?'Plno':'Přidat se →');
+              if(slot.flexible){
+                return `<article class="calendar-slot free flexible" data-slot-card="${escapeHtml(slot.id)}">
+                  <div class="calendar-flex-icon">✓</div>
+                  <strong>VOLNO</strong>
+                  <span class="calendar-flex-note">čas domluvíme</span>
+                  <div class="calendar-slot-foot"><button type="button" class="calendar-slot-action" data-slot-id="${escapeHtml(slot.id)}">${escapeHtml(action)}</button></div>
+                </article>`;
+              }
+              const capacityText=state==='free'?'volný termín':`${slot.people}/${slot.capacity} míst`;
               return `<article class="calendar-slot ${state}" data-slot-card="${escapeHtml(slot.id)}">
-                ${time}
+                <div class="calendar-slot-time">${escapeHtml(slot.time)}</div>
                 <strong>${escapeHtml(slot.title)}</strong>
-                <div class="calendar-slot-foot">${slot.flexible?'':`<span>${slot.people}/${slot.capacity}</span>`}${state==='full'
+                <div class="calendar-slot-foot"><span class="capacity-text">${escapeHtml(capacityText)}</span>${state==='full'
                   ? '<span class="calendar-slot-action disabled">Plno</span>'
                   : `<button type="button" class="calendar-slot-action" data-slot-id="${escapeHtml(slot.id)}">${escapeHtml(action)}</button>`
                 }</div>
               </article>`;
-            }).join(''):'<div class="calendar-empty">—</div>'}</div></section>`;
+            }).join(''):'<div class="calendar-empty">—</div>';
+            return `<section class="calendar-day${flexible?' flexible-day':''}">
+              <div class="calendar-day-head">
+                <div class="calendar-day-title"><span class="calendar-day-abbr">${escapeHtml(abbreviations[day]||day)}</span><span class="calendar-day-name">${escapeHtml(day)}</span></div>
+                <span class="calendar-day-count">${escapeHtml(countLabel)}</span>
+              </div>
+              <div class="calendar-day-slots">${body}</div>
+            </section>`;
           }).join('');
           bindSlotButtons();
         };
