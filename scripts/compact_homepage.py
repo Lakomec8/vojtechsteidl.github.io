@@ -105,21 +105,21 @@ CSS = r'''<style id="blue-spacious-homepage-v2">
 .blue-capacity-standalone .blue-section-head h2{color:var(--navy)}
 .blue-capacity-standalone .capacity-legend{color:#64748b}
 .blue-capacity-standalone .capacity-legend span{color:#64748b}
-.blue-capacity-standalone .weekly-calendar-wrap{overflow-x:auto;padding:.15rem 0 .55rem}
-.blue-capacity-standalone .weekly-calendar{display:grid;grid-template-columns:repeat(5,minmax(188px,1fr));gap:.8rem;min-width:980px}
-.blue-capacity-standalone .calendar-day{padding:.9rem;border:1px solid #e2e8f0;border-radius:18px;background:#f8fafc;box-shadow:0 10px 26px rgba(15,23,42,.04)}
-.blue-capacity-standalone .calendar-day-head{display:flex;justify-content:space-between;gap:.7rem;align-items:flex-start;margin-bottom:1rem;padding-bottom:.8rem;border-bottom:1px solid #e2e8f0}
+.blue-capacity-standalone .weekly-calendar-wrap{overflow:visible;padding:.15rem 0 .55rem}
+.blue-capacity-standalone .weekly-calendar{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:.9rem;min-width:0}
+.blue-capacity-standalone .calendar-day{padding:.95rem;border:1px solid #285f98;border-radius:18px;background:linear-gradient(160deg,#102f50 0%,#174d82 58%,#2563a6 135%);box-shadow:0 14px 30px rgba(15,42,67,.13)}
+.blue-capacity-standalone .calendar-day-head{display:flex;justify-content:space-between;gap:.7rem;align-items:flex-start;margin-bottom:1rem;padding-bottom:.82rem;border-bottom:1px solid rgba(255,255,255,.18)}
 .blue-capacity-standalone .calendar-day-title{display:grid;gap:.08rem}
-.blue-capacity-standalone .calendar-day-abbr{color:#102a43;font-size:1.18rem;font-weight:950;letter-spacing:.03em;line-height:1}
-.blue-capacity-standalone .calendar-day-name{color:#64748b;font-size:.68rem}
-.blue-capacity-standalone .calendar-day-count{color:#94a3b8;font-size:.66rem;font-weight:750;white-space:nowrap}
+.blue-capacity-standalone .calendar-day-abbr{color:#fff;font-size:1.2rem;font-weight:950;letter-spacing:.03em;line-height:1}
+.blue-capacity-standalone .calendar-day-name{color:#cfe3f7;font-size:.69rem}
+.blue-capacity-standalone .calendar-day-count{color:#b9d6f0;font-size:.66rem;font-weight:800;white-space:nowrap}
 .blue-capacity-standalone .calendar-day-slots{position:relative;display:grid;gap:.68rem;padding-left:1.12rem}
-.blue-capacity-standalone .calendar-day-slots::before{position:absolute;top:.5rem;bottom:.5rem;left:.3rem;width:1px;background:#d7e0ea;content:""}
-.blue-capacity-standalone .calendar-slot{position:relative;padding:.8rem .8rem .74rem;border:1px solid #dce6f0;border-radius:12px;background:#fff;box-shadow:0 7px 18px rgba(15,23,42,.045)}
-.blue-capacity-standalone .calendar-slot::before{position:absolute;top:1rem;left:-1.12rem;width:10px;height:10px;border:2px solid #d7e0ea;border-radius:50%;background:#fff;content:""}
-.blue-capacity-standalone .calendar-slot.join{border-color:#dce6f0;background:#fff}
-.blue-capacity-standalone .calendar-slot.free{border-color:#cce8d8;background:#f4fbf7}
-.blue-capacity-standalone .calendar-slot.free::before{border-color:#b8dfc9;background:#7fc9a0}
+.blue-capacity-standalone .calendar-day-slots::before{position:absolute;top:.5rem;bottom:.5rem;left:.3rem;width:1px;background:rgba(255,255,255,.24);content:""}
+.blue-capacity-standalone .calendar-slot{position:relative;padding:.8rem .8rem .74rem;border:1px solid rgba(255,255,255,.72);border-radius:12px;background:#f8fbff;box-shadow:0 8px 18px rgba(5,24,43,.13)}
+.blue-capacity-standalone .calendar-slot::before{position:absolute;top:1rem;left:-1.12rem;width:10px;height:10px;border:2px solid #174d82;border-radius:50%;background:#fff;content:""}
+.blue-capacity-standalone .calendar-slot.join{border-color:#d6e6f5;background:#f8fbff}
+.blue-capacity-standalone .calendar-slot.free{border-color:#bfe3cf;background:#f0faf5}
+.blue-capacity-standalone .calendar-slot.free::before{border-color:#174d82;background:#78c59b}
 .blue-capacity-standalone .calendar-slot.full{opacity:.68}
 .blue-capacity-standalone .calendar-slot-time{margin:0 0 .28rem;color:#64748b;font-size:.68rem;font-weight:800}
 .blue-capacity-standalone .calendar-slot>strong{display:block;color:#102a43;font-size:.84rem;line-height:1.28}
@@ -133,7 +133,7 @@ CSS = r'''<style id="blue-spacious-homepage-v2">
 .blue-capacity-standalone .calendar-day.flexible-day .calendar-day-slots::before{display:none}
 .blue-capacity-standalone .calendar-slot.flexible{display:flex;min-height:230px;flex-direction:column;align-items:center;justify-content:center;text-align:center}
 .blue-capacity-standalone .calendar-slot.flexible::before{display:none}
-.blue-capacity-standalone .calendar-flex-icon{display:grid;width:46px;height:46px;margin-bottom:.65rem;place-items:center;border-radius:50%;background:#e5f6ed;color:#39725f;font-size:1rem;font-weight:900}
+.blue-capacity-standalone .calendar-flex-icon{display:grid;width:46px;height:46px;margin-bottom:.65rem;place-items:center;border-radius:50%;background:#dff4e8;color:#39725f;font-size:1rem;font-weight:900}
 .blue-capacity-standalone .calendar-slot.flexible>strong{font-size:1.1rem;letter-spacing:.04em}
 .blue-capacity-standalone .calendar-flex-note{margin-top:.18rem;color:#64748b;font-size:.7rem}
 .blue-capacity-standalone .calendar-slot.flexible .calendar-slot-foot{margin-top:1rem}
@@ -153,12 +153,14 @@ CSS = r'''<style id="blue-spacious-homepage-v2">
 .blue-pricing{padding:5.5rem 0;background:linear-gradient(180deg,#f4f8fd,#eef5ff)}.blue-price-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-top:1.5rem}.blue-price-card{min-height:250px;padding:1.4rem;border:1px solid #d5e3f2;border-radius:20px;background:#fff;box-shadow:0 14px 32px rgba(15,23,42,.05)}.blue-price-card.featured{border-color:#93c5fd;background:linear-gradient(145deg,#0f3358,#1d4ed8);color:#fff;box-shadow:0 20px 46px rgba(29,78,216,.2)}.blue-price-card small{color:#64748b;font-size:.7rem;font-weight:850;letter-spacing:.06em;text-transform:uppercase}.blue-price-card.featured small{color:#bfdbfe}.blue-price-card strong{display:block;margin:2.4rem 0 .3rem;color:var(--navy);font-size:2rem;letter-spacing:-.045em}.blue-price-card.featured strong{color:#fff}.blue-price-card p{margin:0;color:#64748b;line-height:1.55}.blue-price-card.featured p{color:rgba(255,255,255,.73)}.blue-price-card a{display:inline-flex;margin-top:1.2rem;color:#1d4ed8;font-size:.82rem;font-weight:850;text-decoration:none}.blue-price-card.featured a{color:#fff}
 .blue-contact{padding:6rem 0;background:#fff}.blue-contact-grid{display:grid;grid-template-columns:minmax(300px,.78fr) minmax(0,1.22fr);gap:1rem}.blue-contact-copy{min-height:100%;padding:2rem;border-radius:24px;background:linear-gradient(145deg,#0d2947,#174f89);color:#fff}.blue-contact-copy .eyebrow{color:#93c5fd}.blue-contact-copy h2{margin:.45rem 0 .8rem;color:#fff;font-size:clamp(2.2rem,4vw,3.4rem);letter-spacing:-.05em;line-height:1.08}.blue-contact-copy>p{color:rgba(255,255,255,.72);line-height:1.7}.blue-contact-details{display:grid;gap:.8rem;margin-top:2rem}.blue-contact-detail{display:flex;gap:.75rem;align-items:flex-start;padding:.85rem;border:1px solid rgba(255,255,255,.11);border-radius:12px;background:rgba(255,255,255,.055);color:rgba(255,255,255,.72);font-size:.82rem}.blue-contact-detail i{margin-top:.18rem;color:#93c5fd}.blue-contact-detail strong{display:block;color:#fff}.blue-contact-detail a{color:#dbeafe;text-decoration:none}
 .blue-form{display:grid;grid-template-columns:1fr 1fr;gap:.8rem;padding:2rem;border:1px solid var(--home-line);border-radius:24px;background:#fff;box-shadow:0 22px 55px rgba(15,23,42,.07)}.blue-form .form-group{margin:0}.blue-form .form-group.full,.blue-form .consent,.blue-form .submit-button,.blue-form .form-status{grid-column:1/-1}.blue-form label{font-size:.8rem}.blue-form input,.blue-form select,.blue-form textarea{min-height:46px}.blue-form textarea{min-height:105px}.blue-form .submit-button{min-height:50px}
-@media(max-width:980px){.blue-hero-grid,.blue-contact-grid{grid-template-columns:1fr}.blue-hero-panel{max-width:720px}.blue-section-head{align-items:flex-start;flex-direction:column}.blue-bento{grid-template-columns:1fr;grid-template-rows:auto}.blue-zone-card{grid-row:auto;min-height:530px}.blue-goal-grid,.blue-price-grid{grid-template-columns:1fr 1fr}.blue-review-grid{grid-template-columns:1fr 1fr}.blue-capacity-grid{grid-template-columns:repeat(3,minmax(220px,1fr));overflow-x:auto;padding-bottom:.4rem}}
+@media(max-width:980px){.blue-hero-grid,.blue-contact-grid{grid-template-columns:1fr}.blue-hero-panel{max-width:720px}.blue-section-head{align-items:flex-start;flex-direction:column}.blue-bento{grid-template-columns:1fr;grid-template-rows:auto}.blue-zone-card{grid-row:auto;min-height:530px}.blue-goal-grid,.blue-price-grid{grid-template-columns:1fr 1fr}.blue-review-grid{grid-template-columns:1fr 1fr}.blue-capacity-grid{grid-template-columns:repeat(3,minmax(220px,1fr));overflow-x:auto;padding-bottom:.4rem}.blue-capacity-standalone .weekly-calendar{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:680px){.blue-shell{width:min(100% - 2rem,1180px)}.blue-home-hero{padding:7rem 0 4.5rem}.blue-home-hero h1{font-size:clamp(2.7rem,13vw,4.1rem)}.blue-panel-stats,.blue-goal-grid,.blue-price-grid,.blue-review-grid,.blue-form{grid-template-columns:1fr}.blue-review-head{align-items:flex-start;flex-direction:column}.blue-review-card{min-height:0}.blue-capacity-grid{grid-template-columns:repeat(3,245px)}.blue-capacity{padding:3.7rem 0}.blue-goals,.blue-ecosystem,.blue-pricing,.blue-contact{padding:4rem 0}.blue-goal-card{min-height:500px}.blue-bento{min-height:0}.blue-zone-card{min-height:0}.blue-portal-body{grid-template-columns:90px 1fr}.blue-portal-panels{grid-template-columns:1fr 1fr}.blue-portal-panel:last-child{display:none}.blue-form .form-group.full,.blue-form .consent,.blue-form .submit-button,.blue-form .form-status{grid-column:1}}
 @media(max-width:680px){
   .blue-ecosystem-frame{padding:0;border-radius:0}
   .blue-capacity-standalone{padding:4rem 0}
   .blue-capacity-standalone .weekly-calendar-wrap{padding:0 0 .35rem;border-radius:0}
+  .blue-capacity-standalone .weekly-calendar{grid-template-columns:1fr;gap:.75rem}
+  .blue-capacity-standalone .calendar-slot.flexible{min-height:150px}
 }
 </style>'''
 
