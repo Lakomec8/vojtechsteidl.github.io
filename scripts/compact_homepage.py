@@ -70,15 +70,8 @@ CSS = r'''<style id="blue-spacious-homepage-v2">
 .blue-goal-card h3{margin:1.1rem 0 .55rem;color:var(--navy);font-size:1.45rem;letter-spacing:-.035em}.blue-goal-card p{color:#64748b;line-height:1.6;margin:0}.blue-goal-card>span{position:static;margin-top:auto;padding-top:1rem;color:#1d4ed8;font-size:.82rem;font-weight:850}
 .blue-doc-preview{position:relative;overflow:hidden;height:205px;margin-top:1.15rem;border:1px solid #d9e3ee;border-radius:14px;background:#f8fafc;box-shadow:0 12px 24px rgba(15,23,42,.07)}
 .blue-doc-preview img{display:block;width:100%;height:100%;object-fit:cover;object-position:top}
-.blue-doc-preview.ss-preview img{transform:scale(1.24) translateY(-12%);transform-origin:center top}
 .blue-doc-preview::after{position:absolute;right:0;bottom:0;left:0;height:52px;background:linear-gradient(180deg,rgba(255,255,255,0),rgba(255,255,255,.96));content:"";z-index:1}
 .blue-doc-label{position:absolute;z-index:3;top:.65rem;left:.65rem;padding:.3rem .5rem;border-radius:999px;background:rgba(16,42,67,.9);color:#fff;font-size:.62rem;font-weight:850;letter-spacing:.035em}
-.vs-material-sheet{position:absolute;inset:0;padding:3.2rem 1rem 1rem;background:#fff;color:#102a43}
-.vs-material-heading{font-size:.8rem;font-weight:900;letter-spacing:-.02em;margin-bottom:.55rem}
-.vs-material-box{padding:.55rem .65rem;border:1px solid #2f6b9a;border-radius:8px;background:#eef5fa}
-.vs-material-box strong{display:block;margin-bottom:.35rem;font-size:.67rem;color:#17324d}
-.vs-material-formula{display:block;text-align:center;font-family:Georgia,serif;font-size:1rem;margin:.28rem 0}
-.vs-material-box.green{margin-top:.45rem;border-color:#3a8f5c;background:#eff8f2}
 .blue-ecosystem{padding:5.8rem 0;background:#fff}
 .blue-bento{display:grid;grid-template-columns:1.35fr .65fr;grid-template-rows:1fr 1fr;gap:1rem;min-height:560px;margin-top:1.6rem}
 .blue-zone-card{grid-row:1/3;display:grid;grid-template-rows:auto 1fr;overflow:hidden;padding:1.6rem;border-radius:26px;background:linear-gradient(135deg,#0e2a47 0%,#174f89 62%,#2563eb 140%);color:#fff;box-shadow:0 25px 65px rgba(15,23,42,.16)}
@@ -182,8 +175,8 @@ OFFER = r'''<section class="blue-goals" id="jak-to-funguje">
     </div>
     <div class="blue-goal-grid">
       <a class="blue-goal-card" href="/priprava-na-prijimacky-z-matematiky/"><div class="blue-goal-icon"><i class="fas fa-school"></i></div><h3>Přijímačky na SŠ</h3><p>CERMAT, slovní úlohy, geometrie a strategie práce s časem.</p><div class="blue-doc-preview"><span class="blue-doc-label">Ukázka · slovní úlohy</span><img src="/assets/previews/zs-slovni-ulohy.webp" alt="Omezená ukázka materiálu pro 9. třídu se slovními úlohami" loading="lazy"></div><span>Prohlédnout přípravu →</span></a>
-      <a class="blue-goal-card" href="/priprava-na-maturitu-z-matematiky/"><div class="blue-goal-icon"><i class="fas fa-graduation-cap"></i></div><h3>SŠ a maturita</h3><p>Průběžná matematika, didaktické testy a systematické uzavírání slabých témat.</p><div class="blue-doc-preview ss-preview"><span class="blue-doc-label">Ukázka · funkce</span><img src="/assets/previews/ss-funkce.webp" alt="Omezená ukázka středoškolského materiálu k funkcím" loading="lazy"></div><span>Prohlédnout přípravu →</span></a>
-      <a class="blue-goal-card" href="/doucovani-vs-matematiky/"><div class="blue-goal-icon"><i class="fas fa-square-root-variable"></i></div><h3>VŠ matematika</h3><p>Limity, derivace, integrály a lineární algebra podle konkrétního sylabu.</p><div class="blue-doc-preview"><span class="blue-doc-label">Ukázka · parciální derivace</span><div class="vs-material-sheet"><div class="vs-material-heading">Termodynamika: tlak jako funkce více veličin</div><div class="vs-material-box"><strong>Ideální plyn</strong><span class="vs-material-formula">pV = nRT</span><span class="vs-material-formula">p(V,T) = nRT / V</span></div><div class="vs-material-box green"><strong>Příklad · změna tlaku s teplotou</strong><span class="vs-material-formula">(∂p/∂T)<sub>V</sub> = nR / V</span></div></div></div><span>Prohlédnout VŠ výuku →</span></a>
+      <a class="blue-goal-card" href="/priprava-na-maturitu-z-matematiky/"><div class="blue-goal-icon"><i class="fas fa-graduation-cap"></i></div><h3>SŠ a maturita</h3><p>Průběžná matematika, didaktické testy a systematické uzavírání slabých témat.</p><div class="blue-doc-preview"><span class="blue-doc-label">Ukázka · geometrie</span><img src="/assets/previews/ss-geometrie.webp" alt="Omezená ukázka středoškolského materiálu ke kružnici, výseči a typové úloze" loading="lazy"></div><span>Prohlédnout přípravu →</span></a>
+      <a class="blue-goal-card" href="/doucovani-vs-matematiky/"><div class="blue-goal-icon"><i class="fas fa-square-root-variable"></i></div><h3>VŠ matematika</h3><p>Limity, derivace, integrály a lineární algebra podle konkrétního sylabu.</p><div class="blue-doc-preview"><span class="blue-doc-label">Ukázka · integrály</span><img src="/assets/previews/vs-integraly.webp" alt="Omezená ukázka vysokoškolského materiálu s integračním vzorcem a řešeným příkladem" loading="lazy"></div><span>Prohlédnout VŠ výuku →</span></a>
     </div>
   </div>
 </section>
