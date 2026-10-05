@@ -66,6 +66,8 @@ jobs:
           ! grep -q 'blue-capacity-in-zone' .public-site/index.html
           grep -q 'data-slot-id="mon-1745"' .public-site/index.html
           grep -q 'calendar-day-abbr' .public-site/index.html
+          grep -q 'grid-template-columns:repeat(5,minmax(0,1fr))' .public-site/index.html
+          grep -q 'blue-capacity-standalone .calendar-day{padding:.95rem;border:1px solid #285f98' .public-site/index.html
           grep -q 'volný termín' .public-site/index.html
           test -f .public-site/assets/previews/zs-slovni-ulohy.webp
           test -f .public-site/assets/previews/ss-geometrie.webp
