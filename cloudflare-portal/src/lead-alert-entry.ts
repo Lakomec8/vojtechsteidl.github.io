@@ -1,4 +1,5 @@
 import tutoringCronWorker from "./tutoring-cron-entry";
+import { handlePublicCapacityRequest } from "./public-capacity";
 import {
   LEAD_APP_PATH,
   LEAD_REFRESH_API_PATH,
@@ -208,6 +209,9 @@ async function orderLeadDashboard(response: Response, env: LeadEnv, showResolved
 export default {
   async fetch(request: Request, env: LeadEnv): Promise<Response> {
     const url = new URL(request.url);
+
+    const publicCapacityResponse = await handlePublicCapacityRequest(request, env);
+    if (publicCapacityResponse) return publicCapacityResponse;
 
     const sideIncomeResponse = await handleSideIncomeRequest(request, env);
     if (sideIncomeResponse) return sideIncomeResponse;
