@@ -1,0 +1,61 @@
+{
+  "updated": "2026-10-05",
+  "individual": {
+    "status": "nearly_full",
+    "label": "Téměř plná kapacita",
+    "note": "Nové studenty nyní přijímám především do malých tematických skupin."
+  },
+  "groups": [
+    {
+      "id": "prijimacky-9",
+      "category": "Přijímačky",
+      "title": "Přijímačky na SŠ",
+      "subtitle": "9. třída · matematika",
+      "capacity": 4,
+      "confirmed": null,
+      "status": "collecting",
+      "statusLabel": "Sbíráme zájem",
+      "schedule": "Termín podle skupiny",
+      "formValue": "prijimacky-ss",
+      "topics": [
+        "typové úlohy CERMAT",
+        "strategie a práce s časem",
+        "rozbor chyb"
+      ]
+    },
+    {
+      "id": "ss-rovnice-funkce",
+      "category": "SŠ",
+      "title": "Rovnice a funkce",
+      "subtitle": "1.–2. ročník SŠ",
+      "capacity": 4,
+      "confirmed": null,
+      "status": "collecting",
+      "statusLabel": "Sbíráme zájem",
+      "schedule": "Termín podle skupiny",
+      "formValue": "stredoskolska-matematika",
+      "topics": [
+        "rovnice a nerovnice",
+        "funkce a grafy",
+        "procvičení před testy"
+      ]
+    },
+    {
+      "id": "vs-matematika-1",
+      "category": "VŠ",
+      "title": "Matematika I",
+      "subtitle": "1. ročník VŠ · analýza",
+      "capacity": 5,
+      "confirmed": null,
+      "status": "collecting",
+      "statusLabel": "Sbíráme zájem",
+      "schedule": "Termín podle skupiny",
+      "formValue": "vs-matematika",
+      "topics": [
+        "limity a derivace",
+        "integrály",
+        "příprava na zápočet / zkoušku"
+      ]
+    }
+  ]
+}

@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Skupinové doučování matematiky | Online po celé ČR | 300 Kč</title>
+  <title>Aktuální skupiny a kapacita | Doučování matematiky | Vojtěch Steidl</title>
   <meta name="description" content="Skupinové doučování matematiky v malých skupinách 3–5 studentů za 300 Kč na osobu. Přijímačky na SŠ, maturita a středoškolská matematika online po celé ČR.">
   <meta name="keywords" content="skupinové doučování matematiky, skupinové doučování Jihlava, skupinové doučování online, příprava na přijímačky matematika, skupinová příprava na maturitu, doučování matematiky ve skupině">
   <meta name="robots" content="index,follow">
@@ -36,6 +36,16 @@
     footer{padding:2rem 1rem;text-align:center;color:#64748b}
     @media(max-width:900px){.hero-grid{grid-template-columns:1fr}.price-card{max-width:520px}.tracks{grid-template-columns:1fr 1fr}.how-grid{grid-template-columns:1fr 1fr}}
     @media(max-width:620px){.group-hero{padding-top:4.5rem}.tracks,.how-grid,.benefits,.links,.form-grid{grid-template-columns:1fr}.form-group.full{grid-column:auto}.section{padding:3.7rem 0}.waitlist-band{padding:1.5rem}}
+  
+    .track-meta{display:flex;justify-content:space-between;gap:.7rem;align-items:center;margin-top:1rem;padding-top:1rem;border-top:1px solid #e2e8f0}
+    .track-status{display:inline-flex;align-items:center;gap:.42rem;color:#475569;font-size:.8rem;font-weight:800}
+    .track-status::before{content:"";width:7px;height:7px;border-radius:50%;background:#60a5fa;box-shadow:0 0 0 4px #dbeafe}
+    .track-capacity{color:#0f172a;font-size:.82rem;font-weight:850}
+    .track-schedule{margin-top:.7rem!important;color:#64748b!important;font-size:.86rem}
+    .track-action{display:inline-flex;margin-top:1rem;color:#1d4ed8;font-size:.9rem;font-weight:850;text-decoration:none}
+    .track-action:hover{text-decoration:underline}
+    .capacity-updated{font-size:.8rem!important;color:#94a3b8!important}
+    .capacity-loading{grid-column:1/-1;color:#64748b}
   </style>
   <script type="application/ld+json">
   {
@@ -69,8 +79,8 @@
       <div class="wrap hero-grid">
         <div>
           <div class="crumbs"><a href="../">Domů</a> / Skupinové doučování matematiky</div>
-          <h1>Malá skupina. Stejný cíl. Matematika za 300 Kč.</h1>
-          <p>Skupinové doučování matematiky pro 3–5 studentů, kteří řeší podobný cíl a přibližně stejnou úroveň. Skupiny vznikají pro přijímačky na SŠ, maturitu a průběžnou středoškolskou matematiku — online po celé ČR.</p>
+          <h1>Aktuální skupiny a volná místa.</h1>
+          <p>Individuální kapacita je nyní téměř plná. Nová místa proto otevírám především v malých online skupinách podle společného cíle, úrovně a tématu.</p>
           <div class="hero-badges"><span class="hero-badge">3–5 studentů</span><span class="hero-badge">300 Kč / osoba</span><span class="hero-badge">60 minut</span><span class="hero-badge">Online po celé ČR</span></div>
           <div class="actions"><a class="btn" href="#zajem">Přidat se mezi zájemce</a><a class="btn secondary" href="#skupiny">Vybrat typ skupiny</a></div>
         </div>
@@ -85,11 +95,8 @@
 
     <section class="section" id="skupiny">
       <div class="wrap">
-        <div class="section-heading"><p class="eyebrow">Aktuálně sestavované skupiny</p><h2>Vyber si skupinu podle cíle, ne podle náhodného ročníku.</h2><p>Smyslem skupinové lekce je, aby všichni řešili podobné typy úloh. Proto se zájemci nejdřív seskupují podle cíle, úrovně a časových možností.</p></div>
-        <div class="tracks">
-          <article class="track-card" id="prijimacky"><span class="tag">Přijímačky</span><h3>Přijímačky na SŠ</h3><p>Příprava zaměřená na matematickou část přijímací zkoušky, standardní typy úloh, práci s časem a získávání jistých bodů.</p><ul><li>typové úlohy a strategie</li><li>práce s cvičnými testy</li><li>rozbor chyb a nové varianty</li></ul></article>
-          <article class="track-card" id="maturita"><span class="tag">Maturita</span><h3>Maturita z matematiky</h3><p>Systematická příprava na didaktický test podle tematických celků a skutečných slabých míst jednotlivých studentů.</p><ul><li>diagnostika bodového výkonu</li><li>didaktické testy</li><li>bodová a časová strategie</li></ul></article>
-          <article class="track-card" id="stredni-skola"><span class="tag">SŠ matematika</span><h3>Průběžná středoškolská matematika</h3><p>Skupina pro studenty, kteří chtějí stabilizovat základy a průběžně zvládat látku typickou pro podobný ročník.</p><ul><li>algebra, rovnice a funkce</li><li>geometrie a slovní úlohy</li><li>procvičení před testy</li></ul></article>
+        <div class="section-heading"><p class="eyebrow">Aktuální kapacita</p><h2>Skupiny podle cíle a tématu.</h2><p>Dokud nejsou místa potvrzena se stávajícími studenty, zobrazuji pouze kapacitu a stav „Sbíráme zájem“. Jakmile je skupina potvrzená, uvidíte zde skutečné obsazení.</p><p class="capacity-updated" id="capacityUpdated"></p></div>
+        <div class="tracks" id="groupTracks"><p class="capacity-loading">Načítám aktuální skupiny…</p></div>
         </div>
       </div>
     </section>
@@ -156,6 +163,43 @@
 
   <footer>© 2026 Vojtěch Steidl · Skupinové doučování matematiky online po celé ČR</footer>
   <script>
+
+    const groupTracks=document.getElementById('groupTracks');
+    const groupGoal=document.getElementById('groupGoal');
+    const escapeHtml=value=>String(value??'').replace(/[&<>"']/g,char=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[char]));
+    fetch('/data/group-capacity.json?v=20261005')
+      .then(response=>{if(!response.ok) throw new Error('capacity-fetch'); return response.json();})
+      .then(data=>{
+        if(document.getElementById('capacityUpdated')&&data.updated){
+          const d=new Date(data.updated+'T12:00:00');
+          document.getElementById('capacityUpdated').textContent='Aktualizováno '+d.toLocaleDateString('cs-CZ');
+        }
+        groupTracks.innerHTML=(data.groups||[]).map(group=>{
+          const occupancy=Number.isInteger(group.confirmed)
+            ? `${group.confirmed} / ${group.capacity} míst obsazeno`
+            : `Kapacita ${group.capacity} míst`;
+          const topics=(group.topics||[]).map(topic=>`<li>${escapeHtml(topic)}</li>`).join('');
+          return `<article class="track-card" id="${escapeHtml(group.id)}">
+            <span class="tag">${escapeHtml(group.category)}</span>
+            <h3>${escapeHtml(group.title)}</h3>
+            <p>${escapeHtml(group.subtitle)}</p>
+            <ul>${topics}</ul>
+            <div class="track-meta"><span class="track-status">${escapeHtml(group.statusLabel||'Sbíráme zájem')}</span><span class="track-capacity">${escapeHtml(occupancy)}</span></div>
+            <p class="track-schedule">${escapeHtml(group.schedule||'Termín podle skupiny')}</p>
+            <a class="track-action" href="#zajem" data-group-value="${escapeHtml(group.formValue||'')}">Mám zájem o tuto skupinu →</a>
+          </article>`;
+        }).join('');
+        groupTracks.querySelectorAll('[data-group-value]').forEach(link=>link.addEventListener('click',()=>{
+          if(groupGoal&&link.dataset.groupValue) groupGoal.value=link.dataset.groupValue;
+        }));
+        const requested=new URLSearchParams(location.search).get('group');
+        if(requested){
+          const selected=(data.groups||[]).find(group=>group.id===requested);
+          if(selected&&groupGoal) groupGoal.value=selected.formValue;
+        }
+      })
+      .catch(()=>{groupTracks.innerHTML='<p class="capacity-loading">Aktuální stav skupin se nepodařilo načíst. Použijte prosím formulář níže a napište požadované téma.</p>';});
+
     const groupForm=document.getElementById('groupForm'),status=document.getElementById('groupFormStatus');
     groupForm.addEventListener('submit',async event=>{
       event.preventDefault();
