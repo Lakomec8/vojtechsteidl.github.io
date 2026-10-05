@@ -178,6 +178,7 @@ export async function handlePublicCapacityRequest(request: Request, env: Env): P
         people: 0,
         capacity: Number(slot.capacity),
         kind: "free",
+        flexible: slot.display_mode === "flexible",
       }));
 
     const slots = [...occupied, ...available].sort((a,b) =>
