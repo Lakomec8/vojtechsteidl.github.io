@@ -98,6 +98,9 @@ jobs:
           grep -q 'class="nav-student"' .public-site/index.html
           grep -q 'https://portal.vojtechsteidl.eu' .public-site/index.html
           grep -q 'id="weeklyCalendar"' .public-site/index.html
+          grep -q 'data-slot-id="mon-1745"' .public-site/index.html
+          grep -q 'calendar-day-abbr' .public-site/index.html
+          grep -q 'volný termín' .public-site/index.html
           test -f .public-site/assets/previews/zs-slovni-ulohy.webp
           test -f .public-site/assets/previews/ss-geometrie.webp
           grep -q '/assets/previews/zs-slovni-ulohy.webp' .public-site/index.html
