@@ -59,6 +59,8 @@ jobs:
           grep -q 'doucovani-vs-matematiky' .public-site/index.html
           grep -q 'priprava-na-prijimacky-z-matematiky' .public-site/index.html
           grep -q 'blue-spacious-homepage-v2' .public-site/index.html
+          grep -q 'class="nav-student"' .public-site/index.html
+          grep -q 'https://portal.vojtechsteidl.eu' .public-site/index.html
           grep -q 'id="weeklyCalendar"' .public-site/index.html
           test -f .public-site/assets/previews/zs-slovni-ulohy.webp
           test -f .public-site/assets/previews/ss-geometrie.webp
