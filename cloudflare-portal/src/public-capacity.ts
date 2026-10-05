@@ -163,11 +163,12 @@ export async function handlePublicCapacityRequest(request: Request, env: Env): P
       .filter((slot) => {
         const slotStart = minutes(slot.start_time);
         const slotEnd = minutes(slot.end_time);
-        return !occupiedRanges.some((event) =>
+        const overlaps = occupiedRanges.filter((event) =>
           event.weekday === slot.weekday &&
           slotStart < event.end &&
           slotEnd > event.start
-        );
+        ).length;
+        return overlaps < 2;
       })
       .map((slot) => ({
         id: slot.id,
