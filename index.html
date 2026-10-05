@@ -610,14 +610,15 @@
 
         const escapeHtml=value=>String(value??'').replace(/[&<>"']/g,char=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[char]));
 
-        let slots=[{"id":"mon-1630","day":"Pondělí","weekday":1,"time":"16:30–17:30","title":"CERMAT přijímačky","people":2,"capacity":4,"kind":"join"},{"id":"tue-1300","day":"Úterý","weekday":2,"time":"13:00–15:00","title":"VŠ matematika","people":1,"capacity":4,"kind":"join"},{"id":"tue-1515","day":"Úterý","weekday":2,"time":"15:15–16:15","title":"Volný slot","people":0,"capacity":4,"kind":"free"},{"id":"tue-1630","day":"Úterý","weekday":2,"time":"16:30–17:30","title":"Volný slot","people":0,"capacity":4,"kind":"free"},{"id":"tue-1730","day":"Úterý","weekday":2,"time":"17:30–18:30","title":"CERMAT přijímačky","people":1,"capacity":4,"kind":"join"},{"id":"wed-1600","day":"Středa","weekday":3,"time":"16:00–17:00","title":"2. ročník SŠ","people":1,"capacity":4,"kind":"join"},{"id":"wed-1700","day":"Středa","weekday":3,"time":"17:00–18:00","title":"Příprava na maturitu","people":1,"capacity":4,"kind":"join"},{"id":"wed-1900","day":"Středa","weekday":3,"time":"19:00–20:00","title":"9. ročník · AJ kurikulum","people":1,"capacity":4,"kind":"join"},{"id":"thu-flex","day":"Čtvrtek","weekday":4,"time":"","title":"Volno","people":0,"capacity":4,"kind":"free"},{"id":"fri-1400","day":"Pátek","weekday":5,"time":"14:00–15:00","title":"VŠ matematika","people":1,"capacity":4,"kind":"join"},{"id":"fri-1515","day":"Pátek","weekday":5,"time":"15:15–16:15","title":"Volný slot","people":0,"capacity":4,"kind":"free"},{"id":"fri-1630","day":"Pátek","weekday":5,"time":"16:30–17:30","title":"Volný slot","people":0,"capacity":4,"kind":"free"}];
+        let slots=[{"id":"mon-1630","day":"Pondělí","weekday":1,"time":"16:30–17:30","title":"CERMAT přijímačky","people":2,"capacity":4,"kind":"join"},{"id":"tue-1300","day":"Úterý","weekday":2,"time":"13:00–15:00","title":"VŠ matematika","people":1,"capacity":4,"kind":"join"},{"id":"tue-1515","day":"Úterý","weekday":2,"time":"15:15–16:15","title":"Volný slot","people":0,"capacity":4,"kind":"free"},{"id":"tue-1630","day":"Úterý","weekday":2,"time":"16:30–17:30","title":"Volný slot","people":0,"capacity":4,"kind":"free"},{"id":"tue-1730","day":"Úterý","weekday":2,"time":"17:30–18:30","title":"CERMAT přijímačky","people":1,"capacity":4,"kind":"join"},{"id":"wed-1600","day":"Středa","weekday":3,"time":"16:00–17:00","title":"2. ročník SŠ","people":1,"capacity":4,"kind":"join"},{"id":"wed-1700","day":"Středa","weekday":3,"time":"17:00–18:00","title":"Příprava na maturitu","people":1,"capacity":4,"kind":"join"},{"id":"wed-1900","day":"Středa","weekday":3,"time":"19:00–20:00","title":"9. ročník · AJ kurikulum","people":1,"capacity":4,"kind":"join"},{"id":"thu-flex","day":"Čtvrtek","weekday":4,"time":"","title":"Volno","people":0,"capacity":4,"kind":"free","flexible":true},{"id":"fri-1400","day":"Pátek","weekday":5,"time":"14:00–15:00","title":"VŠ matematika","people":1,"capacity":4,"kind":"join"},{"id":"fri-1515","day":"Pátek","weekday":5,"time":"15:15–16:15","title":"Volný slot","people":0,"capacity":4,"kind":"free"},{"id":"fri-1630","day":"Pátek","weekday":5,"time":"16:30–17:30","title":"Volný slot","people":0,"capacity":4,"kind":"free"}];
         const dayOrder=['Pondělí','Úterý','Středa','Čtvrtek','Pátek'];
 
         const selectSlot=(slot)=>{
           selectedTitle.textContent=slot.title;
-          selectedMeta.textContent=[slot.day,slot.time,`${slot.people}/${slot.capacity} míst`].filter(Boolean).join(' · ');
+          const capacityText=slot.flexible?'':`${slot.people}/${slot.capacity} míst`;
+          selectedMeta.textContent=[slot.day,slot.time,capacityText].filter(Boolean).join(' · ');
           selectedId.value=slot.id;
-          selectedInfo.value=[slot.day,slot.time,slot.title,`${slot.people}/${slot.capacity}`].filter(Boolean).join(' | ');
+          selectedInfo.value=[slot.day,slot.time,slot.title,capacityText].filter(Boolean).join(' | ');
           selection.hidden=false;
           selection.scrollIntoView({behavior:'smooth',block:'nearest'});
         };
@@ -635,12 +636,12 @@
             const daySlots=slots.filter(slot=>slot.day===day);
             return `<section class="calendar-day"><h3>${escapeHtml(day)}</h3><div class="calendar-day-slots">${daySlots.length?daySlots.map(slot=>{
               const state=slot.kind==='free'?'free':(slot.kind==='full'?'full':'join');
-              const action=state==='free'?'Vybrat slot':(state==='full'?'Plno':'Přidat se');
+              const action=state==='free'?(slot.flexible?'Domluvit':'Vybrat slot'):(state==='full'?'Plno':'Přidat se');
               const time=slot.time?`<div class="calendar-slot-time">${escapeHtml(slot.time)}</div>`:'';
               return `<article class="calendar-slot ${state}" data-slot-card="${escapeHtml(slot.id)}">
                 ${time}
                 <strong>${escapeHtml(slot.title)}</strong>
-                <div class="calendar-slot-foot"><span>${slot.people}/${slot.capacity}</span>${state==='full'
+                <div class="calendar-slot-foot">${slot.flexible?'':`<span>${slot.people}/${slot.capacity}</span>`}${state==='full'
                   ? '<span class="calendar-slot-action disabled">Plno</span>'
                   : `<button type="button" class="calendar-slot-action" data-slot-id="${escapeHtml(slot.id)}">${escapeHtml(action)}</button>`
                 }</div>
