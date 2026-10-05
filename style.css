@@ -1376,3 +1376,115 @@ footer p {
     margin-top:.55rem;
     padding-top:0;
 }
+
+
+/* --- Jednoduchý přehled stávající kapacity --- */
+.capacity-shell-simple{
+    display:block;
+    padding:1.4rem;
+}
+.capacity-head{
+    display:flex;
+    gap:1rem 1.4rem;
+    align-items:baseline;
+    flex-wrap:wrap;
+    margin-bottom:1rem;
+}
+.capacity-head .eyebrow{margin:0}
+.capacity-head h2{
+    margin:0;
+    color:var(--navy);
+    font-size:1.55rem;
+    letter-spacing:-.035em;
+}
+.capacity-head>p:not(.eyebrow){
+    margin-left:auto;
+    color:var(--muted);
+    font-size:.86rem;
+}
+.capacity-schedule{
+    display:grid;
+    gap:.55rem;
+}
+.capacity-slot{
+    display:grid;
+    grid-template-columns:150px minmax(180px,1fr) 80px 72px;
+    gap:1rem;
+    align-items:center;
+    padding:.82rem 1rem;
+    border:1px solid var(--border);
+    border-radius:12px;
+    background:#fbfdff;
+}
+.capacity-slot-when,
+.capacity-slot-main{
+    display:grid;
+    gap:.12rem;
+}
+.capacity-slot-when strong,
+.capacity-slot-main strong{
+    color:var(--navy);
+    font-size:.88rem;
+}
+.capacity-slot-when span,
+.capacity-slot-main span,
+.capacity-slot-count span{
+    color:var(--muted);
+    font-size:.74rem;
+}
+.capacity-slot-count{
+    display:grid;
+    justify-items:center;
+    gap:.05rem;
+}
+.capacity-slot-count strong{
+    color:var(--navy);
+    font-size:1rem;
+}
+.capacity-slot-status{
+    justify-self:end;
+    padding:.28rem .55rem;
+    border-radius:999px;
+    background:#f1f5f9;
+    color:#475569;
+    font-size:.68rem;
+    font-weight:850;
+    text-transform:uppercase;
+}
+.capacity-actions{
+    display:flex;
+    gap:.7rem;
+    flex-wrap:wrap;
+    margin-top:1rem;
+}
+.capacity-action{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    padding:.72rem .95rem;
+    border:1px solid var(--border-blue);
+    border-radius:9px;
+    color:var(--blue-dark);
+    font-size:.84rem;
+    font-weight:800;
+    text-decoration:none;
+}
+.capacity-action.primary{
+    border-color:var(--navy);
+    background:var(--navy);
+    color:#fff;
+}
+@media(max-width:760px){
+    .capacity-head{display:block}
+    .capacity-head h2{margin:.2rem 0 .35rem}
+    .capacity-head>p:not(.eyebrow){margin:0}
+    .capacity-slot{
+        grid-template-columns:1fr auto;
+        gap:.45rem .8rem;
+    }
+    .capacity-slot-when{grid-column:1}
+    .capacity-slot-main{grid-column:1}
+    .capacity-slot-count{grid-column:2;grid-row:1 / span 2}
+    .capacity-slot-status{grid-column:2;grid-row:3;justify-self:end}
+    .capacity-actions{display:grid}
+}

@@ -1,67 +1,70 @@
 {
   "updated": "2026-10-05",
-  "individual": {
-    "status": "nearly_full",
-    "label": "Individuální výuka: téměř plná",
-    "note": "Nové studenty nyní směřuji hlavně do malých skupin. Níže jsou reálně volné pravidelné sloty v mém kalendáři."
-  },
-  "groups": [
+  "note": "Uvedené pravidelné termíny jsou aktuálně plné.",
+  "slots": [
     {
-      "id": "prijimacky-9",
-      "category": "Přijímačky",
-      "title": "Přijímačky na SŠ",
-      "subtitle": "9. třída · matematika",
-      "capacity": 4,
-      "minStart": 2,
-      "confirmed": null,
-      "status": "slot_open",
-      "statusLabel": "Volný slot",
-      "schedule": "Čtvrtek 16:30–17:30",
-      "startNote": "Skupina může začít ihned po potvrzení 2 kompatibilních studentů.",
-      "formValue": "prijimacky-ss",
-      "topics": [
-        "typové úlohy CERMAT",
-        "strategie a práce s časem",
-        "rozbor chyb"
-      ]
+      "day": "Pondělí",
+      "time": "16:30–17:30",
+      "title": "Průběžná matematika",
+      "people": 2,
+      "mode": "Skupinová",
+      "status": "Plno"
     },
     {
-      "id": "ss-rovnice-funkce",
-      "category": "SŠ",
-      "title": "Rovnice a funkce",
-      "subtitle": "1.–2. ročník SŠ",
-      "capacity": 4,
-      "minStart": 2,
-      "confirmed": null,
-      "status": "slot_open",
-      "statusLabel": "Volný slot",
-      "schedule": "Pátek 15:15–16:15",
-      "startNote": "Skupina může začít ihned po potvrzení 2 kompatibilních studentů.",
-      "formValue": "stredoskolska-matematika",
-      "topics": [
-        "rovnice a nerovnice",
-        "funkce a grafy",
-        "procvičení před testy"
-      ]
+      "day": "Úterý",
+      "time": "13:00–15:00",
+      "title": "VŠ matematika",
+      "people": 1,
+      "mode": "Individuální",
+      "status": "Plno"
     },
     {
-      "id": "vs-matematika-1",
-      "category": "VŠ",
-      "title": "Matematika I",
-      "subtitle": "1. ročník VŠ · analýza",
-      "capacity": 5,
-      "minStart": 2,
-      "confirmed": null,
-      "status": "slot_open",
-      "statusLabel": "Volný slot",
-      "schedule": "Pátek 16:30–17:30",
-      "startNote": "Skupina může začít ihned po potvrzení 2 kompatibilních studentů.",
-      "formValue": "vs-matematika",
-      "topics": [
-        "limity a derivace",
-        "integrály",
-        "příprava na zápočet / zkoušku"
-      ]
+      "day": "Úterý",
+      "time": "17:30–18:30",
+      "title": "CERMAT přijímačky",
+      "people": 1,
+      "mode": "Individuální",
+      "status": "Plno"
+    },
+    {
+      "day": "Středa",
+      "time": "16:00–17:00",
+      "title": "SŠ matematika",
+      "people": 1,
+      "mode": "Individuální",
+      "status": "Plno"
+    },
+    {
+      "day": "Středa",
+      "time": "17:00–18:00",
+      "title": "Příprava na maturitu",
+      "people": 1,
+      "mode": "Individuální",
+      "status": "Plno"
+    },
+    {
+      "day": "Středa",
+      "time": "19:00–20:00",
+      "title": "SŠ matematika",
+      "people": 1,
+      "mode": "Individuální",
+      "status": "Plno"
+    },
+    {
+      "day": "Pátek",
+      "time": "14:00–15:00",
+      "title": "VŠ matematika",
+      "people": 1,
+      "mode": "Individuální",
+      "status": "Plno"
+    },
+    {
+      "day": "Neděle",
+      "time": "11:00–12:00",
+      "title": "ZŠ matematika",
+      "people": 1,
+      "mode": "Individuální",
+      "status": "Plno"
     }
   ]
 }
