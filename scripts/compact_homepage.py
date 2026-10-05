@@ -105,7 +105,38 @@ CSS = r'''<style id="blue-spacious-homepage-v2">
 .blue-capacity-in-zone .blue-section-head h2{color:#fff}
 .blue-capacity-in-zone .capacity-legend{color:rgba(255,255,255,.68)}
 .blue-capacity-in-zone .capacity-legend span{color:rgba(255,255,255,.72)}
-.blue-capacity-in-zone .weekly-calendar-wrap{padding:1rem;border:1px solid rgba(255,255,255,.16);border-radius:22px;background:rgba(255,255,255,.98);box-shadow:0 20px 46px rgba(3,17,32,.2)}
+.blue-capacity-in-zone .weekly-calendar-wrap{overflow-x:auto;padding:0 0 .45rem;border:0;border-radius:0;background:transparent;box-shadow:none}
+.blue-capacity-in-zone .weekly-calendar{display:grid;grid-template-columns:repeat(5,minmax(188px,1fr));gap:.8rem;min-width:980px}
+.blue-capacity-in-zone .calendar-day{padding:.85rem;border:1px solid rgba(255,255,255,.11);border-radius:18px;background:rgba(255,255,255,.065);box-shadow:none}
+.blue-capacity-in-zone .calendar-day-head{display:flex;justify-content:space-between;gap:.7rem;align-items:flex-start;margin-bottom:1rem;padding-bottom:.8rem;border-bottom:1px solid rgba(255,255,255,.1)}
+.blue-capacity-in-zone .calendar-day-title{display:grid;gap:.08rem}
+.blue-capacity-in-zone .calendar-day-abbr{color:#fff;font-size:1.18rem;font-weight:950;letter-spacing:.03em;line-height:1}
+.blue-capacity-in-zone .calendar-day-name{color:rgba(219,234,254,.62);font-size:.68rem}
+.blue-capacity-in-zone .calendar-day-count{color:rgba(219,234,254,.5);font-size:.66rem;font-weight:750;white-space:nowrap}
+.blue-capacity-in-zone .calendar-day-slots{position:relative;display:grid;gap:.68rem;padding-left:1.12rem}
+.blue-capacity-in-zone .calendar-day-slots::before{position:absolute;top:.5rem;bottom:.5rem;left:.3rem;width:1px;background:rgba(255,255,255,.15);content:""}
+.blue-capacity-in-zone .calendar-slot{position:relative;padding:.78rem .78rem .72rem;border:1px solid #dce6f0;border-radius:12px;background:#fff;box-shadow:0 8px 20px rgba(3,17,32,.08)}
+.blue-capacity-in-zone .calendar-slot::before{position:absolute;top:1rem;left:-1.12rem;width:10px;height:10px;border:2px solid #174f89;border-radius:50%;background:#fff;content:""}
+.blue-capacity-in-zone .calendar-slot.join{border-color:#dce6f0;background:#fff}
+.blue-capacity-in-zone .calendar-slot.free{border-color:#bbf7d0;background:#f0fdf4}
+.blue-capacity-in-zone .calendar-slot.free::before{background:#86efac}
+.blue-capacity-in-zone .calendar-slot.full{opacity:.68}
+.blue-capacity-in-zone .calendar-slot-time{margin:0 0 .28rem;color:#64748b;font-size:.68rem;font-weight:800}
+.blue-capacity-in-zone .calendar-slot>strong{display:block;color:#102a43;font-size:.84rem;line-height:1.28}
+.blue-capacity-in-zone .calendar-slot-foot{display:flex;justify-content:space-between;gap:.45rem;align-items:center;margin-top:.62rem}
+.blue-capacity-in-zone .capacity-text{color:#64748b;font-size:.68rem;font-weight:800}
+.blue-capacity-in-zone .calendar-slot.free .capacity-text{color:#15803d}
+.blue-capacity-in-zone .calendar-slot-action{padding:.2rem 0;border:0;background:transparent;color:#2563eb;font:inherit;font-size:.68rem;font-weight:900;cursor:pointer}
+.blue-capacity-in-zone .calendar-slot.free .calendar-slot-action{background:transparent;color:#15803d}
+.blue-capacity-in-zone .calendar-slot-action.disabled{color:#94a3b8;cursor:default}
+.blue-capacity-in-zone .calendar-day.flexible-day .calendar-day-slots{height:100%;padding-left:0}
+.blue-capacity-in-zone .calendar-day.flexible-day .calendar-day-slots::before{display:none}
+.blue-capacity-in-zone .calendar-slot.flexible{display:flex;min-height:230px;flex-direction:column;align-items:center;justify-content:center;text-align:center}
+.blue-capacity-in-zone .calendar-slot.flexible::before{display:none}
+.blue-capacity-in-zone .calendar-flex-icon{display:grid;width:46px;height:46px;margin-bottom:.65rem;place-items:center;border-radius:50%;background:#dcfce7;color:#15803d;font-size:1rem;font-weight:900}
+.blue-capacity-in-zone .calendar-slot.flexible>strong{font-size:1.1rem;letter-spacing:.04em}
+.blue-capacity-in-zone .calendar-flex-note{margin-top:.18rem;color:#64748b;font-size:.7rem}
+.blue-capacity-in-zone .calendar-slot.flexible .calendar-slot-foot{margin-top:1rem}
 .blue-capacity-in-zone .slot-selection{margin-top:1rem;border-radius:18px;background:#fff}
 .blue-reference{padding:5rem 0;background:#fff}
 .blue-review-head{display:flex;justify-content:space-between;gap:2rem;align-items:end;margin-bottom:1.5rem}
@@ -127,7 +158,7 @@ CSS = r'''<style id="blue-spacious-homepage-v2">
 @media(max-width:680px){
   .blue-ecosystem-frame{padding:0;border-radius:0}
   .blue-capacity-in-zone{margin-top:1.6rem;padding-top:1.6rem}
-  .blue-capacity-in-zone .weekly-calendar-wrap{padding:.65rem;border-radius:16px}
+  .blue-capacity-in-zone .weekly-calendar-wrap{padding:0 0 .35rem;border-radius:0}
 }
 </style>'''
 
@@ -229,12 +260,45 @@ OFFER = r'''<section class="blue-goals" id="jak-to-funguje">
           <span>automatická aktualizace ~15 min</span>
         </div>
         <div class="weekly-calendar-wrap">
-          <div class="weekly-calendar" id="weeklyCalendar" aria-live="polite">
-            <section class="calendar-day"><h3>Pondělí</h3><div class="calendar-day-slots"><article class="calendar-slot join"><div class="calendar-slot-time">16:30–17:30</div><strong>CERMAT přijímačky</strong><div class="calendar-slot-foot"><span>2/4</span><button type="button" class="calendar-slot-action" data-slot-id="mon-1630">Přidat se</button></div></article></div></section>
-            <section class="calendar-day"><h3>Úterý</h3><div class="calendar-day-slots"><article class="calendar-slot join"><div class="calendar-slot-time">13:00–15:00</div><strong>VŠ matematika</strong><div class="calendar-slot-foot"><span>1/4</span><button type="button" class="calendar-slot-action" data-slot-id="tue-1300">Přidat se</button></div></article><article class="calendar-slot free"><div class="calendar-slot-time">15:15–16:15</div><strong>Volný slot</strong><div class="calendar-slot-foot"><span>0/4</span><button type="button" class="calendar-slot-action" data-slot-id="tue-1515">Vybrat slot</button></div></article><article class="calendar-slot free"><div class="calendar-slot-time">16:30–17:30</div><strong>Volný slot</strong><div class="calendar-slot-foot"><span>0/4</span><button type="button" class="calendar-slot-action" data-slot-id="tue-1630">Vybrat slot</button></div></article><article class="calendar-slot join"><div class="calendar-slot-time">17:30–18:30</div><strong>CERMAT přijímačky</strong><div class="calendar-slot-foot"><span>1/4</span><button type="button" class="calendar-slot-action" data-slot-id="tue-1730">Přidat se</button></div></article></div></section>
-            <section class="calendar-day"><h3>Středa</h3><div class="calendar-day-slots"><article class="calendar-slot join"><div class="calendar-slot-time">16:00–17:00</div><strong>2. ročník SŠ</strong><div class="calendar-slot-foot"><span>1/4</span><button type="button" class="calendar-slot-action" data-slot-id="wed-1600">Přidat se</button></div></article><article class="calendar-slot join"><div class="calendar-slot-time">17:00–18:00</div><strong>Příprava na maturitu</strong><div class="calendar-slot-foot"><span>1/4</span><button type="button" class="calendar-slot-action" data-slot-id="wed-1700">Přidat se</button></div></article><article class="calendar-slot join"><div class="calendar-slot-time">19:00–20:00</div><strong>9. ročník · AJ kurikulum</strong><div class="calendar-slot-foot"><span>1/4</span><button type="button" class="calendar-slot-action" data-slot-id="wed-1900">Přidat se</button></div></article></div></section>
-            <section class="calendar-day"><h3>Čtvrtek</h3><div class="calendar-day-slots"><article class="calendar-slot free"><strong>Volno</strong><div class="calendar-slot-foot"><button type="button" class="calendar-slot-action" data-slot-id="thu-flex">Domluvit</button></div></article></div></section>
-            <section class="calendar-day"><h3>Pátek</h3><div class="calendar-day-slots"><article class="calendar-slot join"><div class="calendar-slot-time">14:00–15:00</div><strong>VŠ matematika</strong><div class="calendar-slot-foot"><span>1/4</span><button type="button" class="calendar-slot-action" data-slot-id="fri-1400">Přidat se</button></div></article><article class="calendar-slot free"><div class="calendar-slot-time">15:15–16:15</div><strong>Volný slot</strong><div class="calendar-slot-foot"><span>0/4</span><button type="button" class="calendar-slot-action" data-slot-id="fri-1515">Vybrat slot</button></div></article><article class="calendar-slot free"><div class="calendar-slot-time">16:30–17:30</div><strong>Volný slot</strong><div class="calendar-slot-foot"><span>0/4</span><button type="button" class="calendar-slot-action" data-slot-id="fri-1630">Vybrat slot</button></div></article></div></section>
+          <div class="weekly-calendar timeline-calendar" id="weeklyCalendar" aria-live="polite">
+            <section class="calendar-day">
+              <div class="calendar-day-head"><div class="calendar-day-title"><span class="calendar-day-abbr">PO</span><span class="calendar-day-name">Pondělí</span></div><span class="calendar-day-count">2 sloty</span></div>
+              <div class="calendar-day-slots">
+                <article class="calendar-slot join"><div class="calendar-slot-time">16:30–17:30</div><strong>CERMAT přijímačky</strong><div class="calendar-slot-foot"><span class="capacity-text">2/4 míst</span><button type="button" class="calendar-slot-action" data-slot-id="mon-1630">Přidat se →</button></div></article>
+                <article class="calendar-slot free"><div class="calendar-slot-time">17:45–18:45</div><strong>Volný slot</strong><div class="calendar-slot-foot"><span class="capacity-text">volný termín</span><button type="button" class="calendar-slot-action" data-slot-id="mon-1745">Vybrat →</button></div></article>
+              </div>
+            </section>
+            <section class="calendar-day">
+              <div class="calendar-day-head"><div class="calendar-day-title"><span class="calendar-day-abbr">ÚT</span><span class="calendar-day-name">Úterý</span></div><span class="calendar-day-count">4 sloty</span></div>
+              <div class="calendar-day-slots">
+                <article class="calendar-slot join"><div class="calendar-slot-time">13:00–15:00</div><strong>VŠ matematika</strong><div class="calendar-slot-foot"><span class="capacity-text">1/4 míst</span><button type="button" class="calendar-slot-action" data-slot-id="tue-1300">Přidat se →</button></div></article>
+                <article class="calendar-slot free"><div class="calendar-slot-time">15:15–16:15</div><strong>Volný slot</strong><div class="calendar-slot-foot"><span class="capacity-text">volný termín</span><button type="button" class="calendar-slot-action" data-slot-id="tue-1515">Vybrat →</button></div></article>
+                <article class="calendar-slot free"><div class="calendar-slot-time">16:30–17:30</div><strong>Volný slot</strong><div class="calendar-slot-foot"><span class="capacity-text">volný termín</span><button type="button" class="calendar-slot-action" data-slot-id="tue-1630">Vybrat →</button></div></article>
+                <article class="calendar-slot join"><div class="calendar-slot-time">17:30–18:30</div><strong>CERMAT přijímačky</strong><div class="calendar-slot-foot"><span class="capacity-text">1/4 míst</span><button type="button" class="calendar-slot-action" data-slot-id="tue-1730">Přidat se →</button></div></article>
+              </div>
+            </section>
+            <section class="calendar-day">
+              <div class="calendar-day-head"><div class="calendar-day-title"><span class="calendar-day-abbr">ST</span><span class="calendar-day-name">Středa</span></div><span class="calendar-day-count">3 sloty</span></div>
+              <div class="calendar-day-slots">
+                <article class="calendar-slot join"><div class="calendar-slot-time">16:00–17:00</div><strong>2. ročník SŠ</strong><div class="calendar-slot-foot"><span class="capacity-text">1/4 míst</span><button type="button" class="calendar-slot-action" data-slot-id="wed-1600">Přidat se →</button></div></article>
+                <article class="calendar-slot join"><div class="calendar-slot-time">17:00–18:00</div><strong>Příprava na maturitu</strong><div class="calendar-slot-foot"><span class="capacity-text">1/4 míst</span><button type="button" class="calendar-slot-action" data-slot-id="wed-1700">Přidat se →</button></div></article>
+                <article class="calendar-slot join"><div class="calendar-slot-time">19:00–20:00</div><strong>9. ročník · AJ kurikulum</strong><div class="calendar-slot-foot"><span class="capacity-text">1/4 míst</span><button type="button" class="calendar-slot-action" data-slot-id="wed-1900">Přidat se →</button></div></article>
+              </div>
+            </section>
+            <section class="calendar-day flexible-day">
+              <div class="calendar-day-head"><div class="calendar-day-title"><span class="calendar-day-abbr">ČT</span><span class="calendar-day-name">Čtvrtek</span></div><span class="calendar-day-count">volno</span></div>
+              <div class="calendar-day-slots">
+                <article class="calendar-slot free flexible"><div class="calendar-flex-icon">✓</div><strong>VOLNO</strong><span class="calendar-flex-note">čas domluvíme</span><div class="calendar-slot-foot"><button type="button" class="calendar-slot-action" data-slot-id="thu-flex">Domluvit →</button></div></article>
+              </div>
+            </section>
+            <section class="calendar-day">
+              <div class="calendar-day-head"><div class="calendar-day-title"><span class="calendar-day-abbr">PÁ</span><span class="calendar-day-name">Pátek</span></div><span class="calendar-day-count">3 sloty</span></div>
+              <div class="calendar-day-slots">
+                <article class="calendar-slot join"><div class="calendar-slot-time">14:00–15:00</div><strong>VŠ matematika</strong><div class="calendar-slot-foot"><span class="capacity-text">1/4 míst</span><button type="button" class="calendar-slot-action" data-slot-id="fri-1400">Přidat se →</button></div></article>
+                <article class="calendar-slot free"><div class="calendar-slot-time">15:15–16:15</div><strong>Volný slot</strong><div class="calendar-slot-foot"><span class="capacity-text">volný termín</span><button type="button" class="calendar-slot-action" data-slot-id="fri-1515">Vybrat →</button></div></article>
+                <article class="calendar-slot free"><div class="calendar-slot-time">16:30–17:30</div><strong>Volný slot</strong><div class="calendar-slot-foot"><span class="capacity-text">volný termín</span><button type="button" class="calendar-slot-action" data-slot-id="fri-1630">Vybrat →</button></div></article>
+              </div>
+            </section>
           </div>
         </div>
         <div class="slot-selection" id="slotSelection" hidden>

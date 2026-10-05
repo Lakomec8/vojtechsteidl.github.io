@@ -33,7 +33,7 @@
   function selectSlot(slot) {
     if (!selection || !selectedTitle || !selectedMeta || !selectedId || !selectedInfo) return;
     selectedTitle.textContent = slot.title;
-    const capacityText = slot.flexible ? "" : `${slot.people}/${slot.capacity} míst`;
+    const capacityText = slot.flexible ? "" : (slot.kind === "free" ? "volný termín" : `${slot.people}/${slot.capacity} míst`);
     selectedMeta.textContent = [slot.day, slot.time, capacityText].filter(Boolean).join(" · ");
     selectedId.value = slot.id;
     selectedInfo.value = [slot.day, slot.time, slot.title, capacityText].filter(Boolean).join(" | ");
