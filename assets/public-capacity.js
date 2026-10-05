@@ -19,22 +19,23 @@
     if (!compactEl) return;
     const visible = slots.filter((slot) => slot.kind !== "full").slice(0, 3);
     if (!visible.length) return;
-    compactEl.innerHTML = visible.map((slot) =>
-      `<a class="compact-capacity-card" href="/skupinove-doucovani-matematiky/">
-        <small>${esc(slot.day)} · ${esc(slot.time)}</small>
+    compactEl.innerHTML = visible.map((slot) => {
+      const when = [slot.day, slot.time].filter(Boolean).join(" · ");
+      return `<a class="compact-capacity-card" href="/skupinove-doucovani-matematiky/">
+        <small>${esc(when)}</small>
         <strong>${esc(slot.title)}</strong>
         <span>${Number(slot.people)}/${Number(slot.capacity)} míst</span>
-      </a>`
-    ).join("");
+      </a>`;
+    }).join("");
     compactEl.dataset.live = "true";
   }
 
   function selectSlot(slot) {
     if (!selection || !selectedTitle || !selectedMeta || !selectedId || !selectedInfo) return;
     selectedTitle.textContent = slot.title;
-    selectedMeta.textContent = `${slot.day} · ${slot.time} · ${slot.people}/${slot.capacity} míst`;
+    selectedMeta.textContent = [slot.day, slot.time, `${slot.people}/${slot.capacity} míst`].filter(Boolean).join(" · ");
     selectedId.value = slot.id;
-    selectedInfo.value = `${slot.day} ${slot.time} | ${slot.title} | ${slot.people}/${slot.capacity}`;
+    selectedInfo.value = [slot.day, slot.time, slot.title, `${slot.people}/${slot.capacity}`].filter(Boolean).join(" | ");
     selection.hidden = false;
     selection.scrollIntoView({ behavior: "smooth", block: "nearest" });
   }
@@ -50,8 +51,9 @@
         const control = state === "full"
           ? '<span class="calendar-slot-action disabled">Plno</span>'
           : `<button type="button" class="calendar-slot-action" data-public-slot-id="${esc(slot.id)}">${esc(action)}</button>`;
+        const time = slot.time ? `<div class="calendar-slot-time">${esc(slot.time)}</div>` : "";
         return `<article class="calendar-slot ${state}">
-          <div class="calendar-slot-time">${esc(slot.time)}</div>
+          ${time}
           <strong>${esc(slot.title)}</strong>
           <div class="calendar-slot-foot"><span>${Number(slot.people)}/${Number(slot.capacity)}</span>${control}</div>
         </article>`;
