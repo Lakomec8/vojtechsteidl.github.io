@@ -26,6 +26,7 @@ type FreeSlotRow = {
   end_time: string;
   capacity: number;
   sort_order: number;
+  display_mode: "timed" | "flexible";
 };
 
 function pragueParts(value: string): { weekday: number; time: string } | null {
@@ -97,7 +98,7 @@ async function mappedEvents(env: Env): Promise<EventRow[]> {
 
 async function freeSlots(env: Env): Promise<FreeSlotRow[]> {
   const result = await env.DB.prepare(`
-    SELECT id, weekday, start_time, end_time, capacity, sort_order
+    SELECT id, weekday, start_time, end_time, capacity, sort_order, display_mode
       FROM public_capacity_free_slots
      WHERE enabled = 1
      ORDER BY weekday, start_time, sort_order
@@ -105,15 +106,20 @@ async function freeSlots(env: Env): Promise<FreeSlotRow[]> {
   return result.results || [];
 }
 
-async function allUpcomingStarts(env: Env): Promise<Array<{ starts_at: string }>> {
+async function allUpcomingRanges(env: Env): Promise<Array<{ starts_at: string; ends_at: string }>> {
   const result = await env.DB.prepare(`
-    SELECT starts_at
+    SELECT starts_at, ends_at
       FROM tutoring_calendar_events
      WHERE status = 'planned'
        AND datetime(starts_at) >= datetime('now')
        AND datetime(starts_at) < datetime('now', '+21 days')
-  `).all<{ starts_at: string }>();
+  `).all<{ starts_at: string; ends_at: string }>();
   return result.results || [];
+}
+
+function minutes(value: string): number {
+  const [hour, minute] = value.split(":").map(Number);
+  return hour * 60 + minute;
 }
 
 export async function handlePublicCapacityRequest(request: Request, env: Env): Promise<Response | null> {
@@ -124,7 +130,7 @@ export async function handlePublicCapacityRequest(request: Request, env: Env): P
     const [events, free, allUpcoming] = await Promise.all([
       mappedEvents(env),
       freeSlots(env),
-      allUpcomingStarts(env),
+      allUpcomingRanges(env),
     ]);
     const occupied = events.flatMap((event) => {
       const start = pragueParts(event.starts_at);
@@ -143,20 +149,32 @@ export async function handlePublicCapacityRequest(request: Request, env: Env): P
       }];
     });
 
-    const occupiedKeys = new Set(
-      allUpcoming.flatMap((event) => {
-        const start = pragueParts(event.starts_at);
-        return start ? [`${start.weekday}|${start.time}`] : [];
-      }),
-    );
+    const occupiedRanges = allUpcoming.flatMap((event) => {
+      const start = pragueParts(event.starts_at);
+      const end = pragueParts(event.ends_at);
+      if (!start || !end || start.weekday !== end.weekday) return [];
+      return [{
+        weekday: start.weekday,
+        start: minutes(start.time),
+        end: minutes(end.time),
+      }];
+    });
     const available = free
-      .filter((slot) => !occupiedKeys.has(`${slot.weekday}|${slot.start_time}`))
+      .filter((slot) => {
+        const slotStart = minutes(slot.start_time);
+        const slotEnd = minutes(slot.end_time);
+        return !occupiedRanges.some((event) =>
+          event.weekday === slot.weekday &&
+          slotStart < event.end &&
+          slotEnd > event.start
+        );
+      })
       .map((slot) => ({
         id: slot.id,
         day: DAY_NAMES[slot.weekday],
         weekday: slot.weekday,
-        time: `${slot.start_time}–${slot.end_time}`,
-        title: "Volný slot",
+        time: slot.display_mode === "flexible" ? "" : `${slot.start_time}–${slot.end_time}`,
+        title: slot.display_mode === "flexible" ? "Volno" : "Volný slot",
         people: 0,
         capacity: Number(slot.capacity),
         kind: "free",
