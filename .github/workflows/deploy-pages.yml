@@ -61,11 +61,13 @@ jobs:
           grep -q 'blue-spacious-homepage-v2' .public-site/index.html
           grep -q 'id="weeklyCalendar"' .public-site/index.html
           test -f .public-site/assets/previews/zs-slovni-ulohy.webp
-          test -f .public-site/assets/previews/ss-funkce.webp
+          test -f .public-site/assets/previews/ss-geometrie.webp
           grep -q '/assets/previews/zs-slovni-ulohy.webp' .public-site/index.html
-          grep -q '/assets/previews/ss-funkce.webp' .public-site/index.html
-          grep -q 'Ukázka · parciální derivace' .public-site/index.html
-          grep -q 'vs-material-sheet' .public-site/index.html
+          grep -q '/assets/previews/ss-geometrie.webp' .public-site/index.html
+          test -f .public-site/assets/previews/vs-integraly.webp
+          grep -q '/assets/previews/vs-integraly.webp' .public-site/index.html
+          grep -q 'Ukázka · integrály' .public-site/index.html
+          ! grep -q 'vs-material-sheet' .public-site/index.html
           grep -q 'id="jak-to-funguje"' .public-site/index.html
           ! grep -q '<section class="school-promo-section" id="diagnostika">' .public-site/index.html
           ! grep -q 'id="materialy"' .public-site/index.html
