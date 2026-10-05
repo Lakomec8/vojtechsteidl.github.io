@@ -247,6 +247,20 @@ def add_lead_attribution() -> None:
             path.write_text(html.replace("</head>", script + "\n</head>", 1), encoding="utf-8")
 
 
+def add_public_capacity_sync() -> None:
+    script = '<script src="/assets/public-capacity.js" defer></script>'
+    targets = (
+        DIST / "index.html",
+        DIST / "skupinove-doucovani-matematiky" / "index.html",
+    )
+    for path in targets:
+        html = path.read_text(encoding="utf-8")
+        if "</head>" not in html:
+            raise RuntimeError(f"Capacity page has no closing head tag: {path}")
+        if script not in html:
+            path.write_text(html.replace("</head>", script + "\n</head>", 1), encoding="utf-8")
+
+
 def assert_public_artifact() -> None:
     top_level = {path.name for path in DIST.iterdir()}
     leaked = sorted(top_level & FORBIDDEN_TOP_LEVEL)
@@ -299,6 +313,7 @@ def assert_public_artifact() -> None:
         "assets/diagnostic-feedback.js",
         "assets/diagnostic-engine.js",
         "assets/diagnostic-test.css",
+        "assets/public-capacity.js",
     )
     missing_diagnostics = [relative for relative in required_diagnostics if not (DIST / relative).is_file()]
     if missing_diagnostics:
@@ -346,5 +361,6 @@ for relative in PUBLIC_DIRECTORIES:
 patch_public_entrypoint()
 patch_maturita_diagnostic_feedback()
 add_lead_attribution()
+add_public_capacity_sync()
 assert_public_artifact()
 print(f"Built hardened public site at {DIST}")
