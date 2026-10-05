@@ -72,7 +72,12 @@ CSS = r'''<style id="blue-spacious-homepage-v2">
 .blue-doc-preview img{display:block;width:100%;height:100%;object-fit:cover;object-position:top}
 .blue-doc-preview::after{position:absolute;right:0;bottom:0;left:0;height:52px;background:linear-gradient(180deg,rgba(255,255,255,0),rgba(255,255,255,.96));content:"";z-index:1}
 .blue-doc-label{position:absolute;z-index:3;top:.65rem;left:.65rem;padding:.3rem .5rem;border-radius:999px;background:rgba(16,42,67,.9);color:#fff;font-size:.62rem;font-weight:850;letter-spacing:.035em}
-.blue-ecosystem{padding:5.8rem 0;background:#fff}
+.blue-ecosystem{position:relative;overflow:hidden;padding:6.4rem 0;background:
+  radial-gradient(circle at 82% 18%,rgba(96,165,250,.22),transparent 30%),
+  radial-gradient(circle at 14% 78%,rgba(37,99,235,.18),transparent 34%),
+  linear-gradient(135deg,#0b1f34 0%,#123d70 54%,#1d4ed8 120%)}
+.blue-ecosystem::after{position:absolute;right:-150px;bottom:-240px;width:560px;height:560px;border:1px solid rgba(255,255,255,.1);border-radius:50%;content:"";box-shadow:0 0 0 78px rgba(255,255,255,.02),0 0 0 155px rgba(255,255,255,.015);pointer-events:none}
+.blue-ecosystem>.blue-shell{position:relative;z-index:1}
 .blue-bento{display:grid;grid-template-columns:1.35fr .65fr;grid-template-rows:1fr 1fr;gap:1rem;min-height:560px;margin-top:1.6rem}
 .blue-zone-card{grid-row:1/3;display:grid;grid-template-rows:auto 1fr;overflow:hidden;padding:1.6rem;border-radius:26px;background:linear-gradient(135deg,#0e2a47 0%,#174f89 62%,#2563eb 140%);color:#fff;box-shadow:0 25px 65px rgba(15,23,42,.16)}
 .blue-zone-card .eyebrow{color:#93c5fd}.blue-zone-card h3{margin:.4rem 0 .7rem;color:#fff;font-size:clamp(2rem,3.4vw,3rem);letter-spacing:-.045em}.blue-zone-card>div>p{max-width:660px;color:rgba(255,255,255,.75);line-height:1.7}.blue-zone-card a{display:inline-flex;margin-top:1rem;color:#fff;font-weight:850;text-decoration:none}
@@ -82,7 +87,7 @@ CSS = r'''<style id="blue-spacious-homepage-v2">
 .blue-portal-main{padding:14px}.blue-portal-banner{display:flex;justify-content:space-between;gap:1rem;padding:14px;border-radius:12px;background:linear-gradient(135deg,#eaf2ff,#fff)}.blue-portal-banner strong{color:#102a43;font-size:.9rem}.blue-portal-banner span{color:#64748b;font-size:.58rem}.blue-progress{width:86px;padding:9px;border-radius:9px;background:#fff}.blue-progress b{display:block;color:#102a43;font-size:.95rem}.blue-progress i{display:block;height:5px;margin-top:5px;border-radius:999px;background:linear-gradient(90deg,#2563eb 68%,#e2e8f0 68%)}
 .blue-portal-panels{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-top:8px}.blue-portal-panel{min-height:72px;padding:9px;border:1px solid #e0e7ef;border-radius:9px;background:#fff}.blue-portal-panel strong{display:block;color:#102a43;font-size:.55rem}.blue-portal-line{height:5px;margin-top:7px;border-radius:999px;background:#e2e8f0}.blue-portal-line.short{width:62%}
 .blue-mini-card{display:flex;flex-direction:column;justify-content:space-between;padding:1.4rem;border:1px solid var(--home-line);border-radius:22px;background:#f8fbff;box-shadow:0 12px 30px rgba(15,23,42,.05)}.blue-mini-card i{display:grid;width:44px;height:44px;place-items:center;border-radius:12px;background:#eaf2ff;color:#1d4ed8}.blue-mini-card h3{margin:1rem 0 .45rem;color:var(--navy);font-size:1.25rem;letter-spacing:-.03em}.blue-mini-card p{margin:0;color:#64748b;line-height:1.55;font-size:.88rem}.blue-mini-card a{margin-top:1rem;color:#1d4ed8;font-size:.8rem;font-weight:850;text-decoration:none}
-.blue-ecosystem-frame{overflow:hidden;padding:clamp(1.6rem,4vw,3rem);border-radius:32px;background:linear-gradient(135deg,#0b2036 0%,#123f70 56%,#1d4ed8 140%);box-shadow:0 28px 70px rgba(15,23,42,.16)}
+.blue-ecosystem-frame{overflow:visible;padding:0;border-radius:0;background:transparent;box-shadow:none}
 .blue-ecosystem-frame .blue-section-head{margin-bottom:1.7rem}
 .blue-ecosystem-frame .blue-section-head .eyebrow{color:#93c5fd}
 .blue-ecosystem-frame .blue-section-head h2{color:#fff}
@@ -120,7 +125,7 @@ CSS = r'''<style id="blue-spacious-homepage-v2">
 @media(max-width:980px){.blue-hero-grid,.blue-contact-grid{grid-template-columns:1fr}.blue-hero-panel{max-width:720px}.blue-section-head{align-items:flex-start;flex-direction:column}.blue-bento{grid-template-columns:1fr;grid-template-rows:auto}.blue-zone-card{grid-row:auto;min-height:530px}.blue-goal-grid,.blue-price-grid{grid-template-columns:1fr 1fr}.blue-review-grid{grid-template-columns:1fr 1fr}.blue-capacity-grid{grid-template-columns:repeat(3,minmax(220px,1fr));overflow-x:auto;padding-bottom:.4rem}}
 @media(max-width:680px){.blue-shell{width:min(100% - 2rem,1180px)}.blue-home-hero{padding:7rem 0 4.5rem}.blue-home-hero h1{font-size:clamp(2.7rem,13vw,4.1rem)}.blue-panel-stats,.blue-goal-grid,.blue-price-grid,.blue-review-grid,.blue-form{grid-template-columns:1fr}.blue-review-head{align-items:flex-start;flex-direction:column}.blue-review-card{min-height:0}.blue-capacity-grid{grid-template-columns:repeat(3,245px)}.blue-capacity{padding:3.7rem 0}.blue-goals,.blue-ecosystem,.blue-pricing,.blue-contact{padding:4rem 0}.blue-goal-card{min-height:500px}.blue-bento{min-height:0}.blue-zone-card{min-height:0}.blue-portal-body{grid-template-columns:90px 1fr}.blue-portal-panels{grid-template-columns:1fr 1fr}.blue-portal-panel:last-child{display:none}.blue-form .form-group.full,.blue-form .consent,.blue-form .submit-button,.blue-form .form-status{grid-column:1}}
 @media(max-width:680px){
-  .blue-ecosystem-frame{padding:1.15rem;border-radius:22px}
+  .blue-ecosystem-frame{padding:0;border-radius:0}
   .blue-capacity-in-zone{margin-top:1.6rem;padding-top:1.6rem}
   .blue-capacity-in-zone .weekly-calendar-wrap{padding:.65rem;border-radius:16px}
 }
@@ -184,7 +189,7 @@ OFFER = r'''<section class="blue-goals" id="jak-to-funguje">
     <div class="blue-section-head">
       <div>
         <p class="eyebrow">Součást spolupráce</p>
-        <h2>Nejen videohovor.</h2>
+        <h2>Studentská zóna</h2>
         <p>Technické věci mají pomáhat udržet návaznost, ne přidávat další administrativu.</p>
       </div>
     </div>
