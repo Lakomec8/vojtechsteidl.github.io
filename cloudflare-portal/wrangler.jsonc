@@ -27,6 +27,14 @@
     {
       "pattern": "www.vojtechsteidl.eu/student-portal*",
       "zone_name": "vojtechsteidl.eu"
+    },
+    {
+      "pattern": "vojtechsteidl.eu/api/public-capacity*",
+      "zone_name": "vojtechsteidl.eu"
+    },
+    {
+      "pattern": "www.vojtechsteidl.eu/api/public-capacity*",
+      "zone_name": "vojtechsteidl.eu"
     }
   ],
   "assets": {
