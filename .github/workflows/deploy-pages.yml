@@ -58,12 +58,11 @@ jobs:
           grep -q '<link rel="canonical" href="https://vojtechsteidl.eu/">' .public-site/index.html
           grep -q 'doucovani-vs-matematiky' .public-site/index.html
           grep -q 'priprava-na-prijimacky-z-matematiky' .public-site/index.html
-          grep -q 'compact-homepage-v1' .public-site/index.html
+          grep -q 'blue-spacious-homepage-v2' .public-site/index.html
           grep -q 'id="compactCapacity"' .public-site/index.html
           grep -q 'id="jak-to-funguje"' .public-site/index.html
           ! grep -q '<section class="school-promo-section" id="diagnostika">' .public-site/index.html
           ! grep -q 'id="materialy"' .public-site/index.html
-          ! grep -q 'id="studentska-zona"' .public-site/index.html
           ! grep -q 'id="pro-skoly"' .public-site/index.html
           ! grep -q 'id="faq"' .public-site/index.html
           ! grep -q 'href="#reference"' .public-site/index.html
