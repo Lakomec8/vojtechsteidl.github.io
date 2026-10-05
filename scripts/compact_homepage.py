@@ -126,15 +126,38 @@ CAPACITY = r'''<section class="blue-capacity" id="kapacita">
     <div class="blue-section-head">
       <div>
         <p class="eyebrow">Stávající kapacita</p>
-        <h2>Nejbližší možnosti v kalendáři.</h2>
+        <h2>Týdenní kalendář.</h2>
         <p>Sloty se automaticky aktualizují. K existujícímu studentovi se lze přidat a vytvořit malou skupinu, nebo zvolit volný termín.</p>
       </div>
-      <a class="blue-section-link" href="/skupinove-doucovani-matematiky/">Zobrazit celý kalendář →</a>
     </div>
-    <div class="blue-capacity-grid" id="compactCapacity">
-      <a class="compact-capacity-card" href="/skupinove-doucovani-matematiky/"><small>Pondělí · 16:30–17:30</small><strong>CERMAT přijímačky</strong><span>2/4 míst</span></a>
-      <a class="compact-capacity-card" href="/skupinove-doucovani-matematiky/"><small>Úterý · 13:00–15:00</small><strong>VŠ matematika</strong><span>1/4 míst</span></a>
-      <a class="compact-capacity-card" href="/skupinove-doucovani-matematiky/"><small>Pátek · 15:15–16:15</small><strong>Volný slot</strong><span>0/4 míst</span></a>
+    <div class="capacity-legend" style="margin-bottom:1rem">
+      <span><i class="legend-dot join"></i> lze se přidat</span>
+      <span><i class="legend-dot free"></i> volný slot</span>
+      <span>automatická aktualizace ~15 min</span>
+    </div>
+    <div class="weekly-calendar-wrap">
+      <div class="weekly-calendar" id="weeklyCalendar" aria-live="polite">
+        <section class="calendar-day"><h3>Pondělí</h3><div class="calendar-day-slots"><article class="calendar-slot join"><div class="calendar-slot-time">16:30–17:30</div><strong>CERMAT přijímačky</strong><div class="calendar-slot-foot"><span>2/4</span><button type="button" class="calendar-slot-action" data-public-slot-id="mon-1630">Přidat se</button></div></article></div></section>
+        <section class="calendar-day"><h3>Úterý</h3><div class="calendar-day-slots"><article class="calendar-slot join"><div class="calendar-slot-time">13:00–15:00</div><strong>VŠ matematika</strong><div class="calendar-slot-foot"><span>1/4</span><button type="button" class="calendar-slot-action" data-public-slot-id="tue-1300">Přidat se</button></div></article><article class="calendar-slot join"><div class="calendar-slot-time">17:30–18:30</div><strong>CERMAT přijímačky</strong><div class="calendar-slot-foot"><span>1/4</span><button type="button" class="calendar-slot-action" data-public-slot-id="tue-1730">Přidat se</button></div></article></div></section>
+        <section class="calendar-day"><h3>Středa</h3><div class="calendar-day-slots"><article class="calendar-slot join"><div class="calendar-slot-time">16:00–17:00</div><strong>2. ročník SŠ</strong><div class="calendar-slot-foot"><span>1/4</span><button type="button" class="calendar-slot-action" data-public-slot-id="wed-1600">Přidat se</button></div></article><article class="calendar-slot join"><div class="calendar-slot-time">17:00–18:00</div><strong>Příprava na maturitu</strong><div class="calendar-slot-foot"><span>1/4</span><button type="button" class="calendar-slot-action" data-public-slot-id="wed-1700">Přidat se</button></div></article><article class="calendar-slot join"><div class="calendar-slot-time">19:00–20:00</div><strong>9. ročník · AJ kurikulum</strong><div class="calendar-slot-foot"><span>1/4</span><button type="button" class="calendar-slot-action" data-public-slot-id="wed-1900">Přidat se</button></div></article></div></section>
+        <section class="calendar-day"><h3>Čtvrtek</h3><div class="calendar-day-slots"><article class="calendar-slot free"><div class="calendar-slot-time">16:30–17:30</div><strong>Volný slot</strong><div class="calendar-slot-foot"><span>0/4</span><button type="button" class="calendar-slot-action" data-public-slot-id="thu-1630">Vybrat slot</button></div></article></div></section>
+        <section class="calendar-day"><h3>Pátek</h3><div class="calendar-day-slots"><article class="calendar-slot join"><div class="calendar-slot-time">14:00–15:00</div><strong>VŠ matematika</strong><div class="calendar-slot-foot"><span>1/4</span><button type="button" class="calendar-slot-action" data-public-slot-id="fri-1400">Přidat se</button></div></article><article class="calendar-slot free"><div class="calendar-slot-time">15:15–16:15</div><strong>Volný slot</strong><div class="calendar-slot-foot"><span>0/4</span><button type="button" class="calendar-slot-action" data-public-slot-id="fri-1515">Vybrat slot</button></div></article><article class="calendar-slot free"><div class="calendar-slot-time">16:30–17:30</div><strong>Volný slot</strong><div class="calendar-slot-foot"><span>0/4</span><button type="button" class="calendar-slot-action" data-public-slot-id="fri-1630">Vybrat slot</button></div></article></div></section>
+      </div>
+    </div>
+    <div class="slot-selection" id="slotSelection" hidden>
+      <div class="slot-selection-copy">
+        <span class="slot-selection-label">Vybraný slot</span>
+        <strong id="selectedSlotTitle"></strong>
+        <span id="selectedSlotMeta"></span>
+      </div>
+      <form class="slot-selection-form" id="slotBookingForm">
+        <input type="hidden" id="selectedSlotId" name="slot_id">
+        <input type="hidden" id="selectedSlotInfo" name="slot_info">
+        <input type="text" name="name" placeholder="Jméno" autocomplete="name" required>
+        <input type="email" name="email" placeholder="E-mail" autocomplete="email" required>
+        <button type="submit">Potvrdit výběr</button>
+        <p class="form-status" id="slotBookingStatus" aria-live="polite"></p>
+      </form>
     </div>
   </div>
 </section>'''
@@ -316,7 +339,7 @@ def main() -> None:
 
     required = (
         MARKER,
-        'id="compactCapacity"',
+        'id="weeklyCalendar"',
         'id="jak-to-funguje"',
         'id="studentska-zona"',
         'id="reference"',
