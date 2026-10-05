@@ -252,7 +252,7 @@ def section_bounds(html: str, marker: str, label: str) -> tuple[int, int]:
     start = html.find(marker)
     if start < 0:
         raise RuntimeError(f"Expected homepage section was not found: {label}")
-    token = re.compile(r"<section\\b[^>]*>|</section>")
+    token = re.compile(r"<section[^>]*>|</section>")
     depth = 0
     for match in token.finditer(html, start):
         if match.group(0).startswith("<section"):
