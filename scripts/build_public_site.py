@@ -250,7 +250,6 @@ def add_lead_attribution() -> None:
 def add_public_capacity_sync() -> None:
     script = '<script src="/assets/public-capacity.js" defer></script>'
     targets = (
-        DIST / "index.html",
         DIST / "skupinove-doucovani-matematiky" / "index.html",
     )
     for path in targets:
