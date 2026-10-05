@@ -13,7 +13,7 @@
   <meta property="og:url" content="https://vojtechsteidl.eu/skupinove-doucovani-matematiky/">
   <meta property="og:type" content="website">
   <meta property="og:image" content="https://vojtechsteidl.eu/foto.jpg">
-  <link rel="stylesheet" href="../style.css">
+  <link rel="stylesheet" href="../style.css?v=20261005-slots">
   <style>
     .group-hero{padding:6rem 1.25rem 5.25rem;background:linear-gradient(135deg,#102a43 0%,#173f6c 58%,#1d4ed8 150%);color:#fff}
     .wrap{width:min(1080px,calc(100% - 2rem));margin:0 auto}
@@ -171,7 +171,7 @@
     const groupTracks=document.getElementById('groupTracks');
     const groupGoal=document.getElementById('groupGoal');
     const escapeHtml=value=>String(value??'').replace(/[&<>"']/g,char=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[char]));
-    fetch('/data/group-capacity.json?v=20261005')
+    fetch('/data/group-capacity.json?v=20261005-slots')
       .then(response=>{if(!response.ok) throw new Error('capacity-fetch'); return response.json();})
       .then(data=>{
         if(document.getElementById('capacityUpdated')&&data.updated){
