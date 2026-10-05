@@ -1488,3 +1488,45 @@ footer p {
     .capacity-slot-status{grid-column:2;grid-row:3;justify-self:end}
     .capacity-actions{display:grid}
 }
+
+
+/* --- Týdenní kalendář kapacity --- */
+.weekly-capacity-shell{display:block;padding:1.35rem}
+.capacity-head{display:flex;justify-content:space-between;gap:1rem;align-items:flex-end;margin-bottom:1rem}
+.capacity-head h2{margin:.15rem 0 0;color:var(--navy);font-size:1.6rem;letter-spacing:-.035em}
+.capacity-legend{display:flex;gap:1rem;flex-wrap:wrap;color:var(--muted);font-size:.76rem}
+.capacity-legend span{display:flex;gap:.4rem;align-items:center}
+.legend-dot{width:8px;height:8px;border-radius:50%;display:inline-block}
+.legend-dot.join{background:#2563eb}.legend-dot.free{background:#16a34a}
+.weekly-calendar-wrap{overflow-x:auto;padding-bottom:.25rem}
+.weekly-calendar{display:grid;grid-template-columns:repeat(5,minmax(165px,1fr));gap:.7rem;min-width:860px}
+.calendar-day{padding:.7rem;border:1px solid var(--border);border-radius:14px;background:#f8fafc}
+.calendar-day h3{margin:0 0 .65rem;color:var(--navy);font-size:.82rem;text-transform:uppercase;letter-spacing:.055em}
+.calendar-day-slots{display:grid;gap:.55rem}
+.calendar-slot{padding:.72rem;border:1px solid #dbe4ee;border-radius:11px;background:#fff}
+.calendar-slot.join{border-color:#bfdbfe;background:#f8fbff}
+.calendar-slot.free{border-color:#bbf7d0;background:#f0fdf4}
+.calendar-slot.full{opacity:.72}
+.calendar-slot-time{margin-bottom:.3rem;color:#64748b;font-size:.72rem;font-weight:750}
+.calendar-slot>strong{display:block;color:var(--navy);font-size:.86rem;line-height:1.3}
+.calendar-slot-foot{display:flex;justify-content:space-between;gap:.5rem;align-items:center;margin-top:.62rem}
+.calendar-slot-foot>span:first-child{color:#64748b;font-size:.72rem;font-weight:800}
+.calendar-slot-action{padding:.28rem .48rem;border:0;border-radius:7px;background:#2563eb;color:#fff;font:inherit;font-size:.69rem;font-weight:850;cursor:pointer}
+.calendar-slot.free .calendar-slot-action{background:#15803d}
+.calendar-slot-action.disabled{background:#e2e8f0;color:#64748b;cursor:default}
+.calendar-empty{padding:.75rem;color:#94a3b8;text-align:center}
+.slot-selection{display:grid;grid-template-columns:minmax(180px,.75fr) minmax(0,1.5fr);gap:1rem;align-items:center;margin-top:1rem;padding:1rem;border:1px solid #bfdbfe;border-radius:13px;background:#eff6ff}
+.slot-selection-copy{display:grid;gap:.14rem}
+.slot-selection-label{color:#2563eb;font-size:.68rem;font-weight:850;text-transform:uppercase;letter-spacing:.06em}
+.slot-selection-copy strong{color:var(--navy);font-size:1rem}
+.slot-selection-copy>span:last-child{color:#64748b;font-size:.78rem}
+.slot-selection-form{display:grid;grid-template-columns:1fr 1fr auto;gap:.55rem;align-items:center}
+.slot-selection-form input{min-width:0;padding:.68rem .72rem;border:1px solid #cbd5e1;border-radius:8px;background:#fff;font:inherit;font-size:.84rem}
+.slot-selection-form button{padding:.7rem .8rem;border:0;border-radius:8px;background:var(--navy);color:#fff;font:inherit;font-size:.82rem;font-weight:850;cursor:pointer}
+.slot-selection-form .form-status{grid-column:1/-1;margin:0;font-size:.76rem}
+@media(max-width:760px){
+  .capacity-head{align-items:flex-start;flex-direction:column}
+  .weekly-calendar{grid-template-columns:repeat(5,170px);min-width:max-content}
+  .slot-selection{grid-template-columns:1fr}
+  .slot-selection-form{grid-template-columns:1fr}
+}

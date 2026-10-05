@@ -1,70 +1,92 @@
 {
   "updated": "2026-10-05",
-  "note": "Uvedené pravidelné termíny jsou aktuálně plné.",
+  "days": [
+    "Pondělí",
+    "Úterý",
+    "Středa",
+    "Čtvrtek",
+    "Pátek"
+  ],
   "slots": [
     {
+      "id": "mon-1630",
       "day": "Pondělí",
       "time": "16:30–17:30",
-      "title": "Průběžná matematika",
+      "title": "CERMAT přijímačky",
       "people": 2,
-      "mode": "Skupinová",
-      "status": "Plno"
+      "capacity": 4
     },
     {
+      "id": "tue-1300",
       "day": "Úterý",
       "time": "13:00–15:00",
       "title": "VŠ matematika",
       "people": 1,
-      "mode": "Individuální",
-      "status": "Plno"
+      "capacity": 4
     },
     {
+      "id": "tue-1730",
       "day": "Úterý",
       "time": "17:30–18:30",
       "title": "CERMAT přijímačky",
       "people": 1,
-      "mode": "Individuální",
-      "status": "Plno"
+      "capacity": 4
     },
     {
+      "id": "wed-1600",
       "day": "Středa",
       "time": "16:00–17:00",
-      "title": "SŠ matematika",
+      "title": "2. ročník SŠ",
       "people": 1,
-      "mode": "Individuální",
-      "status": "Plno"
+      "capacity": 4
     },
     {
+      "id": "wed-1700",
       "day": "Středa",
       "time": "17:00–18:00",
       "title": "Příprava na maturitu",
       "people": 1,
-      "mode": "Individuální",
-      "status": "Plno"
+      "capacity": 4
     },
     {
+      "id": "wed-1900",
       "day": "Středa",
       "time": "19:00–20:00",
-      "title": "SŠ matematika",
+      "title": "9. ročník · AJ kurikulum",
       "people": 1,
-      "mode": "Individuální",
-      "status": "Plno"
+      "capacity": 4
     },
     {
+      "id": "thu-1630",
+      "day": "Čtvrtek",
+      "time": "16:30–17:30",
+      "title": "Volný slot",
+      "people": 0,
+      "capacity": 4
+    },
+    {
+      "id": "fri-1400",
       "day": "Pátek",
       "time": "14:00–15:00",
       "title": "VŠ matematika",
       "people": 1,
-      "mode": "Individuální",
-      "status": "Plno"
+      "capacity": 4
     },
     {
-      "day": "Neděle",
-      "time": "11:00–12:00",
-      "title": "ZŠ matematika",
-      "people": 1,
-      "mode": "Individuální",
-      "status": "Plno"
+      "id": "fri-1515",
+      "day": "Pátek",
+      "time": "15:15–16:15",
+      "title": "Volný slot",
+      "people": 0,
+      "capacity": 4
+    },
+    {
+      "id": "fri-1630",
+      "day": "Pátek",
+      "time": "16:30–17:30",
+      "title": "Volný slot",
+      "people": 0,
+      "capacity": 4
     }
   ]
 }
