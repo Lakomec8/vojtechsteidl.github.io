@@ -2,8 +2,8 @@
   "updated": "2026-10-05",
   "individual": {
     "status": "nearly_full",
-    "label": "Téměř plná kapacita",
-    "note": "Nové studenty nyní přijímám především do malých tematických skupin."
+    "label": "Individuální výuka: téměř plná",
+    "note": "Nové studenty nyní směřuji hlavně do malých skupin. Níže jsou reálně volné pravidelné sloty v mém kalendáři."
   },
   "groups": [
     {
@@ -12,10 +12,12 @@
       "title": "Přijímačky na SŠ",
       "subtitle": "9. třída · matematika",
       "capacity": 4,
+      "minStart": 2,
       "confirmed": null,
-      "status": "collecting",
-      "statusLabel": "Sbíráme zájem",
-      "schedule": "Termín podle skupiny",
+      "status": "slot_open",
+      "statusLabel": "Volný slot",
+      "schedule": "Čtvrtek 16:30–17:30",
+      "startNote": "Skupina může začít ihned po potvrzení 2 kompatibilních studentů.",
       "formValue": "prijimacky-ss",
       "topics": [
         "typové úlohy CERMAT",
@@ -29,10 +31,12 @@
       "title": "Rovnice a funkce",
       "subtitle": "1.–2. ročník SŠ",
       "capacity": 4,
+      "minStart": 2,
       "confirmed": null,
-      "status": "collecting",
-      "statusLabel": "Sbíráme zájem",
-      "schedule": "Termín podle skupiny",
+      "status": "slot_open",
+      "statusLabel": "Volný slot",
+      "schedule": "Pátek 15:15–16:15",
+      "startNote": "Skupina může začít ihned po potvrzení 2 kompatibilních studentů.",
       "formValue": "stredoskolska-matematika",
       "topics": [
         "rovnice a nerovnice",
@@ -46,10 +50,12 @@
       "title": "Matematika I",
       "subtitle": "1. ročník VŠ · analýza",
       "capacity": 5,
+      "minStart": 2,
       "confirmed": null,
-      "status": "collecting",
-      "statusLabel": "Sbíráme zájem",
-      "schedule": "Termín podle skupiny",
+      "status": "slot_open",
+      "statusLabel": "Volný slot",
+      "schedule": "Pátek 16:30–17:30",
+      "startNote": "Skupina může začít ihned po potvrzení 2 kompatibilních studentů.",
       "formValue": "vs-matematika",
       "topics": [
         "limity a derivace",
