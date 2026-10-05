@@ -1224,3 +1224,128 @@ footer p {
 .goal-card{padding:1.65rem;border:1px solid #dbe6f2;border-radius:18px;background:#fff;box-shadow:0 8px 24px rgba(15,23,42,.05)}
 .goal-card h3{color:#102a43;margin-bottom:.65rem}.goal-card p{color:#64748b;line-height:1.65}.goal-card a{display:inline-block;margin-top:1rem;font-weight:800;color:#1d4ed8;text-decoration:none}.goal-card a:hover{text-decoration:underline}
 @media(max-width:760px){.goal-grid{grid-template-columns:1fr}}
+
+
+/* --- Aktuální kapacita / skupiny --- */
+.capacity-strip {
+    padding: 1.2rem 1.25rem 0;
+    background: #f8fafc;
+}
+.capacity-shell {
+    display: grid;
+    grid-template-columns: minmax(260px,.92fr) minmax(0,1.55fr);
+    gap: 1.1rem;
+    width: min(1180px,100%);
+    margin: 0 auto;
+    padding: 1.35rem;
+    border: 1px solid #dbe6f2;
+    border-radius: 22px;
+    background: #fff;
+    box-shadow: 0 12px 32px rgba(15,23,42,.06);
+}
+.capacity-summary {
+    padding: .35rem .4rem .35rem .2rem;
+}
+.capacity-summary .eyebrow { margin-bottom: .45rem; }
+.capacity-status {
+    display: inline-flex;
+    gap: .45rem;
+    align-items: center;
+    margin-bottom: .65rem;
+    color: #b45309;
+    font-size: .78rem;
+    font-weight: 850;
+}
+.capacity-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #f59e0b;
+    box-shadow: 0 0 0 4px #fef3c7;
+}
+.capacity-summary h2 {
+    margin-bottom: .45rem;
+    color: var(--navy);
+    font-size: clamp(1.35rem,2.4vw,1.85rem);
+    letter-spacing: -.035em;
+    line-height: 1.15;
+}
+.capacity-summary > p:not(.eyebrow) {
+    color: var(--muted);
+    font-size: .9rem;
+    line-height: 1.55;
+}
+.capacity-link {
+    display: inline-flex;
+    gap: .45rem;
+    align-items: center;
+    margin-top: .8rem;
+    color: var(--blue-dark);
+    font-size: .86rem;
+    font-weight: 850;
+    text-decoration: none;
+}
+.capacity-link:hover { text-decoration: underline; }
+.capacity-groups {
+    display: grid;
+    grid-template-columns: repeat(3,minmax(0,1fr));
+    gap: .75rem;
+}
+.capacity-group {
+    display: flex;
+    min-width: 0;
+    padding: 1rem;
+    flex-direction: column;
+    border: 1px solid var(--border);
+    border-radius: 15px;
+    background: #fbfdff;
+    color: inherit;
+    text-decoration: none;
+    transition: transform .2s ease,border-color .2s ease,box-shadow .2s ease;
+}
+.capacity-group:hover,
+.capacity-group:focus-visible {
+    border-color: var(--border-blue);
+    outline: none;
+    box-shadow: 0 10px 22px rgba(15,23,42,.08);
+    transform: translateY(-2px);
+}
+.capacity-group-category {
+    color: var(--blue);
+    font-size: .68rem;
+    font-weight: 850;
+    letter-spacing: .07em;
+    text-transform: uppercase;
+}
+.capacity-group strong {
+    margin-top: .42rem;
+    color: var(--navy);
+    font-size: .98rem;
+}
+.capacity-group-subtitle {
+    margin-top: .2rem;
+    color: var(--muted);
+    font-size: .77rem;
+}
+.capacity-group-occupancy {
+    margin-top: auto;
+    padding-top: .8rem;
+    color: #475569;
+    font-size: .76rem;
+    font-weight: 800;
+}
+.capacity-loading {
+    grid-column: 1/-1;
+    align-self: center;
+    color: var(--muted);
+    font-size: .88rem;
+}
+@media (max-width: 900px) {
+    .capacity-shell { grid-template-columns: 1fr; }
+}
+@media (max-width: 760px) {
+    .capacity-strip { padding: .8rem 1rem 0; }
+    .capacity-shell { padding: 1.1rem; }
+    .capacity-groups { grid-template-columns: 1fr; }
+    .capacity-group { padding: .85rem 1rem; }
+}
