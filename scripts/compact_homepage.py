@@ -102,12 +102,23 @@ CSS = r'''<style id="blue-spacious-homepage-v2">
 .blue-capacity-in-zone .capacity-legend span{color:rgba(255,255,255,.72)}
 .blue-capacity-in-zone .weekly-calendar-wrap{padding:1rem;border:1px solid rgba(255,255,255,.16);border-radius:22px;background:rgba(255,255,255,.98);box-shadow:0 20px 46px rgba(3,17,32,.2)}
 .blue-capacity-in-zone .slot-selection{margin-top:1rem;border-radius:18px;background:#fff}
-.blue-reference{padding:4.5rem 0;background:#fff}.blue-quote{display:grid;grid-template-columns:auto 1fr auto;gap:1.2rem;align-items:center;padding:1.5rem 1.7rem;border:1px solid var(--home-line);border-radius:20px;background:linear-gradient(135deg,#f8fbff,#fff);box-shadow:0 12px 30px rgba(15,23,42,.045)}.blue-quote-mark{color:#bfdbfe;font-size:3.4rem;line-height:1}.blue-quote p{margin:0;color:#334155;font-size:1.05rem;line-height:1.7}.blue-quote-author{min-width:160px}.blue-quote-author strong{display:block;color:var(--navy)}.blue-quote-author span{display:block;margin-top:.2rem;color:#64748b;font-size:.72rem}
+.blue-reference{padding:5rem 0;background:#fff}
+.blue-review-head{display:flex;justify-content:space-between;gap:2rem;align-items:end;margin-bottom:1.5rem}
+.blue-review-head h2{margin:0;color:var(--navy);font-size:clamp(2rem,4vw,3.1rem);letter-spacing:-.05em}
+.blue-review-head p{max-width:540px;margin:.65rem 0 0;color:#64748b;line-height:1.6}
+.blue-review-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem}
+.blue-review-card{display:flex;min-height:285px;flex-direction:column;padding:1.45rem;border:1px solid var(--home-line);border-radius:20px;background:linear-gradient(150deg,#f8fbff,#fff);box-shadow:0 14px 34px rgba(15,23,42,.05)}
+.blue-review-top{display:flex;justify-content:space-between;gap:.8rem;align-items:center}
+.blue-review-stars{color:#f59e0b;font-size:.82rem;letter-spacing:.08em}
+.blue-review-source{display:inline-flex;align-items:center;padding:.3rem .52rem;border-radius:999px;background:#eaf2ff;color:#1d4ed8;font-size:.65rem;font-weight:850;letter-spacing:.03em}
+.blue-review-card blockquote{margin:1.25rem 0 1.4rem;color:#334155;font-size:.98rem;line-height:1.7}
+.blue-review-person{margin-top:auto}.blue-review-person strong{display:block;color:var(--navy)}.blue-review-person span{display:block;margin-top:.2rem;color:#64748b;font-size:.72rem}
+.blue-review-person a{display:inline-flex;margin-top:.65rem;color:#2563eb;font-size:.72rem;font-weight:800;text-decoration:none}
 .blue-pricing{padding:5.5rem 0;background:linear-gradient(180deg,#f4f8fd,#eef5ff)}.blue-price-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-top:1.5rem}.blue-price-card{min-height:250px;padding:1.4rem;border:1px solid #d5e3f2;border-radius:20px;background:#fff;box-shadow:0 14px 32px rgba(15,23,42,.05)}.blue-price-card.featured{border-color:#93c5fd;background:linear-gradient(145deg,#0f3358,#1d4ed8);color:#fff;box-shadow:0 20px 46px rgba(29,78,216,.2)}.blue-price-card small{color:#64748b;font-size:.7rem;font-weight:850;letter-spacing:.06em;text-transform:uppercase}.blue-price-card.featured small{color:#bfdbfe}.blue-price-card strong{display:block;margin:2.4rem 0 .3rem;color:var(--navy);font-size:2rem;letter-spacing:-.045em}.blue-price-card.featured strong{color:#fff}.blue-price-card p{margin:0;color:#64748b;line-height:1.55}.blue-price-card.featured p{color:rgba(255,255,255,.73)}.blue-price-card a{display:inline-flex;margin-top:1.2rem;color:#1d4ed8;font-size:.82rem;font-weight:850;text-decoration:none}.blue-price-card.featured a{color:#fff}
 .blue-contact{padding:6rem 0;background:#fff}.blue-contact-grid{display:grid;grid-template-columns:minmax(300px,.78fr) minmax(0,1.22fr);gap:1rem}.blue-contact-copy{min-height:100%;padding:2rem;border-radius:24px;background:linear-gradient(145deg,#0d2947,#174f89);color:#fff}.blue-contact-copy .eyebrow{color:#93c5fd}.blue-contact-copy h2{margin:.45rem 0 .8rem;color:#fff;font-size:clamp(2.2rem,4vw,3.4rem);letter-spacing:-.05em;line-height:1.08}.blue-contact-copy>p{color:rgba(255,255,255,.72);line-height:1.7}.blue-contact-details{display:grid;gap:.8rem;margin-top:2rem}.blue-contact-detail{display:flex;gap:.75rem;align-items:flex-start;padding:.85rem;border:1px solid rgba(255,255,255,.11);border-radius:12px;background:rgba(255,255,255,.055);color:rgba(255,255,255,.72);font-size:.82rem}.blue-contact-detail i{margin-top:.18rem;color:#93c5fd}.blue-contact-detail strong{display:block;color:#fff}.blue-contact-detail a{color:#dbeafe;text-decoration:none}
 .blue-form{display:grid;grid-template-columns:1fr 1fr;gap:.8rem;padding:2rem;border:1px solid var(--home-line);border-radius:24px;background:#fff;box-shadow:0 22px 55px rgba(15,23,42,.07)}.blue-form .form-group{margin:0}.blue-form .form-group.full,.blue-form .consent,.blue-form .submit-button,.blue-form .form-status{grid-column:1/-1}.blue-form label{font-size:.8rem}.blue-form input,.blue-form select,.blue-form textarea{min-height:46px}.blue-form textarea{min-height:105px}.blue-form .submit-button{min-height:50px}
-@media(max-width:980px){.blue-hero-grid,.blue-contact-grid{grid-template-columns:1fr}.blue-hero-panel{max-width:720px}.blue-section-head{align-items:flex-start;flex-direction:column}.blue-bento{grid-template-columns:1fr;grid-template-rows:auto}.blue-zone-card{grid-row:auto;min-height:530px}.blue-goal-grid,.blue-price-grid{grid-template-columns:1fr 1fr}.blue-quote{grid-template-columns:auto 1fr}.blue-quote-author{grid-column:2}.blue-capacity-grid{grid-template-columns:repeat(3,minmax(220px,1fr));overflow-x:auto;padding-bottom:.4rem}}
-@media(max-width:680px){.blue-shell{width:min(100% - 2rem,1180px)}.blue-home-hero{padding:7rem 0 4.5rem}.blue-home-hero h1{font-size:clamp(2.7rem,13vw,4.1rem)}.blue-panel-stats,.blue-goal-grid,.blue-price-grid,.blue-form{grid-template-columns:1fr}.blue-capacity-grid{grid-template-columns:repeat(3,245px)}.blue-capacity{padding:3.7rem 0}.blue-goals,.blue-ecosystem,.blue-pricing,.blue-contact{padding:4rem 0}.blue-goal-card{min-height:500px}.blue-bento{min-height:0}.blue-zone-card{min-height:0}.blue-portal-body{grid-template-columns:90px 1fr}.blue-portal-panels{grid-template-columns:1fr 1fr}.blue-portal-panel:last-child{display:none}.blue-quote{grid-template-columns:1fr}.blue-quote-mark{display:none}.blue-quote-author{grid-column:1}.blue-form .form-group.full,.blue-form .consent,.blue-form .submit-button,.blue-form .form-status{grid-column:1}}
+@media(max-width:980px){.blue-hero-grid,.blue-contact-grid{grid-template-columns:1fr}.blue-hero-panel{max-width:720px}.blue-section-head{align-items:flex-start;flex-direction:column}.blue-bento{grid-template-columns:1fr;grid-template-rows:auto}.blue-zone-card{grid-row:auto;min-height:530px}.blue-goal-grid,.blue-price-grid{grid-template-columns:1fr 1fr}.blue-review-grid{grid-template-columns:1fr 1fr}.blue-capacity-grid{grid-template-columns:repeat(3,minmax(220px,1fr));overflow-x:auto;padding-bottom:.4rem}}
+@media(max-width:680px){.blue-shell{width:min(100% - 2rem,1180px)}.blue-home-hero{padding:7rem 0 4.5rem}.blue-home-hero h1{font-size:clamp(2.7rem,13vw,4.1rem)}.blue-panel-stats,.blue-goal-grid,.blue-price-grid,.blue-review-grid,.blue-form{grid-template-columns:1fr}.blue-review-head{align-items:flex-start;flex-direction:column}.blue-review-card{min-height:0}.blue-capacity-grid{grid-template-columns:repeat(3,245px)}.blue-capacity{padding:3.7rem 0}.blue-goals,.blue-ecosystem,.blue-pricing,.blue-contact{padding:4rem 0}.blue-goal-card{min-height:500px}.blue-bento{min-height:0}.blue-zone-card{min-height:0}.blue-portal-body{grid-template-columns:90px 1fr}.blue-portal-panels{grid-template-columns:1fr 1fr}.blue-portal-panel:last-child{display:none}.blue-form .form-group.full,.blue-form .consent,.blue-form .submit-button,.blue-form .form-status{grid-column:1}}
 @media(max-width:680px){
   .blue-ecosystem-frame{padding:1.15rem;border-radius:22px}
   .blue-capacity-in-zone{margin-top:1.6rem;padding-top:1.6rem}
@@ -244,10 +255,26 @@ OFFER = r'''<section class="blue-goals" id="jak-to-funguje">
 
 REFERENCE = r'''<section class="blue-reference" id="reference">
   <div class="blue-shell">
-    <div class="blue-quote">
-      <div class="blue-quote-mark">“</div>
-      <p>Je velmi trpělivý, ochotný a dokáže látku vysvětlit jednoduše a srozumitelně, i když se na první pohled zdá složitá. Bylo vidět, že mu opravdu záleží na tom, abych látku pochopila, ne jen naučila nazpaměť.</p>
-      <div class="blue-quote-author"><strong>Evelína</strong><span>studentka · reference na Doučuji.eu</span></div>
+    <div class="blue-review-head">
+      <div><p class="eyebrow">Reference</p><h2>Jak výuku hodnotí studenti.</h2></div>
+      <p>Krátký výběr z veřejných referencí na Doučuji.eu a Superprof.</p>
+    </div>
+    <div class="blue-review-grid">
+      <article class="blue-review-card">
+        <div class="blue-review-top"><span class="blue-review-stars" aria-label="5 hvězdiček">★★★★★</span><span class="blue-review-source">Doučuji.eu</span></div>
+        <blockquote>Fyziku vysvětluje srozumitelně a klidně i jiným způsobem, když je potřeba. Oceňuji hlavně dobře zpracované materiály a větší jistotu v látce.</blockquote>
+        <div class="blue-review-person"><strong>Justýna B.</strong><span>reference na Doučuji.eu</span><a href="https://www.doucuji.eu/507905-doucovani-doucovani-matematiky-a-fyzika-osobne-ci-online" target="_blank" rel="noopener">Zobrazit zdroj →</a></div>
+      </article>
+      <article class="blue-review-card">
+        <div class="blue-review-top"><span class="blue-review-stars" aria-label="5 hvězdiček">★★★★★</span><span class="blue-review-source">Doučuji.eu</span></div>
+        <blockquote>Potřebovala jsem rychlou přípravu na zápočet z matematiky. Výklad byl jasný a po lekci jsem dostala ještě přehledný písemný souhrn dalšího postupu.</blockquote>
+        <div class="blue-review-person"><strong>Petra S.</strong><span>reference na Doučuji.eu</span><a href="https://www.doucuji.eu/507905-doucovani-doucovani-matematiky-a-fyzika-osobne-ci-online" target="_blank" rel="noopener">Zobrazit zdroj →</a></div>
+      </article>
+      <article class="blue-review-card">
+        <div class="blue-review-top"><span class="blue-review-stars" aria-label="5 hvězdiček">★★★★★</span><span class="blue-review-source">Superprof</span></div>
+        <blockquote>Rychle rozpoznal, kde má syn problém v algebře, a ukázal jiný postup, který mu začal dávat smysl. Velké plus byla také flexibilní domluva před písemkou.</blockquote>
+        <div class="blue-review-person"><strong>Miroslav</strong><span>ověřená recenze na Superprof</span><a href="https://www.superprof.cz/jako-absolvent-aplikovane-fyziky-muni-vam-pomuzu-zvladnout-slozite-matematicke-fyzikalni-koncepty-jednoduse.html" target="_blank" rel="noopener">Zobrazit zdroj →</a></div>
+      </article>
     </div>
   </div>
 </section>'''
