@@ -158,7 +158,7 @@ CSS = r'''<style id="blue-spacious-homepage-v2">
 @media(max-width:680px){
   .blue-ecosystem-frame{padding:0;border-radius:0}
   .blue-capacity-in-zone{margin-top:1.6rem;padding-top:1.6rem}
-  .blue-capacity-in-zone .weekly-calendar-wrap{padding:.65rem;border-radius:16px}
+  .blue-capacity-in-zone .weekly-calendar-wrap{padding:0 0 .35rem;border-radius:0}
 }
 </style>'''
 
