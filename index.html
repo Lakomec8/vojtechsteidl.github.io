@@ -379,9 +379,9 @@
                 <div class="capacity-summary">
                     <p class="eyebrow">Aktuální kapacita</p>
                     <span class="capacity-status"><span class="capacity-dot"></span><span id="individualCapacityLabel">Téměř plná kapacita</span></span>
-                    <h2 id="capacityTitle">Individuální výuka je téměř plná.</h2>
-                    <p id="individualCapacityNote">Nové studenty nyní přijímám především do malých tematických skupin.</p>
-                    <a class="capacity-link" href="/skupinove-doucovani-matematiky/">Zobrazit skupiny a aktuální místa <i class="fas fa-arrow-right"></i></a>
+                    <h2 id="capacityTitle">Volné skupinové sloty bez čekání na neurčitý termín.</h2>
+                    <p id="individualCapacityNote">Nové studenty nyní směřuji hlavně do malých skupin. Níže jsou reálně volné pravidelné sloty v mém kalendáři.</p>
+                    <a class="capacity-link" href="/skupinove-doucovani-matematiky/">Zobrazit termíny a kapacitu <i class="fas fa-arrow-right"></i></a>
                 </div>
                 <div class="capacity-groups" id="capacityGroups" aria-live="polite">
                     <p class="capacity-loading">Načítám aktuální skupiny…</p>
@@ -487,12 +487,19 @@
             if(note&&data.individual?.note) note.textContent=data.individual.note;
             groupsEl.innerHTML=(data.groups||[]).slice(0,3).map(group=>{
               const occupancy=Number.isInteger(group.confirmed)
-                ? `${group.confirmed} / ${group.capacity} míst`
-                : `Kapacita ${group.capacity} · ${group.statusLabel||'Sbíráme zájem'}`;
+                ? `${group.confirmed} / ${group.capacity} míst obsazeno`
+                : `max. ${group.capacity} · start od ${group.minStart||2}`;
+              const state=Number.isInteger(group.confirmed) && group.confirmed >= (group.minStart||2)
+                ? 'Může začít ihned'
+                : (Number.isInteger(group.confirmed) && group.confirmed === (group.minStart||2)-1
+                    ? '1 další student → start'
+                    : (group.statusLabel||'Volný slot'));
               return `<a class="capacity-group" href="/skupinove-doucovani-matematiky/?group=${encodeURIComponent(group.id)}#zajem">
                 <span class="capacity-group-category">${escapeHtml(group.category)}</span>
                 <strong>${escapeHtml(group.title)}</strong>
                 <span class="capacity-group-subtitle">${escapeHtml(group.subtitle)}</span>
+                <span class="capacity-group-slot"><i class="far fa-clock"></i> ${escapeHtml(group.schedule)}</span>
+                <span class="capacity-group-state">${escapeHtml(state)}</span>
                 <span class="capacity-group-occupancy">${escapeHtml(occupancy)}</span>
               </a>`;
             }).join('');
