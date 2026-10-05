@@ -95,7 +95,7 @@ jobs:
           grep -q 'priprava-na-prijimacky-z-matematiky' .public-site/index.html
           grep -q 'skupinove-doucovani-matematiky' .public-site/index.html
           grep -q 'blue-spacious-homepage-v2' .public-site/index.html
-          grep -q 'id="compactCapacity"' .public-site/index.html
+          grep -q 'id="weeklyCalendar"' .public-site/index.html
           grep -q 'id="jak-to-funguje"' .public-site/index.html
           ! grep -q '<section class="school-promo-section" id="diagnostika">' .public-site/index.html
           ! grep -q 'id="materialy"' .public-site/index.html
