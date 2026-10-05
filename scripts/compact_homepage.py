@@ -323,8 +323,8 @@ CONTACT = r'''<section class="blue-contact" id="kontakt">
 NAV = r'''<ul class="nav-links" id="navLinks">
   <li><a href="#kapacita">Kapacita</a></li>
   <li><a href="#jak-to-funguje">Příprava</a></li>
-  <li><a href="#studentska-zona">Studentská zóna</a></li>
   <li><a href="#cenik">Ceník</a></li>
+  <li><a href="https://portal.vojtechsteidl.eu" class="nav-student"><i class="fas fa-user-lock"></i> Studentská zóna</a></li>
   <li><a href="#kontakt" class="nav-contact">Kontakt</a></li>
 </ul>'''
 
