@@ -1,6 +1,5 @@
 import tutoringWorker from "./tutoring-os";
 import { syncGoogleCalendarToD1 } from "./calendar-ingestion";
-import { syncPublicCapacityFromIcs } from "./public-capacity";
 
 type WorkerRequest = Parameters<typeof tutoringWorker.fetch>[0];
 type TutoringEnv = Env & { GOOGLE_CALENDAR_ICS_URL?: string };
@@ -241,10 +240,7 @@ async function syncAndSettle(env: TutoringEnv): Promise<void> {
       cancelled: syncResult.cancelled,
     }));
   }
-  await Promise.all([
-    settleCompletedTutoringEvents(env),
-    syncPublicCapacityFromIcs(env),
-  ]);
+  await settleCompletedTutoringEvents(env);
 }
 
 export default {
