@@ -1349,3 +1349,30 @@ footer p {
     .capacity-groups { grid-template-columns: 1fr; }
     .capacity-group { padding: .85rem 1rem; }
 }
+
+.capacity-group-slot{
+    display:flex;
+    gap:.4rem;
+    align-items:center;
+    margin-top:.72rem;
+    color:var(--navy);
+    font-size:.88rem;
+    font-weight:850;
+}
+.capacity-group-slot i{color:var(--blue)}
+.capacity-group-state{
+    display:inline-flex;
+    width:max-content;
+    max-width:100%;
+    margin-top:.55rem;
+    padding:.3rem .55rem;
+    border-radius:999px;
+    background:#ecfdf5;
+    color:#047857;
+    font-size:.7rem;
+    font-weight:850;
+}
+.capacity-group-occupancy{
+    margin-top:.55rem;
+    padding-top:0;
+}
