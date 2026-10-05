@@ -129,9 +129,9 @@ CSS = r'''<style id="blue-spacious-homepage-v2">
 .blue-capacity-standalone .calendar-slot-action{padding:.2rem 0;border:0;background:transparent;color:#2563eb;font:inherit;font-size:.68rem;font-weight:900;cursor:pointer}
 .blue-capacity-standalone .calendar-slot.free .calendar-slot-action{color:#39725f}
 .blue-capacity-standalone .calendar-slot-action.disabled{color:#94a3b8;cursor:default}
-.blue-capacity-standalone .calendar-day.flexible-day .calendar-day-slots{height:100%;padding-left:0}
+.blue-capacity-standalone .calendar-day.flexible-day .calendar-day-slots{height:auto;padding-left:0;align-content:start}
 .blue-capacity-standalone .calendar-day.flexible-day .calendar-day-slots::before{display:none}
-.blue-capacity-standalone .calendar-slot.flexible{display:flex;min-height:230px;flex-direction:column;align-items:center;justify-content:center;text-align:center}
+.blue-capacity-standalone .calendar-slot.flexible{display:flex;min-height:150px;flex-direction:column;align-items:center;justify-content:center;text-align:center}
 .blue-capacity-standalone .calendar-slot.flexible::before{display:none}
 .blue-capacity-standalone .calendar-flex-icon{display:grid;width:46px;height:46px;margin-bottom:.65rem;place-items:center;border-radius:50%;background:#dff4e8;color:#39725f;font-size:1rem;font-weight:900}
 .blue-capacity-standalone .calendar-slot.flexible>strong{font-size:1.1rem;letter-spacing:.04em}
@@ -160,7 +160,7 @@ CSS = r'''<style id="blue-spacious-homepage-v2">
   .blue-capacity-standalone{padding:4rem 0}
   .blue-capacity-standalone .weekly-calendar-wrap{padding:0 0 .35rem;border-radius:0}
   .blue-capacity-standalone .weekly-calendar{grid-template-columns:1fr;gap:.75rem}
-  .blue-capacity-standalone .calendar-slot.flexible{min-height:150px}
+  .blue-capacity-standalone .calendar-slot.flexible{min-height:130px}
 }
 </style>'''
 
