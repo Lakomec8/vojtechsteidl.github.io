@@ -53,7 +53,6 @@ function publicJson(body: unknown, status = 200): Response {
     "Cache-Control": "public, max-age=60, s-maxage=120, stale-while-revalidate=300",
     "X-Content-Type-Options": "nosniff",
     "Referrer-Policy": "no-referrer",
-    "Access-Control-Allow-Origin": "https://vojtechsteidl.eu",
   });
   return Response.json(body, { status, headers });
 }
@@ -106,12 +105,27 @@ async function freeSlots(env: Env): Promise<FreeSlotRow[]> {
   return result.results || [];
 }
 
+async function allUpcomingStarts(env: Env): Promise<Array<{ starts_at: string }>> {
+  const result = await env.DB.prepare(`
+    SELECT starts_at
+      FROM tutoring_calendar_events
+     WHERE status = 'planned'
+       AND datetime(starts_at) >= datetime('now')
+       AND datetime(starts_at) < datetime('now', '+21 days')
+  `).all<{ starts_at: string }>();
+  return result.results || [];
+}
+
 export async function handlePublicCapacityRequest(request: Request, env: Env): Promise<Response | null> {
   const url = new URL(request.url);
   if (request.method !== "GET" || url.pathname !== PUBLIC_CAPACITY_PATH) return null;
 
   try {
-    const [events, free] = await Promise.all([mappedEvents(env), freeSlots(env)]);
+    const [events, free, allUpcoming] = await Promise.all([
+      mappedEvents(env),
+      freeSlots(env),
+      allUpcomingStarts(env),
+    ]);
     const occupied = events.flatMap((event) => {
       const start = pragueParts(event.starts_at);
       const end = pragueParts(event.ends_at);
@@ -129,7 +143,12 @@ export async function handlePublicCapacityRequest(request: Request, env: Env): P
       }];
     });
 
-    const occupiedKeys = new Set(occupied.map((slot) => `${slot.weekday}|${slot.time.split("–")[0]}`));
+    const occupiedKeys = new Set(
+      allUpcoming.flatMap((event) => {
+        const start = pragueParts(event.starts_at);
+        return start ? [`${start.weekday}|${start.time}`] : [];
+      }),
+    );
     const available = free
       .filter((slot) => !occupiedKeys.has(`${slot.weekday}|${slot.start_time}`))
       .map((slot) => ({
