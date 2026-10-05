@@ -22,7 +22,7 @@
     <link rel="manifest" href="site.webmanifest">
     <meta name="theme-color" content="#102A43">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="style.css?v=20261001-goals">
+    <link rel="stylesheet" href="style.css?v=20261005-slots">
     <style>
         .nav-links .nav-student {
             margin-left: .2rem;
@@ -478,7 +478,7 @@
         const groupsEl=document.getElementById('capacityGroups');
         if(!groupsEl) return;
         const escapeHtml=value=>String(value??'').replace(/[&<>"']/g,char=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[char]));
-        fetch('/data/group-capacity.json?v=20261005')
+        fetch('/data/group-capacity.json?v=20261005-slots')
           .then(response=>{if(!response.ok) throw new Error('capacity-fetch'); return response.json();})
           .then(data=>{
             const label=document.getElementById('individualCapacityLabel');
