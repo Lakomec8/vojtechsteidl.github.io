@@ -73,9 +73,9 @@ CSS = r'''<style id="blue-spacious-homepage-v2">
 .blue-doc-preview::after{position:absolute;right:0;bottom:0;left:0;height:52px;background:linear-gradient(180deg,rgba(255,255,255,0),rgba(255,255,255,.96));content:"";z-index:1}
 .blue-doc-label{position:absolute;z-index:3;top:.65rem;left:.65rem;padding:.3rem .5rem;border-radius:999px;background:rgba(16,42,67,.9);color:#fff;font-size:.62rem;font-weight:850;letter-spacing:.035em}
 .blue-ecosystem{position:relative;overflow:hidden;padding:6.4rem 0;background:
-  radial-gradient(circle at 82% 18%,rgba(96,165,250,.22),transparent 30%),
-  radial-gradient(circle at 14% 78%,rgba(37,99,235,.18),transparent 34%),
-  linear-gradient(135deg,#0b1f34 0%,#123d70 54%,#1d4ed8 120%)}
+  radial-gradient(circle at 82% 18%,rgba(125,170,214,.14),transparent 32%),
+  radial-gradient(circle at 14% 78%,rgba(72,118,166,.12),transparent 36%),
+  linear-gradient(135deg,#11283d 0%,#1b466d 56%,#2f5e89 120%)}
 .blue-ecosystem::after{position:absolute;right:-150px;bottom:-240px;width:560px;height:560px;border:1px solid rgba(255,255,255,.1);border-radius:50%;content:"";box-shadow:0 0 0 78px rgba(255,255,255,.02),0 0 0 155px rgba(255,255,255,.015);pointer-events:none}
 .blue-ecosystem>.blue-shell{position:relative;z-index:1}
 .blue-bento{display:grid;grid-template-columns:1.35fr .65fr;grid-template-rows:1fr 1fr;gap:1rem;min-height:560px;margin-top:1.6rem}
@@ -107,7 +107,7 @@ CSS = r'''<style id="blue-spacious-homepage-v2">
 .blue-capacity-in-zone .capacity-legend span{color:rgba(255,255,255,.72)}
 .blue-capacity-in-zone .weekly-calendar-wrap{overflow-x:auto;padding:0 0 .45rem;border:0;border-radius:0;background:transparent;box-shadow:none}
 .blue-capacity-in-zone .weekly-calendar{display:grid;grid-template-columns:repeat(5,minmax(188px,1fr));gap:.8rem;min-width:980px}
-.blue-capacity-in-zone .calendar-day{padding:.85rem;border:1px solid rgba(255,255,255,.11);border-radius:18px;background:rgba(255,255,255,.065);box-shadow:none}
+.blue-capacity-in-zone .calendar-day{padding:.85rem;border:1px solid rgba(255,255,255,.18);border-radius:18px;background:rgba(255,255,255,.09);box-shadow:inset 0 1px 0 rgba(255,255,255,.08),0 12px 34px rgba(5,20,36,.08);backdrop-filter:blur(14px) saturate(115%);-webkit-backdrop-filter:blur(14px) saturate(115%)}
 .blue-capacity-in-zone .calendar-day-head{display:flex;justify-content:space-between;gap:.7rem;align-items:flex-start;margin-bottom:1rem;padding-bottom:.8rem;border-bottom:1px solid rgba(255,255,255,.1)}
 .blue-capacity-in-zone .calendar-day-title{display:grid;gap:.08rem}
 .blue-capacity-in-zone .calendar-day-abbr{color:#fff;font-size:1.18rem;font-weight:950;letter-spacing:.03em;line-height:1}
@@ -115,29 +115,34 @@ CSS = r'''<style id="blue-spacious-homepage-v2">
 .blue-capacity-in-zone .calendar-day-count{color:rgba(219,234,254,.5);font-size:.66rem;font-weight:750;white-space:nowrap}
 .blue-capacity-in-zone .calendar-day-slots{position:relative;display:grid;gap:.68rem;padding-left:1.12rem}
 .blue-capacity-in-zone .calendar-day-slots::before{position:absolute;top:.5rem;bottom:.5rem;left:.3rem;width:1px;background:rgba(255,255,255,.15);content:""}
-.blue-capacity-in-zone .calendar-slot{position:relative;padding:.78rem .78rem .72rem;border:1px solid #dce6f0;border-radius:12px;background:#fff;box-shadow:0 8px 20px rgba(3,17,32,.08)}
-.blue-capacity-in-zone .calendar-slot::before{position:absolute;top:1rem;left:-1.12rem;width:10px;height:10px;border:2px solid #174f89;border-radius:50%;background:#fff;content:""}
-.blue-capacity-in-zone .calendar-slot.join{border-color:#dce6f0;background:#fff}
-.blue-capacity-in-zone .calendar-slot.free{border-color:#bbf7d0;background:#f0fdf4}
-.blue-capacity-in-zone .calendar-slot.free::before{background:#86efac}
+.blue-capacity-in-zone .calendar-slot{position:relative;padding:.78rem .78rem .72rem;border:1px solid rgba(255,255,255,.38);border-radius:12px;background:rgba(255,255,255,.64);box-shadow:inset 0 1px 0 rgba(255,255,255,.5),0 10px 26px rgba(3,17,32,.08);backdrop-filter:blur(18px) saturate(118%);-webkit-backdrop-filter:blur(18px) saturate(118%)}
+.blue-capacity-in-zone .calendar-slot::before{position:absolute;top:1rem;left:-1.12rem;width:10px;height:10px;border:2px solid rgba(20,64,98,.78);border-radius:50%;background:rgba(255,255,255,.82);content:""}
+.blue-capacity-in-zone .calendar-slot.join{border-color:rgba(255,255,255,.4);background:rgba(255,255,255,.66)}
+.blue-capacity-in-zone .calendar-slot.free{border-color:rgba(176,224,205,.58);background:rgba(229,246,239,.52)}
+.blue-capacity-in-zone .calendar-slot.free::before{background:rgba(145,210,183,.86)}
 .blue-capacity-in-zone .calendar-slot.full{opacity:.68}
-.blue-capacity-in-zone .calendar-slot-time{margin:0 0 .28rem;color:#64748b;font-size:.68rem;font-weight:800}
-.blue-capacity-in-zone .calendar-slot>strong{display:block;color:#102a43;font-size:.84rem;line-height:1.28}
+.blue-capacity-in-zone .calendar-slot-time{margin:0 0 .28rem;color:#587086;font-size:.68rem;font-weight:800}
+.blue-capacity-in-zone .calendar-slot>strong{display:block;color:#153149;font-size:.84rem;line-height:1.28}
 .blue-capacity-in-zone .calendar-slot-foot{display:flex;justify-content:space-between;gap:.45rem;align-items:center;margin-top:.62rem}
-.blue-capacity-in-zone .capacity-text{color:#64748b;font-size:.68rem;font-weight:800}
-.blue-capacity-in-zone .calendar-slot.free .capacity-text{color:#15803d}
-.blue-capacity-in-zone .calendar-slot-action{padding:.2rem 0;border:0;background:transparent;color:#2563eb;font:inherit;font-size:.68rem;font-weight:900;cursor:pointer}
-.blue-capacity-in-zone .calendar-slot.free .calendar-slot-action{background:transparent;color:#15803d}
+.blue-capacity-in-zone .capacity-text{color:#5f7487;font-size:.68rem;font-weight:800}
+.blue-capacity-in-zone .calendar-slot.free .capacity-text{color:#39725f}
+.blue-capacity-in-zone .calendar-slot-action{padding:.2rem 0;border:0;background:transparent;color:#24557d;font:inherit;font-size:.68rem;font-weight:900;cursor:pointer}
+.blue-capacity-in-zone .calendar-slot.free .calendar-slot-action{background:transparent;color:#39725f}
 .blue-capacity-in-zone .calendar-slot-action.disabled{color:#94a3b8;cursor:default}
 .blue-capacity-in-zone .calendar-day.flexible-day .calendar-day-slots{height:100%;padding-left:0}
 .blue-capacity-in-zone .calendar-day.flexible-day .calendar-day-slots::before{display:none}
 .blue-capacity-in-zone .calendar-slot.flexible{display:flex;min-height:230px;flex-direction:column;align-items:center;justify-content:center;text-align:center}
 .blue-capacity-in-zone .calendar-slot.flexible::before{display:none}
-.blue-capacity-in-zone .calendar-flex-icon{display:grid;width:46px;height:46px;margin-bottom:.65rem;place-items:center;border-radius:50%;background:#dcfce7;color:#15803d;font-size:1rem;font-weight:900}
+.blue-capacity-in-zone .calendar-flex-icon{display:grid;width:46px;height:46px;margin-bottom:.65rem;place-items:center;border:1px solid rgba(255,255,255,.42);border-radius:50%;background:rgba(226,244,236,.62);color:#39725f;font-size:1rem;font-weight:900;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}
 .blue-capacity-in-zone .calendar-slot.flexible>strong{font-size:1.1rem;letter-spacing:.04em}
 .blue-capacity-in-zone .calendar-flex-note{margin-top:.18rem;color:#64748b;font-size:.7rem}
 .blue-capacity-in-zone .calendar-slot.flexible .calendar-slot-foot{margin-top:1rem}
-.blue-capacity-in-zone .slot-selection{margin-top:1rem;border-radius:18px;background:#fff}
+.blue-capacity-in-zone .slot-selection{margin-top:1rem;border-radius:18px;background:rgba(255,255,255,.88);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px)}
+@supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){
+  .blue-capacity-in-zone .calendar-day{background:rgba(255,255,255,.13)}
+  .blue-capacity-in-zone .calendar-slot,.blue-capacity-in-zone .calendar-slot.join{background:rgba(255,255,255,.9)}
+  .blue-capacity-in-zone .calendar-slot.free{background:rgba(235,247,242,.9)}
+}
 .blue-reference{padding:5rem 0;background:#fff}
 .blue-review-head{display:flex;justify-content:space-between;gap:2rem;align-items:end;margin-bottom:1.5rem}
 .blue-review-head h2{margin:0;color:var(--navy);font-size:clamp(2rem,4vw,3.1rem);letter-spacing:-.05em}
