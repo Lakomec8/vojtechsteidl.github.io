@@ -63,11 +63,15 @@ CSS = r'''<style id="blue-spacious-homepage-v2">
 .compact-capacity-card small{color:#64748b;font-size:.72rem;font-weight:750}.compact-capacity-card strong{display:block;margin:.5rem 0;color:var(--navy);font-size:1.08rem;line-height:1.3}.compact-capacity-card span{display:inline-flex;width:max-content;padding:.35rem .55rem;border-radius:999px;background:#eff6ff;color:#1d4ed8;font-size:.72rem;font-weight:850}
 .blue-goals{padding:5.7rem 0;background:linear-gradient(180deg,#f6f9fd 0%,#fff 100%)}
 .blue-goal-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.1rem;margin-top:1.6rem}
-.blue-goal-card{position:relative;overflow:hidden;min-height:305px;padding:1.5rem;border:1px solid var(--home-line);border-radius:22px;background:#fff;color:inherit;text-decoration:none;box-shadow:0 14px 36px rgba(15,23,42,.06);transition:.22s}
-.blue-goal-card::after{position:absolute;right:-42px;bottom:-50px;width:160px;height:160px;border-radius:50%;background:#eff6ff;content:""}
+.blue-goal-card{position:relative;overflow:hidden;min-height:520px;padding:1.5rem;border:1px solid var(--home-line);border-radius:22px;background:#fff;color:inherit;text-decoration:none;box-shadow:0 14px 36px rgba(15,23,42,.06);transition:.22s;display:flex;flex-direction:column}
+.blue-goal-card::after{display:none}
 .blue-goal-card:hover{transform:translateY(-4px);border-color:#bfdbfe;box-shadow:0 22px 44px rgba(15,23,42,.09);color:inherit}
 .blue-goal-icon{display:grid;width:52px;height:52px;place-items:center;border-radius:14px;background:#eaf2ff;color:#1d4ed8;font-size:1.15rem}
-.blue-goal-card h3{position:relative;z-index:1;margin:2.7rem 0 .7rem;color:var(--navy);font-size:1.45rem;letter-spacing:-.035em}.blue-goal-card p{position:relative;z-index:1;color:#64748b;line-height:1.65}.blue-goal-card span{position:absolute;z-index:1;left:1.5rem;bottom:1.4rem;color:#1d4ed8;font-size:.82rem;font-weight:850}
+.blue-goal-card h3{margin:1.1rem 0 .55rem;color:var(--navy);font-size:1.45rem;letter-spacing:-.035em}.blue-goal-card p{color:#64748b;line-height:1.6;margin:0}.blue-goal-card>span{position:static;margin-top:auto;padding-top:1rem;color:#1d4ed8;font-size:.82rem;font-weight:850}
+.blue-doc-preview{position:relative;overflow:hidden;height:205px;margin-top:1.15rem;border:1px solid #d9e3ee;border-radius:14px;background:#f8fafc;box-shadow:0 12px 24px rgba(15,23,42,.07)}
+.blue-doc-preview img{display:block;width:100%;height:100%;object-fit:cover;object-position:top}
+.blue-doc-preview::after{position:absolute;right:0;bottom:0;left:0;height:52px;background:linear-gradient(180deg,rgba(255,255,255,0),rgba(255,255,255,.96));content:""}
+.blue-doc-label{position:absolute;z-index:2;top:.65rem;left:.65rem;padding:.3rem .5rem;border-radius:999px;background:rgba(16,42,67,.9);color:#fff;font-size:.62rem;font-weight:850;letter-spacing:.035em}
 .blue-ecosystem{padding:5.8rem 0;background:#fff}
 .blue-bento{display:grid;grid-template-columns:1.35fr .65fr;grid-template-rows:1fr 1fr;gap:1rem;min-height:560px;margin-top:1.6rem}
 .blue-zone-card{grid-row:1/3;display:grid;grid-template-rows:auto 1fr;overflow:hidden;padding:1.6rem;border-radius:26px;background:linear-gradient(135deg,#0e2a47 0%,#174f89 62%,#2563eb 140%);color:#fff;box-shadow:0 25px 65px rgba(15,23,42,.16)}
@@ -83,7 +87,7 @@ CSS = r'''<style id="blue-spacious-homepage-v2">
 .blue-contact{padding:6rem 0;background:#fff}.blue-contact-grid{display:grid;grid-template-columns:minmax(300px,.78fr) minmax(0,1.22fr);gap:1rem}.blue-contact-copy{min-height:100%;padding:2rem;border-radius:24px;background:linear-gradient(145deg,#0d2947,#174f89);color:#fff}.blue-contact-copy .eyebrow{color:#93c5fd}.blue-contact-copy h2{margin:.45rem 0 .8rem;color:#fff;font-size:clamp(2.2rem,4vw,3.4rem);letter-spacing:-.05em;line-height:1.08}.blue-contact-copy>p{color:rgba(255,255,255,.72);line-height:1.7}.blue-contact-details{display:grid;gap:.8rem;margin-top:2rem}.blue-contact-detail{display:flex;gap:.75rem;align-items:flex-start;padding:.85rem;border:1px solid rgba(255,255,255,.11);border-radius:12px;background:rgba(255,255,255,.055);color:rgba(255,255,255,.72);font-size:.82rem}.blue-contact-detail i{margin-top:.18rem;color:#93c5fd}.blue-contact-detail strong{display:block;color:#fff}.blue-contact-detail a{color:#dbeafe;text-decoration:none}
 .blue-form{display:grid;grid-template-columns:1fr 1fr;gap:.8rem;padding:2rem;border:1px solid var(--home-line);border-radius:24px;background:#fff;box-shadow:0 22px 55px rgba(15,23,42,.07)}.blue-form .form-group{margin:0}.blue-form .form-group.full,.blue-form .consent,.blue-form .submit-button,.blue-form .form-status{grid-column:1/-1}.blue-form label{font-size:.8rem}.blue-form input,.blue-form select,.blue-form textarea{min-height:46px}.blue-form textarea{min-height:105px}.blue-form .submit-button{min-height:50px}
 @media(max-width:980px){.blue-hero-grid,.blue-contact-grid{grid-template-columns:1fr}.blue-hero-panel{max-width:720px}.blue-section-head{align-items:flex-start;flex-direction:column}.blue-bento{grid-template-columns:1fr;grid-template-rows:auto}.blue-zone-card{grid-row:auto;min-height:530px}.blue-goal-grid,.blue-price-grid{grid-template-columns:1fr 1fr}.blue-quote{grid-template-columns:auto 1fr}.blue-quote-author{grid-column:2}.blue-capacity-grid{grid-template-columns:repeat(3,minmax(220px,1fr));overflow-x:auto;padding-bottom:.4rem}}
-@media(max-width:680px){.blue-shell{width:min(100% - 2rem,1180px)}.blue-home-hero{padding:7rem 0 4.5rem}.blue-home-hero h1{font-size:clamp(2.7rem,13vw,4.1rem)}.blue-panel-stats,.blue-goal-grid,.blue-price-grid,.blue-form{grid-template-columns:1fr}.blue-capacity-grid{grid-template-columns:repeat(3,245px)}.blue-capacity{padding:3.7rem 0}.blue-goals,.blue-ecosystem,.blue-pricing,.blue-contact{padding:4rem 0}.blue-goal-card{min-height:260px}.blue-bento{min-height:0}.blue-zone-card{min-height:0}.blue-portal-body{grid-template-columns:90px 1fr}.blue-portal-panels{grid-template-columns:1fr 1fr}.blue-portal-panel:last-child{display:none}.blue-quote{grid-template-columns:1fr}.blue-quote-mark{display:none}.blue-quote-author{grid-column:1}.blue-form .form-group.full,.blue-form .consent,.blue-form .submit-button,.blue-form .form-status{grid-column:1}}
+@media(max-width:680px){.blue-shell{width:min(100% - 2rem,1180px)}.blue-home-hero{padding:7rem 0 4.5rem}.blue-home-hero h1{font-size:clamp(2.7rem,13vw,4.1rem)}.blue-panel-stats,.blue-goal-grid,.blue-price-grid,.blue-form{grid-template-columns:1fr}.blue-capacity-grid{grid-template-columns:repeat(3,245px)}.blue-capacity{padding:3.7rem 0}.blue-goals,.blue-ecosystem,.blue-pricing,.blue-contact{padding:4rem 0}.blue-goal-card{min-height:500px}.blue-bento{min-height:0}.blue-zone-card{min-height:0}.blue-portal-body{grid-template-columns:90px 1fr}.blue-portal-panels{grid-template-columns:1fr 1fr}.blue-portal-panel:last-child{display:none}.blue-quote{grid-template-columns:1fr}.blue-quote-mark{display:none}.blue-quote-author{grid-column:1}.blue-form .form-group.full,.blue-form .consent,.blue-form .submit-button,.blue-form .form-status{grid-column:1}}
 </style>'''
 
 HERO = r'''<section class="blue-home-hero">
@@ -126,15 +130,37 @@ CAPACITY = r'''<section class="blue-capacity" id="kapacita">
     <div class="blue-section-head">
       <div>
         <p class="eyebrow">Stávající kapacita</p>
-        <h2>Nejbližší možnosti v kalendáři.</h2>
-        <p>Sloty se automaticky aktualizují. K existujícímu studentovi se lze přidat a vytvořit malou skupinu, nebo zvolit volný termín.</p>
+        <h2>Týdenní kalendář</h2>
       </div>
-      <a class="blue-section-link" href="/skupinove-doucovani-matematiky/">Zobrazit celý kalendář →</a>
     </div>
-    <div class="blue-capacity-grid" id="compactCapacity">
-      <a class="compact-capacity-card" href="/skupinove-doucovani-matematiky/"><small>Pondělí · 16:30–17:30</small><strong>CERMAT přijímačky</strong><span>2/4 míst</span></a>
-      <a class="compact-capacity-card" href="/skupinove-doucovani-matematiky/"><small>Úterý · 13:00–15:00</small><strong>VŠ matematika</strong><span>1/4 míst</span></a>
-      <a class="compact-capacity-card" href="/skupinove-doucovani-matematiky/"><small>Pátek · 15:15–16:15</small><strong>Volný slot</strong><span>0/4 míst</span></a>
+    <div class="capacity-legend" style="margin-bottom:1rem">
+      <span><i class="legend-dot join"></i> lze se přidat</span>
+      <span><i class="legend-dot free"></i> volný slot</span>
+      <span>automatická aktualizace ~15 min</span>
+    </div>
+    <div class="weekly-calendar-wrap">
+      <div class="weekly-calendar" id="weeklyCalendar" aria-live="polite">
+        <section class="calendar-day"><h3>Pondělí</h3><div class="calendar-day-slots"><article class="calendar-slot join"><div class="calendar-slot-time">16:30–17:30</div><strong>CERMAT přijímačky</strong><div class="calendar-slot-foot"><span>2/4</span><button type="button" class="calendar-slot-action" data-slot-id="mon-1630">Přidat se</button></div></article></div></section>
+        <section class="calendar-day"><h3>Úterý</h3><div class="calendar-day-slots"><article class="calendar-slot join"><div class="calendar-slot-time">13:00–15:00</div><strong>VŠ matematika</strong><div class="calendar-slot-foot"><span>1/4</span><button type="button" class="calendar-slot-action" data-slot-id="tue-1300">Přidat se</button></div></article><article class="calendar-slot join"><div class="calendar-slot-time">17:30–18:30</div><strong>CERMAT přijímačky</strong><div class="calendar-slot-foot"><span>1/4</span><button type="button" class="calendar-slot-action" data-slot-id="tue-1730">Přidat se</button></div></article></div></section>
+        <section class="calendar-day"><h3>Středa</h3><div class="calendar-day-slots"><article class="calendar-slot join"><div class="calendar-slot-time">16:00–17:00</div><strong>2. ročník SŠ</strong><div class="calendar-slot-foot"><span>1/4</span><button type="button" class="calendar-slot-action" data-slot-id="wed-1600">Přidat se</button></div></article><article class="calendar-slot join"><div class="calendar-slot-time">17:00–18:00</div><strong>Příprava na maturitu</strong><div class="calendar-slot-foot"><span>1/4</span><button type="button" class="calendar-slot-action" data-slot-id="wed-1700">Přidat se</button></div></article><article class="calendar-slot join"><div class="calendar-slot-time">19:00–20:00</div><strong>9. ročník · AJ kurikulum</strong><div class="calendar-slot-foot"><span>1/4</span><button type="button" class="calendar-slot-action" data-slot-id="wed-1900">Přidat se</button></div></article></div></section>
+        <section class="calendar-day"><h3>Čtvrtek</h3><div class="calendar-day-slots"><article class="calendar-slot free"><div class="calendar-slot-time">16:30–17:30</div><strong>Volný slot</strong><div class="calendar-slot-foot"><span>0/4</span><button type="button" class="calendar-slot-action" data-slot-id="thu-1630">Vybrat slot</button></div></article></div></section>
+        <section class="calendar-day"><h3>Pátek</h3><div class="calendar-day-slots"><article class="calendar-slot join"><div class="calendar-slot-time">14:00–15:00</div><strong>VŠ matematika</strong><div class="calendar-slot-foot"><span>1/4</span><button type="button" class="calendar-slot-action" data-slot-id="fri-1400">Přidat se</button></div></article><article class="calendar-slot free"><div class="calendar-slot-time">15:15–16:15</div><strong>Volný slot</strong><div class="calendar-slot-foot"><span>0/4</span><button type="button" class="calendar-slot-action" data-slot-id="fri-1515">Vybrat slot</button></div></article><article class="calendar-slot free"><div class="calendar-slot-time">16:30–17:30</div><strong>Volný slot</strong><div class="calendar-slot-foot"><span>0/4</span><button type="button" class="calendar-slot-action" data-slot-id="fri-1630">Vybrat slot</button></div></article></div></section>
+      </div>
+    </div>
+    <div class="slot-selection" id="slotSelection" hidden>
+      <div class="slot-selection-copy">
+        <span class="slot-selection-label">Vybraný slot</span>
+        <strong id="selectedSlotTitle"></strong>
+        <span id="selectedSlotMeta"></span>
+      </div>
+      <form class="slot-selection-form" id="slotBookingForm">
+        <input type="hidden" id="selectedSlotId" name="slot_id">
+        <input type="hidden" id="selectedSlotInfo" name="slot_info">
+        <input type="text" name="name" placeholder="Jméno" autocomplete="name" required>
+        <input type="email" name="email" placeholder="E-mail" autocomplete="email" required>
+        <button type="submit">Potvrdit výběr</button>
+        <p class="form-status" id="slotBookingStatus" aria-live="polite"></p>
+      </form>
     </div>
   </div>
 </section>'''
@@ -148,9 +174,9 @@ OFFER = r'''<section class="blue-goals" id="jak-to-funguje">
       </div>
     </div>
     <div class="blue-goal-grid">
-      <a class="blue-goal-card" href="/priprava-na-prijimacky-z-matematiky/"><div class="blue-goal-icon"><i class="fas fa-school"></i></div><h3>Přijímačky na SŠ</h3><p>CERMAT, slovní úlohy, geometrie a strategie práce s časem.</p><span>Prohlédnout přípravu →</span></a>
-      <a class="blue-goal-card" href="/priprava-na-maturitu-z-matematiky/"><div class="blue-goal-icon"><i class="fas fa-graduation-cap"></i></div><h3>SŠ a maturita</h3><p>Průběžná matematika, didaktické testy a systematické uzavírání slabých témat.</p><span>Prohlédnout přípravu →</span></a>
-      <a class="blue-goal-card" href="/doucovani-vs-matematiky/"><div class="blue-goal-icon"><i class="fas fa-square-root-variable"></i></div><h3>VŠ matematika</h3><p>Limity, derivace, integrály a lineární algebra podle konkrétního sylabu.</p><span>Prohlédnout VŠ výuku →</span></a>
+      <a class="blue-goal-card" href="/priprava-na-prijimacky-z-matematiky/"><div class="blue-goal-icon"><i class="fas fa-school"></i></div><h3>Přijímačky na SŠ</h3><p>CERMAT, slovní úlohy, geometrie a strategie práce s časem.</p><div class="blue-doc-preview"><span class="blue-doc-label">Ukázka · slovní úlohy</span><img src="/assets/previews/zs-slovni-ulohy.webp" alt="Omezená ukázka materiálu pro 9. třídu se slovními úlohami" loading="lazy"></div><span>Prohlédnout přípravu →</span></a>
+      <a class="blue-goal-card" href="/priprava-na-maturitu-z-matematiky/"><div class="blue-goal-icon"><i class="fas fa-graduation-cap"></i></div><h3>SŠ a maturita</h3><p>Průběžná matematika, didaktické testy a systematické uzavírání slabých témat.</p><div class="blue-doc-preview"><span class="blue-doc-label">Ukázka · funkce</span><img src="/assets/previews/ss-funkce.webp" alt="Omezená ukázka středoškolského materiálu k funkcím" loading="lazy"></div><span>Prohlédnout přípravu →</span></a>
+      <a class="blue-goal-card" href="/doucovani-vs-matematiky/"><div class="blue-goal-icon"><i class="fas fa-square-root-variable"></i></div><h3>VŠ matematika</h3><p>Limity, derivace, integrály a lineární algebra podle konkrétního sylabu.</p><div class="blue-doc-preview"><span class="blue-doc-label">Ukázka · integrály</span><img src="/assets/previews/vs-integraly.webp" alt="Omezená ukázka vysokoškolského materiálu k integrálům" loading="lazy"></div><span>Prohlédnout VŠ výuku →</span></a>
     </div>
   </div>
 </section>
@@ -316,7 +342,7 @@ def main() -> None:
 
     required = (
         MARKER,
-        'id="compactCapacity"',
+        'id="weeklyCalendar"',
         'id="jak-to-funguje"',
         'id="studentska-zona"',
         'id="reference"',
