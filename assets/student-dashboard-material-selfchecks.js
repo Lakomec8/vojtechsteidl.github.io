@@ -128,10 +128,38 @@
   function render(materials, assignments) {
     target.replaceChildren();
     const shown = materials.slice(0, 6);
+    const linkedAssignmentIds = new Set(shown.map((material) =>
+      matchingAssignment(material, assignments)?.id,
+    ).filter(Boolean));
+    const standaloneAssignments = assignments.filter((assignment) =>
+      Number(assignment.available) === 1 && !linkedAssignmentIds.has(assignment.id),
+    );
 
-    if (!shown.length) {
+    if (!shown.length && !standaloneAssignments.length) {
       target.append(node("div", "empty", "Zatím tu nejsou žádné materiály."));
       return;
+    }
+
+    // Assigned diagnostics must remain visible even before a matching PDF
+    // exists, or when the uploaded filename uses a different language/title.
+    for (const assignment of standaloneAssignments) {
+      const item = node("div", "item");
+      const main = node("div", "item-main");
+      main.append(
+        node("h3", "", assignment.title),
+        node("p", "", `${assignment.question_count} otázek · přibližně ${assignment.estimated_minutes} min · nejdříve test, potom materiál`),
+      );
+      const actions = node("div", "actions");
+      const button = node("button", "primary", assignment.latest_score === null ? "Spustit test" : "Zkusit test znovu");
+      button.type = "button";
+      button.addEventListener("click", () => openAssignedSelfCheck(assignment));
+      actions.append(button);
+      if (assignment.latest_score !== null && assignment.latest_max_score !== null) {
+        main.append(node("p", "self-check-latest", `Poslední test: ${assignment.latest_score}/${assignment.latest_max_score}`));
+      }
+      main.append(actions);
+      item.append(main, node("span", "badge", "Digitální test"));
+      target.append(item);
     }
 
     for (const material of shown) {
