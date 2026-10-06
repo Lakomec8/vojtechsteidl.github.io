@@ -81,6 +81,12 @@ Self-checks are versioned in D1 and assigned to individual students. The student
 
 The initial library test is seeded by `migrations/0003_self_checks.sql`. Add later tests under a new id/version in a new migration so already submitted attempts keep their original question set. The production deployment applies pending D1 migrations before publishing the Worker, while pull requests build the portal and apply all migrations to a local D1 database.
 
+### Meaning of diagnostic requests
+
+For this tutoring workflow, “diagnostika”, “diagnostický test” and “self-check” mean a digital test in the existing student zone under **Spustit test**. Create it in `self_check_tests` / `self_check_questions`, use server-side grading, show topic scores and explanations after submission, and persist the student's attempt. A PDF is step 2: theory and practice based on the diagnostic results, never a replacement for the digital diagnostic. Use the established styled revision material for that follow-up.
+
+Keep reusable tests in the test library. Assign a test to a student only when the user explicitly requests it for that student. Do not submit an administrator preview as a real student attempt.
+
 ## Deployment sequence
 
 1. Keep the existing production site untouched.
