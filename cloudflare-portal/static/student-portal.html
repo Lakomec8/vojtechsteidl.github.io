@@ -9,7 +9,7 @@
   <meta http-equiv="Pragma" content="no-cache">
   <meta http-equiv="Expires" content="0">
   <title>Studentský portál | Vojtěch Steidl</title>
-  <link rel="stylesheet" href="assets/student-portal.css?v=20261007-1">
+  <link rel="stylesheet" href="assets/student-portal.css?v=20261007-2">
   <link rel="stylesheet" href="assets/student-self-checks-math.css?v=20260829-1">
   <link rel="stylesheet" href="assets/student-payment.css?v=20260827-1">
 </head>
@@ -22,15 +22,13 @@
         <button class="active" data-view="dashboard">Nástěnka</button>
         <button data-view="history">Historie hodin</button>
         <button data-view="materials">Materiály</button>
-        <button data-view="tasks">Procvičování</button>
-        <button data-view="schedule">Termíny</button>
-        <button data-view="links">Odkazy</button>
+        <button id="tasksNav" data-view="tasks" hidden>Úkoly</button>
       </nav>
       <button class="logout" id="logout" type="button">Odhlásit se</button>
     </aside>
     <main class="main">
       <div class="top">
-        <input class="search" id="search" type="search" placeholder="Hledat v hodinách, materiálech a procvičování…">
+        <input class="search" id="search" type="search" placeholder="Hledat v hodinách, materiálech a úkolech…">
         <div class="student"><div class="avatar" id="initials">S</div><span id="name">Načítání…</span></div>
       </div>
 
@@ -40,7 +38,7 @@
             <small>TVŮJ STUDIJNÍ PLÁN</small>
             <h1 id="priorityTitle">Vše důležité pro výuku na jednom místě.</h1>
             <p id="priorityText"></p>
-            <div class="next"><button class="primary" data-open="tasks">Pokračovat v úkolu</button><button class="secondary" data-open="history">Zobrazit poslední hodinu</button><small id="priorityDeadline"></small></div>
+            <div class="next"><button class="primary" id="taskShortcut" data-open="tasks" hidden>Pokračovat v úkolu</button><button class="secondary" data-open="history">Zobrazit poslední hodinu</button><small id="priorityDeadline"></small></div>
           </div>
           <div class="focus">
             <span id="readinessLabel">Studijní postup</span>
@@ -53,7 +51,7 @@
           <div class="metric"><span>Absolvované hodiny</span><strong id="lessonCount">0</strong><small id="lastLessonDate">Zatím bez záznamu</small></div>
           <div class="metric"><span>Průměr hodnocení</span><strong id="overallScore">–</strong><small id="overallScoreCopy">Zatím bez hodnocení</small></div>
           <div class="metric"><span>Poslední test</span><strong id="selfCheckScore">–</strong><small id="selfCheckScoreCopy">Zatím bez výsledku</small></div>
-          <div class="metric"><span>Aktivní úkoly</span><strong id="activeCount">0</strong><small id="taskMetricCopy">Žádný aktivní úkol</small></div>
+          <div class="metric" id="taskMetric"><span>Aktivní úkoly</span><strong id="activeCount">0</strong><small id="taskMetricCopy">Žádný aktivní úkol</small></div>
           <div class="metric"><span>Následující hodina</span><strong id="nextDate">–</strong><small id="nextDateCopy">–</small></div>
         </div>
         <section class="resource-grid dashboard-resources" aria-label="Aktuální materiál a diagnostické testy">
@@ -76,10 +74,18 @@
           <section class="card"><h2>Poslední hodina</h2><div id="lastLesson"></div></section>
           <section class="card"><h2>Doporučený další krok</h2><div id="nextAction"></div></section>
         </div>
+        <section class="card dashboard-upcoming" id="upcomingCard" hidden>
+          <h2>Další termíny</h2>
+          <p class="card-intro">Přehled dalších naplánovaných setkání.</p>
+          <div class="list" id="dashboardUpcomingList"></div>
+        </section>
         <section class="card dashboard-payment"><h2>Platba za lekci</h2><div id="paymentContent"><div class="empty">Načítám platební údaje…</div></div></section>
       </section>
 
-      <section class="view" id="history"><section class="card"><h2>Historie hodin</h2><p class="card-intro">Přehled probírané látky, hodnocení, doporučení a materiálů ke každé hodině.</p><div class="list" id="historyList"></div></section></section>
+      <section class="view" id="history">
+        <section class="card"><h2>Historie hodin</h2><p class="card-intro">Přehled probírané látky, hodnocení, doporučení a materiálů ke každé hodině.</p><div class="list" id="historyList"></div></section>
+        <section class="card timeline-card" id="timelineCard" hidden><h2>Časová osa výuky</h2><div class="list" id="timelineList"></div></section>
+      </section>
       <section class="view" id="materials">
         <div class="resource-grid materials-resources">
           <section class="card resource-panel resource-panel-pdf" aria-labelledby="materialsPdfTitle">
@@ -95,12 +101,11 @@
             <div class="list" id="selfChecksList"><div class="empty">Načítám přiřazené testy…</div></div>
           </section>
         </div>
+        <section class="card links-card" id="linksCard" hidden><h2>Doplňkové odkazy k výuce</h2><p class="card-intro">Odkazy vybrané k materiálům a tématům hodin.</p><div class="list" id="linksList"></div></section>
       </section>
       <section class="view" id="tasks">
         <section class="card"><h2>Úkoly</h2><div class="list" id="tasksList"></div><div class="formula" id="formula" hidden></div></section>
       </section>
-      <section class="view" id="schedule"><div class="grid"><section class="card"><h2>Nejbližší termíny</h2><div class="list" id="upcomingList"></div></section><section class="card"><h2>Časová osa</h2><div class="list" id="timelineList"></div></section></div></section>
-      <section class="view" id="links"><section class="card"><h2>Užitečné odkazy</h2><div class="list" id="linksList"></div></section></section>
     </main>
   </div>
 
@@ -109,7 +114,7 @@
     <div id="selfCheckContent"></div>
   </dialog>
 
-  <script src="assets/student-portal.js?v=20261007-1"></script>
+  <script src="assets/student-portal.js?v=20261007-2"></script>
   <script>
     (() => {
       const metric = document.getElementById("lessonCount");
