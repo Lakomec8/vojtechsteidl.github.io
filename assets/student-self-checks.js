@@ -13,7 +13,7 @@
   let activeAssignmentId = "";
 
   if (window.location.hash === "#tasks") {
-    document.querySelector('[data-view="tasks"]')?.click();
+    document.querySelector('[data-view="materials"]')?.click();
   }
 
   function node(tag, className, text) {
@@ -72,7 +72,7 @@
     }
 
     if (!payload.assignments?.length) {
-      list.append(node("div", "empty", "Zatím nemáš přiřazený žádný self-check."));
+      list.append(node("div", "empty", "Zatím nemáš přiřazený žádný diagnostický test."));
       return;
     }
 
