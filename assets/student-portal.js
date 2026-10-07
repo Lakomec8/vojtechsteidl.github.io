@@ -132,6 +132,13 @@
           (parseDate(second.date)?.getTime() || 0) -
           (parseDate(first.date)?.getTime() || 0),
       );
+    const currentMaterial =
+      materials.find((material) =>
+        String(material.badge || "")
+          .normalize("NFD")
+          .replace(/[\\u0300-\\u036f]/g, "")
+          .toLocaleLowerCase("cs") === "aktualni pdf",
+      ) || materials[0] || null;
     const externalLessons = (Array.isArray(data.externalLessons) ? data.externalLessons : [])
       .slice()
       .sort(
@@ -490,8 +497,8 @@
       deadline.label ||
       "Termín není uveden";
 
-    $("materialsList").innerHTML = materials.length
-      ? materials
+    $("materialsList").innerHTML = currentMaterial
+      ? [currentMaterial]
           .map(
             (material) => `
               <div class="item" data-searchable="${escapeAttribute(
@@ -500,18 +507,18 @@
                   .toLocaleLowerCase("cs"),
               )}">
                 <div class="item-main">
-                  <h3>${escapeHtml(material.title)}</h3>
-                  <p>${escapeHtml(material.meta)}</p>
+                  <h3>${escapeHtml(material.title || "Výukový materiál")}</h3>
+                  <p>${escapeHtml(material.meta || formatDate(material.date) || "")}</p>
                   ${materialButtons(material)}
                 </div>
                 <span class="badge">${escapeHtml(
-                  material.badge || "Soubor",
+                  material.badge || "Aktuální PDF",
                 )}</span>
               </div>
             `,
           )
           .join("")
-      : emptyState("Zatím tu nejsou žádné materiály.");
+      : emptyState("Zatím tu není žádný aktuální PDF materiál.");
 
     $("historyList").innerHTML = historyEntries.length || unrepresentedHistoryCount
       ? `${historyEntries.map(renderLesson).join("")}${
