@@ -232,7 +232,7 @@ OFFER = r'''<section class="blue-goals" id="jak-to-funguje">
           <p class="eyebrow">Studentská zóna</p>
           <h3>Vše důležité na jednom místě.</h3>
           <p>Termíny, materiály, úkoly, průběh spolupráce a platby. Bez hledání starých e-mailů a souborů.</p>
-          <a href="https://vojtechsteidl.eu/student-portal/" rel="nofollow">Vstoupit do studentské zóny <i class="fas fa-arrow-right" style="margin-left:.45rem"></i></a>
+          <a href="/student-portal/" rel="nofollow">Vstoupit do studentské zóny <i class="fas fa-arrow-right" style="margin-left:.45rem"></i></a>
         </div>
         <div class="blue-portal-mini" aria-label="Ilustrační náhled studentské zóny">
           <div class="blue-portal-top"><span></span><span></span><span></span></div>
@@ -376,7 +376,7 @@ CONTACT = r'''<section class="blue-contact" id="kontakt">
       <div class="blue-contact-details">
         <div class="blue-contact-detail"><i class="fas fa-envelope"></i><div><strong>vojtasteidl@seznam.cz</strong>Odpovídám zpravidla do 24 hodin.</div></div>
         <div class="blue-contact-detail"><i class="fas fa-laptop"></i><div><strong>Online po celé ČR</strong>Videohovor + sdílený zápis.</div></div>
-        <div class="blue-contact-detail"><i class="fas fa-user-lock"></i><div><strong>Současní studenti</strong><a href="https://vojtechsteidl.eu/student-portal/" rel="nofollow">Otevřít studentskou zónu →</a></div></div>
+        <div class="blue-contact-detail"><i class="fas fa-user-lock"></i><div><strong>Současní studenti</strong><a href="/student-portal/" rel="nofollow">Otevřít studentskou zónu →</a></div></div>
       </div>
     </aside>
     <form class="contact-form blue-form" id="contactForm">
@@ -396,7 +396,7 @@ NAV = r'''<ul class="nav-links" id="navLinks">
   <li><a href="#kapacita">Kapacita</a></li>
   <li><a href="#jak-to-funguje">Příprava</a></li>
   <li><a href="#cenik">Ceník</a></li>
-  <li><a href="https://portal.vojtechsteidl.eu" class="nav-student"><i class="fas fa-user-lock"></i> Studentská zóna</a></li>
+  <li><a href="/student-portal/" rel="nofollow" class="nav-student"><i class="fas fa-user-lock"></i> Studentská zóna</a></li>
   <li><a href="#kontakt" class="nav-contact">Kontakt</a></li>
 </ul>'''
 

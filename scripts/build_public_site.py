@@ -13,7 +13,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 DIST = ROOT / ".public-site"
-PORTAL_URL = "https://vojtechsteidl.eu/student-portal/"
+PORTAL_URL = "/student-portal/"
 
 ROOT_FILES = (
     ".nojekyll",
@@ -152,7 +152,7 @@ def patch_public_entrypoint() -> None:
     )
     html = replace_required(
         html,
-        '<div class="hero-actions"><a href="#kontakt" class="cta-button">Domluvit úvodní konzultaci zdarma <i class="fas fa-arrow-right"></i></a><a href="https://vojtechsteidl.eu/student-portal/" class="cta-button cta-button-secondary"><i class="fas fa-user-lock"></i> Vstoupit do studentské zóny</a></div>',
+        '<div class="hero-actions"><a href="#kontakt" class="cta-button">Domluvit úvodní konzultaci zdarma <i class="fas fa-arrow-right"></i></a><a href="/student-portal/" class="cta-button cta-button-secondary"><i class="fas fa-user-lock"></i> Vstoupit do studentské zóny</a></div>',
         '<div class="hero-actions"><a href="#kontakt" class="cta-button">Domluvit úvodní konzultaci zdarma <i class="fas fa-arrow-right"></i></a><a href="/diagnostika/" class="cta-button cta-button-secondary"><i class="fas fa-chart-line"></i> Diagnostika zdarma</a></div>',
         "homepage hero actions",
     )
