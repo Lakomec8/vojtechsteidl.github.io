@@ -135,9 +135,8 @@
     const currentMaterial =
       materials.find((material) =>
         String(material.badge || "")
-          .normalize("NFD")
-          .replace(/[\\u0300-\\u036f]/g, "")
-          .toLocaleLowerCase("cs") === "aktualni pdf",
+          .trim()
+          .toLocaleLowerCase("cs") === "aktuální pdf",
       ) || materials[0] || null;
     const externalLessons = (Array.isArray(data.externalLessons) ? data.externalLessons : [])
       .slice()
