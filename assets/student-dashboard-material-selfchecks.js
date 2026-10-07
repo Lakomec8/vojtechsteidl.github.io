@@ -17,9 +17,8 @@
       .slice()
       .sort((a, b) => String(b.date || "").localeCompare(String(a.date || "")));
     return sorted.find((material) => String(material.badge || "")
-      .normalize("NFD")
-      .replace(/[\\u0300-\\u036f]/g, "")
-      .toLocaleLowerCase("cs") === "aktualni pdf") || sorted[0] || null;
+      .trim()
+      .toLocaleLowerCase("cs") === "aktuální pdf") || sorted[0] || null;
   }
 
   async function api(url) {
