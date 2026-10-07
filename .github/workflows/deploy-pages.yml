@@ -60,7 +60,8 @@ jobs:
           grep -q 'priprava-na-prijimacky-z-matematiky' .public-site/index.html
           grep -q 'blue-spacious-homepage-v2' .public-site/index.html
           grep -q 'class="nav-student"' .public-site/index.html
-          grep -q 'https://portal.vojtechsteidl.eu' .public-site/index.html
+          grep -q 'href="/student-portal/" rel="nofollow"' .public-site/index.html
+          ! grep -q 'https://portal.vojtechsteidl.eu' .public-site/index.html
           grep -q 'id="weeklyCalendar"' .public-site/index.html
           grep -q 'class="blue-capacity-standalone" id="kapacita"' .public-site/index.html
           ! grep -q 'blue-capacity-in-zone' .public-site/index.html
