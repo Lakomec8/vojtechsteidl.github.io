@@ -203,6 +203,11 @@
     const tasks = Array.isArray(data.tasks) ? data.tasks : [];
     const timeline = Array.isArray(data.timeline) ? data.timeline : [];
     const links = Array.isArray(data.links) ? data.links : [];
+    $("tasksNav").hidden = tasks.length === 0;
+    $("taskShortcut").hidden = tasks.length === 0;
+    $("taskMetric").hidden = tasks.length === 0;
+    $("timelineCard").hidden = timeline.length === 0;
+    $("linksCard").hidden = links.length === 0;
     let selfCheckSummary = data.selfCheckSummary || {
       completedTests: 0,
       averagePercent: null,
@@ -636,8 +641,10 @@
       `;
     }
 
-    $("upcomingList").innerHTML = upcoming.length
-      ? upcoming
+    const additionalUpcoming = upcoming.slice(1);
+    $("upcomingCard").hidden = additionalUpcoming.length === 0;
+    $("dashboardUpcomingList").innerHTML = additionalUpcoming.length
+      ? additionalUpcoming
           .map(
             (row) => `
               <div class="item" data-searchable="${escapeAttribute(
@@ -647,14 +654,12 @@
                   <h3>${escapeHtml(row.title)}</h3>
                   <p>${escapeHtml(row.meta)}</p>
                 </div>
-                <span class="badge">${escapeHtml(
-                  row.badge || "Termín",
-                )}</span>
+                <span class="badge">${escapeHtml(row.badge || "Termín")}</span>
               </div>
             `,
           )
           .join("")
-      : emptyState("Zatím nejsou žádné další termíny.");
+      : "";
 
     $("timelineList").innerHTML = timeline.length
       ? timeline
@@ -682,30 +687,28 @@
           .join("")
       : emptyState("Zatím tu není žádná historie.");
 
-    $("linksList").innerHTML = links.length
-      ? links
-          .map(
-            (link) => `
-              <div class="item" data-searchable="${escapeAttribute(
-                [link.title, link.desc].join(" ").toLocaleLowerCase("cs"),
-              )}">
-                <div class="item-main">
-                  <h3>${escapeHtml(link.title)}</h3>
-                  <p>${escapeHtml(link.desc)}</p>
-                  <div class="actions">
-                    <a
-                      class="secondary"
-                      href="${escapeAttribute(link.url || "#")}"
-                      target="_blank"
-                      rel="noopener"
-                    >Otevřít odkaz</a>
-                  </div>
-                </div>
+    $("linksList").innerHTML = links
+      .map(
+        (link) => `
+          <div class="item" data-searchable="${escapeAttribute(
+            [link.title, link.desc].join(" ").toLocaleLowerCase("cs"),
+          )}">
+            <div class="item-main">
+              <h3>${escapeHtml(link.title)}</h3>
+              <p>${escapeHtml(link.desc)}</p>
+              <div class="actions">
+                <a
+                  class="secondary"
+                  href="${escapeAttribute(link.url || "#")}"
+                  target="_blank"
+                  rel="noopener"
+                >Otevřít odkaz</a>
               </div>
-            `,
-          )
-          .join("")
-      : emptyState("Zatím tu nejsou žádné odkazy.");
+            </div>
+          </div>
+        `,
+      )
+      .join("");
 
     document.querySelectorAll("[data-view]").forEach((button) => {
       button.addEventListener("click", () => openView(button.dataset.view));
