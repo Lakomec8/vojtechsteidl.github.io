@@ -182,10 +182,10 @@ def patch_public_entrypoint() -> None:
         <section class="school-promo-section" id="skupinove-lekce">
             <div class="school-promo">
                 <div>
-                    <p class="eyebrow">Nově · malé skupiny 3–5 studentů</p>
+                    <p class="eyebrow">Nově · malé skupiny 2–4 studentů</p>
                     <h2>Skupinové lekce matematiky za 300 Kč na osobu</h2>
                     <p>Pro studenty se stejným cílem sestavuji malé skupiny pro přijímačky na SŠ, maturitu a průběžnou středoškolskou matematiku. Nejdřív sbírám zájemce podle úrovně a časových možností; teprve potom navrhnu společný termín.</p>
-                    <div class="school-promo-actions"><a class="school-promo-button" href="/skupinove-doucovani-matematiky/">Zjistit více a přidat se mezi zájemce <i class="fas fa-arrow-right"></i></a></div>
+                    <div class="school-promo-actions"><a class="school-promo-button" href="/skupiny/">Zjistit více a přidat se mezi zájemce <i class="fas fa-arrow-right"></i></a></div>
                     <p class="school-promo-note">300 Kč / osoba / 60 minut · online po celé ČR · vyplnění zájmu je nezávazné</p>
                 </div>
                 <div class="school-promo-points">
