@@ -10,86 +10,110 @@
 <meta property="og:description" content="CERMAT • maturita • 1. ročník VŠ. 2–4 studenti, 300 Kč/os./60 min. Nezávazná přihláška.">
 <meta property="og:type" content="website">
 <link rel="icon" href="/favicon.ico">
-<style>
-:root{--navy:#0c2a53;--blue:#2457b6;--orange:#e68d0b;--ink:#182b48;--muted:#5b6c83;--line:#dbe4ef;--light:#f5f8fd;--white:#fff}
-*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:#f8faff;color:var(--ink);font:16px/1.65 system-ui,-apple-system,"Segoe UI",sans-serif}
-a{color:var(--blue)}button,input,select,textarea{font:inherit}button{cursor:pointer}
-.wrap{width:min(1120px,calc(100% - 36px));margin:auto}
-header{background:#fff;border-bottom:1px solid var(--line)}
-header .wrap{display:flex;align-items:center;justify-content:space-between;min-height:72px;gap:14px}
-.logo{font-weight:850;color:var(--navy);font-size:1.12rem;text-decoration:none;letter-spacing:-.03em}
-nav a{margin-left:22px;text-decoration:none;font-size:.92rem;font-weight:650}
-nav .primary{border-radius:9px;background:var(--navy);color:#fff;padding:10px 17px}
-.hero{background:linear-gradient(118deg,#0d2b55,#183e78);color:#fff;padding:66px 0 75px;overflow:hidden}
-.hero-grid{display:grid;grid-template-columns:1fr 285px;gap:44px;align-items:center}
-.eyebrow{font-size:.77rem;text-transform:uppercase;letter-spacing:.14em;font-weight:800;color:#f8ba59}
-.hero h1{font-size:clamp(2.35rem,5.1vw,4.1rem);line-height:1.09;letter-spacing:-.045em;margin:17px 0 20px;max-width:800px}
-.hero h1 span{color:#ffbd63}
-.hero p{font-size:1.11rem;color:#e5eefc;max-width:650px;margin:0 0 26px}
-.ctas{display:flex;align-items:center;gap:16px;flex-wrap:wrap}
-.cta{display:inline-block;background:#f9a937;color:#102847;padding:14px 21px;font-weight:850;border-radius:11px;text-decoration:none;box-shadow:0 10px 25px #0002}
-.hero .minor{color:#fff;font-weight:650}
-.portrait{width:250px;height:250px;border-radius:50%;border:7px solid #ffffff29;background:#e5eef9;object-fit:cover;box-shadow:0 17px 45px #00162b77}
-.stats{display:flex;flex-wrap:wrap;gap:24px;margin-top:29px}
-.stats span{font-size:.9rem;color:#e5edf9}
-.stats b{color:white;font-size:1.14rem}
-section{padding:60px 0}
-h2{color:var(--navy);line-height:1.2;font-size:clamp(1.65rem,3.5vw,2.35rem);letter-spacing:-.033em;margin:8px 0 14px}
-.lead{color:var(--muted);max-width:740px;margin:0 0 28px}
-.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:19px}
-.card{background:white;border:1px solid var(--line);border-radius:18px;padding:25px;box-shadow:0 8px 25px #0d325009}
-.tag{display:inline-block;color:#9b5a00;background:#fff3de;font-weight:800;border-radius:6px;font-size:.76rem;padding:4px 9px;margin-bottom:12px}
-.card h3{color:var(--navy);font-size:1.24rem;line-height:1.3;margin:2px 0 10px}
-.card p{color:var(--muted);font-size:.95rem;min-height:87px;margin:0 0 15px}
-.card a{font-weight:800;text-decoration:none}
-.process{background:#f0f5fc}
-.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:19px;counter-reset:step}
-.step{background:#fff;padding:24px;border:1px solid var(--line);border-radius:14px}
-.step:before{counter-increment:step;content:counter(step);display:inline-grid;place-items:center;width:35px;height:35px;border-radius:10px;background:#e8f0ff;color:#2155b5;font-weight:850;margin-bottom:12px}
-.step h3{color:var(--navy);margin:0 0 7px;font-size:1rem}
-.step p{margin:0;color:var(--muted);font-size:.92rem}
-.form-zone{background:#fff}
-.form-grid{display:grid;grid-template-columns:.72fr 1.28fr;gap:52px;align-items:start}
-.pitch{position:sticky;top:24px}
-.price{border-radius:14px;background:#eff5ff;padding:18px 20px;margin:25px 0}
-.price b{color:var(--navy);font-size:1.4rem}
-.price span{display:block;color:var(--muted);font-size:.85rem}
-form{border:1px solid var(--line);border-radius:20px;box-shadow:0 14px 45px #122d5712;padding:28px;background:white}
-fieldset{border:0;padding:0;margin:0 0 19px;min-width:0}
-legend,.label{display:block;font-weight:750;font-size:.93rem;color:var(--navy);margin:0 0 8px}
-small,.hint{font-size:.82rem;color:var(--muted)}
-input[type=text],input[type=email],input[type=url],select,textarea{display:block;width:100%;border:1px solid #bfcee0;border-radius:10px;padding:12px 13px;background:#fff;color:#102847;outline-offset:3px}
-textarea{min-height:92px;resize:vertical}
-.two{display:grid;grid-template-columns:1fr 1fr;gap:14px}
-.times{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;margin-top:11px}
-.times label{border:1px solid var(--line);border-radius:9px;padding:9px 12px;font-size:.88rem;display:flex;gap:10px;align-items:center;cursor:pointer}
-.times input{width:16px;height:16px;accent-color:var(--blue);flex:0 0 auto}
-.times label:has(input:checked){background:#eef5ff;border-color:#8bb0ef}
-.consent{display:flex;align-items:start;gap:10px;margin:20px 0 18px;color:#536780;font-size:.86rem}
-.consent input{width:17px;height:17px;margin-top:4px;accent-color:var(--blue)}
-.submit{width:100%;padding:14px;background:var(--navy);color:#fff;border:0;border-radius:10px;font-weight:850}
-.submit:disabled{opacity:.7;cursor:wait}
-.status{min-height:24px;font-weight:700;font-size:.89rem;margin:12px 0 0}
-.status.error{color:#a71d2a}.status.success{color:#116334}
-.visually-hidden{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap}
-.hidden{display:none}
-footer{background:#0d2a51;color:#d6e2ef;padding:28px 0;font-size:.87rem}
-footer a{color:#fff}
-@media(max-width:870px){.hero-grid{grid-template-columns:1fr 175px;gap:20px}.portrait{width:175px;height:175px}.form-grid{grid-template-columns:1fr;gap:24px}.pitch{position:static}.cards,.steps{grid-template-columns:1fr 1fr}}
-@media(max-width:620px){nav a:not(.primary){display:none}nav .primary{padding:9px 12px}.hero{padding:45px 0}.hero-grid{grid-template-columns:1fr}.portrait{display:none}.stats{gap:14px}.cards,.steps,.two{grid-template-columns:1fr}.times{grid-template-columns:1fr}section{padding:46px 0}form{padding:19px}}
+<link rel="stylesheet" href="/style.css?v=20261013">
+
+<style id="skupiny-brand-consistent">
+/* This campaign reuses the public site's Inter font, color tokens and header. */
+.campaign-page{background:#f8fafc;color:var(--text);font-family:"Inter","Segoe UI",sans-serif;line-height:1.65}
+.campaign-page .site-header{z-index:100}
+.campaign-page .campaign-nav{display:flex;align-items:center;gap:1.55rem}
+.campaign-page .campaign-nav a{font-size:.86rem;font-weight:750;color:#475569;text-decoration:none}
+.campaign-page .campaign-nav a:hover{color:#1d4ed8}
+.campaign-page .campaign-nav .nav-contact{display:inline-flex;color:#fff;background:#102a43;padding:.72rem 1rem;border-radius:9px}
+.campaign-page .campaign-nav .nav-contact:hover{background:#1d4ed8;color:#fff}
+.campaign-shell{width:min(1180px,calc(100% - 2.5rem));margin:0 auto}
+.campaign-hero{position:relative;overflow:hidden;padding:7.5rem 0 5.9rem;color:#fff;
+  background:radial-gradient(circle at 82% 18%,rgba(96,165,250,.26),transparent 30%),radial-gradient(circle at 18% 82%,rgba(37,99,235,.20),transparent 32%),linear-gradient(135deg,#0b1f34 0%,#123d70 54%,#1d4ed8 120%)}
+.campaign-hero::after{position:absolute;right:-120px;bottom:-210px;width:520px;height:520px;border:1px solid rgba(255,255,255,.12);border-radius:50%;content:"";box-shadow:0 0 0 70px rgba(255,255,255,.025),0 0 0 145px rgba(255,255,255,.018);pointer-events:none}
+.campaign-hero-grid{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(320px,.87fr);gap:clamp(2.5rem,6vw,5rem);align-items:center;position:relative;z-index:1}
+.campaign-kicker{display:inline-flex;max-width:100%;align-items:center;padding:.42rem .78rem;border:1px solid rgba(255,255,255,.22);border-radius:999px;background:rgba(255,255,255,.08);color:#dbeafe;font-size:.74rem;font-weight:850;letter-spacing:.04em;text-transform:uppercase}
+.campaign-hero h1{max-width:750px;margin:1.2rem 0 0;font-size:clamp(2.6rem,5.5vw,4.8rem);font-weight:800;line-height:1.04;letter-spacing:-.06em;color:#fff}
+.campaign-hero h1 span{color:#fff}
+.campaign-hero p{max-width:650px;margin:1.5rem 0 0;color:rgba(255,255,255,.79);font-size:clamp(1rem,1.5vw,1.16rem);line-height:1.75}
+.campaign-actions{display:flex;flex-wrap:wrap;gap:.75rem;margin-top:1.7rem}
+.campaign-button{display:inline-flex;align-items:center;justify-content:center;min-height:3.15rem;padding:.85rem 1.12rem;border-radius:10px;font-size:.93rem;font-weight:850;text-decoration:none;transition:background .18s,color .18s}
+.campaign-button.primary{background:#fff;color:#102a43;box-shadow:0 16px 34px #0002}
+.campaign-button.primary:hover{background:#eff6ff;color:#102a43}
+.campaign-button.secondary{border:1px solid rgba(255,255,255,.25);background:rgba(255,255,255,.08);color:#fff}
+.campaign-button.secondary:hover{background:rgba(255,255,255,.14);color:#fff}
+.campaign-meta{display:flex;flex-wrap:wrap;gap:.6rem 1.4rem;margin-top:1.6rem;color:#dbeafe;font-size:.83rem}
+.campaign-meta b{color:#fff}
+.campaign-panel{padding:1.5rem;border:1px solid rgba(255,255,255,.18);border-radius:26px;background:linear-gradient(145deg,rgba(255,255,255,.14),rgba(255,255,255,.06));box-shadow:0 28px 75px #0003;backdrop-filter:blur(14px)}
+.campaign-panel>small{color:#bfdbfe;font-size:.72rem;letter-spacing:.09em;font-weight:850;text-transform:uppercase}
+.campaign-panel h2{font-size:1.35rem;color:#fff;margin:.45rem 0 1rem}
+.campaign-panel-row{display:grid;grid-template-columns:40px 1fr;gap:.85rem;align-items:start;background:rgba(255,255,255,.075);border:1px solid rgba(255,255,255,.1);border-radius:13px;padding:1rem;margin-top:.65rem}
+.campaign-panel-row>strong{display:grid;place-items:center;width:37px;height:37px;border-radius:10px;color:#dbeafe;background:rgba(147,197,253,.17);font-size:1.15rem}
+.campaign-panel-row b{display:block;color:#fff;font-size:.95rem}
+.campaign-panel-row span{display:block;color:rgba(255,255,255,.7);font-size:.82rem}
+.campaign-panel-footer{display:flex;justify-content:space-between;gap:1rem;align-items:center;margin-top:1.1rem;padding:.95rem 1.05rem;background:rgba(255,255,255,.92);border-radius:12px}
+.campaign-panel-footer b{color:#102a43;font-size:1.18rem}
+.campaign-panel-footer span{font-size:.76rem;color:#475569;max-width:130px;text-align:right}
+.campaign-page section:not(.campaign-hero){padding:5rem 0}
+.campaign-page .section-kicker{font-size:.77rem;text-transform:uppercase;letter-spacing:.09em;font-weight:850;color:#1d4ed8}
+.campaign-page h2{color:var(--navy);line-height:1.15;font-size:clamp(1.8rem,3.7vw,2.55rem);letter-spacing:-.045em;margin:.55rem 0 .8rem}
+.campaign-page .lead{max-width:750px;margin:0 0 1.8rem;color:#64748b}
+.campaign-page .cards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1.2rem}
+.campaign-page .card{min-width:0;border:1px solid #dbe6f2;border-radius:21px;background:#fff;padding:1.6rem;box-shadow:0 14px 36px rgba(15,23,42,.06)}
+.campaign-page .tag{display:inline-block;padding:.3rem .65rem;margin-bottom:.85rem;background:#eaf2ff;color:#1d4ed8;font-size:.76rem;font-weight:850;border-radius:8px}
+.campaign-page .card h3{margin:0 0 .7rem;font-size:1.32rem;font-weight:800;line-height:1.2;letter-spacing:-.03em;color:#102a43}
+.campaign-page .card p{color:#64748b;min-height:6rem;font-size:.92rem;margin:0 0 .9rem}
+.campaign-page .card a{color:#1d4ed8;font-size:.85rem;font-weight:850;text-decoration:none}
+.campaign-page .process{background:linear-gradient(180deg,#eef5ff 0%,#f6f9fd 100%)}
+.campaign-page .steps{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1.1rem;counter-reset:campaign-step}
+.campaign-page .step{border:1px solid #dbe6f2;border-radius:19px;background:#fff;padding:1.45rem;box-shadow:0 10px 27px #0f172a0b}
+.campaign-page .step::before{counter-increment:campaign-step;content:counter(campaign-step);display:grid;place-items:center;width:38px;height:38px;margin-bottom:.9rem;color:#1d4ed8;background:#eaf2ff;border-radius:11px;font-weight:850}
+.campaign-page .step h3{margin:0 0 .5rem;color:#102a43;font-size:1.08rem}
+.campaign-page .step p{color:#64748b;font-size:.91rem;margin:0}
+.campaign-page .form-zone{background:#fff}
+.campaign-page .form-grid{display:grid;grid-template-columns:minmax(265px,.78fr) minmax(0,1.25fr);gap:clamp(2rem,5vw,4rem);align-items:start}
+.campaign-page .pitch{position:sticky;top:6.2rem}
+.campaign-page .pitch>p{margin:1rem 0;color:#64748b}
+.campaign-page .price{padding:1.2rem 1.3rem;margin:1.5rem 0;border:1px solid #dbeafe;border-radius:15px;background:#eff6ff}
+.campaign-page .price b{display:block;color:#102a43;font-size:1.75rem;letter-spacing:-.04em}
+.campaign-page .price span{display:block;color:#64748b;font-size:.84rem}
+.campaign-trust{display:flex;align-items:center;gap:1rem;padding:1rem;margin-top:2rem;border-top:1px solid #e2e8f0}
+.campaign-trust img{display:block;width:68px;height:68px;object-fit:cover;border-radius:15px}
+.campaign-trust b{display:block;color:#102a43}
+.campaign-trust span{display:block;font-size:.77rem;line-height:1.4;color:#64748b}
+.campaign-page #groupForm{min-width:0;padding:clamp(1.15rem,3vw,2rem);border:1px solid #dbe6f2;border-radius:23px;background:#fff;box-shadow:0 18px 55px rgba(15,23,42,.08)}
+.campaign-page #groupForm fieldset{border:0;padding:0;margin:0 0 1.15rem;min-width:0}
+.campaign-page #groupForm legend,.campaign-page #groupForm .label{display:block;font-size:.83rem;font-weight:800;color:#102a43;margin-bottom:.5rem}
+.campaign-page #groupForm small{display:block;font-size:.78rem;color:#64748b;line-height:1.5}
+.campaign-page #groupForm input[type=text],.campaign-page #groupForm input[type=email],.campaign-page #groupForm select,.campaign-page #groupForm textarea{display:block;width:100%;min-height:47px;padding:.72rem .9rem;color:#1e293b;border:1px solid #cbd5e1;border-radius:10px;background:#fff;font-size:.89rem;font-family:inherit}
+.campaign-page #groupForm textarea{min-height:95px;resize:vertical}
+.campaign-page #groupForm :is(input,textarea,select):focus-visible{outline:3px solid #bfdbfe;outline-offset:1px}
+.campaign-page #groupForm .two{display:grid;grid-template-columns:1fr 1fr;gap:.9rem}
+.campaign-page .times{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.65rem;margin:.8rem 0 0}
+.campaign-page .times label{border:1px solid #e2e8f0;border-radius:10px;padding:.7rem;display:flex;align-items:center;gap:.65rem;cursor:pointer;font-size:.87rem}
+.campaign-page .times label:has(input:checked){background:#eff6ff;border-color:#93c5fd}
+.campaign-page .times input{width:17px;height:17px;flex:0 0 auto;accent-color:#2563eb}
+.campaign-page .consent{display:flex;gap:.7rem;align-items:flex-start;color:#64748b;margin:1.25rem 0;font-size:.82rem}
+.campaign-page .consent input{margin-top:.2rem;accent-color:#2563eb}
+.campaign-page #groupForm .submit{width:100%;padding:1rem 1.15rem;background:#102a43;border:0;border-radius:11px;color:#fff;font-weight:850;cursor:pointer}
+.campaign-page #groupForm .submit:hover{background:#1d4ed8}
+.campaign-page #groupForm .submit:disabled{opacity:.65;cursor:wait}
+.campaign-page #groupForm .status{font-size:.84rem;font-weight:750;min-height:25px;margin-top:1rem}
+.campaign-page #groupForm .status.error{color:#b42318}
+.campaign-page #groupForm .status.success{color:#15803d}
+.campaign-page .visually-hidden{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap}
+.campaign-page .hidden{display:none}
+.campaign-page footer{padding:2rem 0;background:#102a43;color:#dbeafe;font-size:.82rem}
+.campaign-page footer a{color:#fff}
+@media(max-width:970px){.campaign-hero-grid{grid-template-columns:1fr}.campaign-panel{max-width:600px}.campaign-page .form-grid{grid-template-columns:1fr}.campaign-page .pitch{position:static}.campaign-page .cards,.campaign-page .steps{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:650px){.campaign-page .campaign-nav{gap:.6rem}.campaign-page .campaign-nav a:not(.nav-contact){display:none}.campaign-page .campaign-nav .nav-contact{font-size:.74rem;padding:.65rem .75rem}.campaign-hero{padding:4.6rem 0 3.5rem}.campaign-hero h1{font-size:clamp(2.45rem,11vw,3.7rem)}.campaign-page section:not(.campaign-hero){padding:3.7rem 0}.campaign-page .cards,.campaign-page .steps,.campaign-page #groupForm .two,.campaign-page .times{grid-template-columns:1fr}.campaign-page .card p{min-height:0}.campaign-page .campaign-meta{gap:.55rem 1rem}.campaign-page .campaign-panel{padding:1.1rem}}
 </style>
 </head>
-<body>
-<header><div class="wrap"><a class="logo" href="/">Vojtěch Steidl</a><nav aria-label="Navigace"><a href="#jak-to-funguje">Jak to funguje</a><a class="primary" href="#prihlaska">Nezávazná přihláška →</a></nav></div></header>
+<body class="campaign-page">
+<header class="site-header"><nav class="nav" aria-label="Hlavní navigace"><a class="logo" href="/">Vojtěch Steidl</a><div class="campaign-nav"><a href="/">Hlavní web</a><a href="#jak-to-funguje">Jak to funguje</a><a class="nav-contact" href="#prihlaska">Nezávazná přihláška →</a></div></nav></header>
 <main>
-<section class="hero"><div class="wrap hero-grid"><div><span class="eyebrow">Pro zaměstnance a jejich rodiny · online po celé ČR</span><h1>Otevírám nové <span>online skupiny</span> matematiky.</h1><p>CERMAT přijímačky, maturita a první ročník vysoké školy. Výuka v malých skupinách s podobnou úrovní a společným cílem.</p><div class="ctas"><a class="cta" href="#prihlaska">Mám zájem o skupinu →</a><a class="minor" href="#jak-to-funguje">Jak se skupiny sestavují?</a></div><div class="stats"><span><b>2–4 studenti</b> ve skupině</span><span><b>300 Kč</b> / osoba / 60 minut</span><span><b>30 minut zdarma</b> úvodní konzultace</span></div></div><div><img class="portrait" src="/foto.jpg" alt="Vojtěch Steidl, lektor matematiky a fyziky" width="250" height="250"></div></div></section>
-<section id="temata"><div class="wrap"><span class="eyebrow" style="color:#996322">Podle cíle, ne náhodně</span><h2>Pro koho se skupiny otevírají?</h2><p class="lead">V jedné skupině mají studenti podobnou úroveň a řeší stejný typ zkoušky. Příprava je cílená, ne univerzální přednáška.</p><div class="cards">
+<section class="campaign-hero"><div class="campaign-shell campaign-hero-grid"><div><span class="campaign-kicker">Online po celé ČR · matematika pro ZŠ, SŠ a VŠ</span><h1>Otevírám nové online skupiny matematiky.</h1><p>Přijímačky CERMAT, maturita a první ročník vysoké školy. V každé skupině jsou studenti s podobnou úrovní a společným cílem. Termín sestavíme podle jejich časových možností.</p><div class="campaign-actions"><a class="campaign-button primary" href="#prihlaska">Mám zájem o skupinu →</a><a class="campaign-button secondary" href="#jak-to-funguje">Jak vzniká skupina?</a></div><div class="campaign-meta"><span><b>2–4</b> studenti</span><span><b>300 Kč</b> / osoba / 60 minut</span><span><b>30 minut zdarma</b> na úvod</span></div></div><aside class="campaign-panel" aria-label="Jak funguje sestavování skupiny"><small>Průběh spolupráce</small><h2>Správná skupina vzniká podle cíle a úrovně.</h2><div class="campaign-panel-row"><strong>1</strong><div><b>Zvolíte přípravu</b><span>CERMAT, maturita nebo konkrétní VŠ předmět.</span></div></div><div class="campaign-panel-row"><strong>2</strong><div><b>Porovnáme úroveň a čas</b><span>Najdeme studenty se stejným cílem a společným termínem.</span></div></div><div class="campaign-panel-row"><strong>3</strong><div><b>Potvrdíme skupinu</b><span>Teprve potom společně domluvíme pravidelnou výuku.</span></div></div><div class="campaign-panel-footer"><b>300 Kč / osoba</b><span>60 minut online · 2–4 studenti</span></div></aside></div></section>
+<section id="temata"><div class="campaign-shell"><span class="section-kicker">Podle cíle, ne náhodně</span><h2>Pro koho se skupiny otevírají?</h2><p class="lead">V jedné skupině mají studenti podobnou úroveň a řeší stejný typ zkoušky. Příprava je cílená, ne univerzální přednáška.</p><div class="cards">
 <article class="card"><span class="tag">9. třída</span><h3>CERMAT přijímačky</h3><p>Rovnice, slovní úlohy, geometrie, testové strategie a hospodaření s časem.</p><a href="#prihlaska" data-goal="cermat">Mám zájem →</a></article>
 <article class="card"><span class="tag">Střední škola</span><h3>Maturita z matematiky</h3><p>Didaktické testy, systematický rozbor chyb a doplnění slabých témat.</p><a href="#prihlaska" data-goal="maturita">Mám zájem →</a></article>
 <article class="card"><span class="tag">1. ročník VŠ</span><h3>Vysokoškolská matematika</h3><p>Limity, derivace, integrály a matice podle konkrétního předmětu a sylabu školy.</p><a href="#prihlaska" data-goal="vs">Mám zájem →</a></article>
 </div></div></section>
-<section class="process" id="jak-to-funguje"><div class="wrap"><h2>Jak vznikne skupina</h2><p class="lead">Neslibuji místo v předem vypsaném termínu, který se nakonec nebude hodit. Nejdřív spojím kompatibilní zájemce.</p><div class="steps"><div class="step"><h3>1. Vyplníte nezávazný zájem</h3><p>Zvolíte cíl, úroveň a všechny časové možnosti, kdy můžete.</p></div><div class="step"><h3>2. Ověřím kompatibilitu</h3><p>Úvodní konzultace do 30 minut je zdarma. Ověříme úroveň i očekávání.</p></div><div class="step"><h3>3. Navrhnu společný termín</h3><p>Pokud se sejdou vhodní studenti, pošlu návrh. Zařazení je až po vzájemném potvrzení.</p></div></div></div></section>
-<section class="form-zone" id="prihlaska"><div class="wrap form-grid"><aside class="pitch"><span class="eyebrow" style="color:#a36716">Bez závazku</span><h2>Přihlaste zájem do skupiny.</h2><p class="lead">Přihláška není rezervace ani objednávka. Slouží k výběru vhodných studentů a společného času. Odpovím s návrhem dalšího kroku.</p><div class="price"><b>300 Kč / osoba</b><span>60 minut online · 2–4 studenti · úvodních 30 minut zdarma</span></div><p>Raději stručně napište více dostupných časů. Zvýší to pravděpodobnost nalezení společného termínu.</p><p>Dotazy: <a href="mailto:vojtasteidl@seznam.cz">vojtasteidl@seznam.cz</a></p></aside>
+<section class="process" id="jak-to-funguje"><div class="campaign-shell"><h2>Jak vznikne skupina</h2><p class="lead">Neslibuji místo v předem vypsaném termínu, který se nakonec nebude hodit. Nejdřív spojím kompatibilní zájemce.</p><div class="steps"><div class="step"><h3>1. Vyplníte nezávazný zájem</h3><p>Zvolíte cíl, úroveň a všechny časové možnosti, kdy můžete.</p></div><div class="step"><h3>2. Ověřím kompatibilitu</h3><p>Úvodní konzultace do 30 minut je zdarma. Ověříme úroveň i očekávání.</p></div><div class="step"><h3>3. Navrhnu společný termín</h3><p>Pokud se sejdou vhodní studenti, pošlu návrh. Zařazení je až po vzájemném potvrzení.</p></div></div></div></section>
+<section class="form-zone" id="prihlaska"><div class="wrap form-grid"><aside class="pitch"><span class="section-kicker">Bez závazku</span><h2>Přihlaste zájem do skupiny.</h2><p class="lead">Přihláška není rezervace ani objednávka. Slouží k výběru vhodných studentů a společného času. Odpovím s návrhem dalšího kroku.</p><div class="price"><b>300 Kč / osoba</b><span>60 minut online · 2–4 studenti · úvodních 30 minut zdarma</span></div><p>Raději stručně napište více dostupných časů. Zvýší to pravděpodobnost nalezení společného termínu.</p><p>Dotazy: <a href="mailto:vojtasteidl@seznam.cz">vojtasteidl@seznam.cz</a></p><div class="campaign-trust"><img src="/foto.jpg" alt="Autentická fotografie lektora Vojtěcha Steidla" width="68" height="68" loading="lazy"><div><b>Vojtěch Steidl</b><span>Absolvent aplikované fyziky na Masarykově univerzitě. Výuka online po celé ČR.</span></div></div></aside>
 <form id="groupForm" novalidate>
 <input type="hidden" name="subject" value="Zájem o NOVOU online skupinu – firemní kampaň">
 <input type="hidden" name="source" value="skupiny_2026_firmy">
@@ -116,7 +140,7 @@ footer a{color:#fff}
 </form>
 </div></section>
 </main>
-<footer><div class="wrap">Vojtěch Steidl · Matematika a fyzika online · IČO 29857368 · <a href="/">Hlavní web</a> · <a href="mailto:vojtasteidl@seznam.cz">E-mail</a></div></footer>
+<footer><div class="campaign-shell">Vojtěch Steidl · Matematika a fyzika online · IČO 29857368 · <a href="/">Hlavní web</a> · <a href="mailto:vojtasteidl@seznam.cz">E-mail</a></div></footer>
 <script>
 (function(){
 const form=document.getElementById('groupForm'),goal=form.querySelector('#goal'),vs=document.getElementById('vsFields'),syllabus=document.getElementById('syllabus'),status=document.getElementById('status'),availability=document.getElementById('availabilityValue');
