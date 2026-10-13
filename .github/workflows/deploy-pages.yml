@@ -52,11 +52,13 @@ jobs:
             exit 1
           fi
           grep -q 'responsive-nav-no-wrap' .public-site/style.css
+          test -f .public-site/skupiny/index.html
           test -f .public-site/online-doucovani-matematiky/index.html
           test -f .public-site/doucovani-vs-matematiky/index.html
           test -f .public-site/priprava-na-prijimacky-z-matematiky/index.html
           grep -q '<link rel="canonical" href="https://vojtechsteidl.eu/">' .public-site/index.html
           grep -q 'doucovani-vs-matematiky' .public-site/index.html
+          grep -q '/skupiny/' .public-site/index.html
           grep -q 'priprava-na-prijimacky-z-matematiky' .public-site/index.html
           grep -q 'blue-spacious-homepage-v2' .public-site/index.html
           grep -q 'class="nav-student"' .public-site/index.html
