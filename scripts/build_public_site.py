@@ -38,6 +38,7 @@ PUBLIC_DIRECTORIES = (
     "doucovani-matematiky",
     "doucovani-vs-matematiky",
     "skupinove-doucovani-matematiky",
+    "skupiny",
     "priprava-na-prijimacky-z-matematiky",
     "priprava-na-maturitu-z-matematiky",
     "diagnostika",
@@ -288,6 +289,7 @@ def assert_public_artifact() -> None:
 
     for relative, label in (
         ("skupinove-doucovani-matematiky/index.html", "Group tutoring landing page"),
+        ("skupiny/index.html", "New group campaign landing page"),
         ("priprava-na-prijimacky-z-matematiky/index.html", "Admissions math landing page"),
         ("doucovani-vs-matematiky/index.html", "University math landing page"),
     ):
@@ -323,6 +325,7 @@ def assert_public_artifact() -> None:
         raise RuntimeError("Homepage canonical link is missing")
     for link, label in (
         ("/skupinove-doucovani-matematiky/", "Group tutoring"),
+        ("/skupiny/", "New group campaign landing page"),
         ("/diagnostika/", "Diagnostics"),
         ("/priprava-na-prijimacky-z-matematiky/", "Admissions landing page"),
         ("/doucovani-vs-matematiky/", "University math landing page"),

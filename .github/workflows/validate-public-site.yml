@@ -11,6 +11,7 @@ on:
       - "doucovani-vs-matematiky/**"
       - "online-doucovani-matematiky/**"
       - "skupinove-doucovani-matematiky/**"
+      - "skupiny/**"
       - "priprava-na-prijimacky-z-matematiky/**"
       - "priprava-na-maturitu-z-matematiky/**"
       - "pro-skoly/**"
@@ -35,6 +36,7 @@ on:
       - "doucovani-vs-matematiky/**"
       - "online-doucovani-matematiky/**"
       - "skupinove-doucovani-matematiky/**"
+      - "skupiny/**"
       - "priprava-na-prijimacky-z-matematiky/**"
       - "priprava-na-maturitu-z-matematiky/**"
       - "pro-skoly/**"
@@ -87,6 +89,7 @@ jobs:
             exit 1
           fi
           test -f .public-site/skupinove-doucovani-matematiky/index.html
+          test -f .public-site/skupiny/index.html
           test -f .public-site/online-doucovani-matematiky/index.html
           test -f .public-site/doucovani-vs-matematiky/index.html
           test -f .public-site/priprava-na-prijimacky-z-matematiky/index.html
@@ -94,6 +97,7 @@ jobs:
           grep -q 'doucovani-vs-matematiky' .public-site/index.html
           grep -q 'priprava-na-prijimacky-z-matematiky' .public-site/index.html
           grep -q 'skupinove-doucovani-matematiky' .public-site/index.html
+          grep -q '/skupiny/' .public-site/index.html
           grep -q 'blue-spacious-homepage-v2' .public-site/index.html
           grep -q 'class="nav-student"' .public-site/index.html
           grep -q 'href="/student-portal/" rel="nofollow"' .public-site/index.html
