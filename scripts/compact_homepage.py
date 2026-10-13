@@ -362,7 +362,7 @@ PRICING = r'''<section class="blue-pricing" id="cenik">
     <div class="blue-price-grid">
       <article class="blue-price-card"><small>První krok</small><strong>Zdarma</strong><p>30min úvodní konzultace nebo diagnostika.</p><a href="#kontakt">Domluvit →</a></article>
       <article class="blue-price-card featured"><small>Individuální lekce</small><strong>450 Kč</strong><p>60 minut, jednorázově nebo pravidelně podle aktuální potřeby.</p><a href="#kontakt">Vybrat individuální lekci →</a></article>
-      <article class="blue-price-card"><small>Malá skupina</small><strong>300 Kč / osoba</strong><p>60 minut pro studenty s podobnou úrovní a stejným cílem.</p><a href="/skupinove-doucovani-matematiky/">Zobrazit skupiny →</a></article>
+      <article class="blue-price-card"><small>Malá skupina</small><strong>300 Kč / osoba</strong><p>60 minut pro studenty s podobnou úrovní a stejným cílem.</p><a href="/skupiny/">Otevírané online skupiny →</a></article>
     </div>
   </div>
 </section>'''
@@ -478,6 +478,7 @@ def main() -> None:
         "/diagnostika/",
         "/materialy-zdarma/",
         "/skupinove-doucovani-matematiky/",
+        "/skupiny/",
         "/priprava-na-prijimacky-z-matematiky/",
         "/doucovani-vs-matematiky/",
         "student-portal/",
