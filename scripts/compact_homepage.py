@@ -477,7 +477,6 @@ def main() -> None:
         'id="kontakt"',
         "/diagnostika/",
         "/materialy-zdarma/",
-        "/skupinove-doucovani-matematiky/",
         "/skupiny/",
         "/priprava-na-prijimacky-z-matematiky/",
         "/doucovani-vs-matematiky/",
