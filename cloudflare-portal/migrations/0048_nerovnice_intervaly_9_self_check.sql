@@ -55,7 +55,7 @@ VALUES
 
   ('nerovnice-intervaly-9-v1-q9', 'nerovnice-intervaly-9-v1', 9,
    '{"instruction":"Vyřeš dvojitou nerovnici a zapiš řešení intervalem.","math":"-3<2x+1\\leq7","category":"Dvojitá nerovnice","hint":"Odečti 1 ve všech částech a potom vyděl kladnou dvojkou."}',
-   '[{"id":"a","label":"[[math:(-2,3]]"},{"id":"b","label":"[[math:[-2,3)]]"},{"id":"c","label":"[[math:(-2,3]]"},{"id":"d","label":"[[math:(-2,3)]]"}]',
+   '[{"id":"a","label":"[[math:(-2,3)]]"},{"id":"b","label":"[[math:[-2,3]]]"},{"id":"c","label":"[[math:(-2,3]]]"},{"id":"d","label":"[[math:[-2,3)]]"}]',
    'c', 'Odečteme 1: [[math:-4<2x\\leq6]]. Dělením kladnou dvojkou získáme [[math:-2<x\\leq3]], tedy interval [[math:(-2,3)]].', 3),
 
   ('nerovnice-intervaly-9-v1-q10', 'nerovnice-intervaly-9-v1', 10,
