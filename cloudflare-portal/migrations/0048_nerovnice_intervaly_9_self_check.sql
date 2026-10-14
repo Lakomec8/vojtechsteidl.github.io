@@ -16,7 +16,7 @@ VALUES
   ('nerovnice-intervaly-9-v1-q1', 'nerovnice-intervaly-9-v1', 1,
    '{"instruction":"Která nerovnost odpovídá intervalu?","math":"(-3,2]","category":"Zápis intervalu","hint":"Kulatá závorka krajní bod nezahrnuje, hranatá závorka jej zahrnuje."}',
    '[{"id":"a","label":"[[math:-3\\leq x<2]]"},{"id":"b","label":"[[math:-3<x\\leq2]]"},{"id":"c","label":"[[math:-3<x<2]]"},{"id":"d","label":"[[math:-3\\leq x\\leq2]]"}]',
-   'b', 'V intervalu [[math:(-3,2)]] číslo [[math:-3]] nepatří, ale [[math:2]] patří. Proto [[math:-3<x\\leq2]].', 1),
+   'b', 'V intervalu [[math:(-3,2]]] číslo [[math:-3]] nepatří, ale [[math:2]] patří. Proto [[math:-3<x\\leq2]].', 1),
 
   ('nerovnice-intervaly-9-v1-q2', 'nerovnice-intervaly-9-v1', 2,
    '{"instruction":"Zapiš řešení nerovnice intervalem.","math":"x<5","category":"Zápis nerovnice intervalem","hint":"Pětka do řešení nepatří a interval pokračuje neomezeně doleva."}',
@@ -55,12 +55,12 @@ VALUES
 
   ('nerovnice-intervaly-9-v1-q9', 'nerovnice-intervaly-9-v1', 9,
    '{"instruction":"Vyřeš dvojitou nerovnici a zapiš řešení intervalem.","math":"-3<2x+1\\leq7","category":"Dvojitá nerovnice","hint":"Odečti 1 ve všech částech a potom vyděl kladnou dvojkou."}',
-   '[{"id":"a","label":"[[math:(-2,3)]]"},{"id":"b","label":"[[math:[-2,3]]]"},{"id":"c","label":"[[math:(-2,3]]]"},{"id":"d","label":"[[math:[-2,3)]]"}]',
-   'c', 'Odečteme 1: [[math:-4<2x\\leq6]]. Dělením kladnou dvojkou získáme [[math:-2<x\\leq3]], tedy interval [[math:(-2,3)]].', 3),
+   '[{"id":"a","label":"[[math:(-2,3]]]"},{"id":"b","label":"[[math:[-2,3]]]"},{"id":"c","label":"[[math:(-2,3]]]"},{"id":"d","label":"[[math:[-2,3)]]"}]',
+   'c', 'Odečteme 1: [[math:-4<2x\\leq6]]. Dělením kladnou dvojkou získáme [[math:-2<x\\leq3]], tedy interval [[math:(-2,3]]].', 3),
 
   ('nerovnice-intervaly-9-v1-q10', 'nerovnice-intervaly-9-v1', 10,
    '{"instruction":"Urči průnik intervalů.","math":"[-1,4)\\cap(2,6]","category":"Průnik intervalů","hint":"V průniku zůstávají jen čísla, která patří do obou intervalů současně."}',
-   '[{"id":"a","label":"[[math:(2,4)]]"},{"id":"b","label":"[[math:[2,4)]]"},{"id":"c","label":"[[math:(-1,6]]"},{"id":"d","label":"[[math:[-1,6]]"}]',
+   '[{"id":"a","label":"[[math:(2,4)]]"},{"id":"b","label":"[[math:[2,4)]]"},{"id":"c","label":"[[math:(-1,6]]]"},{"id":"d","label":"[[math:[-1,6]]]"}]',
    'a', 'Oba intervaly se překrývají mezi 2 a 4. Číslo 2 do druhého intervalu nepatří a číslo 4 do prvního nepatří, proto je průnik [[math:(2,4)]].', 2),
 
   ('nerovnice-intervaly-9-v1-q11', 'nerovnice-intervaly-9-v1', 11,
@@ -70,5 +70,5 @@ VALUES
 
   ('nerovnice-intervaly-9-v1-q12', 'nerovnice-intervaly-9-v1', 12,
    '{"instruction":"Vyřeš dvojitou nerovnici a zapiš řešení intervalem.","math":"-2\\leq\\frac{3x-1}{2}<4","category":"Dvojitá nerovnice","hint":"Vynásob všechny části kladnou dvojkou, potom přičti 1 a vyděl 3."}',
-   '[{"id":"a","label":"[[math:[-1,3)]]"},{"id":"b","label":"[[math:(-1,3]]"},{"id":"c","label":"[[math:[-3,1)]]"},{"id":"d","label":"[[math:(-1,3)]]"}]',
+   '[{"id":"a","label":"[[math:[-1,3)]]"},{"id":"b","label":"[[math:(-1,3]]]"},{"id":"c","label":"[[math:[-3,1)]]"},{"id":"d","label":"[[math:(-1,3)]]"}]',
    'a', 'Vynásobíme všechny části dvěma: [[math:-4\\leq3x-1<8]]. Přičteme 1: [[math:-3\\leq3x<9]]. Vydělíme kladnou trojkou: [[math:-1\\leq x<3]], tedy [[math:[-1,3)]].', 4);
