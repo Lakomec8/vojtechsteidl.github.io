@@ -501,28 +501,35 @@
       deadline.label ||
       "Termín není uveden";
 
+    const renderMaterialCard = (material, isCurrent = false) => `
+      <div class="item" data-searchable="${escapeAttribute(
+        [material.title, material.meta, material.badge]
+          .join(" ")
+          .toLocaleLowerCase("cs"),
+      )}">
+        <div class="item-main">
+          <h3>${escapeHtml(material.title || "Výukový materiál")}</h3>
+          <p>${escapeHtml(material.meta || formatDate(material.date) || "")}</p>
+          ${materialButtons(material)}
+        </div>
+        <span class="badge">${escapeHtml(
+          material.badge || (isCurrent ? "Aktuální PDF" : "Historie"),
+        )}</span>
+      </div>
+    `;
+
+    const historicalMaterials = materials.filter(
+      (material) => material !== currentMaterial,
+    );
     $("materialsList").innerHTML = currentMaterial
-      ? [currentMaterial]
-          .map(
-            (material) => `
-              <div class="item" data-searchable="${escapeAttribute(
-                [material.title, material.meta, material.badge]
-                  .join(" ")
-                  .toLocaleLowerCase("cs"),
-              )}">
-                <div class="item-main">
-                  <h3>${escapeHtml(material.title || "Výukový materiál")}</h3>
-                  <p>${escapeHtml(material.meta || formatDate(material.date) || "")}</p>
-                  ${materialButtons(material)}
-                </div>
-                <span class="badge">${escapeHtml(
-                  material.badge || "Aktuální PDF",
-                )}</span>
-              </div>
-            `,
-          )
-          .join("")
-      : emptyState("Zatím tu není žádný aktuální PDF materiál.");
+      ? `${renderMaterialCard(currentMaterial, true)}${
+          historicalMaterials.length
+            ? `<h3 class="materials-history-title">Historie materiálů</h3>${historicalMaterials
+                .map((material) => renderMaterialCard(material))
+                .join("")}`
+            : ""
+        }`
+      : emptyState("Zatím tu není žádný PDF materiál.");
 
     $("historyList").innerHTML = historyEntries.length || unrepresentedHistoryCount
       ? `${historyEntries.map(renderLesson).join("")}${
