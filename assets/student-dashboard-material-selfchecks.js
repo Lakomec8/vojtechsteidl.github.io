@@ -79,12 +79,15 @@
 
   function renderTests(assignments) {
     testList.replaceChildren();
-    if (!assignments.length) {
+    const latestAssignment = (Array.isArray(assignments) ? assignments : [])
+      .slice()
+      .sort((a, b) => String(b.assigned_at || "").localeCompare(String(a.assigned_at || "")))[0];
+    if (!latestAssignment) {
       testList.append(node("div", "empty", "Zatím nemáš přiřazený žádný diagnostický test."));
       return;
     }
 
-    for (const assignment of assignments) {
+    for (const assignment of [latestAssignment]) {
       const item = node("article", "item dashboard-test-card");
       const main = node("div", "item-main");
       main.append(
