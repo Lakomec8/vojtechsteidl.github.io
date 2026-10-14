@@ -65,10 +65,10 @@
 .campaign-page .step h3{margin:0 0 .5rem;color:#102a43;font-size:1.08rem}
 .campaign-page .step p{color:#64748b;font-size:.91rem;margin:0}
 .campaign-page .form-zone{background:#fff}
-.campaign-page .form-grid{display:grid;grid-template-columns:minmax(265px,.78fr) minmax(0,1.25fr);gap:clamp(2rem,5vw,4rem);align-items:start}
-.campaign-page .pitch{position:sticky;top:6.2rem}
-.campaign-page .pitch>p{margin:1rem 0;color:#64748b}
-.campaign-page .price{padding:1.2rem 1.3rem;margin:1.5rem 0;border:1px solid #dbeafe;border-radius:15px;background:#eff6ff}
+.campaign-page .form-grid{display:grid;grid-template-columns:minmax(0,.95fr) minmax(0,1.25fr);gap:clamp(2rem,4vw,3.5rem);align-items:start}
+.campaign-page .pitch{position:sticky;top:6.2rem;min-width:0;max-width:510px;padding:0 .5rem 0 0}
+.campaign-page .pitch>p{margin:1rem 0;color:#64748b;max-width:49ch}
+.campaign-page .price{max-width:460px;padding:1.2rem 1.3rem;margin:1.5rem 0;border:1px solid #dbeafe;border-radius:15px;background:#eff6ff}
 .campaign-page .price b{display:block;color:#102a43;font-size:1.75rem;letter-spacing:-.04em}
 .campaign-page .price span{display:block;color:#64748b;font-size:.84rem}
 .campaign-trust{display:flex;align-items:center;gap:1rem;padding:1rem;margin-top:2rem;border-top:1px solid #e2e8f0}
@@ -99,7 +99,7 @@
 .campaign-page .hidden{display:none}
 .campaign-page footer{padding:2rem 0;background:#102a43;color:#dbeafe;font-size:.82rem}
 .campaign-page footer a{color:#fff}
-@media(max-width:970px){.campaign-hero-grid{grid-template-columns:1fr}.campaign-panel{max-width:600px}.campaign-page .form-grid{grid-template-columns:1fr}.campaign-page .pitch{position:static}.campaign-page .cards,.campaign-page .steps{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:970px){.campaign-hero-grid{grid-template-columns:1fr}.campaign-panel{max-width:600px}.campaign-page .form-grid{grid-template-columns:1fr}.campaign-page .pitch{position:static;max-width:680px;padding-right:0}.campaign-page .cards,.campaign-page .steps{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:650px){.campaign-page .campaign-nav{gap:.6rem}.campaign-page .campaign-nav a:not(.nav-contact){display:none}.campaign-page .campaign-nav .nav-contact{font-size:.74rem;padding:.65rem .75rem}.campaign-hero{padding:4.6rem 0 3.5rem}.campaign-hero h1{font-size:clamp(2.45rem,11vw,3.7rem)}.campaign-page section:not(.campaign-hero){padding:3.7rem 0}.campaign-page .cards,.campaign-page .steps,.campaign-page #groupForm .two,.campaign-page .times{grid-template-columns:1fr}.campaign-page .card p{min-height:0}.campaign-page .campaign-meta{gap:.55rem 1rem}.campaign-page .campaign-panel{padding:1.1rem}}
 </style>
 </head>
@@ -113,7 +113,7 @@
 <article class="card"><span class="tag">1. ročník VŠ</span><h3>Vysokoškolská matematika</h3><p>Limity, derivace, integrály a matice podle konkrétního předmětu a sylabu školy.</p><a href="#prihlaska" data-goal="vs">Mám zájem →</a></article>
 </div></div></section>
 <section class="process" id="jak-to-funguje"><div class="campaign-shell"><h2>Jak vznikne skupina</h2><p class="lead">Neslibuji místo v předem vypsaném termínu, který se nakonec nebude hodit. Nejdřív spojím kompatibilní zájemce.</p><div class="steps"><div class="step"><h3>1. Vyplníte nezávazný zájem</h3><p>Zvolíte cíl, úroveň a všechny časové možnosti, kdy můžete.</p></div><div class="step"><h3>2. Ověřím kompatibilitu</h3><p>Úvodní konzultace do 30 minut je zdarma. Ověříme úroveň i očekávání.</p></div><div class="step"><h3>3. Navrhnu společný termín</h3><p>Pokud se sejdou vhodní studenti, pošlu návrh. Zařazení je až po vzájemném potvrzení.</p></div></div></div></section>
-<section class="form-zone" id="prihlaska"><div class="wrap form-grid"><aside class="pitch"><span class="section-kicker">Bez závazku</span><h2>Přihlaste zájem do skupiny.</h2><p class="lead">Přihláška není rezervace ani objednávka. Slouží k výběru vhodných studentů a společného času. Odpovím s návrhem dalšího kroku.</p><div class="price"><b>300 Kč / osoba</b><span>60 minut online · 2–4 studenti · úvodních 30 minut zdarma</span></div><p>Raději stručně napište více dostupných časů. Zvýší to pravděpodobnost nalezení společného termínu.</p><p>Dotazy: <a href="mailto:vojtasteidl@seznam.cz">vojtasteidl@seznam.cz</a></p><div class="campaign-trust"><img src="/foto.jpg" alt="Autentická fotografie lektora Vojtěcha Steidla" width="68" height="68" loading="lazy"><div><b>Vojtěch Steidl</b><span>Absolvent aplikované fyziky na Masarykově univerzitě. Výuka online po celé ČR.</span></div></div></aside>
+<section class="form-zone" id="prihlaska"><div class="campaign-shell form-grid"><aside class="pitch"><span class="section-kicker">Bez závazku</span><h2>Přihlaste zájem do skupiny.</h2><p class="lead">Přihláška není rezervace ani objednávka. Slouží k výběru vhodných studentů a společného času. Odpovím s návrhem dalšího kroku.</p><div class="price"><b>300 Kč / osoba</b><span>60 minut online · 2–4 studenti · úvodních 30 minut zdarma</span></div><p>Raději stručně napište více dostupných časů. Zvýší to pravděpodobnost nalezení společného termínu.</p><p>Dotazy: <a href="mailto:vojtasteidl@seznam.cz">vojtasteidl@seznam.cz</a></p><div class="campaign-trust"><img src="/foto.jpg" alt="Autentická fotografie lektora Vojtěcha Steidla" width="68" height="68" loading="lazy"><div><b>Vojtěch Steidl</b><span>Absolvent aplikované fyziky na Masarykově univerzitě. Výuka online po celé ČR.</span></div></div></aside>
 <form id="groupForm" novalidate>
 <input type="hidden" name="subject" value="Zájem o NOVOU online skupinu – firemní kampaň">
 <input type="hidden" name="source" value="skupiny_2026_firmy">
