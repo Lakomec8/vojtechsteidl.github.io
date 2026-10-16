@@ -729,7 +729,7 @@
 
         const refreshCapacity=()=>{
           if(refreshInFlight) return refreshInFlight;
-          refreshInFlight=fetch('/api/public-capacity?ts='+Date.now(),{cache:'no-store',headers:{Accept:'application/json'}})
+          refreshInFlight=fetch('https://capacity.vojtechsteidl.eu/api/public-capacity?ts='+Date.now(),{cache:'no-store',headers:{Accept:'application/json'}})
             .then(response=>{if(!response.ok) throw new Error('capacity-api'); return response.json();})
             .then(data=>{
               if(!validSlots(data.slots)) throw new Error('capacity-payload');

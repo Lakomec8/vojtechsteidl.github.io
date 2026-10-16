@@ -136,7 +136,7 @@
 
   function refreshCapacity() {
     if (refreshInFlight) return refreshInFlight;
-    refreshInFlight = fetch(`/api/public-capacity?ts=${Date.now()}`, {
+    refreshInFlight = fetch(`https://capacity.vojtechsteidl.eu/api/public-capacity?ts=${Date.now()}`, {
       cache: "no-store",
       headers: { Accept: "application/json" },
     })

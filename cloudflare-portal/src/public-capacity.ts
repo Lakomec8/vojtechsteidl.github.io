@@ -98,13 +98,18 @@ function pragueParts(value: string): { weekday: number; time: string } | null {
   return weekday ? { weekday, time: `${hour}:${minute}` } : null;
 }
 
-function publicJson(body: unknown, status = 200): Response {
+function publicJson(body: unknown, status = 200, request?: Request): Response {
   const headers = new Headers({
     "Content-Type": "application/json; charset=utf-8",
     "Cache-Control": "public, max-age=60, s-maxage=120, stale-while-revalidate=300",
     "X-Content-Type-Options": "nosniff",
     "Referrer-Policy": "no-referrer",
   });
+  const origin = request?.headers.get("Origin") || "";
+  if (["https://vojtechsteidl.eu", "https://www.vojtechsteidl.eu"].includes(origin)) {
+    headers.set("Access-Control-Allow-Origin", origin);
+    headers.set("Vary", "Origin");
+  }
   return Response.json(body, { status, headers });
 }
 
@@ -239,12 +244,12 @@ export async function handlePublicCapacityRequest(request: Request, env: Env): P
       week: { startDate: week.startDate, endDate: week.endDate },
       days: DAY_NAMES.slice(1,6),
       slots,
-    });
+    }, 200, request);
   } catch (error) {
     console.error(JSON.stringify({
       event: "public_capacity_error",
       message: error instanceof Error ? error.message : "unknown",
     }));
-    return publicJson({ error: "capacity_unavailable" }, 503);
+    return publicJson({ error: "capacity_unavailable" }, 503, request);
   }
 }
