@@ -1,4 +1,6 @@
 import { nextWeekWindow, slotIsAvailable, busyMinutesOnDay, isCalendarSyncFresh } from "../src/public-capacity.ts";
+import { publicCategoryForCalendarTitle } from "../src/calendar-ingestion.ts";
+import { readFileSync } from "node:fs";
 
 const cases = [
   ["2026-10-16T12:00:00Z", "2026-10-19", "2026-10-23"],
@@ -39,4 +41,24 @@ for (const [value, expected] of [
 const overnight = { starts_at: "2026-10-19T22:00:00+02:00", ends_at: "2026-10-20T17:00:00+02:00" };
 const nextDay = busyMinutesOnDay(overnight, "2026-10-20");
 if (nextDay?.start !== 0 || nextDay?.end !== 1020) throw new Error("Overnight collision missed");
-console.log("Public capacity next-week, sync freshness, and busy-slot filtering are valid.");
+const classifications = [
+  ["Kája - doučko", { label: "Matematika", capacity: 4 }],
+  ["Fyzika Doučko", { label: "Fyzika", capacity: 4 }],
+  ["Doučko - syn Veronika.", { label: "Matematika", capacity: 4 }],
+  ["Zkušební hodina", { label: "Úvodní konzultace", capacity: 1 }],
+  ["Eliška doučování", null],
+  ["Soukromá událost", null],
+];
+for (const [title, expected] of classifications) {
+  const actual = publicCategoryForCalendarTitle(title);
+  if (JSON.stringify(actual) !== JSON.stringify(expected)) {
+    throw new Error(`Public title classification failed for ${title}: ${JSON.stringify(actual)}`);
+  }
+}
+// Seed the two existing one-off lesson IDs immediately, while the automatic
+// registration handles newly added future tutoring lessons.
+const migration = readFileSync(new URL("../migrations/0050_public_capacity_missing_lessons.sql", import.meta.url), "utf8");
+for (const id of ["7feha3tiugdudsjdurtjlkkkks", "2b2suvsjh6e68sm04jh3ucavld"]) {
+  if (!migration.includes(id)) throw new Error("Missing public mapping: " + id);
+}
+console.log("Public capacity week, collisions, tutoring mappings, and privacy tests are valid.");

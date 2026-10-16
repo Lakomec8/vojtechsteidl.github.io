@@ -109,7 +109,19 @@ jobs:
                   exit 1
                 }
               fi
-              echo "Public calendar API is reachable, synchronized, and conflict-free for the verified dates."
+              if jq -e '.week.startDate == "2026-10-19"' /tmp/public-capacity.json >/dev/null; then
+                jq -e '(
+                  any(.slots[]; .weekday == 1 and .time == "17:30–18:30" and .title == "Matematika" and .kind == "join")
+                ) and (
+                  any(.slots[]; .weekday == 5 and .time == "15:30–16:30" and .title == "Fyzika" and .kind == "join")
+                ) and (
+                  all(.slots[]; (.title | test("Kája|Eliška|Doučko"; "i") | not))
+                )' /tmp/public-capacity.json >/dev/null || {
+                  echo "Live Google Calendar tutoring lessons are missing or private details leaked." >&2
+                  exit 1
+                }
+              fi
+              echo "Public calendar API is reachable, synchronized, and shows the expected anonymized lessons."
               exit 0
             fi
             sleep 3

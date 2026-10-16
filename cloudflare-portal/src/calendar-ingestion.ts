@@ -42,6 +42,22 @@ function normalizeText(value: string): string {
     .trim();
 }
 
+// Only schedule entries explicitly recognizable as tutoring are auto-published.
+// Raw titles and student names are NEVER returned by the public capacity API.
+// Explicit public_capacity_series mappings take precedence over these defaults.
+export function publicCategoryForCalendarTitle(title: string): { label: string; capacity: number } | null {
+  const normalized = normalizeText(title);
+  if (normalized.split(" ").includes("eliska")) return null; // explicitly private
+  if (normalized.includes("zkusebni hodina")) {
+    return { label: "Úvodní konzultace", capacity: 1 };
+  }
+  if (!normalized.split(" ").some((part) => part === "doucko" || part === "doucovani")) return null;
+  return {
+    label: normalized.split(" ").includes("fyzika") ? "Fyzika" : "Matematika",
+    capacity: 4,
+  };
+}
+
 function containsName(summary: string, displayName: string): boolean {
   const normalizedSummary = ` ${normalizeText(summary)} `;
   const normalizedName = normalizeText(displayName);
@@ -211,6 +227,30 @@ function expandBusyCalendar(events: IcalEvent[], rangeStart: Date, rangeEnd: Dat
   return [...occurrences.values()].sort((a, b) => a.startsAt.localeCompare(b.startsAt));
 }
 
+async function autoMapPublicTutoringSeries(env: Env, events: IcalEvent[]): Promise<number> {
+  const mappings = events.flatMap((event) => {
+    if (isCancelled(event) || isTransparent(event)) return [];
+    const category = publicCategoryForCalendarTitle(String(event.summary || ""));
+    if (!category) return [];
+    return [{
+      id: googleBaseEventId(String(event.uid || "")),
+      ...category,
+    }];
+  }).filter((candidate) => candidate.id.length > 0);
+
+  const statements = mappings.map((mapping) => env.DB.prepare(`
+    INSERT INTO public_capacity_series
+      (series_id, public_label, capacity, fallback_people, enabled, sort_order)
+    VALUES (?1, ?2, ?3, 1, 1, 100)
+    ON CONFLICT(series_id) DO NOTHING
+  `).bind(mapping.id, mapping.label, mapping.capacity));
+
+  for (let offset = 0; offset < statements.length; offset += 100) {
+    await env.DB.batch(statements.slice(offset, offset + 100));
+  }
+  return mappings.length;
+}
+
 async function activeStudents(env: Env): Promise<TutoringStudent[]> {
   // Calendar matching must use the canonical tutoring identity, not the portal
   // display name. A portal profile can deliberately have a different label
@@ -328,6 +368,7 @@ export async function syncGoogleCalendarToD1(env: CalendarEnv): Promise<{ import
     await upsertOccurrence(env, occurrence, syncedAt);
   }
   await syncBusyOccurrences(env, busyOccurrences, rangeStart, rangeEnd, syncedAt);
+  await autoMapPublicTutoringSeries(env, events);
 
   const planned = await env.DB.prepare(`
     SELECT google_event_id

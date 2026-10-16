@@ -150,7 +150,7 @@ async function allUpcomingRanges(env: Env): Promise<Array<{ starts_at: string; e
   const result = await env.DB.prepare(`
     SELECT starts_at, ends_at
       FROM public_calendar_busy
-     WHERE datetime(starts_at) >= datetime('now', '-1 day')
+     WHERE datetime(ends_at) > datetime('now')
        AND datetime(starts_at) < datetime('now', '+21 days')
   `).all<{ starts_at: string; ends_at: string }>();
   return result.results || [];
@@ -238,19 +238,14 @@ export async function handlePublicCapacityRequest(request: Request, env: Env): P
     if (!isCalendarSyncFresh(syncedAt)) {
       return publicJson({ error: "calendar_not_synced" }, 503, request);
     }
-    const nextWeekBySeries = new Map<string, EventRow>();
-    for (const event of events) {
-      if (isInWeek(event.starts_at, week) && !nextWeekBySeries.has(event.series_id)) {
-        nextWeekBySeries.set(event.series_id, event);
-      }
-    }
-    const occupied = [...nextWeekBySeries.values()].flatMap((event) => {
+    // A series can have several lessons in one week; render each occurrence.
+    const occupied = events.filter((event) => isInWeek(event.starts_at, week)).flatMap((event) => {
       const start = pragueParts(event.starts_at);
       const end = pragueParts(event.ends_at);
       if (!start || !end || start.weekday > 5) return [];
       const people = Math.max(1, Number(event.people || 0));
       return [{
-        id: `series-${event.sort_order}`,
+        id: `series-${event.google_event_id}`,
         day: DAY_NAMES[start.weekday],
         weekday: start.weekday,
         time: `${start.time}–${end.time}`,
