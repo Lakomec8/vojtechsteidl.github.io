@@ -64,9 +64,17 @@ jobs:
         working-directory: cloudflare-portal
         run: npm run typecheck
 
+      - name: Verify next-week calendar calculation
+        working-directory: cloudflare-portal
+        run: npm run test:public-capacity
+
       - name: Apply production database migrations
         working-directory: cloudflare-portal
         run: npm run db:migrate:remote
+
+      - name: Keep public calendar capacity outside the login wall
+        working-directory: cloudflare-portal
+        run: node scripts/ensure-public-capacity-access.mjs
 
       - name: Audit active portal accounts and Access policy
         working-directory: cloudflare-portal

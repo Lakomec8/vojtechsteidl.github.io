@@ -8,8 +8,14 @@
   const selectedMeta = document.getElementById("selectedSlotMeta");
   const selectedId = document.getElementById("selectedSlotId");
   const selectedInfo = document.getElementById("selectedSlotInfo");
+  const weekLabel = document.getElementById("calendarWeekLabel");
+  const weekSummary = document.getElementById("calendarWeekSummary");
+  const liveStatus = document.getElementById("calendarLiveStatus");
   const dayOrder = ["Pondělí", "Úterý", "Středa", "Čtvrtek", "Pátek"];
+  const refreshIntervalMs = 15 * 60 * 1000;
   let currentSlots = [];
+  let refreshInFlight = null;
+  let lastRefreshAt = 0;
 
   const esc = (value) => String(value ?? "").replace(/[&<>"']/g, (character) => ({
     "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#039;",
@@ -41,10 +47,22 @@
     selection.scrollIntoView({ behavior: "smooth", block: "nearest" });
   }
 
-  function renderFull(slots) {
+  function dateForDay(week, dayIndex) {
+    if (typeof week?.startDate !== "string") return "";
+    const [year, month, day] = week.startDate.split("-").map(Number);
+    if (!year || !month || !day) return "";
+    const date = new Date(Date.UTC(year, month - 1, day + dayIndex, 12));
+    return new Intl.DateTimeFormat("cs-CZ", {
+      timeZone: "Europe/Prague",
+      day: "numeric",
+      month: "numeric",
+    }).format(date);
+  }
+
+  function renderFull(slots, week) {
     if (!calendarEl) return;
     currentSlots = slots;
-    calendarEl.innerHTML = dayOrder.map((day) => {
+    calendarEl.innerHTML = dayOrder.map((day, dayIndex) => {
       const daySlots = slots.filter((slot) => slot.day === day);
       const body = daySlots.length ? daySlots.map((slot) => {
         const state = slot.kind === "free" ? "free" : slot.kind === "full" ? "full" : "join";
@@ -59,7 +77,8 @@
           <div class="calendar-slot-foot">${slot.flexible ? "" : `<span>${Number(slot.people)}/${Number(slot.capacity)}</span>`}${control}</div>
         </article>`;
       }).join("") : '<div class="calendar-empty">—</div>';
-      return `<section class="calendar-day"><h3>${esc(day)}</h3><div class="calendar-day-slots">${body}</div></section>`;
+      const date = dateForDay(week, dayIndex);
+      return `<section class="calendar-day"><h3>${esc(day)}${date ? `<span class="calendar-day-date">${esc(date)}</span>` : ""}</h3><div class="calendar-day-slots">${body}</div></section>`;
     }).join("");
     calendarEl.dataset.live = "true";
   }
@@ -73,31 +92,81 @@
     });
   }
 
-  fetch("/api/public-capacity", {
-    cache: "no-store",
-    headers: { Accept: "application/json" },
-  })
-    .then((response) => {
-      if (!response.ok) throw new Error("capacity-api");
-      return response.json();
+  function validSlots(slots) {
+    return Array.isArray(slots) && slots.length > 0 && slots.every((slot) =>
+      typeof slot.id === "string" &&
+      typeof slot.day === "string" &&
+      typeof slot.time === "string" &&
+      typeof slot.title === "string" &&
+      ["free", "join", "full"].includes(slot.kind) &&
+      Number.isFinite(Number(slot.people)) &&
+      Number.isFinite(Number(slot.capacity))
+    );
+  }
+
+  function renderWeekLabel(week) {
+    if (!weekLabel || typeof week?.startDate !== "string" || typeof week?.endDate !== "string") return;
+    const format = (value, includeYear) => {
+      const [year, month, day] = value.split("-").map(Number);
+      if (!year || !month || !day) return value;
+      return new Intl.DateTimeFormat("cs-CZ", {
+        timeZone: "Europe/Prague",
+        day: "numeric",
+        month: "numeric",
+        ...(includeYear ? { year: "numeric" } : {}),
+      }).format(new Date(Date.UTC(year, month - 1, day, 12)));
+    };
+    weekLabel.textContent = `Následující týden · ${format(week.startDate, false)}–${format(week.endDate, true)}`;
+  }
+
+  function renderSummary(slots) {
+    if (!weekSummary) return;
+    const free = slots.filter((slot) => slot.kind === "free").length;
+    const joinable = slots.filter((slot) => slot.kind === "join").length;
+    weekSummary.textContent = `${free} ${free === 1 ? "volný termín" : free >= 2 && free <= 4 ? "volné termíny" : "volných termínů"} · ${joinable} ${joinable === 1 ? "skupina s místem" : joinable >= 2 && joinable <= 4 ? "skupiny s místem" : "skupin s místem"}`;
+  }
+
+  function renderLiveStatus(isLive) {
+    if (!liveStatus) return;
+    liveStatus.textContent = isLive
+      ? `Živá data · aktualizováno ${new Intl.DateTimeFormat("cs-CZ", { hour: "2-digit", minute: "2-digit" }).format(new Date())}`
+      : "Dočasně zobrazený záložní rozvrh";
+    liveStatus.dataset.state = isLive ? "live" : "fallback";
+  }
+
+  function refreshCapacity() {
+    if (refreshInFlight) return refreshInFlight;
+    refreshInFlight = fetch(`/api/public-capacity?ts=${Date.now()}`, {
+      cache: "no-store",
+      headers: { Accept: "application/json" },
     })
-    .then((data) => {
-      if (!Array.isArray(data.slots) || !data.slots.length) return;
-      const safe = data.slots.every((slot) =>
-        typeof slot.id === "string" &&
-        typeof slot.day === "string" &&
-        typeof slot.time === "string" &&
-        typeof slot.title === "string" &&
-        ["free", "join", "full"].includes(slot.kind) &&
-        Number.isFinite(Number(slot.people)) &&
-        Number.isFinite(Number(slot.capacity))
-      );
-      if (!safe) return;
-      renderCompact(data.slots);
-      renderFull(data.slots);
-    })
-    .catch(() => {
-      if (compactEl) compactEl.dataset.live = "false";
-      if (calendarEl) calendarEl.dataset.live = "false";
-    });
+      .then((response) => {
+        if (!response.ok) throw new Error("capacity-api");
+        return response.json();
+      })
+      .then((data) => {
+        if (!validSlots(data.slots)) throw new Error("capacity-payload");
+        renderCompact(data.slots);
+        renderFull(data.slots, data.week);
+        renderWeekLabel(data.week);
+        renderSummary(data.slots);
+        renderLiveStatus(true);
+        lastRefreshAt = Date.now();
+      })
+      .catch(() => {
+        if (compactEl) compactEl.dataset.live = "false";
+        if (calendarEl) calendarEl.dataset.live = "false";
+        renderLiveStatus(false);
+      })
+      .finally(() => {
+        refreshInFlight = null;
+      });
+    return refreshInFlight;
+  }
+
+  refreshCapacity();
+  window.setInterval(refreshCapacity, refreshIntervalMs);
+  document.addEventListener("visibilitychange", () => {
+    if (!document.hidden && Date.now() - lastRefreshAt >= refreshIntervalMs) refreshCapacity();
+  });
 })();

@@ -113,6 +113,11 @@ CSS = r'''<style id="blue-spacious-homepage-v2">
 .blue-capacity-standalone .calendar-day-abbr{color:#fff;font-size:1.2rem;font-weight:950;letter-spacing:.03em;line-height:1}
 .blue-capacity-standalone .calendar-day-name{color:#cfe3f7;font-size:.69rem}
 .blue-capacity-standalone .calendar-day-count{color:#b9d6f0;font-size:.66rem;font-weight:800;white-space:nowrap}
+.blue-capacity-standalone .calendar-week-label{margin:.3rem 0 0;color:#cfe3f7;font-size:.84rem;font-weight:750}
+.blue-capacity-standalone .calendar-week-summary{margin:.28rem 0 0;color:#fff;font-size:.9rem;font-weight:800}
+.blue-capacity-standalone .calendar-live-status[data-state="live"]{color:#bbf7d0}
+.blue-capacity-standalone .calendar-live-status[data-state="fallback"]{color:#fde68a}
+.blue-capacity-standalone .calendar-day-date{display:block;margin-top:.15rem;color:#b9d6f0;font-size:.64rem;font-weight:750;letter-spacing:0}
 .blue-capacity-standalone .calendar-day-slots{position:relative;display:grid;gap:.68rem;padding-left:1.12rem}
 .blue-capacity-standalone .calendar-day-slots::before{position:absolute;top:.5rem;bottom:.5rem;left:.3rem;width:1px;background:rgba(255,255,255,.24);content:""}
 .blue-capacity-standalone .calendar-slot{position:relative;padding:.8rem .8rem .74rem;border:1px solid rgba(255,255,255,.72);border-radius:12px;background:#f8fbff;box-shadow:0 8px 18px rgba(5,24,43,.13)}
@@ -258,12 +263,14 @@ OFFER = r'''<section class="blue-goals" id="jak-to-funguje">
           <div>
             <p class="eyebrow">Stávající kapacita</p>
             <h2>Týdenní kalendář</h2>
+            <p class="calendar-week-label" id="calendarWeekLabel">Následující týden</p>
+            <p class="calendar-week-summary" id="calendarWeekSummary">Načítám aktuální možnosti…</p>
           </div>
         </div>
         <div class="capacity-legend" style="margin-bottom:1rem">
           <span><i class="legend-dot join"></i> lze se přidat</span>
           <span><i class="legend-dot free"></i> volný slot</span>
-          <span>automatická aktualizace ~15 min</span>
+          <span class="calendar-live-status" id="calendarLiveStatus">Ověřuji aktuálnost…</span>
         </div>
         <div class="weekly-calendar-wrap">
           <div class="weekly-calendar timeline-calendar" id="weeklyCalendar" aria-live="polite">

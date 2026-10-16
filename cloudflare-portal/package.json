@@ -7,6 +7,7 @@
     "build": "node scripts/build-site.mjs && node scripts/prepare-self-check-v2.mjs",
     "cf:types": "wrangler types",
     "typecheck": "wrangler types && tsc --noEmit",
+    "test:public-capacity": "node --experimental-strip-types scripts/test-public-capacity-week.mjs",
     "test:fixtures": "node scripts/validate-test-fixtures.mjs",
     "audit:access": "node scripts/audit-portal-access.mjs",
     "dev": "npm run build && wrangler dev",

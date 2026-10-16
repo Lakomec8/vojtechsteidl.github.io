@@ -30,6 +30,7 @@
 .weekly-calendar{display:grid;grid-template-columns:repeat(5,minmax(165px,1fr));gap:.7rem;min-width:860px}
 .calendar-day{padding:.7rem;border:1px solid #e2e8f0;border-radius:14px;background:#f8fafc}
 .calendar-day h3{margin:0 0 .65rem;color:#102a43;font-size:.82rem;text-transform:uppercase;letter-spacing:.055em}
+.calendar-day-date{display:block;margin-top:.18rem;color:#64748b;font-size:.68rem;font-weight:750;letter-spacing:0}
 .calendar-day-slots{display:grid;gap:.55rem}
 .calendar-slot{padding:.72rem;border:1px solid #dbe4ee;border-radius:11px;background:#fff}
 .calendar-slot.join{border-color:#bfdbfe;background:#f8fbff}
@@ -55,8 +56,8 @@
 </style>
   <main class="calendar-page">
     <div class="calendar-page-head">
-      <div><p class="eyebrow">Stávající kapacita</p><h1>Týdenní kalendář</h1></div>
-      <p>Vyberte volný slot nebo se přidejte k existujícímu termínu.</p>
+      <div><p class="eyebrow">Stávající kapacita</p><h1>Týdenní kalendář</h1><p id="calendarWeekLabel">Následující týden</p><p id="calendarWeekSummary">Načítám aktuální možnosti…</p></div>
+      <p>Vyberte volný slot nebo se přidejte k existujícímu termínu.<br><span id="calendarLiveStatus">Ověřuji aktuálnost…</span></p>
     </div>
     <div class="capacity-legend"><span><i class="legend-dot join"></i> lze se přidat</span><span><i class="legend-dot free"></i> volný slot</span></div>
     <div class="weekly-calendar-wrap" style="margin-top:1rem"><div class="weekly-calendar" id="weeklyCalendar"><section class="calendar-day"><h3>Pondělí</h3><div class="calendar-day-slots"><article class="calendar-slot join" data-slot-card="mon-1630">
