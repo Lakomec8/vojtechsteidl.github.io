@@ -97,7 +97,19 @@ jobs:
           for attempt in 1 2 3 4 5; do
             if curl -fsSL --max-time 20 'https://capacity.vojtechsteidl.eu/api/public-capacity' -o /tmp/public-capacity.json \
                && jq -e '.calendarSyncedAt != null and (.slots | type == "array") and .week.startDate' /tmp/public-capacity.json > /dev/null; then
-              echo "Public calendar API is reachable and synchronized."
+              # Regression check against known Google Calendar commitments on 19–23 Oct 2026.
+              # Ignore outside that specific next-week window.
+              if jq -e '.week.startDate == "2026-10-19"' /tmp/public-capacity.json >/dev/null; then
+                jq -e '[.slots[] | select(.kind == "free" and (
+                  (.weekday == 1 and .time == "17:45–18:45") or
+                  (.weekday == 2 and .time == "16:30–17:30") or
+                  (.weekday == 5 and .time == "15:15–16:15")
+                ))] | length == 0' /tmp/public-capacity.json >/dev/null || {
+                  echo "Public calendar exposes a Google Calendar busy interval as free." >&2
+                  exit 1
+                }
+              fi
+              echo "Public calendar API is reachable, synchronized, and conflict-free for the verified dates."
               exit 0
             fi
             sleep 3
