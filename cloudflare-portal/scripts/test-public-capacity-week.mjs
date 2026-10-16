@@ -1,4 +1,4 @@
-import { nextWeekWindow, slotIsAvailable } from "../src/public-capacity.ts";
+import { nextWeekWindow, slotIsAvailable, busyMinutesOnDay, isCalendarSyncFresh } from "../src/public-capacity.ts";
 
 const cases = [
   ["2026-10-16T12:00:00Z", "2026-10-19", "2026-10-23"],
@@ -27,4 +27,16 @@ for (const [start, end, occupied, flexible, expected] of availabilityCases) {
   }
 }
 
-console.log("Public capacity next-week calculation and busy-slot filtering are valid.");
+const now = new Date("2026-10-16T13:00:00Z");
+for (const [value, expected] of [
+  [null, false],
+  ["2026-10-16T12:45:00Z", true],
+  ["2026-10-16T11:00:00Z", false],
+  ["2026-10-16T13:10:00Z", false],
+]) {
+  if (isCalendarSyncFresh(value, now) !== expected) throw new Error("Freshness check failed: " + value);
+}
+const overnight = { starts_at: "2026-10-19T22:00:00+02:00", ends_at: "2026-10-20T17:00:00+02:00" };
+const nextDay = busyMinutesOnDay(overnight, "2026-10-20");
+if (nextDay?.start !== 0 || nextDay?.end !== 1020) throw new Error("Overnight collision missed");
+console.log("Public capacity next-week, sync freshness, and busy-slot filtering are valid.");

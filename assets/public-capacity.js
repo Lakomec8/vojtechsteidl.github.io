@@ -34,7 +34,7 @@
       return `<a class="compact-capacity-card" href="/skupinove-doucovani-matematiky/">
         <small>${esc(when)}</small>
         <strong>${esc(slot.title)}</strong>
-        <span>${slot.flexible ? "Volno" : `${Number(slot.people)}/${Number(slot.capacity)} míst`}</span>
+        <span>${slot.flexible ? "Volno" : slot.kind === "free" ? "Volný termín" : `${Number(slot.people)}/${Number(slot.capacity)} míst`}</span>
       </a>`;
     }).join("");
     compactEl.dataset.live = "true";
@@ -136,7 +136,7 @@
     const hasTimestamp = synced && !Number.isNaN(synced.getTime());
     liveStatus.textContent = isLive && hasTimestamp
       ? `Google Kalendář · synchronizováno ${new Intl.DateTimeFormat("cs-CZ", { hour: "2-digit", minute: "2-digit" }).format(synced)}`
-      : isLive ? "Google Kalendář · čekám na první synchronizaci" : "Dočasně zobrazený záložní rozvrh";
+      : isLive ? "Google Kalendář · čekám na první synchronizaci" : "Google Kalendář · dostupnost nelze ověřit";
     liveStatus.dataset.state = isLive && hasTimestamp ? "live" : "fallback";
   }
 
@@ -160,8 +160,16 @@
         lastRefreshAt = Date.now();
       })
       .catch(() => {
-        if (compactEl) compactEl.dataset.live = "false";
-        if (calendarEl) calendarEl.dataset.live = "false";
+        currentSlots = [];
+        if (compactEl) {
+          compactEl.dataset.live = "false";
+          compactEl.innerHTML = '<p role="status">Dostupnost nelze ověřit. Kontaktujte mě pro výběr termínu.</p>';
+        }
+        if (calendarEl) {
+          calendarEl.dataset.live = "false";
+          calendarEl.innerHTML = '<p class="calendar-empty" role="status">Dostupnost nelze ověřit. Kontaktujte mě pro výběr termínu.</p>';
+        }
+        if (selection) selection.hidden = true;
         renderLiveStatus(false);
       })
       .finally(() => {
@@ -170,6 +178,9 @@
     return refreshInFlight;
   }
 
+  currentSlots = [];
+  if (compactEl) compactEl.innerHTML = '<p role="status">Ověřuji dostupnost termínů…</p>';
+  if (calendarEl) calendarEl.innerHTML = '<p class="calendar-empty" role="status">Ověřuji dostupnost termínů…</p>';
   refreshCapacity();
   window.setInterval(refreshCapacity, refreshIntervalMs);
   document.addEventListener("visibilitychange", () => {

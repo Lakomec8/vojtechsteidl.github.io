@@ -725,7 +725,7 @@
           const hasTimestamp=synced&&!Number.isNaN(synced.getTime());
           liveStatus.textContent=isLive&&hasTimestamp
             ? `Google Kalendář · synchronizováno ${new Intl.DateTimeFormat('cs-CZ',{hour:'2-digit',minute:'2-digit'}).format(synced)}`
-            : isLive?'Google Kalendář · čekám na první synchronizaci':'Dočasně zobrazený záložní rozvrh';
+            : isLive?'Google Kalendář · čekám na první synchronizaci':'Google Kalendář · dostupnost nelze ověřit';
           liveStatus.dataset.state=isLive&&hasTimestamp?'live':'fallback';
         };
 
@@ -736,18 +736,32 @@
             .then(data=>{
               if(!validSlots(data.slots)) throw new Error('capacity-payload');
               renderCalendar(data.slots,data.week);
+              if(selectedId && !data.slots.some(slot=>slot.id===selectedId.value && slot.kind!=='full')){
+                if(selection) selection.hidden=true;
+                selectedId.value='';
+              }
               renderWeekLabel(data.week);
               renderSummary(data.slots);
               renderLiveStatus(true,data.calendarSyncedAt);
               calendarEl.dataset.live='true';
               lastRefreshAt=Date.now();
             })
-            .catch(()=>{calendarEl.dataset.live='false';renderLiveStatus(false);/* statický anonymní kalendář zůstává jako fallback */})
+            .catch(()=>{
+              slots=[];
+              calendarEl.dataset.live='false';
+              calendarEl.innerHTML='<p class="calendar-empty" role="status">Dostupnost nyní nelze ověřit. Napište mi prosím přes kontaktní formulář.</p>';
+              if(weekSummary) weekSummary.textContent='Aktuální termíny se nepodařilo ověřit.';
+              if(selection) selection.hidden=true;
+              if(selectedId) selectedId.value='';
+              renderLiveStatus(false);
+            })
             .finally(()=>{refreshInFlight=null;});
           return refreshInFlight;
         };
 
-        bindSlotButtons();
+        slots=[];
+        calendarEl.innerHTML='<p class="calendar-empty" role="status">Dostupnost termínů ověřuji v Google Kalendáři…</p>';
+        if(selection) selection.hidden=true;
         refreshCapacity();
         window.setInterval(refreshCapacity,refreshIntervalMs);
         document.addEventListener('visibilitychange',()=>{

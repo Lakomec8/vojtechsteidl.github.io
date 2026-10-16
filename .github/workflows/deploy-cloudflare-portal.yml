@@ -89,3 +89,18 @@ jobs:
       - name: Deploy isolated public calendar capacity Worker
         working-directory: cloudflare-portal
         run: npx wrangler deploy --config wrangler.public-capacity.jsonc
+
+      - name: Smoke test publicly available calendar
+        shell: bash
+        run: |
+          set -euo pipefail
+          for attempt in 1 2 3 4 5; do
+            if curl -fsSL --max-time 20 'https://capacity.vojtechsteidl.eu/api/public-capacity' -o /tmp/public-capacity.json \
+               && jq -e '.calendarSyncedAt != null and (.slots | type == "array") and .week.startDate' /tmp/public-capacity.json > /dev/null; then
+              echo "Public calendar API is reachable and synchronized."
+              exit 0
+            fi
+            sleep 3
+          done
+          echo "Public calendar endpoint is not accessible with synchronized availability." >&2
+          exit 1

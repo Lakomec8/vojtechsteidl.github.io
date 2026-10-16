@@ -274,44 +274,7 @@ OFFER = r'''<section class="blue-goals" id="jak-to-funguje">
         </div>
         <div class="weekly-calendar-wrap">
           <div class="weekly-calendar timeline-calendar" id="weeklyCalendar" aria-live="polite">
-            <section class="calendar-day">
-              <div class="calendar-day-head"><div class="calendar-day-title"><span class="calendar-day-abbr">PO</span><span class="calendar-day-name">Pondělí</span></div><span class="calendar-day-count">2 sloty</span></div>
-              <div class="calendar-day-slots">
-                <article class="calendar-slot join"><div class="calendar-slot-time">16:30–17:30</div><strong>CERMAT přijímačky</strong><div class="calendar-slot-foot"><span class="capacity-text">2/4 míst</span><button type="button" class="calendar-slot-action" data-slot-id="mon-1630">Přidat se →</button></div></article>
-                <article class="calendar-slot free"><div class="calendar-slot-time">17:45–18:45</div><strong>Volný slot</strong><div class="calendar-slot-foot"><span class="capacity-text">volný termín</span><button type="button" class="calendar-slot-action" data-slot-id="mon-1745">Vybrat →</button></div></article>
-              </div>
-            </section>
-            <section class="calendar-day">
-              <div class="calendar-day-head"><div class="calendar-day-title"><span class="calendar-day-abbr">ÚT</span><span class="calendar-day-name">Úterý</span></div><span class="calendar-day-count">4 sloty</span></div>
-              <div class="calendar-day-slots">
-                <article class="calendar-slot join"><div class="calendar-slot-time">13:00–15:00</div><strong>VŠ matematika</strong><div class="calendar-slot-foot"><span class="capacity-text">1/4 míst</span><button type="button" class="calendar-slot-action" data-slot-id="tue-1300">Přidat se →</button></div></article>
-                <article class="calendar-slot free"><div class="calendar-slot-time">15:15–16:15</div><strong>Volný slot</strong><div class="calendar-slot-foot"><span class="capacity-text">volný termín</span><button type="button" class="calendar-slot-action" data-slot-id="tue-1515">Vybrat →</button></div></article>
-                <article class="calendar-slot free"><div class="calendar-slot-time">16:30–17:30</div><strong>Volný slot</strong><div class="calendar-slot-foot"><span class="capacity-text">volný termín</span><button type="button" class="calendar-slot-action" data-slot-id="tue-1630">Vybrat →</button></div></article>
-                <article class="calendar-slot join"><div class="calendar-slot-time">17:30–18:30</div><strong>CERMAT přijímačky</strong><div class="calendar-slot-foot"><span class="capacity-text">1/4 míst</span><button type="button" class="calendar-slot-action" data-slot-id="tue-1730">Přidat se →</button></div></article>
-              </div>
-            </section>
-            <section class="calendar-day">
-              <div class="calendar-day-head"><div class="calendar-day-title"><span class="calendar-day-abbr">ST</span><span class="calendar-day-name">Středa</span></div><span class="calendar-day-count">3 sloty</span></div>
-              <div class="calendar-day-slots">
-                <article class="calendar-slot join"><div class="calendar-slot-time">16:00–17:00</div><strong>2. ročník SŠ</strong><div class="calendar-slot-foot"><span class="capacity-text">1/4 míst</span><button type="button" class="calendar-slot-action" data-slot-id="wed-1600">Přidat se →</button></div></article>
-                <article class="calendar-slot join"><div class="calendar-slot-time">17:00–18:00</div><strong>Příprava na maturitu</strong><div class="calendar-slot-foot"><span class="capacity-text">1/4 míst</span><button type="button" class="calendar-slot-action" data-slot-id="wed-1700">Přidat se →</button></div></article>
-                <article class="calendar-slot join"><div class="calendar-slot-time">19:00–20:00</div><strong>9. ročník · AJ kurikulum</strong><div class="calendar-slot-foot"><span class="capacity-text">1/4 míst</span><button type="button" class="calendar-slot-action" data-slot-id="wed-1900">Přidat se →</button></div></article>
-              </div>
-            </section>
-            <section class="calendar-day flexible-day">
-              <div class="calendar-day-head"><div class="calendar-day-title"><span class="calendar-day-abbr">ČT</span><span class="calendar-day-name">Čtvrtek</span></div><span class="calendar-day-count">volno</span></div>
-              <div class="calendar-day-slots">
-                <article class="calendar-slot free flexible"><div class="calendar-flex-icon">✓</div><strong>VOLNO</strong><span class="calendar-flex-note">čas domluvíme</span><div class="calendar-slot-foot"><button type="button" class="calendar-slot-action" data-slot-id="thu-flex">Domluvit →</button></div></article>
-              </div>
-            </section>
-            <section class="calendar-day">
-              <div class="calendar-day-head"><div class="calendar-day-title"><span class="calendar-day-abbr">PÁ</span><span class="calendar-day-name">Pátek</span></div><span class="calendar-day-count">3 sloty</span></div>
-              <div class="calendar-day-slots">
-                <article class="calendar-slot join"><div class="calendar-slot-time">14:00–15:00</div><strong>VŠ matematika</strong><div class="calendar-slot-foot"><span class="capacity-text">1/4 míst</span><button type="button" class="calendar-slot-action" data-slot-id="fri-1400">Přidat se →</button></div></article>
-                <article class="calendar-slot free"><div class="calendar-slot-time">15:15–16:15</div><strong>Volný slot</strong><div class="calendar-slot-foot"><span class="capacity-text">volný termín</span><button type="button" class="calendar-slot-action" data-slot-id="fri-1515">Vybrat →</button></div></article>
-                <article class="calendar-slot free"><div class="calendar-slot-time">16:30–17:30</div><strong>Volný slot</strong><div class="calendar-slot-foot"><span class="capacity-text">volný termín</span><button type="button" class="calendar-slot-action" data-slot-id="fri-1630">Vybrat →</button></div></article>
-              </div>
-            </section>
+            <p class="calendar-empty" role="status">Dostupnost termínů ověřuji v Google Kalendáři…</p>
           </div>
         </div>
         <div class="slot-selection" id="slotSelection" hidden>

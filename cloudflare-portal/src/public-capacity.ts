@@ -101,7 +101,7 @@ function pragueParts(value: string): { weekday: number; time: string } | null {
 function publicJson(body: unknown, status = 200, request?: Request): Response {
   const headers = new Headers({
     "Content-Type": "application/json; charset=utf-8",
-    "Cache-Control": "public, max-age=60, s-maxage=120, stale-while-revalidate=300",
+    "Cache-Control": status >= 400 ? "no-store" : "public, max-age=60, s-maxage=120",
     "X-Content-Type-Options": "nosniff",
     "Referrer-Policy": "no-referrer",
   });
@@ -114,29 +114,24 @@ function publicJson(body: unknown, status = 200, request?: Request): Response {
 }
 
 async function mappedEvents(env: Env): Promise<EventRow[]> {
+  // Only explicit public series are shown; time is read from anonymized
+  // calendar occurrences instead of student-name matching.
   const result = await env.DB.prepare(`
-    SELECT
-      m.series_id,
-      e.google_event_id,
-      e.starts_at,
-      e.ends_at,
-      m.public_label,
-      m.capacity,
-      m.sort_order,
-      COALESCE((
-        SELECT COUNT(DISTINCT es.student_id)
-          FROM tutoring_calendar_event_students AS es
-         WHERE es.google_event_id = e.google_event_id
-      ), 0) AS people
-    FROM public_capacity_series AS m
-    JOIN tutoring_calendar_events AS e
-      ON e.google_event_id = m.series_id
-      OR e.google_event_id LIKE m.series_id || '_%'
-    WHERE m.enabled = 1
-      AND e.status = 'planned'
-      AND datetime(e.starts_at) >= datetime('now')
-      AND datetime(e.starts_at) < datetime('now', '+21 days')
-    ORDER BY m.sort_order, datetime(e.starts_at)
+    SELECT m.series_id, b.calendar_event_id AS google_event_id,
+           b.starts_at, b.ends_at, m.public_label, m.capacity, m.sort_order,
+           COALESCE(NULLIF((
+             SELECT COUNT(DISTINCT es.student_id)
+               FROM tutoring_calendar_event_students AS es
+              WHERE es.google_event_id = b.calendar_event_id
+           ), 0), m.fallback_people) AS people
+      FROM public_capacity_series AS m
+      JOIN public_calendar_busy AS b
+        ON b.calendar_event_id = m.series_id
+        OR b.calendar_event_id LIKE m.series_id || '_%'
+     WHERE m.enabled = 1
+       AND datetime(b.starts_at) >= datetime('now')
+       AND datetime(b.starts_at) < datetime('now', '+21 days')
+     ORDER BY m.sort_order, datetime(b.starts_at)
   `).all<EventRow>();
   return result.results || [];
 }
@@ -174,6 +169,37 @@ function minutes(value: string): number {
   return hour * 60 + minute;
 }
 
+export function isCalendarSyncFresh(value: string | null, now = new Date()): boolean {
+  if (!value) return false;
+  const ageMs = now.getTime() - new Date(value).getTime();
+  return Number.isFinite(ageMs) && ageMs >= -5 * 60_000 && ageMs <= 60 * 60_000;
+}
+
+function weekdayDate(week: WeekWindow, weekday: number): string {
+  const date = new Date(`${week.startDate}T12:00:00Z`);
+  date.setUTCDate(date.getUTCDate() + weekday - 1);
+  return dateKey(date.getUTCFullYear(), date.getUTCMonth() + 1, date.getUTCDate());
+}
+
+// Busy intervals spanning midnight are split by local Prague calendar day.
+export function busyMinutesOnDay(
+  event: { starts_at: string; ends_at: string },
+  localDay: string,
+): { start: number; end: number } | null {
+  const starts = pragueDate(event.starts_at);
+  const ends = pragueDate(event.ends_at);
+  if (!starts || !ends) return null;
+  const startDay = dateKey(starts.year, starts.month, starts.day);
+  const endDay = dateKey(ends.year, ends.month, ends.day);
+  if (localDay < startDay || localDay > endDay) return null;
+  const startTime = pragueParts(event.starts_at);
+  const endTime = pragueParts(event.ends_at);
+  if (!startTime || !endTime) return null;
+  const start = localDay === startDay ? minutes(startTime.time) : 0;
+  const end = localDay === endDay ? minutes(endTime.time) : 24 * 60;
+  return end > start ? { start, end } : null;
+}
+
 export function slotIsAvailable(
   startTime: string,
   endTime: string,
@@ -209,6 +235,9 @@ export async function handlePublicCapacityRequest(request: Request, env: Env): P
       allUpcomingRanges(env),
       calendarSyncedAt(env),
     ]);
+    if (!isCalendarSyncFresh(syncedAt)) {
+      return publicJson({ error: "calendar_not_synced" }, 503, request);
+    }
     const nextWeekBySeries = new Map<string, EventRow>();
     for (const event of events) {
       if (isInWeek(event.starts_at, week) && !nextWeekBySeries.has(event.series_id)) {
@@ -232,21 +261,12 @@ export async function handlePublicCapacityRequest(request: Request, env: Env): P
       }];
     });
 
-    const occupiedRanges = allUpcoming.filter((event) => isInWeek(event.starts_at, week)).flatMap((event) => {
-      const start = pragueParts(event.starts_at);
-      const end = pragueParts(event.ends_at);
-      if (!start || !end || start.weekday !== end.weekday) return [];
-      return [{
-        weekday: start.weekday,
-        start: minutes(start.time),
-        end: minutes(end.time),
-      }];
-    });
     const available = free
       .filter((slot) => {
-        const sameDayBusy = occupiedRanges
-          .filter((event) => event.weekday === slot.weekday)
-          .map((event) => ({ start: event.start, end: event.end }));
+        const day = weekdayDate(week, slot.weekday);
+        const sameDayBusy = allUpcoming
+          .map((event) => busyMinutesOnDay(event, day))
+          .filter((range): range is { start: number; end: number } => range !== null);
         return slotIsAvailable(
           slot.start_time,
           slot.end_time,
