@@ -12,6 +12,7 @@ When the `GOOGLE_CALENDAR_ICS_URL` Worker secret is configured, each run first:
 - links every matched participant, including group lessons such as `Adam a Kryštof`,
 - updates moved/rescheduled events,
 - marks planned D1 events as cancelled when they disappear from the live calendar.
+- stores anonymized busy intervals for every non-cancelled, non-transparent event so the public availability view cannot offer a time already occupied in Google Calendar; event titles and private details are never exposed by the public API.
 
 It then:
 

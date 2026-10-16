@@ -237,6 +237,7 @@ async function syncAndSettle(env: TutoringEnv): Promise<void> {
     console.log(JSON.stringify({
       event: "tutoring_calendar_ingestion",
       imported: syncResult.imported,
+      busy: syncResult.busy,
       cancelled: syncResult.cancelled,
     }));
   }

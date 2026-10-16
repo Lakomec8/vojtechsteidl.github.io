@@ -154,17 +154,47 @@ async function freeSlots(env: Env): Promise<FreeSlotRow[]> {
 async function allUpcomingRanges(env: Env): Promise<Array<{ starts_at: string; ends_at: string }>> {
   const result = await env.DB.prepare(`
     SELECT starts_at, ends_at
-      FROM tutoring_calendar_events
-     WHERE status = 'planned'
-       AND datetime(starts_at) >= datetime('now')
+      FROM public_calendar_busy
+     WHERE datetime(starts_at) >= datetime('now', '-1 day')
        AND datetime(starts_at) < datetime('now', '+21 days')
   `).all<{ starts_at: string; ends_at: string }>();
   return result.results || [];
 }
 
+async function calendarSyncedAt(env: Env): Promise<string | null> {
+  const row = await env.DB.prepare(`
+    SELECT MAX(last_synced_at) AS last_synced_at
+      FROM public_calendar_busy
+  `).first<{ last_synced_at: string | null }>();
+  return row?.last_synced_at || null;
+}
+
 function minutes(value: string): number {
   const [hour, minute] = value.split(":").map(Number);
   return hour * 60 + minute;
+}
+
+export function slotIsAvailable(
+  startTime: string,
+  endTime: string,
+  occupied: Array<{ start: number; end: number }>,
+  flexible = false,
+): boolean {
+  const slotStart = minutes(startTime);
+  const slotEnd = minutes(endTime);
+  const overlaps = occupied
+    .filter((event) => slotStart < event.end && slotEnd > event.start)
+    .sort((a, b) => a.start - b.start);
+
+  if (!flexible) return overlaps.length === 0;
+
+  const minimumLessonMinutes = 60;
+  let cursor = slotStart;
+  for (const event of overlaps) {
+    if (Math.max(slotStart, event.start) - cursor >= minimumLessonMinutes) return true;
+    cursor = Math.max(cursor, Math.min(slotEnd, event.end));
+  }
+  return slotEnd - cursor >= minimumLessonMinutes;
 }
 
 export async function handlePublicCapacityRequest(request: Request, env: Env): Promise<Response | null> {
@@ -173,10 +203,11 @@ export async function handlePublicCapacityRequest(request: Request, env: Env): P
 
   try {
     const week = nextWeekWindow();
-    const [events, free, allUpcoming] = await Promise.all([
+    const [events, free, allUpcoming, syncedAt] = await Promise.all([
       mappedEvents(env),
       freeSlots(env),
       allUpcomingRanges(env),
+      calendarSyncedAt(env),
     ]);
     const nextWeekBySeries = new Map<string, EventRow>();
     for (const event of events) {
@@ -213,14 +244,15 @@ export async function handlePublicCapacityRequest(request: Request, env: Env): P
     });
     const available = free
       .filter((slot) => {
-        const slotStart = minutes(slot.start_time);
-        const slotEnd = minutes(slot.end_time);
-        const overlaps = occupiedRanges.filter((event) =>
-          event.weekday === slot.weekday &&
-          slotStart < event.end &&
-          slotEnd > event.start
-        ).length;
-        return overlaps < 2;
+        const sameDayBusy = occupiedRanges
+          .filter((event) => event.weekday === slot.weekday)
+          .map((event) => ({ start: event.start, end: event.end }));
+        return slotIsAvailable(
+          slot.start_time,
+          slot.end_time,
+          sameDayBusy,
+          slot.display_mode === "flexible",
+        );
       })
       .map((slot) => ({
         id: slot.id,
@@ -240,6 +272,7 @@ export async function handlePublicCapacityRequest(request: Request, env: Env): P
 
     return publicJson({
       updatedAt: new Date().toISOString(),
+      calendarSyncedAt: syncedAt,
       refreshMinutes: 15,
       week: { startDate: week.startDate, endDate: week.endDate },
       days: DAY_NAMES.slice(1,6),

@@ -24,7 +24,11 @@
   function renderCompact(slots) {
     if (!compactEl) return;
     const visible = slots.filter((slot) => slot.kind !== "full").slice(0, 3);
-    if (!visible.length) return;
+    if (!visible.length) {
+      compactEl.innerHTML = '<p class="compact-capacity-empty">Následující týden je momentálně bez volné kapacity.</p>';
+      compactEl.dataset.live = "true";
+      return;
+    }
     compactEl.innerHTML = visible.map((slot) => {
       const when = [slot.day, slot.time].filter(Boolean).join(" · ");
       return `<a class="compact-capacity-card" href="/skupinove-doucovani-matematiky/">
@@ -93,7 +97,7 @@
   }
 
   function validSlots(slots) {
-    return Array.isArray(slots) && slots.length > 0 && slots.every((slot) =>
+    return Array.isArray(slots) && slots.every((slot) =>
       typeof slot.id === "string" &&
       typeof slot.day === "string" &&
       typeof slot.time === "string" &&
@@ -126,12 +130,14 @@
     weekSummary.textContent = `${free} ${free === 1 ? "volný termín" : free >= 2 && free <= 4 ? "volné termíny" : "volných termínů"} · ${joinable} ${joinable === 1 ? "skupina s místem" : joinable >= 2 && joinable <= 4 ? "skupiny s místem" : "skupin s místem"}`;
   }
 
-  function renderLiveStatus(isLive) {
+  function renderLiveStatus(isLive, syncedAt) {
     if (!liveStatus) return;
-    liveStatus.textContent = isLive
-      ? `Živá data · aktualizováno ${new Intl.DateTimeFormat("cs-CZ", { hour: "2-digit", minute: "2-digit" }).format(new Date())}`
-      : "Dočasně zobrazený záložní rozvrh";
-    liveStatus.dataset.state = isLive ? "live" : "fallback";
+    const synced = typeof syncedAt === "string" ? new Date(syncedAt) : null;
+    const hasTimestamp = synced && !Number.isNaN(synced.getTime());
+    liveStatus.textContent = isLive && hasTimestamp
+      ? `Google Kalendář · synchronizováno ${new Intl.DateTimeFormat("cs-CZ", { hour: "2-digit", minute: "2-digit" }).format(synced)}`
+      : isLive ? "Google Kalendář · čekám na první synchronizaci" : "Dočasně zobrazený záložní rozvrh";
+    liveStatus.dataset.state = isLive && hasTimestamp ? "live" : "fallback";
   }
 
   function refreshCapacity() {
@@ -150,7 +156,7 @@
         renderFull(data.slots, data.week);
         renderWeekLabel(data.week);
         renderSummary(data.slots);
-        renderLiveStatus(true);
+        renderLiveStatus(true, data.calendarSyncedAt);
         lastRefreshAt = Date.now();
       })
       .catch(() => {

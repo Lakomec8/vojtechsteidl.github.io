@@ -23,6 +23,12 @@ type CalendarOccurrence = {
   studentIds: string[];
 };
 
+type BusyOccurrence = {
+  calendarEventId: string;
+  startsAt: string;
+  endsAt: string;
+};
+
 const LOOKBACK_MS = 2 * 24 * 60 * 60 * 1000;
 const LOOKAHEAD_MS = 120 * 24 * 60 * 60 * 1000;
 const GOOGLE_UID_SUFFIX = "@google.com";
@@ -60,6 +66,10 @@ function isCancelled(event: IcalEvent): boolean {
   return String(event.component.getFirstPropertyValue("status") || "").toUpperCase() === "CANCELLED";
 }
 
+function isTransparent(event: IcalEvent): boolean {
+  return String(event.component.getFirstPropertyValue("transp") || "").toUpperCase() === "TRANSPARENT";
+}
+
 function matchesAnyStudent(event: IcalEvent, students: TutoringStudent[]): boolean {
   const summary = String(event.summary || "").trim();
   return students.some((student) => containsName(summary, student.display_name));
@@ -93,7 +103,7 @@ function occurrenceFromDates(
   };
 }
 
-function expandCalendar(ics: string, students: TutoringStudent[], rangeStart: Date, rangeEnd: Date): CalendarOccurrence[] {
+function calendarEvents(ics: string): IcalEvent[] {
   const root = new ICAL.Component(ICAL.parse(ics));
 
   for (const timezoneComponent of root.getAllSubcomponents("vtimezone")) {
@@ -117,8 +127,12 @@ function expandCalendar(ics: string, students: TutoringStudent[], rangeStart: Da
     if (master) master.relateException(exception);
   }
 
+  return [...masters.values()];
+}
+
+function expandCalendar(events: IcalEvent[], students: TutoringStudent[], rangeStart: Date, rangeEnd: Date): CalendarOccurrence[] {
   const occurrences = new Map<string, CalendarOccurrence>();
-  for (const event of masters.values()) {
+  for (const event of events) {
     if (isCancelled(event) || !matchesAnyStudent(event, students)) continue;
 
     if (!event.isRecurring()) {
@@ -146,6 +160,51 @@ function expandCalendar(ics: string, students: TutoringStudent[], rangeStart: Da
         details.recurrenceId,
       );
       if (occurrence) occurrences.set(occurrence.googleEventId, occurrence);
+    }
+  }
+
+  return [...occurrences.values()].sort((a, b) => a.startsAt.localeCompare(b.startsAt));
+}
+
+function busyOccurrence(
+  event: IcalEvent,
+  startsAt: Date,
+  endsAt: Date,
+  recurrenceId?: IcalTime | null,
+): BusyOccurrence | null {
+  if (isCancelled(event) || isTransparent(event)) return null;
+  if (Number.isNaN(startsAt.getTime()) || Number.isNaN(endsAt.getTime()) || endsAt <= startsAt) return null;
+  return {
+    calendarEventId: eventIdForOccurrence(event, recurrenceId),
+    startsAt: startsAt.toISOString(),
+    endsAt: endsAt.toISOString(),
+  };
+}
+
+function expandBusyCalendar(events: IcalEvent[], rangeStart: Date, rangeEnd: Date): BusyOccurrence[] {
+  const occurrences = new Map<string, BusyOccurrence>();
+  for (const event of events) {
+    if (isCancelled(event) || isTransparent(event)) continue;
+
+    if (!event.isRecurring()) {
+      const startsAt = event.startDate.toJSDate();
+      const endsAt = event.endDate.toJSDate();
+      if (endsAt < rangeStart || startsAt > rangeEnd) continue;
+      const occurrence = busyOccurrence(event, startsAt, endsAt);
+      if (occurrence) occurrences.set(occurrence.calendarEventId, occurrence);
+      continue;
+    }
+
+    const iterator = event.iterator();
+    for (let next = iterator.next(); next; next = iterator.next()) {
+      const occurrenceStart = next.toJSDate();
+      if (occurrenceStart > rangeEnd) break;
+      const details = event.getOccurrenceDetails(next);
+      const startsAt = details.startDate.toJSDate();
+      const endsAt = details.endDate.toJSDate();
+      if (endsAt < rangeStart) continue;
+      const occurrence = busyOccurrence(details.item, startsAt, endsAt, details.recurrenceId);
+      if (occurrence) occurrences.set(occurrence.calendarEventId, occurrence);
     }
   }
 
@@ -205,9 +264,47 @@ async function upsertOccurrence(env: Env, occurrence: CalendarOccurrence, synced
   }
 }
 
-export async function syncGoogleCalendarToD1(env: CalendarEnv): Promise<{ imported: number; cancelled: number; skipped: boolean }> {
+async function syncBusyOccurrences(
+  env: Env,
+  occurrences: BusyOccurrence[],
+  rangeStart: Date,
+  rangeEnd: Date,
+  syncedAt: string,
+): Promise<void> {
+  const statements = occurrences.map((occurrence) => env.DB.prepare(`
+      INSERT INTO public_calendar_busy (calendar_event_id, starts_at, ends_at, last_synced_at)
+      VALUES (?1, ?2, ?3, ?4)
+      ON CONFLICT(calendar_event_id) DO UPDATE SET
+        starts_at = excluded.starts_at,
+        ends_at = excluded.ends_at,
+        last_synced_at = excluded.last_synced_at
+    `).bind(
+      occurrence.calendarEventId,
+      occurrence.startsAt,
+      occurrence.endsAt,
+      syncedAt,
+    ));
+  for (let offset = 0; offset < statements.length; offset += 100) {
+    await env.DB.batch(statements.slice(offset, offset + 100));
+  }
+
+  await env.DB.prepare(`
+    DELETE FROM public_calendar_busy
+     WHERE last_synced_at <> ?1
+       AND starts_at <= ?2
+       AND ends_at >= ?3
+  `).bind(syncedAt, rangeEnd.toISOString(), rangeStart.toISOString()).run();
+
+  await env.DB.prepare(`
+    DELETE FROM public_calendar_busy
+     WHERE ends_at < ?1
+        OR starts_at > ?2
+  `).bind(rangeStart.toISOString(), rangeEnd.toISOString()).run();
+}
+
+export async function syncGoogleCalendarToD1(env: CalendarEnv): Promise<{ imported: number; busy: number; cancelled: number; skipped: boolean }> {
   const feedUrl = String(env.GOOGLE_CALENDAR_ICS_URL || "").trim();
-  if (!feedUrl) return { imported: 0, cancelled: 0, skipped: true };
+  if (!feedUrl) return { imported: 0, busy: 0, cancelled: 0, skipped: true };
 
   const now = new Date();
   const rangeStart = new Date(now.getTime() - LOOKBACK_MS);
@@ -222,12 +319,15 @@ export async function syncGoogleCalendarToD1(env: CalendarEnv): Promise<{ import
   }
 
   const [ics, students] = await Promise.all([response.text(), activeStudents(env)]);
-  const occurrences = expandCalendar(ics, students, rangeStart, rangeEnd);
+  const events = calendarEvents(ics);
+  const occurrences = expandCalendar(events, students, rangeStart, rangeEnd);
+  const busyOccurrences = expandBusyCalendar(events, rangeStart, rangeEnd);
   const seenIds = new Set(occurrences.map((occurrence) => occurrence.googleEventId));
 
   for (const occurrence of occurrences) {
     await upsertOccurrence(env, occurrence, syncedAt);
   }
+  await syncBusyOccurrences(env, busyOccurrences, rangeStart, rangeEnd, syncedAt);
 
   const planned = await env.DB.prepare(`
     SELECT google_event_id
@@ -249,5 +349,5 @@ export async function syncGoogleCalendarToD1(env: CalendarEnv): Promise<{ import
     cancelled += Number(result.meta.changes || 0);
   }
 
-  return { imported: occurrences.length, cancelled, skipped: false };
+  return { imported: occurrences.length, busy: busyOccurrences.length, cancelled, skipped: false };
 }

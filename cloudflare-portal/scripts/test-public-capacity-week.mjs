@@ -1,4 +1,4 @@
-import { nextWeekWindow } from "../src/public-capacity.ts";
+import { nextWeekWindow, slotIsAvailable } from "../src/public-capacity.ts";
 
 const cases = [
   ["2026-10-16T12:00:00Z", "2026-10-19", "2026-10-23"],
@@ -13,4 +13,18 @@ for (const [now, expectedStart, expectedEnd] of cases) {
   }
 }
 
-console.log("Public capacity next-week calculation is valid.");
+const availabilityCases = [
+  ["15:15", "16:15", [], false, true],
+  ["15:15", "16:15", [{ start: 15 * 60 + 30, end: 16 * 60 }], false, false],
+  ["15:00", "19:00", [{ start: 16 * 60, end: 17 * 60 }], true, true],
+  ["15:00", "19:00", [{ start: 15 * 60, end: 18 * 60 + 15 }], true, false],
+];
+
+for (const [start, end, occupied, flexible, expected] of availabilityCases) {
+  const actual = slotIsAvailable(start, end, occupied, flexible);
+  if (actual !== expected) {
+    throw new Error(JSON.stringify({ start, end, occupied, flexible, expected, actual }));
+  }
+}
+
+console.log("Public capacity next-week calculation and busy-slot filtering are valid.");
