@@ -70,6 +70,19 @@ type LeadRow = {
   scheduled_week: string | null;
   prospect_label: string | null;
 };
+type PublicBookingRow = {
+  confirmation_code: string;
+  booking_type: "diagnostic_30" | "lesson_60";
+  starts_at: string;
+  ends_at: string;
+  name: string;
+  email: string;
+  grade: string;
+  topic: string;
+  note: string;
+  status: "confirmed" | "cancelled";
+  created_at: string;
+};
 type SyncEvent = {
   id: string;
   summary: string;
@@ -187,9 +200,10 @@ async function dashboardData(env: Env): Promise<{
   events: CalendarRow[];
   expenses: ExpenseRow[];
   leads: LeadRow[];
+  bookings: PublicBookingRow[];
   sync: SyncRow | null;
 }> {
-  const [students, lessons, events, expenses, leads, sync] = await Promise.all([
+  const [students, lessons, events, expenses, leads, bookings, sync] = await Promise.all([
     env.DB.prepare("SELECT id, display_name, hourly_rate, active, accent FROM tutoring_students ORDER BY active DESC, display_name COLLATE NOCASE").all<StudentRow>(),
     env.DB.prepare("SELECT id, google_event_id, student_id, student_label, lesson_date, starts_at, ends_at, duration_minutes, hourly_rate, amount, payment_status, paid_at, payment_method, source FROM tutoring_lessons ORDER BY lesson_date DESC, id DESC").all<LessonRow>(),
     env.DB.prepare(`SELECT e.google_event_id, e.student_id, e.summary, e.starts_at, e.ends_at,
@@ -207,6 +221,10 @@ async function dashboardData(env: Env): Promise<{
                       LEFT JOIN tutoring_lead_trials AS t ON t.lead_id = l.id
                      ORDER BY datetime(l.first_seen_at) DESC
                      LIMIT 300`).all<LeadRow>(),
+    env.DB.prepare(`SELECT confirmation_code, booking_type, starts_at, ends_at, name, email, grade, topic, note, status, created_at
+                      FROM public_bookings
+                     ORDER BY datetime(starts_at) DESC
+                     LIMIT 100`).all<PublicBookingRow>(),
     env.DB.prepare("SELECT last_synced_at, completed_events, planned_events, note FROM tutoring_sync_state WHERE id = 1").first<SyncRow>(),
   ]);
   return {
@@ -215,12 +233,13 @@ async function dashboardData(env: Env): Promise<{
     events: events.results || [],
     expenses: expenses.results || [],
     leads: leads.results || [],
+    bookings: bookings.results || [],
     sync,
   };
 }
 
 function renderDashboard(data: Awaited<ReturnType<typeof dashboardData>>, email: string): Response {
-  const { students, lessons, events, expenses, leads, sync } = data;
+  const { students, lessons, events, expenses, leads, bookings, sync } = data;
   const paidLessons = lessons.filter((lesson) => lesson.payment_status === "paid");
   const revenue = paidLessons.reduce((sum, lesson) => sum + Number(lesson.amount), 0);
   const countedTeachingSessions = new Set<string>();
@@ -328,6 +347,16 @@ function renderDashboard(data: Awaited<ReturnType<typeof dashboardData>>, email:
       <td>${esc(hours(lesson.duration_minutes))}</td>
       <td class="money">${esc(money(lesson.amount))}</td>
       <td><span class="pill success">Uhrazeno</span></td>
+    </tr>`).join("");
+
+  const bookingRows = bookings.map((booking) => `
+    <tr>
+      <td><span class="status-dot ${booking.status === "confirmed" ? "paid" : "baseline"}"></span>${esc(dateLabel(booking.starts_at, true))}<small>${esc(booking.confirmation_code)}</small></td>
+      <td><strong>${esc(booking.name)}</strong><small>${esc(booking.email)}</small></td>
+      <td>${esc(booking.booking_type === "diagnostic_30" ? "30 min zdarma" : "60 min · 450 Kč")}</td>
+      <td><strong>${esc(booking.grade)}</strong><small>${esc(booking.topic)}</small></td>
+      <td>${esc(booking.note || "—")}</td>
+      <td>${esc(booking.status === "confirmed" ? "Potvrzeno" : "Zrušeno")}</td>
     </tr>`).join("");
 
   const studentRows = studentStats.map((student) => `
@@ -476,7 +505,7 @@ function renderDashboard(data: Awaited<ReturnType<typeof dashboardData>>, email:
 
       <section class="view" id="finance"><div class="kpis"><article class="card kpi"><span class="kpi-label">Příjmy</span><strong>${esc(money(revenue))}</strong><small>${paidLessons.length} evidovaných úhrad</small></article><article class="card kpi"><span class="kpi-label">Výdaje</span><strong>${esc(money(deductibleExpenses))}</strong><small>${expenses.length ? expenses.length + " záznamů" : "Zatím bez záznamů"}</small></article><article class="card kpi"><span class="kpi-label">Pohledávky</span><strong>${esc(money(unpaid))}</strong><small>Žádná po splatnosti</small></article><article class="card kpi"><span class="kpi-label">Průměr / hodina</span><strong>${esc(money(Math.round(revenue / Math.max(1, totalMinutes / 60))))}</strong><small>Včetně historického baseline</small></article></div><article class="card wide-card"><div class="table-head"><div><h2>Daňová evidence příjmů</h2><span style="font-size:12px;color:var(--muted)">Dokončená lekce = úhrada převodem v den lekce</span></div><span class="chip">Google ID + student bez duplicit</span></div><table><thead><tr><th>Datum</th><th>Plátce / zdroj</th><th>Délka</th><th>Částka</th><th>Úhrada</th></tr></thead><tbody>${lessonRows}</tbody></table></article></section>
 
-      <section class="view" id="calendar"><div class="content-grid"><article class="card section"><div class="section-head"><div><h2>Časová osa · ${esc(monthName(currentMonth))}</h2><p>Dokončené a budoucí lekce z Google Calendar</p></div><span class="chip">${timelineEvents.length} událostí</span></div><div class="timeline">${timeline || '<div class="empty">V tomto měsíci nejsou žádné lekce.</div>'}</div></article><article class="card section"><div class="section-head"><div><h2>Stav synchronizace</h2><p>Google event ID je unikátní klíč</p></div><span class="sync-dot"></span></div><div class="tax-breakdown"><div class="tax-row"><span>Dokončeno</span><strong>${completedEvents.length}</strong></div><div class="tax-row"><span>Plánováno</span><strong>${plannedEvents.length}</strong></div><div class="tax-row"><span>Duplicitní lekce</span><strong>0</strong></div><div class="tax-row"><span>Poslední sync</span><strong>${esc(sync ? dateLabel(sync.last_synced_at, true) : "—")}</strong></div></div><div class="note" style="margin-top:20px">Budoucí události jsou pouze v časové ose. Do lekcí a příjmů se zapíší až po skončení.</div></article></div></section>
+      <section class="view" id="calendar"><div class="content-grid"><article class="card section"><div class="section-head"><div><h2>Časová osa · ${esc(monthName(currentMonth))}</h2><p>Dokončené a budoucí lekce z Google Calendar</p></div><span class="chip">${timelineEvents.length} událostí</span></div><div class="timeline">${timeline || '<div class="empty">V tomto měsíci nejsou žádné lekce.</div>'}</div></article><article class="card section"><div class="section-head"><div><h2>Stav synchronizace</h2><p>Google event ID je unikátní klíč</p></div><span class="sync-dot"></span></div><div class="tax-breakdown"><div class="tax-row"><span>Dokončeno</span><strong>${completedEvents.length}</strong></div><div class="tax-row"><span>Plánováno</span><strong>${plannedEvents.length}</strong></div><div class="tax-row"><span>Webové rezervace</span><strong>${bookings.filter((booking) => booking.status === "confirmed").length}</strong></div><div class="tax-row"><span>Poslední sync</span><strong>${esc(sync ? dateLabel(sync.last_synced_at, true) : "—")}</strong></div></div><div class="note" style="margin-top:20px">Budoucí události jsou pouze v časové ose. Do lekcí a příjmů se zapíší až po skončení.</div></article></div><article class="card wide-card"><div class="table-head"><div><h2>Rezervace z webu</h2><span style="font-size:12px;color:var(--muted)">Úvodní diagnostiky a placené online lekce</span></div><span class="chip">${bookings.length} rezervací</span></div><table><thead><tr><th>Termín</th><th>Zájemce</th><th>Typ</th><th>Úroveň / téma</th><th>Poznámka</th><th>Stav</th></tr></thead><tbody>${bookingRows || '<tr><td colspan="6">Zatím bez webových rezervací.</td></tr>'}</tbody></table></article></section>
 
       <section class="view" id="leads">
         <div class="kpis">

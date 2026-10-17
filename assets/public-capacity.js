@@ -1,133 +1,123 @@
 (() => {
-  const compactEl = document.getElementById("compactCapacity");
   const calendarEl = document.getElementById("weeklyCalendar");
-  if (!compactEl && !calendarEl) return;
-
-  const selection = document.getElementById("slotSelection");
-  const selectedTitle = document.getElementById("selectedSlotTitle");
-  const selectedMeta = document.getElementById("selectedSlotMeta");
-  const selectedId = document.getElementById("selectedSlotId");
-  const selectedInfo = document.getElementById("selectedSlotInfo");
+  if (!calendarEl) return;
+  const API_BASE = window.__CAPACITY_API_BASE || "https://capacity.vojtechsteidl.eu";
+  const PRAGUE_TIME_ZONE = "Europe/Prague";
+  const dayOrder = ["Pondělí", "Úterý", "Středa", "Čtvrtek", "Pátek"];
+  const dayAbbreviations = { Pondělí: "PO", Úterý: "ÚT", Středa: "ST", Čtvrtek: "ČT", Pátek: "PÁ" };
+  const refreshIntervalMs = 15 * 60 * 1000;
+  const timelineStart = 13 * 60;
+  const timelineEnd = 20 * 60 + 30;
+  const timelineMinutes = timelineEnd - timelineStart;
   const weekLabel = document.getElementById("calendarWeekLabel");
   const weekSummary = document.getElementById("calendarWeekSummary");
   const liveStatus = document.getElementById("calendarLiveStatus");
-  const dayOrder = ["Pondělí", "Úterý", "Středa", "Čtvrtek", "Pátek"];
-  const refreshIntervalMs = 15 * 60 * 1000;
-  let currentSlots = [];
+  const form = document.getElementById("slotBookingForm");
+  const status = document.getElementById("slotBookingStatus");
+  const typeInputs = form ? Array.from(form.querySelectorAll('input[name="booking_type"]')) : [];
+  const timeSelect = document.getElementById("bookingStartAt");
+  const typeSummary = document.getElementById("bookingTypeSummary");
+  let currentData = null;
   let refreshInFlight = null;
   let lastRefreshAt = 0;
 
   const esc = (value) => String(value ?? "").replace(/[&<>"']/g, (character) => ({
     "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#039;",
   })[character] || character);
-
-  function renderCompact(slots) {
-    if (!compactEl) return;
-    const visible = slots.filter((slot) => slot.kind !== "full").slice(0, 3);
-    if (!visible.length) {
-      compactEl.innerHTML = '<p class="compact-capacity-empty">Následující týden je momentálně bez volné kapacity.</p>';
-      compactEl.dataset.live = "true";
-      return;
-    }
-    compactEl.innerHTML = visible.map((slot) => {
-      const when = [slot.day, slot.time].filter(Boolean).join(" · ");
-      return `<a class="compact-capacity-card" href="/skupinove-doucovani-matematiky/">
-        <small>${esc(when)}</small>
-        <strong>${esc(slot.title)}</strong>
-        <span>${slot.flexible ? "Volno" : slot.kind === "free" ? "Volný termín" : `${Number(slot.people)}/${Number(slot.capacity)} míst`}</span>
-      </a>`;
-    }).join("");
-    compactEl.dataset.live = "true";
-  }
-
-  function selectSlot(slot) {
-    if (!selection || !selectedTitle || !selectedMeta || !selectedId || !selectedInfo) return;
-    selectedTitle.textContent = slot.title;
-    const capacityText = slot.flexible ? "" : (slot.kind === "free" ? "volný termín" : `${slot.people}/${slot.capacity} míst`);
-    selectedMeta.textContent = [slot.day, slot.time, capacityText].filter(Boolean).join(" · ");
-    selectedId.value = slot.id;
-    selectedInfo.value = [slot.day, slot.time, slot.title, capacityText].filter(Boolean).join(" | ");
-    selection.hidden = false;
-    selection.scrollIntoView({ behavior: "smooth", block: "nearest" });
-  }
+  const minutes = (value) => {
+    const [hour, minute] = String(value).split(":").map(Number);
+    return hour * 60 + minute;
+  };
+  const parseTimeRange = (value) => {
+    const [start, end] = String(value).split("–");
+    if (!start || !end) return null;
+    const startMinute = minutes(start);
+    const endMinute = minutes(end);
+    return Number.isFinite(startMinute) && Number.isFinite(endMinute) && endMinute > startMinute
+      ? { start: startMinute, end: endMinute }
+      : null;
+  };
 
   function dateForDay(week, dayIndex) {
     if (typeof week?.startDate !== "string") return "";
     const [year, month, day] = week.startDate.split("-").map(Number);
     if (!year || !month || !day) return "";
-    const date = new Date(Date.UTC(year, month - 1, day + dayIndex, 12));
-    return new Intl.DateTimeFormat("cs-CZ", {
-      timeZone: "Europe/Prague",
-      day: "numeric",
-      month: "numeric",
-    }).format(date);
+    return new Intl.DateTimeFormat("cs-CZ", { timeZone: PRAGUE_TIME_ZONE, day: "numeric", month: "numeric" })
+      .format(new Date(Date.UTC(year, month - 1, day + dayIndex, 12)));
   }
 
-  function renderFull(slots, week) {
-    if (!calendarEl) return;
-    currentSlots = slots;
+  function renderTimeline(slots, week) {
+    const hourMarks = [];
+    for (let minute = timelineStart; minute <= timelineEnd; minute += 60) hourMarks.push(minute);
     calendarEl.innerHTML = dayOrder.map((day, dayIndex) => {
       const daySlots = slots.filter((slot) => slot.day === day);
-      const body = daySlots.length ? daySlots.map((slot) => {
-        const state = slot.kind === "free" ? "free" : slot.kind === "full" ? "full" : "join";
-        const action = state === "free" ? (slot.flexible ? "Domluvit" : "Vybrat slot") : state === "full" ? "Plno" : "Přidat se";
-        const control = state === "full"
-          ? '<span class="calendar-slot-action disabled">Plno</span>'
-          : `<button type="button" class="calendar-slot-action" data-public-slot-id="${esc(slot.id)}">${esc(action)}</button>`;
-        const time = slot.time ? `<div class="calendar-slot-time">${esc(slot.time)}</div>` : "";
-        return `<article class="calendar-slot ${state}">
-          ${time}
-          <strong>${esc(slot.title)}</strong>
-          <div class="calendar-slot-foot">${slot.flexible ? "" : `<span>${Number(slot.people)}/${Number(slot.capacity)}</span>`}${control}</div>
-        </article>`;
-      }).join("") : '<div class="calendar-empty">—</div>';
       const date = dateForDay(week, dayIndex);
-      return `<section class="calendar-day"><h3>${esc(day)}${date ? `<span class="calendar-day-date">${esc(date)}</span>` : ""}</h3><div class="calendar-day-slots">${body}</div></section>`;
+      const marks = hourMarks.map((minute) => {
+        const top = ((minute - timelineStart) / timelineMinutes) * 100;
+        const label = `${Math.floor(minute / 60).toString().padStart(2, "0")}:00`;
+        return `<span class="calendar-hour" style="top:${top}%">${esc(label)}</span>`;
+      }).join("");
+      const events = daySlots.map((slot) => {
+        const range = parseTimeRange(slot.time);
+        if (!range) return "";
+        const start = Math.max(timelineStart, range.start);
+        const end = Math.min(timelineEnd, range.end);
+        if (end <= start) return "";
+        const top = ((start - timelineStart) / timelineMinutes) * 100;
+        const height = ((end - start) / timelineMinutes) * 100;
+        const state = slot.kind === "full" ? "full" : "join";
+        const occupancy = state === "join" ? `${Number(slot.people)}/${Number(slot.capacity)} míst` : "obsazeno";
+        return `<article class="calendar-event ${state}" style="top:${top}%;height:calc(${height}% - 3px)">
+          <span class="calendar-event-time">${esc(slot.time)}</span><strong>${esc(slot.title)}</strong><small>${esc(occupancy)}</small>
+        </article>`;
+      }).join("");
+      return `<section class="calendar-day">
+        <div class="calendar-day-head"><div class="calendar-day-title"><span class="calendar-day-abbr">${esc(dayAbbreviations[day])}</span><span class="calendar-day-name">${esc(day)} · ${esc(date)}</span></div><span class="calendar-day-count">${daySlots.length} ${daySlots.length === 1 ? "lekce" : "lekcí"}</span></div>
+        <div class="calendar-time-track" aria-label="${esc(day)} ${esc(date)}">${marks}${events}</div>
+      </section>`;
     }).join("");
     calendarEl.dataset.live = "true";
   }
 
-  if (calendarEl) {
-    calendarEl.addEventListener("click", (event) => {
-      const target = event.target instanceof Element ? event.target.closest("[data-public-slot-id]") : null;
-      if (!target) return;
-      const slot = currentSlots.find((item) => item.id === target.getAttribute("data-public-slot-id"));
-      if (slot) selectSlot(slot);
-    });
+  const selectedType = () => typeInputs.find((input) => input.checked)?.value || "diagnostic_30";
+
+  function formatBookingOption(option) {
+    const date = new Intl.DateTimeFormat("cs-CZ", { timeZone: PRAGUE_TIME_ZONE, weekday: "long", day: "numeric", month: "numeric" })
+      .format(new Date(option.startAt));
+    return `${date} · ${option.time}`;
   }
 
-  function validSlots(slots) {
-    return Array.isArray(slots) && slots.every((slot) =>
-      typeof slot.id === "string" &&
-      typeof slot.day === "string" &&
-      typeof slot.time === "string" &&
-      typeof slot.title === "string" &&
-      ["free", "join", "full"].includes(slot.kind) &&
-      Number.isFinite(Number(slot.people)) &&
-      Number.isFinite(Number(slot.capacity))
-    );
+  function renderBookingOptions() {
+    if (!timeSelect || !currentData) return;
+    const type = selectedType();
+    const options = currentData.availability?.[type] || [];
+    const previous = timeSelect.value;
+    timeSelect.innerHTML = `<option value="">${options.length ? "Vyberte volný čas" : "Pro tento typ teď není volný čas"}</option>` + options.map((option) =>
+      `<option value="${esc(option.startAt)}">${esc(formatBookingOption(option))}</option>`
+    ).join("");
+    if (options.some((option) => option.startAt === previous)) timeSelect.value = previous;
+    timeSelect.disabled = options.length === 0;
+    if (typeSummary) {
+      const configuration = currentData.bookingTypes?.[type];
+      typeSummary.textContent = configuration ? `${configuration.duration} minut · ${configuration.price} · online` : "";
+    }
   }
 
   function renderWeekLabel(week) {
     if (!weekLabel || typeof week?.startDate !== "string" || typeof week?.endDate !== "string") return;
     const format = (value, includeYear) => {
       const [year, month, day] = value.split("-").map(Number);
-      if (!year || !month || !day) return value;
-      return new Intl.DateTimeFormat("cs-CZ", {
-        timeZone: "Europe/Prague",
-        day: "numeric",
-        month: "numeric",
-        ...(includeYear ? { year: "numeric" } : {}),
-      }).format(new Date(Date.UTC(year, month - 1, day, 12)));
+      return new Intl.DateTimeFormat("cs-CZ", { timeZone: PRAGUE_TIME_ZONE, day: "numeric", month: "numeric", ...(includeYear ? { year: "numeric" } : {}) })
+        .format(new Date(Date.UTC(year, month - 1, day, 12)));
     };
     weekLabel.textContent = `Následující týden · ${format(week.startDate, false)}–${format(week.endDate, true)}`;
   }
 
-  function renderSummary(slots) {
+  function renderSummary(data) {
     if (!weekSummary) return;
-    const free = slots.filter((slot) => slot.kind === "free").length;
-    const joinable = slots.filter((slot) => slot.kind === "join").length;
-    weekSummary.textContent = `${free} ${free === 1 ? "volný termín" : free >= 2 && free <= 4 ? "volné termíny" : "volných termínů"} · ${joinable} ${joinable === 1 ? "skupina s místem" : joinable >= 2 && joinable <= 4 ? "skupiny s místem" : "skupin s místem"}`;
+    const diagnostic = data.availability?.diagnostic_30?.length || 0;
+    const lesson = data.availability?.lesson_60?.length || 0;
+    weekSummary.textContent = `${diagnostic} možností pro 30 min zdarma · ${lesson} možností pro 60min lekci`;
   }
 
   function renderLiveStatus(isLive, syncedAt) {
@@ -135,52 +125,79 @@
     const synced = typeof syncedAt === "string" ? new Date(syncedAt) : null;
     const hasTimestamp = synced && !Number.isNaN(synced.getTime());
     liveStatus.textContent = isLive && hasTimestamp
-      ? `Google Kalendář · synchronizováno ${new Intl.DateTimeFormat("cs-CZ", { hour: "2-digit", minute: "2-digit" }).format(synced)}`
-      : isLive ? "Google Kalendář · čekám na první synchronizaci" : "Google Kalendář · dostupnost nelze ověřit";
+      ? `Europe/Prague · synchronizováno ${new Intl.DateTimeFormat("cs-CZ", { timeZone: PRAGUE_TIME_ZONE, hour: "2-digit", minute: "2-digit" }).format(synced)}`
+      : "Dostupnost nelze bezpečně ověřit";
     liveStatus.dataset.state = isLive && hasTimestamp ? "live" : "fallback";
+  }
+
+  function validPayload(data) {
+    return data && Array.isArray(data.slots) && data.timeZone === PRAGUE_TIME_ZONE
+      && Array.isArray(data.availability?.diagnostic_30) && Array.isArray(data.availability?.lesson_60)
+      && data.slots.every((slot) => typeof slot.day === "string" && typeof slot.time === "string" && typeof slot.title === "string");
   }
 
   function refreshCapacity() {
     if (refreshInFlight) return refreshInFlight;
-    refreshInFlight = fetch(`https://capacity.vojtechsteidl.eu/api/public-capacity?ts=${Date.now()}`, {
-      cache: "no-store",
-      headers: { Accept: "application/json" },
-    })
-      .then((response) => {
-        if (!response.ok) throw new Error("capacity-api");
-        return response.json();
-      })
+    refreshInFlight = fetch(`${API_BASE}/api/public-capacity?ts=${Date.now()}`, { cache: "no-store", headers: { Accept: "application/json" } })
+      .then((response) => { if (!response.ok) throw new Error("capacity-api"); return response.json(); })
       .then((data) => {
-        if (!validSlots(data.slots)) throw new Error("capacity-payload");
-        renderCompact(data.slots);
-        renderFull(data.slots, data.week);
+        if (!validPayload(data)) throw new Error("capacity-payload");
+        currentData = data;
+        renderTimeline(data.slots, data.week);
         renderWeekLabel(data.week);
-        renderSummary(data.slots);
+        renderSummary(data);
         renderLiveStatus(true, data.calendarSyncedAt);
+        renderBookingOptions();
         lastRefreshAt = Date.now();
-      })
-      .catch(() => {
-        currentSlots = [];
-        if (compactEl) {
-          compactEl.dataset.live = "false";
-          compactEl.innerHTML = '<p role="status">Dostupnost nelze ověřit. Kontaktujte mě pro výběr termínu.</p>';
-        }
-        if (calendarEl) {
-          calendarEl.dataset.live = "false";
-          calendarEl.innerHTML = '<p class="calendar-empty" role="status">Dostupnost nelze ověřit. Kontaktujte mě pro výběr termínu.</p>';
-        }
-        if (selection) selection.hidden = true;
+      }).catch(() => {
+        currentData = null;
+        calendarEl.dataset.live = "false";
+        calendarEl.innerHTML = '<p class="calendar-empty" role="status">Dostupnost nyní nelze ověřit. Rezervaci proto dočasně nepřijímám.</p>';
+        if (timeSelect) { timeSelect.innerHTML = '<option value="">Dostupnost nelze ověřit</option>'; timeSelect.disabled = true; }
+        if (weekSummary) weekSummary.textContent = "Aktuální termíny se nepodařilo ověřit.";
         renderLiveStatus(false);
-      })
-      .finally(() => {
-        refreshInFlight = null;
-      });
+      }).finally(() => { refreshInFlight = null; });
     return refreshInFlight;
   }
 
-  currentSlots = [];
-  if (compactEl) compactEl.innerHTML = '<p role="status">Ověřuji dostupnost termínů…</p>';
-  if (calendarEl) calendarEl.innerHTML = '<p class="calendar-empty" role="status">Ověřuji dostupnost termínů…</p>';
+  typeInputs.forEach((input) => input.addEventListener("change", renderBookingOptions));
+  form?.addEventListener("submit", async (event) => {
+    event.preventDefault();
+    const button = form.querySelector('button[type="submit"]');
+    const formData = new FormData(form);
+    const original = button.textContent;
+    const payload = {
+      bookingType: selectedType(), startAt: formData.get("start_at"), name: formData.get("name"),
+      email: formData.get("email"), grade: formData.get("grade"), topic: formData.get("topic"),
+      note: formData.get("note"), website: formData.get("website"),
+    };
+    button.disabled = true;
+    button.textContent = "Rezervuji…";
+    status.textContent = "";
+    status.className = "form-status";
+    try {
+      const response = await fetch(`${API_BASE}/api/public-bookings`, {
+        method: "POST", headers: { "Content-Type": "application/json", Accept: "application/json" }, body: JSON.stringify(payload),
+      });
+      const result = await response.json();
+      if (!response.ok) throw new Error(response.status === 409 ? "slot-unavailable" : "booking-failed");
+      const when = new Intl.DateTimeFormat("cs-CZ", { timeZone: PRAGUE_TIME_ZONE, weekday: "long", day: "numeric", month: "numeric", hour: "2-digit", minute: "2-digit" })
+        .format(new Date(result.booking.startAt));
+      status.innerHTML = `<strong>Rezervace je potvrzená.</strong> ${esc(result.booking.label)} · ${esc(when)}. Kód: <strong>${esc(result.confirmationCode)}</strong>`;
+      status.classList.add("success");
+      form.reset();
+      if (typeInputs[0]) typeInputs[0].checked = true;
+      await refreshCapacity();
+    } catch (error) {
+      status.textContent = error instanceof Error && error.message === "slot-unavailable"
+        ? "Tento čas mezitím obsadil někdo jiný. Nabídku jsem obnovil; vyberte prosím jiný termín."
+        : "Rezervaci se nepodařilo bezpečně potvrdit. Zkuste to znovu nebo napište na vojtasteidl@seznam.cz.";
+      status.classList.add("error");
+      await refreshCapacity();
+    } finally { button.disabled = false; button.textContent = original; }
+  });
+
+  calendarEl.innerHTML = '<p class="calendar-empty" role="status">Dostupnost termínů ověřuji v Google Kalendáři…</p>';
   refreshCapacity();
   window.setInterval(refreshCapacity, refreshIntervalMs);
   document.addEventListener("visibilitychange", () => {

@@ -144,6 +144,7 @@
   </main>
   <footer>© 2026 Vojtěch Steidl · Online doučování matematiky a fyziky</footer>
   <script>
+    if (false) { // Kept only as a no-script fallback; public-capacity.js owns live rendering.
     const escapeHtml=value=>String(value??'').replace(/[&<>"']/g,char=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[char]));
     const calendarEl=document.getElementById('weeklyCalendar'),selection=document.getElementById('slotSelection');
     const selectedTitle=document.getElementById('selectedSlotTitle'),selectedMeta=document.getElementById('selectedSlotMeta'),selectedId=document.getElementById('selectedSlotId'),selectedInfo=document.getElementById('selectedSlotInfo');
@@ -162,6 +163,7 @@
       catch(error){status.textContent='Potvrzení se nepodařilo odeslat. Napište prosím na vojtasteidl@seznam.cz.';status.classList.add('error');}
       finally{button.disabled=false;button.textContent=original;}
     });
+    }
   </script>
 </body>
 </html>

@@ -1,4 +1,4 @@
-import { nextWeekWindow, slotIsAvailable, busyMinutesOnDay, isCalendarSyncFresh } from "../src/public-capacity.ts";
+import { nextWeekWindow, slotIsAvailable, busyMinutesOnDay, isCalendarSyncFresh, localDateTimeToUtc, availabilityForType, bookingLocks } from "../src/public-capacity.ts";
 import { publicCategoryForCalendarTitle } from "../src/calendar-ingestion.ts";
 import { readFileSync } from "node:fs";
 
@@ -41,6 +41,22 @@ for (const [value, expected] of [
 const overnight = { starts_at: "2026-10-19T22:00:00+02:00", ends_at: "2026-10-20T17:00:00+02:00" };
 const nextDay = busyMinutesOnDay(overnight, "2026-10-20");
 if (nextDay?.start !== 0 || nextDay?.end !== 1020) throw new Error("Overnight collision missed");
+if (localDateTimeToUtc("2026-10-19", "17:30").toISOString() !== "2026-10-19T15:30:00.000Z") {
+  throw new Error("Prague summer-time conversion failed");
+}
+if (localDateTimeToUtc("2026-11-02", "17:30").toISOString() !== "2026-11-02T16:30:00.000Z") {
+  throw new Error("Prague winter-time conversion failed");
+}
+const sampleWeek = { startDate: "2026-10-19", endDate: "2026-10-23", endExclusive: "2026-10-26" };
+const sampleFree = [{ id: "thu-flex", weekday: 4, start_time: "15:00", end_time: "17:00", capacity: 1, sort_order: 1, display_mode: "flexible" }];
+const sampleBusy = [{ starts_at: "2026-10-22T13:30:00.000Z", ends_at: "2026-10-22T14:30:00.000Z" }];
+const diagnostics = availabilityForType(sampleWeek, sampleFree, sampleBusy, 30);
+if (diagnostics.some((slot) => slot.time === "15:30–16:00" || slot.time === "16:00–16:30")) {
+  throw new Error("Busy time leaked into 30-minute availability");
+}
+const locks30 = bookingLocks(new Date("2026-10-22T13:00:00.000Z"), 30);
+const locks60 = bookingLocks(new Date("2026-10-22T13:15:00.000Z"), 60);
+if (!locks30.some((lock) => locks60.includes(lock))) throw new Error("Overlapping booking locks do not collide");
 const classifications = [
   ["Kája - doučko", { label: "Matematika", capacity: 4 }],
   ["Fyzika Doučko", { label: "Fyzika", capacity: 4 }],
@@ -61,4 +77,12 @@ const migration = readFileSync(new URL("../migrations/0050_public_capacity_missi
 for (const id of ["7feha3tiugdudsjdurtjlkkkks", "2b2suvsjh6e68sm04jh3ucavld"]) {
   if (!migration.includes(id)) throw new Error("Missing public mapping: " + id);
 }
-console.log("Public capacity week, collisions, tutoring mappings, and privacy tests are valid.");
+const bookingMigration = readFileSync(new URL("../migrations/0051_public_bookings.sql", import.meta.url), "utf8");
+if (!bookingMigration.includes("interval_start TEXT PRIMARY KEY") || !bookingMigration.includes("confirmation_code")) {
+  throw new Error("Atomic public booking schema is incomplete");
+}
+const client = readFileSync(new URL("../../assets/public-capacity.js", import.meta.url), "utf8");
+for (const marker of ["calendar-time-track", "diagnostic_30", "lesson_60", "/api/public-bookings", "Europe/Prague"]) {
+  if (!client.includes(marker)) throw new Error(`Public booking client is missing ${marker}`);
+}
+console.log("Public capacity, Prague timezone, proportional layout, privacy, and atomic booking tests are valid.");
