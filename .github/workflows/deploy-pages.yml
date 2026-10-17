@@ -79,7 +79,8 @@ jobs:
           grep -q 'id="calendarWeekSummary">Načítám aktuální možnosti' .public-site/index.html
           grep -q 'id="calendarLiveStatus">Ověřuji aktuálnost' .public-site/index.html
           grep -q 'window.setInterval(refreshCapacity, refreshIntervalMs)' .public-site/assets/public-capacity.js
-          grep -q 'https://capacity.vojtechsteidl.eu/api/public-capacity' .public-site/assets/public-capacity.js
+          grep -q 'https://capacity.vojtechsteidl.eu' .public-site/assets/public-capacity.js
+          grep -q '/api/public-capacity' .public-site/assets/public-capacity.js
           grep -q 'api/public-bookings' .public-site/assets/public-capacity.js
           grep -q 'renderTimeline(data.slots, data.week)' .public-site/assets/public-capacity.js
           test -f .public-site/assets/previews/zs-slovni-ulohy.webp

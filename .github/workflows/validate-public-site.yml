@@ -106,10 +106,17 @@ jobs:
           ! grep -q 'blue-capacity-in-zone' .public-site/index.html
           grep -q 'Dostupnost termínů ověřuji' .public-site/index.html
           ! grep -q 'data-slot-id="mon-1745"' .public-site/index.html
-          grep -q 'calendar-day-abbr' .public-site/index.html
-          grep -q 'grid-template-columns:repeat(5,minmax(0,1fr))' .public-site/index.html
-          grep -q 'blue-capacity-standalone .calendar-day{padding:.95rem;border:1px solid #285f98' .public-site/index.html
-          grep -q 'volný termín' .public-site/index.html
+          grep -q 'calendar-time-track' .public-site/index.html
+          grep -q 'grid-template-columns:repeat(5,minmax(190px,1fr))' .public-site/index.html
+          grep -q 'name="booking_type" value="diagnostic_30"' .public-site/index.html
+          grep -q 'name="booking_type" value="lesson_60"' .public-site/index.html
+          grep -q 'id="bookingStartAt"' .public-site/index.html
+          grep -q 'src="/assets/public-capacity.js"' .public-site/index.html
+          grep -q 'window.setInterval(refreshCapacity, refreshIntervalMs)' .public-site/assets/public-capacity.js
+          grep -q 'https://capacity.vojtechsteidl.eu' .public-site/assets/public-capacity.js
+          grep -q '/api/public-capacity' .public-site/assets/public-capacity.js
+          grep -q '/api/public-bookings' .public-site/assets/public-capacity.js
+          grep -q 'renderTimeline(data.slots, data.week)' .public-site/assets/public-capacity.js
           test -f .public-site/assets/previews/zs-slovni-ulohy.webp
           test -f .public-site/assets/previews/ss-geometrie.webp
           grep -q '/assets/previews/zs-slovni-ulohy.webp' .public-site/index.html
