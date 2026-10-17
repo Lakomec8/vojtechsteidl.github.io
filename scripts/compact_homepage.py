@@ -113,10 +113,10 @@ CSS = r'''<style id="blue-spacious-homepage-v2">
 .blue-capacity-standalone .calendar-day-abbr{color:#fff;font-size:1.2rem;font-weight:950;letter-spacing:.03em;line-height:1}
 .blue-capacity-standalone .calendar-day-name{color:#cfe3f7;font-size:.69rem}
 .blue-capacity-standalone .calendar-day-count{color:#b9d6f0;font-size:.66rem;font-weight:800;white-space:nowrap}
-.blue-capacity-standalone .calendar-week-label{margin:.3rem 0 0;color:#cfe3f7;font-size:.84rem;font-weight:750}
-.blue-capacity-standalone .calendar-week-summary{margin:.28rem 0 0;color:#fff;font-size:.9rem;font-weight:800}
-.blue-capacity-standalone .calendar-live-status[data-state="live"]{color:#bbf7d0}
-.blue-capacity-standalone .calendar-live-status[data-state="fallback"]{color:#fde68a}
+.blue-capacity-standalone .calendar-week-label{margin:.3rem 0 0;color:#64748b;font-size:.84rem;font-weight:750}
+.blue-capacity-standalone .calendar-week-summary{margin:.28rem 0 0;color:#102a43;font-size:.9rem;font-weight:800}
+.blue-capacity-standalone .calendar-live-status[data-state="live"]{color:#15803d}
+.blue-capacity-standalone .calendar-live-status[data-state="fallback"]{color:#b45309}
 .blue-capacity-standalone .calendar-time-track{position:relative;height:540px;margin-left:2.3rem;border-radius:12px;background:repeating-linear-gradient(to bottom,rgba(255,255,255,.12) 0,rgba(255,255,255,.12) 1px,transparent 1px,transparent 12.5%)}
 .blue-capacity-standalone .calendar-hour{position:absolute;left:-2.3rem;width:1.9rem;transform:translateY(-50%);color:#b9d6f0;font-size:.58rem;text-align:right}
 .blue-capacity-standalone .calendar-event{position:absolute;right:.2rem;left:.15rem;z-index:2;overflow:hidden;min-height:36px;padding:.42rem .48rem;border:1px solid #d6e6f5;border-radius:9px;background:#f8fbff;box-shadow:0 6px 14px rgba(5,24,43,.16)}
