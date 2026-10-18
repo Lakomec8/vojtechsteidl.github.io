@@ -48,6 +48,21 @@ jobs:
           python scripts/generate_eliska_fractions_materials.py
           python scripts/validate_eliska_fractions_materials.py
 
+      - name: Verify the unique production account before upload
+        working-directory: cloudflare-portal
+        shell: bash
+        run: |
+          set -euo pipefail
+          npx wrangler d1 execute DB --remote --json --command "
+            SELECT CASE
+                     WHEN COUNT(*) = 1 AND MAX(id) = 'eliska' THEN 'verified-eliska'
+                     ELSE 'identity-mismatch'
+                   END AS identity_check
+              FROM students
+             WHERE display_name = 'Eliška' COLLATE NOCASE
+               AND enabled = 1;
+          " | grep -F 'verified-eliska'
+
       - name: Stage private upload outside repository history
         shell: bash
         run: |
