@@ -142,7 +142,7 @@ jobs:
               fi
               if jq -e '.week.startDate == "2026-10-19"' /tmp/public-capacity.json >/dev/null; then
                 jq -e '(
-                  any(.slots[]; .weekday == 1 and .time == "17:30–18:30" and .title == "Matematika" and .kind == "join")
+                  any(.slots[]; .weekday == 1 and .time == "18:00–19:00" and .title == "Matematika" and .kind == "join")
                 ) and (
                   any(.slots[]; .weekday == 5 and .time == "15:30–16:30" and .title == "Fyzika" and .kind == "join")
                 ) and (
