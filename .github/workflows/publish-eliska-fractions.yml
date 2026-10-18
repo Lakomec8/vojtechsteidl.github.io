@@ -69,7 +69,9 @@ jobs:
           set -euo pipefail
           queue="$RUNNER_TEMP/eliska-fractions-upload"
           mkdir -p "$queue"
-          base64 -w 0 "$GITHUB_WORKSPACE/../outputs/eliska-zlomky-kraceni-a-prevody-jednotek.pdf" > "$queue/part-001.b64"
+          # The generator writes to the task/workspace output directory. GitHub
+          # checks repositories out as <work>/<repo>/<repo>, hence two parents.
+          base64 -w 0 "$GITHUB_WORKSPACE/../../outputs/eliska-zlomky-kraceni-a-prevody-jednotek.pdf" > "$queue/part-001.b64"
           cat > "$queue/META.json" <<'JSON'
           {
             "displayName": "Eliška",
