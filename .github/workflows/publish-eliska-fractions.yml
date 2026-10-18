@@ -1,0 +1,87 @@
+name: Publish Eliska fractions material
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "scripts/generate_eliska_fractions_materials.py"
+      - ".github/workflows/publish-eliska-fractions.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: publish-eliska-fractions-material
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Install PDF and portal dependencies
+        run: |
+          pip install reportlab
+          npm --prefix cloudflare-portal install --no-audit --no-fund
+
+      - name: Generate and validate material
+        run: |
+          python scripts/generate_eliska_fractions_materials.py
+          python scripts/validate_eliska_fractions_materials.py
+
+      - name: Stage private upload outside repository history
+        shell: bash
+        run: |
+          set -euo pipefail
+          queue="$RUNNER_TEMP/eliska-fractions-upload"
+          mkdir -p "$queue"
+          base64 -w 0 "$GITHUB_WORKSPACE/../outputs/eliska-zlomky-kraceni-a-prevody-jednotek.pdf" > "$queue/part-001.b64"
+          cat > "$queue/META.json" <<'JSON'
+          {
+            "displayName": "Eliška",
+            "files": [
+              {
+                "source": "part-001.b64",
+                "fileName": "2026-10-18__matematika__zlomky-kraceni-prevody-jednotek.pdf",
+                "title": "Zlomky - krácení a převody jednotek",
+                "date": "2026-10-18"
+              }
+            ]
+          }
+          JSON
+          node cloudflare-portal/scripts/upload-student-material-queue.mjs "$queue/META.json"
+
+      - name: Verify the exact student and assigned PDF
+        working-directory: cloudflare-portal
+        shell: bash
+        run: |
+          set -euo pipefail
+          npx wrangler d1 execute DB --remote --json --command "
+            SELECT s.id,
+                   s.display_name,
+                   json_extract(p.payload_json, '$.materials[0].r2Key') AS latest_material
+              FROM students AS s
+              JOIN student_profiles AS p ON p.student_id = s.id
+             WHERE s.id = 'eliska'
+               AND s.display_name = 'Eliška'
+               AND s.enabled = 1;
+          " | grep -F 'eliska/2026-10-18__matematika__zlomky-kraceni-prevody-jednotek.pdf'

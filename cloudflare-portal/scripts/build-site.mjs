@@ -90,6 +90,8 @@ await writeFile(indexPath, indexHtml);
 // authenticated API endpoint below /student-portal/.
 const portalJsPath = join(dist, "assets", "student-portal.js");
 let portalJs = await readFile(portalJsPath, "utf8");
+// Keep exact build-time patches portable when Git checks files out with CRLF.
+portalJs = portalJs.replaceAll("\r\n", "\n");
 portalJs = replaceOrFail(
   portalJs,
   '  const token = sessionStorage.getItem("student_token");',
