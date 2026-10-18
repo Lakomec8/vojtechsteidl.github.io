@@ -1,5 +1,5 @@
 import { nextWeekWindow, slotIsAvailable, busyMinutesOnDay, isCalendarSyncFresh, localDateTimeToUtc, availabilityForType, bookingLocks } from "../src/public-capacity.ts";
-import { publicCategoryForCalendarTitle } from "../src/calendar-ingestion.ts";
+import { calendarTitleContainsStudent, publicCategoryForCalendarTitle } from "../src/calendar-ingestion.ts";
 import { readFileSync } from "node:fs";
 
 const cases = [
@@ -70,6 +70,12 @@ for (const [title, expected] of classifications) {
   if (JSON.stringify(actual) !== JSON.stringify(expected)) {
     throw new Error(`Public title classification failed for ${title}: ${JSON.stringify(actual)}`);
   }
+}
+if (!calendarTitleContainsStudent("Dan doučování", "Dan")) {
+  throw new Error("Dan's canonical Calendar identity does not match his lesson title");
+}
+if (calendarTitleContainsStudent("Dan doučování", "Dan Štec")) {
+  throw new Error("Full portal display name unexpectedly matched the shorter Calendar title");
 }
 // Seed the two existing one-off lesson IDs immediately, while the automatic
 // registration handles newly added future tutoring lessons.

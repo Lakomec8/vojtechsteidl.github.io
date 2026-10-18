@@ -33,4 +33,4 @@ Set a Cloudflare Worker secret named `GOOGLE_CALENDAR_ICS_URL` to the primary ca
 
 Without this secret, the Worker deliberately falls back to the existing D1 snapshot and settlement logic, but it cannot discover newly-created, moved or deleted calendar events continuously.
 
-The ingestion window covers two days in the past and 120 days into the future. Unknown calendar names are intentionally ignored until the person exists as an active tutoring student, preventing unrelated personal calendar entries from entering the tutoring ledger.
+The ingestion window covers 45 days in the past and 120 days into the future. The recovery window allows a corrected student/calendar identity to pick up recently completed lessons without manual backfills; inserts remain idempotent. Unknown calendar names are intentionally ignored until the person exists as an active tutoring student, preventing unrelated personal calendar entries from entering the tutoring ledger.

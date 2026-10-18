@@ -29,7 +29,10 @@ type BusyOccurrence = {
   endsAt: string;
 };
 
-const LOOKBACK_MS = 2 * 24 * 60 * 60 * 1000;
+// Keep enough history to recover lessons after a student is added, renamed or
+// given a corrected Calendar identity. Inserts are idempotent by Google event
+// ID and student/time slot, so re-reading this window cannot double-count.
+const LOOKBACK_MS = 45 * 24 * 60 * 60 * 1000;
 const LOOKAHEAD_MS = 120 * 24 * 60 * 60 * 1000;
 const GOOGLE_UID_SUFFIX = "@google.com";
 
@@ -58,7 +61,7 @@ export function publicCategoryForCalendarTitle(title: string): { label: string; 
   };
 }
 
-function containsName(summary: string, displayName: string): boolean {
+export function calendarTitleContainsStudent(summary: string, displayName: string): boolean {
   const normalizedSummary = ` ${normalizeText(summary)} `;
   const normalizedName = normalizeText(displayName);
   return Boolean(normalizedName) && normalizedSummary.includes(` ${normalizedName} `);
@@ -88,7 +91,7 @@ function isTransparent(event: IcalEvent): boolean {
 
 function matchesAnyStudent(event: IcalEvent, students: TutoringStudent[]): boolean {
   const summary = String(event.summary || "").trim();
-  return students.some((student) => containsName(summary, student.display_name));
+  return students.some((student) => calendarTitleContainsStudent(summary, student.display_name));
 }
 
 function occurrenceFromDates(
@@ -101,7 +104,7 @@ function occurrenceFromDates(
   if (isCancelled(event)) return null;
   const summary = String(event.summary || "").trim();
   const studentIds = students
-    .filter((student) => containsName(summary, student.display_name))
+    .filter((student) => calendarTitleContainsStudent(summary, student.display_name))
     .map((student) => student.id)
     .sort();
   if (!studentIds.length) return null;
