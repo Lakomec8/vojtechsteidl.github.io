@@ -45,6 +45,9 @@ function waveLambda(){return state.fixedSpeed===null?v("wave-l"):state.fixedSpee
 function waveValues(){
  const A=v("wave-A"),f=v("wave-f"),lambda=waveLambda();
  const fixed=state.fixedSpeed!==null;
+ set("wave-main-equation",state.mode==="transverse"
+  ?"y(x, t) = A · sin [2π (f · t − x/λ)]"
+  :"ξ(x, t) = A · sin [2π (f · t − x/λ)]");
  $("wave-l").disabled=fixed;
  set("wave-l-note",fixed?"Dopočtena ze vztahu λ = v/f":"Rozestup stejných fází");
  set("wave-medium-hint",fixed
@@ -66,7 +69,7 @@ function drawWave(){
   const x=2,y=cy-amp*Math.sin(phase(x));
   line(ctx,sx(x),cy,sx(x),y,C.orange,1.6,true);dot(ctx,sx(x),y,C.orange);
   label(ctx,"Částice P",sx(x)+12,y-14,C.orange,"left",11);
-  const x0=Math.max(0.2,Math.min(2,11.75-lambda)),x1=x0+lambda,top=cy-amp-25;
+  const x0=Math.max(0,Math.min(2,12-lambda)),x1=x0+lambda,top=cy-amp-25;
   if(x1<=12&&x1>x0+.2){line(ctx,sx(x0),top,sx(x1),top,C.navy,1.4);line(ctx,sx(x0),top-5,sx(x0),top+5,C.navy);line(ctx,sx(x1),top-5,sx(x1),top+5,C.navy);label(ctx,"λ",.5*(sx(x0)+sx(x1)),top-8,C.navy,"center",14);}
   label(ctx,"Kmitání kolmo na směr šíření",left,25);
  }else{
@@ -269,7 +272,7 @@ function frame(now){
   if(state.active!=="instant"&&state.run[state.active])state.time[state.active]+=dt;
   if(state.active==="instant"&&state.run.instant){
    let t=v("instant-t")+dt;
-   if(t>=12){t=12;state.run.instant=false;set("instant-run","Přehrát běh času");}
+   if(t>=12){t=12;state.run.instant=false;set("instant-run","Přehrát běh času");redraw();}
    $("instant-t").value=String(t);
   }
   if(state.run[state.active] && now-lastDraw>=30){redraw();lastDraw=now;}
