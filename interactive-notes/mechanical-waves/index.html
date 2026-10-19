@@ -8,7 +8,7 @@
   <meta name="theme-color" content="#13263d">
   <title>Mechanické vlnění · Interaktivní laboratoř | Vojtěch Steidl</title>
   <link rel="stylesheet" href="./style.css?v=2">
-  <script src="./app.js?v=2" defer></script>
+  <script src="./app.js?v=3" defer></script>
 </head>
 <body>
   <header class="topbar">
@@ -67,12 +67,12 @@
       <div class="equation-card"><p class="equation-name">Fázový rozdíl ve stejném okamžiku</p><div class="equation">|Δφ| = 2π · |x₂ − x₁| / λ</div><div class="derived" id="phase-equation"></div><p class="equation-explain">Stejná fáze: Δx = nλ. Opačná fáze: Δx = (n + ½)λ. Při porovnávání stavů rozlišuj nezredukovaný fázový posun a fázi modulo 2π; úhel π odpovídá 180°.</p></div>
       <div class="experiment"><div class="experiment-top"><strong>Porovnej dva body</strong><span class="helper">Bod A a B můžeš táhnout myší nebo prstem</span></div><div class="canvas-surface"><canvas id="phase-canvas" role="img" aria-label="Vlna s dvěma posuvnými body a porovnáním jejich kmitání"></canvas><div class="canvas-label">Sleduj také průběh kmitání A a B ve spodním grafu</div></div>
         <div class="controls cols-3">
-          <label class="control"><span>Vlnová délka <b id="phase-l-label"></b></span><input id="phase-l" type="range" min="1" max="8" step="0.1" value="4"></label>
+          <label class="control"><span>Vlnová délka <b id="phase-l-label"></b></span><input id="phase-l" type="range" min="0.4" max="8" step="0.1" value="4"></label>
           <label class="control"><span>Poloha A · x₁ <b id="phase-x1-label"></b></span><input id="phase-x1" type="range" min="0" max="10" step="0.1" value="2"></label>
           <label class="control"><span>Poloha B · x₂ <b id="phase-x2-label"></b></span><input id="phase-x2" type="range" min="0" max="10" step="0.1" value="4"></label>
         </div>
         <div class="readings"><div><span>Vzdálenost |Δx|</span><strong id="phase-distance"></strong></div><div><span>Fáze modulo 2π (rad / °)</span><strong id="phase-mod"></strong></div><div><span>Interpretace</span><strong id="phase-status"></strong></div></div>
-        <div class="actions"><button type="button" class="primary" id="phase-play">Pozastavit animaci</button><button type="button" id="phase-same">Nastavit stejnou fázi</button><button type="button" id="phase-opposite">Nastavit opačnou fázi</button></div>
+        <div class="actions"><button type="button" class="primary" id="phase-play">Pozastavit animaci</button><button type="button" id="phase-same">Nastavit stejnou fázi</button><button type="button" id="phase-opposite">Nastavit opačnou fázi</button><button type="button" id="phase-school" title="f = 450 Hz, v = 360 m/s, Δx = 0,20 m">Načíst školní úlohu 6</button></div>
       </div>
       <div class="observation"><strong>Vyzkoušej.</strong><p>Nastav Δx = λ/2 a sleduj oba časové průběhy. Pak nastav Δx = λ. Ověř, proč v prvním případě kmitají opačně a ve druhém synchronně.</p><button type="button" data-check="phase">Zobrazit vysvětlení</button><p class="feedback" id="phase-feedback" hidden>Pro Δx = λ/2 vyjde |Δφ| = π: když je bod A nahoře, B je dole. Pro Δx = λ je |Δφ| = 2π, tedy stav kmitání je v každém okamžiku shodný.</p></div>
       <div class="calculation-check" aria-label="Procvičení na školním příkladu">
@@ -90,14 +90,14 @@
       <div class="experiment"><div class="experiment-top"><strong>Měřicí laboratoř</strong><span class="helper">Čárkovaná svislice označuje vybrané x</span></div><div class="canvas-surface"><canvas id="instant-canvas" role="img" aria-label="Okamžitá poloha harmonické vlny, měřicí bod a čelo vlny"></canvas><div class="canvas-label">Zdroj spuštěný v t = 0 · čelo vlny postupuje rychlostí v</div></div>
         <div class="controls cols-3">
           <label class="control"><span>Amplituda A <b id="instant-A-label"></b></span><input id="instant-A" type="range" min="2" max="20" step="1" value="10"></label>
-          <label class="control"><span>Perioda T <b id="instant-T-label"></b></span><input id="instant-T" type="range" min="0.5" max="4" step="0.1" value="2"></label>
-          <label class="control"><span>Vlnová délka λ <b id="instant-l-label"></b></span><input id="instant-l" type="range" min="1" max="8" step="0.2" value="4"></label>
+          <label class="control"><span>Perioda T <b id="instant-T-label"></b></span><input id="instant-T" type="range" min="0.1" max="4" step="0.1" value="2"></label>
+          <label class="control"><span>Vlnová délka λ <b id="instant-l-label"></b></span><input id="instant-l" type="range" min="1" max="24" step="0.2" value="4"></label>
           <label class="control"><span>Poloha bodu x <b id="instant-x-label"></b></span><input id="instant-x" type="range" min="0" max="12" step="0.1" value="3"></label>
           <label class="control"><span>Čas t <b id="instant-t-label"></b></span><input id="instant-t" type="range" min="0" max="12" step="0.05" value="2"></label>
           <label class="control"><span>Počáteční fáze φ₀ <b id="instant-p-label"></b></span><select id="instant-p"><option value="0">0</option><option value="1.5707963267948966">π/2</option><option value="3.141592653589793">π</option></select></label>
         </div>
         <div class="readings"><div><span>Rychlost v = λ/T</span><strong id="instant-v"></strong></div><div><span>Příchod vlny tₚ = x/v</span><strong id="instant-arrival"></strong></div><div><span>Naměřená výchylka</span><strong id="instant-y"></strong></div></div>
-        <div class="actions"><button type="button" class="primary" id="instant-run">Přehrát běh času</button><button type="button" id="instant-zero">Zastavit a vrátit čas na nulu</button></div>
+        <div class="actions"><button type="button" class="primary" id="instant-run">Přehrát běh času</button><button type="button" id="instant-zero">Zastavit a vrátit čas na nulu</button><button type="button" id="instant-school">Načíst školní úlohu 4</button></div>
       </div>
       <div class="observation"><strong>Vyzkoušej.</strong><p>Nastav x = 6 m a t = 1 s. Dorazila už vlna? Pak přidávej čas, dokud čelo nedorazí na měřicí bod. Všimni si rozdílu mezi dosazením do sinusovky a fyzikálním začátkem šíření.</p><button type="button" data-check="instant">Vysvětlit souvislost</button><p class="feedback" id="instant-feedback" hidden>Rovnice popisuje harmonické kmitání za čelem vlny. Pro zdroj spuštěný v t = 0 musíš nejprve ověřit t ≥ x/v. Do té doby zůstává bod v klidu a výchylka je nula.</p></div>
       <div class="calculation-check" aria-label="Procvičení na školním příkladu">
@@ -119,7 +119,7 @@
           <label class="control"><span>Rychlost v₂ <b id="medium-v2-label"></b></span><input id="medium-v2" type="range" min="1" max="8" step="0.1" value="6"></label>
         </div>
         <div class="readings"><div><span>Vlnová délka λ₁</span><strong id="medium-l1"></strong></div><div><span>Vlnová délka λ₂</span><strong id="medium-l2"></strong></div><div><span>Poměr λ₂/λ₁</span><strong id="medium-ratio"></strong></div></div>
-        <div class="actions"><button class="primary" type="button" id="medium-play">Pozastavit animaci</button><button type="button" id="medium-slower">Druhé prostředí pomalejší</button><button type="button" id="medium-faster">Druhé prostředí rychlejší</button></div>
+        <div class="actions"><button class="primary" type="button" id="medium-play">Pozastavit animaci</button><button type="button" id="medium-slower">Druhé prostředí pomalejší</button><button type="button" id="medium-faster">Druhé prostředí rychlejší</button><button type="button" id="medium-demo">Ukázka: λ₂/λ₁ = 1,5</button></div>
       </div>
       <div class="observation"><strong>Vyzkoušej.</strong><p>Přepni druhé prostředí z pomalejšího na rychlejší. Porovnej rozestupy vrcholů v obou částech obrázku a výsledky vypočtené z λ = v/f.</p><button type="button" data-check="medium">Vysvětlit souvislost</button><p class="feedback" id="medium-feedback" hidden>Frekvenci určuje zdroj a na stacionárním rozhraní se nemění. Proto λ₂/λ₁ = v₂/v₁. Při vyšší rychlosti je vlnová délka delší, při nižší kratší.</p></div>
       <div class="calculation-check" aria-label="Procvičení na školním příkladu">
