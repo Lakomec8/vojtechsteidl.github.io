@@ -641,7 +641,12 @@ async function adminPage(request: Request, env: Env, url: URL): Promise<Response
     <small>${test.question_count} otázek · přibližně ${test.estimated_minutes} min</small>
   </article>`).join("") || `<p class="empty">Knihovna zatím neobsahuje publikovaný self-check.</p>`;
   const assignmentRows = assignments.map((assignment) => {
-    const lastAttempt = formatScore(assignment.latest_score, assignment.latest_max_score);
+    const lastAttempt = formatScore(assignment.latest_score, assignment.latest_max_score) +
+      (assignment.latest_is_partial === 1
+        ? " · Částečný pokus (" +
+          (assignment.latest_answered_count ?? "?") + "/" +
+          (assignment.latest_total_questions ?? "?") + " úloh)"
+        : "");
     const attemptDate = assignment.latest_submitted_at
       ? ` · ${escapeHtml(assignment.latest_submitted_at.slice(0, 10))}`
       : "";
