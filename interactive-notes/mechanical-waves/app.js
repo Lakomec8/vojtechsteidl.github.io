@@ -226,6 +226,19 @@ $("phase-same").addEventListener("click",()=>preset(false));
 $("phase-opposite").addEventListener("click",()=>preset(true));
 $("medium-slower").addEventListener("click",()=>{$("medium-v2").value="1.5";redraw();});
 $("medium-faster").addEventListener("click",()=>{$("medium-v2").value="7";redraw();});
+$("phase-school").addEventListener("click",()=>{
+ [["phase-l","0.8"],["phase-x1","2"],["phase-x2","2.2"]].forEach(([id,value])=>$(id).value=value);
+ redraw();
+});
+$("instant-school").addEventListener("click",()=>{
+ [["instant-A","3"],["instant-T","0.1"],["instant-l","20"],["instant-x","5"],["instant-t","0.1"],["instant-p","0"]].forEach(([id,value])=>$(id).value=value);
+ state.run.instant=false;set("instant-run","Přehrát běh času");redraw();
+});
+$("medium-demo").addEventListener("click",()=>{
+ [["medium-f","1.5"],["medium-v1","3"],["medium-v2","4.5"]].forEach(([id,value])=>$(id).value=value);
+ redraw();
+});
+
 document.querySelectorAll("[data-check]").forEach(button=>button.addEventListener("click",()=>{
  const el=$(button.dataset.check+"-feedback");el.hidden=!el.hidden;
  button.textContent=el.hidden?"Zobrazit vysvětlení":"Skrýt vysvětlení";
