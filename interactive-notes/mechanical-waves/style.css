@@ -13,3 +13,25 @@
 @media(max-width:850px){.intro{grid-template-columns:1fr;padding-top:45px;gap:24px}.intro-note{display:none}.tabs{grid-template-columns:repeat(2,1fr)}.chapter,.equation-card,.experiment{padding-left:24px;padding-right:24px}.canvas-surface{height:345px}.cols-3{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:560px){.wrap{width:calc(100% - 24px)}.topbar{height:auto;min-height:60px}.top-row{padding:12px 0}.brand{font-size:14px}.brand span,.top-subtitle{display:none}.intro{padding:36px 0 30px}.lead{font-size:15px}.tab{gap:6px;padding:12px 9px;font-size:11px}.tab span{font-size:11px}.chapter,.equation-card,.experiment{padding-left:16px;padding-right:16px}.chapter{padding-top:24px}.equation{font-size:20px}.derived{font-size:14px}.canvas-surface{height:330px}.cols-3{grid-template-columns:1fr;gap:13px}.readings{grid-template-columns:1fr}.readings>div{padding:10px 14px}.readings>div+div{border-left:0;border-top:1px solid var(--hair)}.footer{flex-direction:column}.actions button{flex:1 1 auto}}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+/* V2: interactive physics controls and concise guided checks */
+.model-switch{display:flex;align-items:center;gap:13px;margin-top:21px;padding:14px 16px;border:1px solid var(--hair);border-radius:8px;background:#f8fafc;cursor:pointer}
+.model-switch input{width:19px;height:19px;flex:0 0 auto;accent-color:var(--accent)}
+.model-switch span{display:grid;gap:2px;min-width:0}
+.model-switch strong{font-size:13px;color:var(--ink)}
+.model-switch small{font-size:12px;color:var(--muted);line-height:1.5}
+.control input[type=range]:disabled{opacity:.36;cursor:not-allowed}
+#phase-canvas{touch-action:none}
+.calculation-check{margin-top:25px;padding:23px 27px 25px;background:#fff;border:1px solid var(--hair);border-radius:10px}
+.calculation-check h3{font-size:19px;color:var(--ink);margin:7px 0}
+.calculation-check p{font-size:13px;margin:0;color:var(--muted);line-height:1.7}
+.check-kicker{font-size:10px;letter-spacing:.11em;color:var(--accent);font-weight:800}
+.check-form{margin-top:16px}
+.check-form label{display:block;font-weight:700;font-size:12px;color:var(--ink);margin-bottom:8px}
+.small-muted{font-weight:400;color:var(--muted)}
+.check-entry{display:flex;gap:8px;max-width:480px}
+.check-entry input{min-width:0;flex:1;padding:11px 13px;border:1px solid #becbd6;border-radius:7px;background:#fff;color:var(--ink)}
+.check-entry button{border:0;background:var(--ink);color:#fff;padding:10px 16px;border-radius:7px;font-weight:700;flex-shrink:0}
+.calculation-check .check-feedback{font-size:13px;min-height:1.6em;margin:10px 0 0;color:var(--muted)}
+.check-feedback[data-result=correct]{color:#176445}
+.check-feedback[data-result=error]{color:#a2472b}
+@media(max-width:560px){.calculation-check{padding:18px 16px}.check-entry{flex-wrap:wrap}.check-entry input{flex-basis:100%}.check-entry button{width:100%}}
