@@ -30,6 +30,9 @@ jobs:
       - name: Build hardened public artifact
         run: python scripts/build_public_site.py
 
+      - name: Test interactive mechanical-waves lesson
+        run: node scripts/test-mechanical-waves.mjs
+
       - name: Publish online math tutoring landing page
         run: python scripts/publish_online_tutoring.py
 
