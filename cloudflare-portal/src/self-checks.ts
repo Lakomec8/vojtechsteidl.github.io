@@ -284,6 +284,110 @@ async function assignmentDetail(
   });
 }
 
+
+type StoredAttempt = {
+  id: string;
+  score: number;
+  max_score: number;
+  submitted_at: string;
+};
+type StoredAnswer = QuestionRow & {
+  answer_value: string | null;
+  is_correct: number | null;
+  points_awarded: number | null;
+};
+
+/**
+ * Read-only reconstruction of previously submitted answers.
+ * Authenticated students may retrieve their own results only; administrators
+ * can use the same API within a selected student's portal preview.
+ * Archived tests remain reviewable.
+ */
+async function storedAssignmentResult(
+  request: Request,
+  env: Env,
+  assignmentId: string,
+  url: URL,
+): Promise<Response> {
+  const principal = await principalForRequest(request, env);
+  const student = await selectedStudentForPrincipal(request, env, principal);
+  if (!assignmentId || assignmentId.length > 160) {
+    throw new PortalError(404, "Test was not found.");
+  }
+  const assignment = await env.DB.prepare(
+    "SELECT a.id, a.test_id, t.title, t.topic " +
+    "FROM self_check_assignments a " +
+    "JOIN self_check_tests t ON t.id = a.test_id " +
+    "WHERE a.id = ?1 AND a.student_id = ?2 LIMIT 1",
+  ).bind(assignmentId, student.id).first<{
+    id: string;
+    test_id: string;
+    title: string;
+    topic: string;
+  }>();
+  if (!assignment) throw new PortalError(404, "Test was not found.");
+
+  const history = await env.DB.prepare(
+    "SELECT id, score, max_score, submitted_at " +
+    "FROM self_check_attempts " +
+    "WHERE assignment_id = ?1 AND student_id = ?2 AND test_id = ?3 " +
+    "ORDER BY submitted_at DESC, id DESC LIMIT 100",
+  ).bind(assignment.id, student.id, assignment.test_id).all<StoredAttempt>();
+  const attempts = history.results || [];
+  if (!attempts.length) throw new PortalError(404, "This test has no completed attempts.");
+
+  const requestedAttempt = url.searchParams.get("attempt");
+  // A guessed or foreign attempt ID cannot select outside the authorized history.
+  const selected = requestedAttempt
+    ? attempts.find((item) => item.id === requestedAttempt)
+    : attempts[0];
+  if (!selected) throw new PortalError(404, "Attempt was not found.");
+
+  const result = await env.DB.prepare(
+    "SELECT q.id, q.position, q.prompt, q.options_json, q.correct_answer, " +
+    "q.explanation, q.points, " +
+    "ans.answer_value, ans.is_correct, ans.points_awarded " +
+    "FROM self_check_questions q " +
+    "LEFT JOIN self_check_answers ans " +
+    "ON ans.question_id = q.id AND ans.attempt_id = ?1 " +
+    "WHERE q.test_id = ?2 ORDER BY q.position",
+  ).bind(selected.id, assignment.test_id).all<StoredAnswer>();
+
+  const graded = (result.results || []).map((question) => ({
+    questionId: question.id,
+    position: question.position,
+    prompt: question.prompt,
+    answer: question.answer_value,
+    correctAnswer: question.correct_answer,
+    options: parseOptions(question.options_json),
+    correct: question.is_correct === 1,
+    unanswered: question.is_correct === null,
+    pointsAwarded: question.points_awarded ?? 0,
+    points: question.points,
+    explanation: question.explanation,
+  }));
+
+  return json({
+    saved: true,
+    readOnly: true,
+    preview: principal.isAdmin,
+    student: { id: student.id, displayName: student.display_name },
+    assignment: { id: assignment.id, title: assignment.title, topic: assignment.topic },
+    attemptId: selected.id,
+    history: attempts.map((attempt) => ({
+      id: attempt.id,
+      score: attempt.score,
+      maxScore: attempt.max_score,
+      submittedAt: attempt.submitted_at,
+    })),
+    score: selected.score,
+    maxScore: selected.max_score,
+    percent: Math.round((selected.score / selected.max_score) * 100),
+    submittedAt: selected.submitted_at,
+    results: graded,
+  });
+}
+
 async function submittedAnswers(request: Request): Promise<Record<string, string>> {
   const length = Number(request.headers.get("Content-Length") || "0");
   if (Number.isFinite(length) && length > MAX_BODY_BYTES) {
@@ -578,6 +682,12 @@ export async function handleSelfCheckRoute(request: Request, env: Env): Promise<
     if (url.pathname === API_ROOT) {
       if (request.method !== "GET") return plain("Method not allowed", 405);
       return listAssignments(request, env);
+    }
+
+    const storedResultMatch = url.pathname.match(/^\/student-portal\/api\/self-checks\/([^/]+)\/results$/);
+    if (storedResultMatch) {
+      if (request.method !== "GET") return plain("Method not allowed", 405);
+      return storedAssignmentResult(request, env, decodeURIComponent(storedResultMatch[1]), url);
     }
 
     const submitMatch = url.pathname.match(/^\/student-portal\/api\/self-checks\/([^/]+)\/submit$/);
