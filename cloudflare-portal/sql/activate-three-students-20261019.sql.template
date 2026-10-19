@@ -1,0 +1,46 @@
+-- Run in Cloudflare D1 -> vojtechsteidl-portal -> Console.
+-- Apply migration 0055 first. Replace all three __...__ placeholders locally.
+-- NEVER COMMIT FILLED EMAILS TO GITHUB.
+-- Activation affects portal login only; financial/calendar tutoring identities
+-- remain inactive until hourly rates are agreed and set separately.
+
+BEGIN TRANSACTION;
+
+UPDATE students
+   SET email = '__JAN_ZAPLETAL_EMAIL__',
+       enabled = 1,
+       updated_at = CURRENT_TIMESTAMP
+ WHERE id = 'jan-zapletal'
+   AND enabled = 0
+   AND email = 'pending-jan-zapletal-20261019@portal.invalid'
+   AND substr('__JAN_ZAPLETAL_EMAIL__', 1, 2) <> '__';
+
+UPDATE students
+   SET email = '__PETR_EMAIL__',
+       enabled = 1,
+       updated_at = CURRENT_TIMESTAMP
+ WHERE id = 'petr-svihi'
+   AND enabled = 0
+   AND email = 'pending-petr-svihi-20261019@portal.invalid'
+   AND substr('__PETR_EMAIL__', 1, 2) <> '__';
+
+UPDATE students
+   SET email = '__KAROLINA_LHOTSKA_EMAIL__',
+       enabled = 1,
+       updated_at = CURRENT_TIMESTAMP
+ WHERE id = 'karolina-lhotska'
+   AND enabled = 0
+   AND email = 'pending-karolina-lhotska-20261019@portal.invalid'
+   AND substr('__KAROLINA_LHOTSKA_EMAIL__', 1, 2) <> '__';
+
+COMMIT;
+
+-- Expect three enabled profiles, each backed by student_profiles and a calendar identity link.
+SELECT s.id, s.display_name, s.enabled,
+       CASE WHEN p.student_id IS NOT NULL THEN 'OK' ELSE 'MISSING' END AS profile,
+       CASE WHEN l.student_id IS NOT NULL THEN 'OK' ELSE 'MISSING' END AS calendar_link
+  FROM students AS s
+  LEFT JOIN student_profiles AS p ON p.student_id = s.id
+  LEFT JOIN student_tutoring_links AS l ON l.student_id = s.id
+ WHERE s.id IN ('jan-zapletal', 'petr-svihi', 'karolina-lhotska')
+ ORDER BY s.id;
