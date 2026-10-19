@@ -687,7 +687,7 @@ export async function handleSelfCheckRoute(request: Request, env: Env): Promise<
     const storedResultMatch = url.pathname.match(/^\/student-portal\/api\/self-checks\/([^/]+)\/results$/);
     if (storedResultMatch) {
       if (request.method !== "GET") return plain("Method not allowed", 405);
-      return storedAssignmentResult(request, env, decodeURIComponent(storedResultMatch[1]), url);
+      return await storedAssignmentResult(request, env, decodeURIComponent(storedResultMatch[1]), url);
     }
 
     const submitMatch = url.pathname.match(/^\/student-portal\/api\/self-checks\/([^/]+)\/submit$/);
