@@ -93,6 +93,17 @@
       .filter((a) => a.latest_score != null && a.latest_max_score != null)
       .sort((a, b) => String(b.latest_submitted_at || "").localeCompare(
         String(a.latest_submitted_at || "")))[0];
+    const metric = document.getElementById("selfCheckScore")?.closest(".metric");
+    if (metric) {
+      metric.querySelector("#dashboardLastTestReview")?.remove();
+      if (latestCompleted) {
+        const review = node("button", "secondary metric-review", "Zobrazit odpovědi");
+        review.id = "dashboardLastTestReview";
+        review.type = "button";
+        review.addEventListener("click", () => showSavedResult(latestCompleted));
+        metric.append(review);
+      }
+    }
     const displayed = [latestAssigned];
     // When a newer test is awaiting completion, retain the last completed
     // test alongside it so that past mistakes remain accessible.
