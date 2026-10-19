@@ -2,7 +2,7 @@ import { PortalError, principalForRequest, privateHeaders } from "./entry";
 
 const ROOT = "/student-portal/admin/self-checks";
 type Assignment = { id: string; student_id: string; display_name: string; test_id: string; title: string; topic: string };
-type Attempt = { id: string; score: number; max_score: number; submitted_at: string };
+type Attempt = { id: string; score: number; max_score: number; submitted_at: string; is_partial: number; answered_count: number | null; total_questions: number | null; full_max_score: number | null };
 type Answer = { position: number; prompt: string; options_json: string; correct_answer: string; explanation: string; points: number; answer_value: string | null; is_correct: number | null; points_awarded: number | null };
 type Option = { id: string; label: string };
 type Prompt = { instruction: string; math: string; category: string };
@@ -72,7 +72,7 @@ function renderQuestion(q: Answer): string {
     list + '<div class="explanation"><strong>Vysvětlení:</strong> ' + markedText(q.explanation || "Není uvedeno.") + '</div></article>';
 }
 
-const css = '*,*:before,*:after{box-sizing:border-box}body{margin:0;background:#f5f7f9;color:#203449;font:15px/1.6 system-ui,-apple-system,Segoe UI,sans-serif}main{width:min(1040px,calc(100% - 32px));margin:28px auto 75px}a{color:#2b597f;text-decoration:none}a:hover{text-decoration:underline}.back{font-weight:700}.head{margin:25px 0;border-bottom:1px solid #dbe3e9;padding-bottom:22px}.eyebrow{font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:#637689;font-weight:800}h1{margin:4px 0;font-size:clamp(24px,4vw,36px);letter-spacing:-.04em;line-height:1.25;color:#153048}h2{margin:0 0 12px;font-size:19px;color:#153048}h3{margin:3px 0 12px;font-size:17px;color:#18334b}.muted{color:#657a8c;margin:0}.panel,.question{border:1px solid #dbe3e9;border-radius:11px;padding:22px;background:#fff;margin:15px 0}.attempts,.focus,.toolbar{display:flex;flex-wrap:wrap;gap:8px}.attempts{margin-top:12px}.attempt{display:flex;flex-direction:column;min-width:175px;padding:10px 13px;border:1px solid #d8e1e8;border-radius:8px;font-size:13px;font-weight:750}.attempt small{color:#688095;font-weight:400;font-size:11px}.attempt.active{border-color:#366991;background:#edf4fa}.stats{display:grid;grid-template-columns:repeat(3,1fr);border:1px solid #dbe3e9;border-radius:7px;overflow:hidden;margin:16px 0}.stat{padding:13px 18px}.stat+.stat{border-left:1px solid #dbe3e9}.stat span{display:block;font-size:12px;color:#68798a}.stat strong{font-size:23px;color:#18334b}.focus{margin-top:10px}.focus span{font-size:12px;border:1px solid #dbe3e9;background:#f7f9fb;border-radius:7px;padding:6px 10px}.toolbar{align-items:center;margin:24px 0 12px}.toolbar strong{margin-right:8px}.filter{background:white;padding:7px 12px;border:1px solid #cbd8e2;border-radius:7px;font-weight:750}.filter.active{background:#203f5c;color:white;border-color:#203f5c}.question.correct{border-left:4px solid #468065}.question.incorrect{border-left:4px solid #b85c42}.question.missing{border-left:4px solid #9aa4ad}.q-header{display:flex;gap:10px;align-items:center;margin-bottom:12px;font-size:12px;color:#5e7083}.pill{padding:3px 10px;border-radius:20px;background:#eef6f0;color:#276447}.incorrect .pill{background:#fff0eb;color:#9f4833}.missing .pill{background:#eceff2;color:#596977}.pts{margin-left:auto}.category{font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:#6e8291;font-weight:700;margin-bottom:9px}.math{font-size:19px;color:#173f61;overflow-x:auto;margin-bottom:13px}.options{list-style:none;margin:12px 0;padding:0;display:grid;gap:7px}.option{display:flex;align-items:flex-start;gap:13px;padding:9px 11px;border:1px solid #e6ebf0;border-radius:7px}.option b{color:#586c7f}.option span{flex:1;min-width:0}.option small{font-size:11px;color:#62798b;text-align:right;font-weight:700}.option.correct-option{background:#edf8f1;border-color:#afd4bc}.option.chosen-option{background:#fff3ee;border-color:#e2b5a7}.explanation{font-size:13px;color:#43586b;background:#f7f9fb;padding:12px 15px;border-left:2px solid #9caebe;margin-top:15px}.note{font-size:12px;color:#6d7e8d;margin-top:20px}.empty{background:#fff;border:1px dashed #b5c4cf;border-radius:9px;padding:20px;color:#607385}@media(max-width:600px){main{width:calc(100% - 20px)}.panel,.question{padding:15px}.stats{grid-template-columns:1fr}.stat+.stat{border-left:0;border-top:1px solid #dbe3e9}.option{flex-wrap:wrap}.option small{margin-left:27px;text-align:left}}';
+const css = '*,*:before,*:after{box-sizing:border-box}body{margin:0;background:#f5f7f9;color:#203449;font:15px/1.6 system-ui,-apple-system,Segoe UI,sans-serif}main{width:min(1040px,calc(100% - 32px));margin:28px auto 75px}a{color:#2b597f;text-decoration:none}a:hover{text-decoration:underline}.back{font-weight:700}.head{margin:25px 0;border-bottom:1px solid #dbe3e9;padding-bottom:22px}.eyebrow{font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:#637689;font-weight:800}h1{margin:4px 0;font-size:clamp(24px,4vw,36px);letter-spacing:-.04em;line-height:1.25;color:#153048}h2{margin:0 0 12px;font-size:19px;color:#153048}h3{margin:3px 0 12px;font-size:17px;color:#18334b}.muted{color:#657a8c;margin:0}.panel,.question{border:1px solid #dbe3e9;border-radius:11px;padding:22px;background:#fff;margin:15px 0}.attempts,.focus,.toolbar{display:flex;flex-wrap:wrap;gap:8px}.attempts{margin-top:12px}.attempt{display:flex;flex-direction:column;min-width:175px;padding:10px 13px;border:1px solid #d8e1e8;border-radius:8px;font-size:13px;font-weight:750}.attempt small{color:#688095;font-weight:400;font-size:11px}.attempt.active{border-color:#366991;background:#edf4fa}.stats{display:grid;grid-template-columns:repeat(3,1fr);border:1px solid #dbe3e9;border-radius:7px;overflow:hidden;margin:16px 0}.stat{padding:13px 18px}.stat+.stat{border-left:1px solid #dbe3e9}.stat span{display:block;font-size:12px;color:#68798a}.stat strong{font-size:23px;color:#18334b}.focus{margin-top:10px}.focus span{font-size:12px;border:1px solid #dbe3e9;background:#f7f9fb;border-radius:7px;padding:6px 10px}.toolbar{align-items:center;margin:24px 0 12px}.toolbar strong{margin-right:8px}.filter{background:white;padding:7px 12px;border:1px solid #cbd8e2;border-radius:7px;font-weight:750}.filter.active{background:#203f5c;color:white;border-color:#203f5c}.question.correct{border-left:4px solid #468065}.question.incorrect{border-left:4px solid #b85c42}.question.missing{border-left:4px solid #9aa4ad}.q-header{display:flex;gap:10px;align-items:center;margin-bottom:12px;font-size:12px;color:#5e7083}.pill{padding:3px 10px;border-radius:20px;background:#eef6f0;color:#276447}.incorrect .pill{background:#fff0eb;color:#9f4833}.missing .pill{background:#eceff2;color:#596977}.pts{margin-left:auto}.category{font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:#6e8291;font-weight:700;margin-bottom:9px}.math{font-size:19px;color:#173f61;overflow-x:auto;margin-bottom:13px}.options{list-style:none;margin:12px 0;padding:0;display:grid;gap:7px}.option{display:flex;align-items:flex-start;gap:13px;padding:9px 11px;border:1px solid #e6ebf0;border-radius:7px}.option b{color:#586c7f}.option span{flex:1;min-width:0}.option small{font-size:11px;color:#62798b;text-align:right;font-weight:700}.option.correct-option{background:#edf8f1;border-color:#afd4bc}.option.chosen-option{background:#fff3ee;border-color:#e2b5a7}.explanation{font-size:13px;color:#43586b;background:#f7f9fb;padding:12px 15px;border-left:2px solid #9caebe;margin-top:15px}.note{font-size:12px;color:#6d7e8d;margin-top:20px}.empty{background:#fff;border:1px dashed #b5c4cf;border-radius:9px;padding:20px;color:#607385}.partial-warning{margin:12px 0;padding:12px 15px;border:1px solid #bcd1e5;border-radius:8px;background:#eef5fc;color:#23465e;font-size:13px}@media(max-width:600px){main{width:calc(100% - 20px)}.panel,.question{padding:15px}.stats{grid-template-columns:1fr}.stat+.stat{border-left:0;border-top:1px solid #dbe3e9}.option{flex-wrap:wrap}.option small{margin-left:27px;text-align:left}}';
 
 export async function adminSelfCheckResults(request: Request, env: Env, assignmentId: string): Promise<Response> {
   const principal = await principalForRequest(request, env);
@@ -88,7 +88,7 @@ export async function adminSelfCheckResults(request: Request, env: Env, assignme
   if (!assignment) throw new PortalError(404, "Assignment was not found.");
 
   const history = await env.DB.prepare(
-    "SELECT id, score, max_score, submitted_at FROM self_check_attempts " +
+    "SELECT id, score, max_score, submitted_at, is_partial, answered_count, total_questions, full_max_score FROM self_check_attempts " +
     "WHERE assignment_id = ?1 AND student_id = ?2 AND test_id = ?3 ORDER BY submitted_at DESC, id DESC LIMIT 100"
   ).bind(assignment.id, assignment.student_id, assignment.test_id).all<Attempt>();
   const attempts = history.results || [];
@@ -103,8 +103,14 @@ export async function adminSelfCheckResults(request: Request, env: Env, assignme
     "LEFT JOIN self_check_answers ans ON ans.question_id = q.id AND ans.attempt_id = ?1 " +
     "WHERE q.test_id = ?2 ORDER BY q.position"
   ).bind(selected.id, assignment.test_id).all<Answer>() : null;
-  const answers = results?.results || [];
-  const correctCount = answers.filter((a) => a.is_correct === 1).length, wrongCount = answers.length - correctCount;
+  const allQuestions = results?.results || [];
+  // Unanswered questions from a partial attempt are not errors and should
+  // not disclose the solutions to questions the student never attempted.
+  const answers = selected?.is_partial === 1
+    ? allQuestions.filter((item) => item.is_correct !== null)
+    : allQuestions;
+  const correctCount = answers.filter((a) => a.is_correct === 1).length;
+  const wrongCount = answers.filter((a) => a.is_correct === 0).length;
 
   const categoryStats = new Map<string, { total: number; wrong: number }>();
   for (const answer of answers) {
@@ -119,7 +125,7 @@ export async function adminSelfCheckResults(request: Request, env: Env, assignme
   const attemptChoices = attempts.map((item, index) =>
     '<a class="attempt' + (selected?.id === item.id ? ' active' : '') +
     '" href="' + resultUrl(assignment.id, item.id) + '"><span>Pokus ' + (attempts.length - index) +
-    ' · ' + scoreLabel(item.score, item.max_score) + '</span><small>' + esc(dateLabel(item.submitted_at)) + '</small></a>'
+    ' · ' + (item.is_partial === 1 ? 'Částečný · ' : 'Celý · ') + scoreLabel(item.score, item.max_score) + '</span><small>' + esc(dateLabel(item.submitted_at)) + '</small></a>'
   ).join("");
 
   const visible = errorsOnly ? answers.filter((a) => a.is_correct !== 1) : answers;
@@ -127,6 +133,11 @@ export async function adminSelfCheckResults(request: Request, env: Env, assignme
     (errorsOnly ? "Tento pokus neobsahuje žádné chybně zodpovězené otázky." : "K pokusu nejsou dostupné jednotlivé otázky.") + '</div>';
   const details = selected ?
     '<section class="panel"><h2>Výsledek pokusu</h2><p class="muted">' + esc(dateLabel(selected.submitted_at)) + '</p>' +
+    (selected.is_partial === 1
+      ? '<p class="partial-warning"><strong>Částečný pokus · ' + (selected.answered_count ?? answers.length) +
+        '/' + (selected.total_questions ?? allQuestions.length) + ' úloh.</strong> ' +
+        'Procento je jen ze zodpovězené části. Nevyplněné úlohy nejsou chyby; výsledek nevstupuje do studijního průměru.</p>'
+      : '') +
     '<div class="stats"><div class="stat"><span>Skóre</span><strong>' + scoreLabel(selected.score, selected.max_score) + '</strong></div>' +
     '<div class="stat"><span>Správně</span><strong>' + correctCount + ' / ' + answers.length + '</strong></div>' +
     '<div class="stat"><span>Chyby</span><strong>' + wrongCount + '</strong></div></div>' +
