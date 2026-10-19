@@ -15,7 +15,8 @@
     "deploy": "npm run build && npm run typecheck && wrangler deploy",
     "db:migrate:local": "wrangler d1 migrations apply DB --local",
     "db:migrate:remote": "wrangler d1 migrations apply DB --remote",
-    "db:seed": "node scripts/generate-seed.mjs"
+    "db:seed": "node scripts/generate-seed.mjs",
+    "test:self-check-results": "node scripts/test-admin-self-check-results.mjs"
   },
   "dependencies": {
     "ical.js": "^2.2.1",
