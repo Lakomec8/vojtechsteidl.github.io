@@ -118,7 +118,7 @@
     for (const [index, assignment] of displayed.entries()) {
       const item = node("article", "item dashboard-test-card");
       const main = node("div", "item-main");
-      if (index === 1) main.append(node("span", "dashboard-test-kicker", "POSLEDNÍ DOKONČENÝ TEST"));
+      if (index === 1) main.append(node("span", "dashboard-test-kicker", "POSLEDNÍ VYHODNOCENÝ POKUS"));
       main.append(
         node("h3", "", assignment.title || "Diagnostický test"),
         node("p", "", String(assignment.description || "")
@@ -136,8 +136,16 @@
       if (completed) {
         const percent = assignment.latest_max_score > 0
           ? Math.round(assignment.latest_score / assignment.latest_max_score * 100) : 0;
+        const partial = Number(assignment.latest_is_partial) === 1;
+        const label = partial ? "Částečný výsledek" : "Poslední výsledek";
         main.append(node("p", "dashboard-test-result",
-          "Poslední výsledek: " + assignment.latest_score + "/" + assignment.latest_max_score + " (" + percent + " %)"));
+          label + ": " + assignment.latest_score + "/" + assignment.latest_max_score + " (" + percent + " %)"));
+        if (partial) {
+          const completedQuestions = assignment.latest_answered_count ?? "?";
+          const totalQuestions = assignment.latest_total_questions ?? assignment.question_count;
+          main.append(node("p", "dashboard-test-partial",
+            completedQuestions + "/" + totalQuestions + " úloh · procento pouze ze zodpovězené části"));
+        }
       } else {
         main.append(node("p", "dashboard-test-result", "Zatím bez výsledku"));
       }
