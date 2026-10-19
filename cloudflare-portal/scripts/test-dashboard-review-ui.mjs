@@ -69,8 +69,10 @@ const document={
   createTextNode(text){return new TextNode(text);},
   querySelector(){return null;}
 };
+let confirmation=true;
 const window={
   location:{hash:""},
+  confirm(){return confirmation;},
   katex:null,
   setTimeout(fn){fn();return 0;},
   addEventListener(name,fn){(listeners[name]??=[]).push(fn);},
@@ -80,6 +82,7 @@ class CustomEvent{constructor(type,opts={}){this.type=type;this.detail=opts.deta
 const pending=[];
 let savedViews=0;
 let submitted=false;
+let earlyFinishCount=0;
 const assignmentRows=[
   {id:"new-assignment",title:"Nová diagnostika",description:"",topic:"Funkce",question_count:2,estimated_minutes:10,assigned_at:"2026-10-19T10:00:00Z",latest_score:null,latest_max_score:null,latest_submitted_at:null,available:1},
   {id:"old-assignment",title:"Mechanické vlnění",description:"Opakování vztahů",topic:"Fyzika",question_count:2,estimated_minutes:12,assigned_at:"2026-10-18T10:00:00Z",latest_score:1,latest_max_score:3,latest_submitted_at:"2026-10-19T07:00:00Z",available:1}
@@ -97,9 +100,31 @@ const saved=(attempt="latest")=>({
   results:attempt==="old"?answerRows.map(x=>({...x,answer:x.correctAnswer,correct:true,pointsAwarded:x.points})):answerRows
 });
 const fetch=async (url,opts={})=>{
-  assert.equal(opts.method||"GET","GET","Review must not submit/regrade the stored test");
+  if(url==="./api/self-checks/new-assignment/submit"){
+    assert.equal(opts.method,"POST","Early finish must submit once through the same endpoint");
+    const body=JSON.parse(opts.body);
+    assert.equal(body.partial,true,"Student explicitly chose partial completion");
+    assert.equal(Object.keys(body.answers).length,1,"Unanswered questions must not be forged as incorrect");
+    earlyFinishCount++;
+    submitted=true;
+    return Response.json({
+      saved:false,preview:false,isPartial:true,answeredCount:1,totalQuestions:2,fullMaxScore:3,coveragePercent:50,
+      score:1,maxScore:1,percent:100,submittedAt:"2026-10-19T09:00:00Z",
+      selfCheckSummary:{completedTests:0,averagePercent:null,latest:{title:"Nová diagnostika",score:1,maxScore:1,percent:100,isPartial:true,answeredCount:1,totalQuestions:2}},
+      results:[{position:1,prompt:"Úloha 1",options:[{id:"a",label:"Ano"},{id:"b",label:"Ne"}],answer:"a",correctAnswer:"a",correct:true,pointsAwarded:1,points:1,explanation:"Správně."}]
+    });
+  }
+  assert.equal(opts.method||"GET","GET","Read-only review must not submit or regrade a stored test");
   if(url==="./api/profile")return Response.json({materials:[]});
   if(url==="./api/self-checks")return Response.json({preview:false,assignments:assignmentRows});
+  if(url==="./api/self-checks/new-assignment")return Response.json({
+    preview:false,
+    assignment:{id:"new-assignment",title:"Nová diagnostika",topic:"Funkce",description:"Vyzkoušej dvě otázky",questionCount:2,maxScore:3,estimatedMinutes:10},
+    questions:[
+      {id:"qa",position:1,prompt:"Úloha 1",points:1,options:[{id:"a",label:"Ano"},{id:"b",label:"Ne"}]},
+      {id:"qb",position:2,prompt:"Úloha 2",points:2,options:[{id:"a",label:"Ano"},{id:"b",label:"Ne"}]}
+    ]
+  });
   if(url.startsWith("./api/self-checks/old-assignment/results")){
     savedViews++;
     return Response.json(saved(url.includes("attempt=attempt-old")?"old":"latest"));
@@ -149,4 +174,33 @@ await tick();
 assert.equal(savedViews,2);
 assert.match(contentHost.textContent,/3\/3/);
 assert(findButton(contentHost,"Jen chyby (0)"),"Past successful attempt should contain no mistakes");
-console.log("Student dashboard UI: new test, last completed result, metric review button, saved answer modal, error filter and attempt history passed.");
+
+const openNew=findButton(nodes.get("selfChecksList"),"Spustit test");
+assert(openNew,"Unfinished diagnostic must still be startable");
+openNew.dispatch("click");
+await tick();
+assert.match(contentHost.textContent,/Ukončit a vyhodnotit dosavadní odpovědi/);
+const stopBefore=findButton(contentHost,"Ukončit a vyhodnotit dosavadní odpovědi");
+assert.equal(stopBefore.disabled,true,"Cannot stop a test with zero answers");
+const option=contentHost.querySelectorAll(".self-check-v2-option")[0];
+assert(option);
+const radio=option.children.find(x=>x.tagName==="INPUT");
+assert(radio);
+radio.dispatch("change");
+await tick();
+const stopAfter=findButton(contentHost,"Ukončit a vyhodnotit dosavadní odpovědi");
+assert.equal(stopAfter.disabled,false,"Allow a partial result after the first answered question");
+confirmation=false;
+stopAfter.dispatch("click");
+await tick();
+assert.equal(earlyFinishCount,0,"Cancellation must preserve the unfinished test");
+confirmation=true;
+stopAfter.dispatch("click");
+await tick();
+assert.equal(earlyFinishCount,1,"Confirming early finish must submit exactly one graded attempt");
+assert.match(contentHost.textContent,/Částečný výsledek/);
+assert.match(contentHost.textContent,/1\/2 úloh/);
+assert.match(contentHost.textContent,/Úspěšnost 100 %/);
+assert.match(contentHost.textContent,/neovlivňuje celkový studijní průměr/);
+console.log("Student dashboard UI passed: saved results, test launch, zero-answer lock, partial-stop confirmation, single submission, and honest coverage reporting.");
+
