@@ -299,7 +299,7 @@
         ? `${latest.score}/${latest.maxScore}`
         : "–";
       $("selfCheckScoreCopy").textContent = latest
-        ? `${latest.percent} % · ${latest.title}`
+        ? `${latest.isPartial ? "Částečný pokus" : "Dokončený test"} · ${latest.percent} %${latest.isPartial && latest.answeredCount && latest.totalQuestions ? ` (${latest.answeredCount}/${latest.totalQuestions} úloh)` : ""} · ${latest.title}`
         : "Zatím bez výsledku";
     };
 
