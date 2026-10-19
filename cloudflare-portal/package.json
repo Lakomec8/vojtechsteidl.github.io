@@ -17,7 +17,8 @@
     "db:migrate:remote": "wrangler d1 migrations apply DB --remote",
     "db:seed": "node scripts/generate-seed.mjs",
     "test:self-check-results": "node scripts/test-admin-self-check-results.mjs",
-    "test:self-check-history": "node scripts/test-student-self-check-history.mjs"
+    "test:self-check-history": "node scripts/test-student-self-check-history.mjs",
+    "test:self-check-dashboard-ui": "node scripts/test-dashboard-review-ui.mjs"
   },
   "dependencies": {
     "ical.js": "^2.2.1",
