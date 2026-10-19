@@ -8,7 +8,7 @@ const set=(id,value)=>{$(id).textContent=value;};
 const fmt=(n,places=2)=>Number(n).toLocaleString("cs-CZ",{minimumFractionDigits:places,maximumFractionDigits:places});
 const clamp=(n,lo,hi)=>Math.max(lo,Math.min(hi,n));
 const modulo=n=>((n%TAU)+TAU)%TAU;
-const state={active:"wave",mode:"transverse",time:{wave:0,phase:0,instant:2,medium:0},run:{wave:true,phase:true,instant:false,medium:true},drag:null};
+const state={active:"wave",mode:"transverse",time:{wave:0,phase:0,instant:2,medium:0},run:{wave:true,phase:true,instant:false,medium:true},drag:null,fixedSpeed:null};
 if(window.matchMedia&&window.matchMedia("(prefers-reduced-motion: reduce)").matches)Object.keys(state.run).forEach(key=>state.run[key]=false);
 function canvas(id){
  const node=$(id),r=node.getBoundingClientRect(),w=r.width,h=r.height;
@@ -41,8 +41,15 @@ function axes(ctx,left,right,y){
  for(let i=0;i<=12;i+=2){const x=left+(right-left)*i/12;line(ctx,x,y-4,x,y+4);label(ctx,String(i),x,y+20,C.muted,"center",10);}
  label(ctx,"x [m]",right,y+36,C.muted,"right",11);
 }
+function waveLambda(){return state.fixedSpeed===null?v("wave-l"):state.fixedSpeed/v("wave-f");}
 function waveValues(){
- const A=v("wave-A"),f=v("wave-f"),lambda=v("wave-l");
+ const A=v("wave-A"),f=v("wave-f"),lambda=waveLambda();
+ const fixed=state.fixedSpeed!==null;
+ $("wave-l").disabled=fixed;
+ set("wave-l-note",fixed?"Dopočtena ze vztahu λ = v/f":"Rozestup stejných fází");
+ set("wave-medium-hint",fixed
+  ?"Stejné nedisperzní prostředí: rychlost "+fmt(state.fixedSpeed)+" m/s je konstantní; při změně f se mění λ."
+  :"Volný model: f a λ volíš nezávisle, a tím porovnáváš i různé rychlosti šíření.");
  set("wave-A-label",fmt(A,0)+" cm");set("wave-f-label",fmt(f,1)+" Hz");set("wave-l-label",fmt(lambda,1)+" m");
  set("wave-T",fmt(1/f,3)+" s");set("wave-v",fmt(f*lambda)+" m/s");set("wave-time",fmt(state.time.wave)+" s");
  set("wave-equation","v = "+fmt(f,1)+" × "+fmt(lambda,1)+" = "+fmt(f*lambda)+" m/s   ·   T = "+fmt(1/f,3)+" s");
@@ -50,7 +57,7 @@ function waveValues(){
 function drawWave(){
  const c=canvas("wave-canvas");if(!c)return;
  const {ctx,w,h}=c,left=37,right=w-38,cy=h*.51;
- const A=v("wave-A"),f=v("wave-f"),lambda=v("wave-l"),amp=A*4.5;
+ const A=v("wave-A"),f=v("wave-f"),lambda=waveLambda(),amp=A*4.2;
  const sx=x=>left+(right-left)*x/12;
  const phase=x=>TAU*(f*state.time.wave-x/lambda);
  axes(ctx,left,right,cy);
@@ -59,12 +66,16 @@ function drawWave(){
   const x=2,y=cy-amp*Math.sin(phase(x));
   line(ctx,sx(x),cy,sx(x),y,C.orange,1.6,true);dot(ctx,sx(x),y,C.orange);
   label(ctx,"Částice P",sx(x)+12,y-14,C.orange,"left",11);
-  const x0=7,x1=Math.min(12,x0+lambda),top=cy-amp-25;
-  if(x1>x0+.2){line(ctx,sx(x0),top,sx(x1),top,C.navy,1.4);line(ctx,sx(x0),top-5,sx(x0),top+5,C.navy);line(ctx,sx(x1),top-5,sx(x1),top+5,C.navy);label(ctx,"λ",.5*(sx(x0)+sx(x1)),top-8,C.navy,"center",14);}
+  const x0=Math.max(0.2,Math.min(2,11.75-lambda)),x1=x0+lambda,top=cy-amp-25;
+  if(x1<=12&&x1>x0+.2){line(ctx,sx(x0),top,sx(x1),top,C.navy,1.4);line(ctx,sx(x0),top-5,sx(x0),top+5,C.navy);line(ctx,sx(x1),top-5,sx(x1),top+5,C.navy);label(ctx,"λ",.5*(sx(x0)+sx(x1)),top-8,C.navy,"center",14);}
   label(ctx,"Kmitání kolmo na směr šíření",left,25);
  }else{
   for(let j=0;j<66;j++){
-   const x=j*12/65,px=sx(x)+Math.sin(phase(x))*A*1.25,py=cy+Math.sin(j*12.5)*7;
+   const x=j*12/65;
+   // Small longitudinal displacements retain particle ordering:
+   // a linear displacement wave, not particles travelling with the signal.
+   const dxPx=Math.min(4,(right-left)/65*.40)*A/20;
+   const px=sx(x)+Math.sin(phase(x))*dxPx,py=cy+(j%3-1)*7;
    if(j===15){line(ctx,sx(x),cy-48,sx(x),cy+48,C.orange,1,true);dot(ctx,px,py,C.orange);label(ctx,"Částice P",px+12,py-23,C.orange,"left",11);}
    else dot(ctx,px,py,C.blue,3.5);
   }
@@ -76,13 +87,13 @@ function drawWave(){
  label(ctx,"šíření energie →",left+20,ay-12);
 }
 function phaseValues(){
- const lambda=v("phase-l"),a=v("phase-x1"),b=v("phase-x2"),dx=Math.abs(a-b),rad=TAU*dx/lambda,mod=modulo(rad);
+ const lambda=v("phase-l"),a=v("phase-x1"),b=v("phase-x2"),dx=Math.abs(a-b),rad=TAU*dx/lambda,mod0=modulo(rad),mod=Math.min(mod0,TAU-mod0)<1e-8?0:mod0;
  let status="Fázově posunuté";
  if(Math.min(mod,TAU-mod)<.09)status="Stejná fáze";
  else if(Math.abs(mod-PI)<.09)status="Opačná fáze";
  set("phase-l-label",fmt(lambda,1)+" m");set("phase-x1-label",fmt(a,1)+" m");set("phase-x2-label",fmt(b,1)+" m");
  set("phase-equation","|Δφ| = 2π × "+fmt(dx,1)+" / "+fmt(lambda,1)+" = "+fmt(rad,3)+" rad");
- set("phase-distance",fmt(dx)+" m");set("phase-mod",fmt(mod,3)+" rad");set("phase-status",status);
+ set("phase-distance",fmt(dx)+" m");set("phase-mod",fmt(mod,3)+" rad / "+fmt(mod*180/PI,1)+"°");set("phase-status",status);
 }
 function drawPhase(){
  const c=canvas("phase-canvas");if(!c)return;
@@ -94,7 +105,7 @@ function drawPhase(){
  [[a,C.orange,"A"],[b,C.navy,"B"]].forEach(item=>{
   const px=sx(item[0]),py=cy-amp*Math.sin(phase(item[0]));
   line(ctx,px,cy-amp-12,px,cy+amp+13,item[1],1.15,true);
-  dot(ctx,px,py,item[1],7);label(ctx,item[2]+"  "+fmt(item[0],1)+" m",px,cy+amp+31,item[1],"center",11);
+  dot(ctx,px,py,item[1],7);label(ctx,item[2]+"  "+fmt(item[0],1)+" m",clamp(px,left+39,right-39),cy+amp+31,item[1],"center",11);
  });
  label(ctx,"Kmitání v čase",left,h*.53,C.navy);
  line(ctx,left,bottom,right,bottom,"#b7c7d3");
@@ -180,6 +191,10 @@ $("instant-t").addEventListener("input",()=>{
  state.run.instant=false;set("instant-run","Přehrát běh času");redraw();
 });
 function toggle(lab,id){state.run[lab]=!state.run[lab];set(id,state.run[lab]?"Pozastavit animaci":"Spustit animaci");}
+$("wave-lock-speed").addEventListener("change",event=>{
+ state.fixedSpeed=event.target.checked?v("wave-f")*v("wave-l"):null;
+ redraw();
+});
 $("wave-play").addEventListener("click",()=>toggle("wave","wave-play"));
 $("phase-play").addEventListener("click",()=>toggle("phase","phase-play"));
 $("medium-play").addEventListener("click",()=>toggle("medium","medium-play"));
@@ -192,13 +207,17 @@ $("instant-zero").addEventListener("click",()=>{
 });
 $("wave-reset").addEventListener("click",()=>{
  [["wave-A","10"],["wave-f","1.2"],["wave-l","4"]].forEach(row=>$(row[0]).value=row[1]);
- state.mode="transverse";state.time.wave=0;
+ state.mode="transverse";state.time.wave=0;state.fixedSpeed=null;$("wave-lock-speed").checked=false;
  document.querySelectorAll("[data-mode]").forEach(b=>b.classList.toggle("selected",b.dataset.mode==="transverse"));
  redraw();
 });
 function preset(opposite){
  const l=v("phase-l"),a=v("phase-x1"),d=opposite?l/2:l;
- $("phase-x2").value=String(a+d<=10?a+d:a-d);redraw();
+ // Always move both markers into the visible interval when necessary.
+ const first=clamp(a,0,10-d);
+ $("phase-x1").value=String(Math.round(first*10)/10);
+ $("phase-x2").value=String(Math.round((first+d)*10)/10);
+ redraw();
 }
 $("phase-same").addEventListener("click",()=>preset(false));
 $("phase-opposite").addEventListener("click",()=>preset(true));
@@ -207,6 +226,25 @@ $("medium-faster").addEventListener("click",()=>{$("medium-v2").value="7";redraw
 document.querySelectorAll("[data-check]").forEach(button=>button.addEventListener("click",()=>{
  const el=$(button.dataset.check+"-feedback");el.hidden=!el.hidden;
  button.textContent=el.hidden?"Zobrazit vysvětlení":"Skrýt vysvětlení";
+}));
+
+const numericalChecks={
+ wave:{correct:1450,tolerance:1,help:"Nejdřív převeď 2 ms na 0,002 s. Potom dosaď do v = λ/T.",solution:"v = λ/T = 2,9 / 0,002 = 1450 m/s."},
+ phase:{correct:0.5,tolerance:0.015,help:"Spočti λ = v/f a pak Δφ/π = 2Δx/λ.",solution:"λ = 360/450 = 0,8 m; |Δφ| = 2π·0,20/0,8 = 0,5π."},
+ instant:{correct:-3,tolerance:0.04,help:"Dosaď t/T = 1 a x/λ = 0,25; dej pozor na znaménko sinu.",solution:"y = 3·sin[2π(1−5/20)] = 3·sin(3π/2) = −3 cm."},
+ medium:{correct:450,tolerance:1,help:"Frekvence se nemění: f = v₁/λ₁ a v₂ = fλ₂.",solution:"f = 300/2 = 150 Hz; v₂ = 150·3 = 450 m/s."}
+};
+document.querySelectorAll("form[data-calc]").forEach(form=>form.addEventListener("submit",event=>{
+ event.preventDefault();
+ const lab=form.dataset.calc,field=$(lab+"-answer"),feedback=$(lab+"-check-feedback");
+ const raw=field.value.trim().replace(/\s/g,"").replace(",",".");
+ if(!/^[+-]?(?:\d+(?:\.\d*)?|\.\d+)$/.test(raw)){
+  feedback.textContent="Zadej jedno číslo, bez jednotky. Můžeš použít desetinnou čárku.";
+  feedback.dataset.result="error";return;
+ }
+ const val=Number(raw),quiz=numericalChecks[lab],correct=Number.isFinite(val)&&Math.abs(val-quiz.correct)<=quiz.tolerance;
+ feedback.textContent=correct?"Správně. "+quiz.solution:"Zatím ne. "+quiz.help;
+ feedback.dataset.result=correct?"correct":"error";
 }));
 const phaseCanvas=$("phase-canvas");
 function pointerX(event){
@@ -224,7 +262,7 @@ phaseCanvas.addEventListener("pointermove",event=>{
  $(state.drag).value=String(Math.round(pointerX(event)*10)/10);redraw();event.preventDefault();
 });
 ["pointerup","pointercancel","lostpointercapture"].forEach(name=>phaseCanvas.addEventListener(name,()=>{state.drag=null;}));
-let last=0;
+let last=0,lastDraw=0;
 function frame(now){
  const dt=last?Math.min((now-last)/1000,.08):0;last=now;
  if(!document.hidden){
@@ -234,11 +272,14 @@ function frame(now){
    if(t>=12){t=12;state.run.instant=false;set("instant-run","Přehrát běh času");}
    $("instant-t").value=String(t);
   }
-  redraw();
+  if(state.run[state.active] && now-lastDraw>=30){redraw();lastDraw=now;}
  }
  window.requestAnimationFrame(frame);
 }
 document.addEventListener("visibilitychange",()=>{last=0;});
 window.addEventListener("resize",redraw,{passive:true});
+for(const [lab,id] of [["wave","wave-play"],["phase","phase-play"],["medium","medium-play"]]){
+ if(!state.run[lab])set(id,"Spustit animaci");
+}
 tab("wave");window.requestAnimationFrame(frame);
 })();
