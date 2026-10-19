@@ -30,6 +30,10 @@ type AssignmentListRow = {
   latest_score: number | null;
   latest_max_score: number | null;
   latest_submitted_at: string | null;
+  latest_is_partial: number | null;
+  latest_answered_count: number | null;
+  latest_total_questions: number | null;
+  latest_full_max_score: number | null;
   assignment_status: string;
   test_status: string;
   available: number;
@@ -60,6 +64,10 @@ type AdminAssignmentRow = {
   latest_score: number | null;
   latest_max_score: number | null;
   latest_submitted_at: string | null;
+  latest_is_partial: number | null;
+  latest_answered_count: number | null;
+  latest_total_questions: number | null;
+  latest_full_max_score: number | null;
   assignment_status: string;
   test_status: string;
   available: number;
@@ -162,6 +170,10 @@ async function assignmentForStudent(
             latest.score AS latest_score,
             latest.max_score AS latest_max_score,
             latest.submitted_at AS latest_submitted_at,
+            latest.is_partial AS latest_is_partial,
+            latest.answered_count AS latest_answered_count,
+            latest.total_questions AS latest_total_questions,
+            latest.full_max_score AS latest_full_max_score,
             a.status AS assignment_status,
             t.status AS test_status,
             CASE WHEN a.status = 'active' AND t.status = 'published' THEN 1 ELSE 0 END AS available
@@ -205,6 +217,10 @@ async function listAssignments(request: Request, env: Env): Promise<Response> {
             latest.score AS latest_score,
             latest.max_score AS latest_max_score,
             latest.submitted_at AS latest_submitted_at,
+            latest.is_partial AS latest_is_partial,
+            latest.answered_count AS latest_answered_count,
+            latest.total_questions AS latest_total_questions,
+            latest.full_max_score AS latest_full_max_score,
             a.status AS assignment_status,
             t.status AS test_status,
             CASE WHEN a.status = 'active' AND t.status = 'published' THEN 1 ELSE 0 END AS available
@@ -279,6 +295,9 @@ async function assignmentDetail(
       latestScore: assignment.latest_score,
       latestMaxScore: assignment.latest_max_score,
       latestSubmittedAt: assignment.latest_submitted_at,
+      latestIsPartial: assignment.latest_is_partial === 1,
+      latestAnsweredCount: assignment.latest_answered_count,
+      latestTotalQuestions: assignment.latest_total_questions,
     },
     questions,
   });
@@ -290,6 +309,10 @@ type StoredAttempt = {
   score: number;
   max_score: number;
   submitted_at: string;
+  is_partial: number;
+  answered_count: number | null;
+  total_questions: number | null;
+  full_max_score: number | null;
 };
 type StoredAnswer = QuestionRow & {
   answer_value: string | null;
@@ -328,7 +351,7 @@ async function storedAssignmentResult(
   if (!assignment) throw new PortalError(404, "Test was not found.");
 
   const history = await env.DB.prepare(
-    "SELECT id, score, max_score, submitted_at " +
+    "SELECT id, score, max_score, submitted_at, is_partial, answered_count, total_questions, full_max_score " +
     "FROM self_check_attempts " +
     "WHERE assignment_id = ?1 AND student_id = ?2 AND test_id = ?3 " +
     "ORDER BY submitted_at DESC, id DESC LIMIT 100",
@@ -353,7 +376,9 @@ async function storedAssignmentResult(
     "WHERE q.test_id = ?2 ORDER BY q.position",
   ).bind(selected.id, assignment.test_id).all<StoredAnswer>();
 
-  const graded = (result.results || []).map((question) => ({
+  const graded = (result.results || [])
+    .filter((question) => selected.is_partial !== 1 || question.is_correct !== null)
+    .map((question) => ({
     questionId: question.id,
     position: question.position,
     prompt: question.prompt,
@@ -379,16 +404,23 @@ async function storedAssignmentResult(
       score: attempt.score,
       maxScore: attempt.max_score,
       submittedAt: attempt.submitted_at,
+      isPartial: attempt.is_partial === 1,
+      answeredCount: attempt.answered_count,
+      totalQuestions: attempt.total_questions,
     })),
     score: selected.score,
     maxScore: selected.max_score,
     percent: Math.round((selected.score / selected.max_score) * 100),
+    isPartial: selected.is_partial === 1,
+    answeredCount: selected.answered_count ?? (selected.is_partial === 1 ? graded.length : result.results?.length ?? 0),
+    totalQuestions: selected.total_questions ?? result.results?.length ?? 0,
+    fullMaxScore: selected.full_max_score ?? selected.max_score,
     submittedAt: selected.submitted_at,
     results: graded,
   });
 }
 
-async function submittedAnswers(request: Request): Promise<Record<string, string>> {
+async function submittedAnswers(request: Request): Promise<{ answers: Record<string, string>; partial: boolean }> {
   const length = Number(request.headers.get("Content-Length") || "0");
   if (Number.isFinite(length) && length > MAX_BODY_BYTES) {
     throw new PortalError(413, "Submitted self-check is too large.");
@@ -406,6 +438,8 @@ async function submittedAnswers(request: Request): Promise<Record<string, string
   if (!payload || typeof payload !== "object" || !("answers" in payload)) {
     throw new PortalError(400, "Submitted answers are missing.");
   }
+  const partial = "partial" in payload ? payload.partial : false;
+  if (typeof partial !== "boolean") throw new PortalError(400, "Partial result flag is invalid.");
   const rawAnswers = payload.answers;
   if (!rawAnswers || typeof rawAnswers !== "object" || Array.isArray(rawAnswers)) {
     throw new PortalError(400, "Submitted answers are invalid.");
@@ -417,7 +451,7 @@ async function submittedAnswers(request: Request): Promise<Record<string, string
     }
     answers[questionId] = answer;
   }
-  return answers;
+  return { answers, partial };
 }
 
 async function submitAssignment(
@@ -429,7 +463,8 @@ async function submitAssignment(
   const principal = await principalForRequest(request, env);
   const student = await selectedStudentForPrincipal(request, env, principal);
   const assignment = await assignmentForStudent(assignmentId, student.id, env);
-  const answers = await submittedAnswers(request);
+  const submission = await submittedAnswers(request);
+  const answers = submission.answers;
   const result = await env.DB.prepare(
     `SELECT id, position, prompt, options_json, correct_answer, explanation, points
        FROM self_check_questions
@@ -438,17 +473,28 @@ async function submitAssignment(
   ).bind(assignment.test_id).all<QuestionRow>();
   const questions = result.results || [];
   if (!questions.length) throw new PortalError(409, "This self-check has no questions.");
-  if (Object.keys(answers).length !== questions.length) {
+  const answeredCount = Object.keys(answers).length;
+  if (answeredCount === 0) throw new PortalError(400, "Answer at least one question to receive a partial result.");
+  if (answeredCount > questions.length) throw new PortalError(400, "Submitted answers contain unknown questions.");
+  if (!submission.partial && answeredCount !== questions.length) {
     throw new PortalError(400, "Answer every question before submitting the self-check.");
   }
+  const isPartial = submission.partial && answeredCount < questions.length;
+  const fullMaxScore = questions.reduce((sum, question) => sum + question.points, 0);
+  let answeredMaxScore = 0;
 
   let score = 0;
   const graded = questions.map((question) => {
     const options = parseOptions(question.options_json);
     const answer = answers[question.id];
-    if (!answer || !options.some((option) => option.id === answer)) {
+    if (answer === undefined) {
+      if (!isPartial) throw new PortalError(400, "One or more submitted answers are missing.");
+      return null;
+    }
+    if (!options.some((option) => option.id === answer)) {
       throw new PortalError(400, "One or more submitted answers are invalid.");
     }
+    answeredMaxScore += question.points;
     const correct = answer === question.correct_answer;
     const awarded = correct ? question.points : 0;
     score += awarded;
@@ -465,7 +511,9 @@ async function submitAssignment(
       explanation: question.explanation,
     };
   });
-  const maxScore = questions.reduce((sum, question) => sum + question.points, 0);
+  const validGraded = graded.filter((item): item is NonNullable<typeof item> => item !== null);
+  if (validGraded.length !== answeredCount) throw new PortalError(400, "Submitted answers contain unknown questions.");
+  const maxScore = isPartial ? answeredMaxScore : fullMaxScore;
   const submittedAt = new Date().toISOString();
 
   if (!principal.isAdmin) {
@@ -473,10 +521,12 @@ async function submitAssignment(
     const statements = [
       env.DB.prepare(
         `INSERT INTO self_check_attempts
-          (id, assignment_id, student_id, test_id, score, max_score, submitted_at)
-         VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7)`,
-      ).bind(attemptId, assignment.id, student.id, assignment.test_id, score, maxScore, submittedAt),
-      ...graded.map((item) => env.DB.prepare(
+          (id, assignment_id, student_id, test_id, score, max_score, submitted_at,
+           is_partial, answered_count, total_questions, full_max_score)
+         VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11)`,
+      ).bind(attemptId, assignment.id, student.id, assignment.test_id, score, maxScore, submittedAt,
+        isPartial ? 1 : 0, answeredCount, questions.length, fullMaxScore),
+      ...validGraded.map((item) => env.DB.prepare(
         `INSERT INTO self_check_answers
           (attempt_id, question_id, answer_value, is_correct, points_awarded)
          VALUES (?1, ?2, ?3, ?4, ?5)`,
@@ -496,16 +546,23 @@ async function submitAssignment(
     preview: principal.isAdmin,
     score,
     maxScore,
+    isPartial,
+    answeredCount,
   }));
 
   return json({
     preview: principal.isAdmin,
+    isPartial,
+    answeredCount,
+    totalQuestions: questions.length,
+    fullMaxScore,
+    coveragePercent: Math.round((answeredCount / questions.length) * 100),
     score,
     maxScore,
     percent: Math.round((score / maxScore) * 100),
     submittedAt,
     selfCheckSummary,
-    results: graded,
+    results: validGraded,
   });
 }
 
@@ -541,6 +598,10 @@ async function adminPage(request: Request, env: Env, url: URL): Promise<Response
               latest.score AS latest_score,
               latest.max_score AS latest_max_score,
               latest.submitted_at AS latest_submitted_at,
+              latest.is_partial AS latest_is_partial,
+              latest.answered_count AS latest_answered_count,
+              latest.total_questions AS latest_total_questions,
+              latest.full_max_score AS latest_full_max_score,
               a.status AS assignment_status,
               t.status AS test_status,
               CASE WHEN a.status = 'active' AND t.status = 'published' THEN 1 ELSE 0 END AS available
