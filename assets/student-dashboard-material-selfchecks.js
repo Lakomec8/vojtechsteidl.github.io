@@ -14,6 +14,7 @@
 
   function currentMaterial(materials) {
     const sorted = (Array.isArray(materials) ? materials : [])
+      .filter((item) => item.kind !== "interactive" && !/\/interactive-notes\//i.test(String(item.url || "")))
       .slice()
       .sort((a, b) => String(b.date || "").localeCompare(String(a.date || "")));
     return sorted.find((material) => String(material.badge || "")

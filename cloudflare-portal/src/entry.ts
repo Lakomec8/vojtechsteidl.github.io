@@ -464,10 +464,10 @@ function normalizeMaterials(
 
   const transientBadges = new Set(["Aktuální PDF", "Aktuální materiál", "Nové PDF"]);
   for (const material of sorted) {
-    if (transientBadges.has(String(material.badge || ""))) material.badge = "PDF";
+    if (transientBadges.has(String(material.badge || ""))) material.badge = material.kind === "interactive" ? "Interaktivní" : "PDF";
   }
 
-  const latest = sorted.find((material) => material?.url);
+  const latest = sorted.find((material) => material?.url && material.kind !== "interactive");
   if (latest) {
     const url = String(latest.url || "").toLowerCase();
     latest.badge = url.includes(".pdf") ? "Aktuální PDF" : "Aktuální materiál";

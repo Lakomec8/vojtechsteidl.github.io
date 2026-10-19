@@ -68,3 +68,13 @@ button,input{font:inherit}button{cursor:pointer}
 
 
 .dashboard-test-partial{margin:5px 0 0;color:#53697c;font-size:12px;font-weight:650;line-height:1.5}
+
+/* Samostatná galerie interaktivních zápisů v Materiálech. */
+.interactive-notes-section{margin-top:18px;border-top:4px solid #0f766e;background:linear-gradient(180deg,#f0fdfa 0,#fff 170px)}
+.interactive-notes-section .resource-label{color:#0f766e}
+.interactive-notes-section h2{color:#115e59}
+.interactive-notes-section .list{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:12px}
+.interactive-notes-section .item{align-items:flex-start;flex-direction:column;gap:12px;background:#fff}
+.interactive-notes-section .item .badge{background:#ccfbf1;color:#115e59;align-self:flex-start}
+.interactive-notes-section .item .actions{margin-top:11px}
+@media(max-width:560px){.interactive-notes-section .list{grid-template-columns:1fr}}

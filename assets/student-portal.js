@@ -132,12 +132,16 @@
           (parseDate(second.date)?.getTime() || 0) -
           (parseDate(first.date)?.getTime() || 0),
       );
+    const isInteractiveMaterial = (material) =>
+      material.kind === "interactive" || /\/interactive-notes\//i.test(String(material.url || ""));
+    const interactiveMaterials = materials.filter(isInteractiveMaterial);
+    const pdfMaterials = materials.filter((material) => !isInteractiveMaterial(material));
     const currentMaterial =
-      materials.find((material) =>
+      pdfMaterials.find((material) =>
         String(material.badge || "")
           .trim()
           .toLocaleLowerCase("cs") === "aktuální pdf",
-      ) || materials[0] || null;
+      ) || pdfMaterials[0] || null;
     const externalLessons = (Array.isArray(data.externalLessons) ? data.externalLessons : [])
       .slice()
       .sort(
@@ -518,7 +522,7 @@
       </div>
     `;
 
-    const historicalMaterials = materials.filter(
+    const historicalMaterials = pdfMaterials.filter(
       (material) => material !== currentMaterial,
     );
     $("materialsList").innerHTML = currentMaterial
@@ -530,6 +534,10 @@
             : ""
         }`
       : emptyState("Zatím tu není žádný PDF materiál.");
+
+    $("interactiveNotesList").innerHTML = interactiveMaterials.length
+      ? interactiveMaterials.map((material) => renderMaterialCard(material)).join("")
+      : emptyState("Zatím ti nebyl přiřazen žádný interaktivní zápis.");
 
     $("historyList").innerHTML = historyEntries.length || unrepresentedHistoryCount
       ? `${historyEntries.map(renderLesson).join("")}${

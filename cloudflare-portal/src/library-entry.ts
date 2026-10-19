@@ -8,6 +8,94 @@ const R2_PREFIX = "library/matematika/";
 const ROUTE_PREFIX = `${PREFIX}/Library/matematika/`;
 const MAX_UPLOAD_BYTES = 25 * 1024 * 1024;
 
+// Master katalog: stránky zůstávají jednou v repozitáři, student dostává pouze odkaz.
+const INTERACTIVE = [
+  {
+    "id": "functions",
+    "title": "Funkce: od předpisu ke grafu",
+    "meta": "Matematika · grafy, transformace, definiční obor",
+    "url": "/interactive-notes/functions/"
+  },
+  {
+    "id": "waves",
+    "title": "Mechanické vlnění",
+    "meta": "Fyzika · animace vlnění, vlnová délka, fáze",
+    "url": "/interactive-notes/mechanical-waves/"
+  },
+  {
+    "id": "fractions",
+    "title": "Zlomky a krácení",
+    "meta": "ZŠ · ekvivalentní zlomky a plošné modely",
+    "url": "/interactive-notes/laboratore/?topic=fractions"
+  },
+  {
+    "id": "equations",
+    "title": "Rovnice jako váhy",
+    "meta": "ZŠ · ekvivalentní úpravy rovnic",
+    "url": "/interactive-notes/laboratore/?topic=equations"
+  },
+  {
+    "id": "inequalities",
+    "title": "Nerovnice a intervaly",
+    "meta": "ZŠ · krajní body a intervaly",
+    "url": "/interactive-notes/laboratore/?topic=inequalities"
+  },
+  {
+    "id": "systems",
+    "title": "Soustavy dvou rovnic",
+    "meta": "ZŠ a SŠ · průsečíky přímek",
+    "url": "/interactive-notes/laboratore/?topic=systems"
+  },
+  {
+    "id": "trigonometry",
+    "title": "Goniometrická kružnice",
+    "meta": "SŠ · sinus, kosinus a úhly",
+    "url": "/interactive-notes/laboratore/?topic=trigonometry"
+  },
+  {
+    "id": "geometry",
+    "title": "Geometrie a obsahy",
+    "meta": "ZŠ a SŠ · obsahy obrazců",
+    "url": "/interactive-notes/laboratore/?topic=geometry"
+  },
+  {
+    "id": "limits",
+    "title": "Limity zleva a zprava",
+    "meta": "SŠ a VŠ · jednostranné limity",
+    "url": "/interactive-notes/laboratore/?topic=limits"
+  },
+  {
+    "id": "derivatives",
+    "title": "Derivace a tečna",
+    "meta": "SŠ a VŠ · směrnice a sečny",
+    "url": "/interactive-notes/laboratore/?topic=derivatives"
+  },
+  {
+    "id": "integrals",
+    "title": "Integrály jako plocha",
+    "meta": "SŠ a VŠ · Riemannovy součty",
+    "url": "/interactive-notes/laboratore/?topic=integrals"
+  },
+  {
+    "id": "matrices",
+    "title": "Matice a geometrická transformace",
+    "meta": "VŠ · determinant a singularita",
+    "url": "/interactive-notes/laboratore/?topic=matrices"
+  },
+  {
+    "id": "circuits",
+    "title": "Elektrické obvody",
+    "meta": "Fyzika · Ohmův zákon a výkon",
+    "url": "/interactive-notes/laboratore/?topic=circuits"
+  },
+  {
+    "id": "probability",
+    "title": "Pravděpodobnost a četnosti",
+    "meta": "ZŠ a SŠ · zákon velkých čísel",
+    "url": "/interactive-notes/laboratore/?topic=probability"
+  }
+] as const;
+
 type Student = { id: string; display_name: string; material_path: string };
 type Principal = { student: Student | null; isAdmin: boolean };
 type WorkerRequest = Parameters<typeof portalWorker.fetch>[0];
@@ -93,8 +181,8 @@ function normalizeMaterials(materials: Array<Record<string, unknown>>): Array<Re
     .sort((a, b) => materialDate(b.material).localeCompare(materialDate(a.material)) || a.index - b.index)
     .map(({ material }) => material);
   const current = new Set(["Aktuální PDF", "Aktuální materiál", "Nové PDF"]);
-  for (const material of sorted) if (current.has(String(material.badge || ""))) material.badge = "PDF";
-  const latest = sorted.find((material) => material.url);
+  for (const material of sorted) if (current.has(String(material.badge || ""))) material.badge = material.kind === "interactive" ? "Interaktivní" : "PDF";
+  const latest = sorted.find((material) => material.url && material.kind !== "interactive");
   if (latest) latest.badge = String(latest.url).toLowerCase().includes(".pdf") ? "Aktuální PDF" : "Aktuální materiál";
   return sorted;
 }
@@ -182,6 +270,9 @@ async function manager(request: Request, env: Env, url: URL): Promise<Response> 
     return { object, fileName, title, date };
   }));
   items.sort((a, b) => a.title.localeCompare(b.title, "cs", { numeric: true }));
+  const interactiveRows = INTERACTIVE.map((lesson) => `
+    <article class="item interactive-item"><div><h3>${escapeHtml(lesson.title)}</h3><p>${escapeHtml(lesson.meta)}</p><a href="${escapeHtml(lesson.url)}" target="_blank" rel="noopener noreferrer">Otevřít interaktivní zápis ↗</a></div>
+    <form method="post" action="${PREFIX}/admin/library/assign"><input type="hidden" name="interactiveId" value="${escapeHtml(lesson.id)}"><select name="studentId" required><option value="">Vyber studenta…</option>${options}</select><button>Přidělit</button></form></article>`).join("");
   const rows = items.length ? items.map(({ object, fileName, title, date }) => `
     <article class="item"><div><h3>${escapeHtml(title)}</h3><p>${escapeHtml(fileName)} · ${Math.max(1, Math.round(object.size / 1024))} kB · ${escapeHtml(date)}</p><a href="${libraryUrl(object.key)}" target="_blank" rel="noopener">Otevřít master PDF</a></div>
     <form method="post" action="${PREFIX}/admin/library/assign"><input type="hidden" name="key" value="${escapeHtml(object.key)}"><select name="studentId" required><option value="">Vyber studenta…</option>${options}</select><button>Přidělit</button></form></article>`).join("")
@@ -190,8 +281,8 @@ async function manager(request: Request, env: Env, url: URL): Promise<Response> 
     ? `${Number(url.searchParams.get("uploaded")) || 1} PDF bylo uloženo do knihovny.`
     : url.searchParams.get("assigned") ? `Materiál byl přidělen studentovi ${url.searchParams.get("assigned")}.` : "";
   return html(`<!doctype html><html lang="cs"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex,nofollow"><title>Knihovna materiálů</title><style>
-*{box-sizing:border-box}body{margin:0;background:#f4f7fb;color:#102a43;font-family:Inter,system-ui,sans-serif}.wrap{width:min(960px,calc(100% - 32px));margin:42px auto}.nav{display:flex;justify-content:space-between;margin-bottom:18px}.nav a,a{color:#2563eb;font-weight:700;text-decoration:none}.box{background:#fff;border:1px solid #d9e2ec;border-radius:18px;padding:24px;margin-bottom:18px}h1,h2,h3{margin-top:0}.muted,.item p{color:#64748b}.upload{display:flex;gap:12px;align-items:end;flex-wrap:wrap}.upload input,.item select{padding:10px;border:1px solid #bcccdc;border-radius:9px;background:#fff}.upload button,.item button{padding:11px 15px;border:0;border-radius:9px;background:#2563eb;color:#fff;font-weight:800;cursor:pointer}.rule,.notice{padding:12px 14px;border-radius:11px;margin-top:14px}.rule{background:#eff6ff;color:#1e3a8a}.notice{background:#ecfdf5;color:#166534;margin-bottom:18px}.list{display:grid;gap:12px}.item{display:grid;grid-template-columns:1fr auto;gap:20px;align-items:center;border:1px solid #e2e8f0;border-radius:13px;padding:16px}.item h3{margin-bottom:5px}.item p{margin:0 0 7px;font-size:13px}.item form{display:flex;gap:8px}.empty{color:#64748b}@media(max-width:720px){.item{grid-template-columns:1fr}.item form{flex-direction:column}.nav{gap:10px;flex-direction:column}}
-</style></head><body><main class="wrap"><div class="nav"><a href="${ROOT}">← Studentské zóny</a><a href="${PREFIX}/admin/materials">Soukromé materiály →</a></div>${message ? `<div class="notice">${escapeHtml(message)}</div>` : ""}<section class="box"><h1>Knihovna materiálů</h1><p class="muted">Master PDF je v R2 jen jednou. Studentovi se při přidělení uloží pouze bezpečný odkaz.</p><form class="upload" method="post" action="${PREFIX}/admin/library/upload" enctype="multipart/form-data"><div><strong>PDF do knihovny</strong><br><input name="files" type="file" accept="application/pdf,.pdf" multiple required></div><button>Nahrát / nahradit PDF</button></form><div class="rule"><strong>Aktualizace:</strong> znovu nahraj PDF se stejným názvem souboru. Všichni studenti pak automaticky otevřou novou verzi.</div></section><section class="box"><h2>Materiály</h2><div class="list">${rows}</div></section></main></body></html>`);
+*{box-sizing:border-box}body{margin:0;background:#f4f7fb;color:#102a43;font-family:Inter,system-ui,sans-serif}.wrap{width:min(960px,calc(100% - 32px));margin:42px auto}.nav{display:flex;justify-content:space-between;margin-bottom:18px}.nav a,a{color:#2563eb;font-weight:700;text-decoration:none}.box{background:#fff;border:1px solid #d9e2ec;border-radius:18px;padding:24px;margin-bottom:18px}h1,h2,h3{margin-top:0}.muted,.item p{color:#64748b}.upload{display:flex;gap:12px;align-items:end;flex-wrap:wrap}.upload input,.item select{padding:10px;border:1px solid #bcccdc;border-radius:9px;background:#fff}.upload button,.item button{padding:11px 15px;border:0;border-radius:9px;background:#2563eb;color:#fff;font-weight:800;cursor:pointer}.rule,.notice{padding:12px 14px;border-radius:11px;margin-top:14px}.rule{background:#eff6ff;color:#1e3a8a}.notice{background:#ecfdf5;color:#166534;margin-bottom:18px}.list{display:grid;gap:12px}.item{display:grid;grid-template-columns:1fr auto;gap:20px;align-items:center;border:1px solid #e2e8f0;border-radius:13px;padding:16px}.item h3{margin-bottom:5px}.item p{margin:0 0 7px;font-size:13px}.item form{display:flex;gap:8px}.empty{color:#64748b}.interactive-item{border-left:4px solid #0f766e}.section-intro{color:#64748b;font-size:14px;line-height:1.55}@media(max-width:720px){.item{grid-template-columns:1fr}.item form{flex-direction:column}.nav{gap:10px;flex-direction:column}}
+</style></head><body><main class="wrap"><div class="nav"><a href="${ROOT}">← Studentské zóny</a><a href="${PREFIX}/admin/materials">Soukromé materiály →</a></div>${message ? `<div class="notice">${escapeHtml(message)}</div>` : ""}<section class="box"><h1>Knihovna materiálů</h1><p class="muted">Master PDF je v R2 jen jednou. Studentovi se při přidělení uloží pouze bezpečný odkaz.</p><form class="upload" method="post" action="${PREFIX}/admin/library/upload" enctype="multipart/form-data"><div><strong>PDF do knihovny</strong><br><input name="files" type="file" accept="application/pdf,.pdf" multiple required></div><button>Nahrát / nahradit PDF</button></form><div class="rule"><strong>Aktualizace:</strong> znovu nahraj PDF se stejným názvem souboru. Všichni studenti pak automaticky otevřou novou verzi.</div></section><section class="box" id="interaktivni-zapisy"><h2>Interaktivní zápisy</h2><p class="section-intro">Experimentální lekce matematiky a fyziky. Každý zápis lze otevřít nebo přiřadit konkrétnímu studentovi. Nahrané PDF se nemění.</p><div class="list">${interactiveRows}</div></section><section class="box"><h2>PDF materiály</h2><div class="list">${rows}</div></section></main></body></html>`);
 }
 
 async function upload(request: Request, env: Env): Promise<Response> {
@@ -216,10 +307,28 @@ async function upload(request: Request, env: Env): Promise<Response> {
 async function assign(request: Request, env: Env): Promise<Response> {
   await requireAdmin(request, env);
   if (request.method !== "POST") return plain("Method not allowed", 405);
-  const bucket = env.MATERIALS;
-  if (!bucket) throw new PortalError(503, "Private material storage is not configured yet.");
   const form = await request.formData();
   const student = await studentById(String(form.get("studentId") || "").trim(), env);
+  const interactiveId = String(form.get("interactiveId") || "").trim();
+  if (interactiveId) {
+    const lesson = INTERACTIVE.find((entry) => entry.id === interactiveId);
+    if (!lesson) throw new PortalError(400, "Unknown interactive material.");
+    const data = await profile(student.id, env);
+    const materials = Array.isArray(data.materials) ? [...data.materials] as Array<Record<string, unknown>> : [];
+    const remaining = materials.filter((item) => item.interactiveId !== interactiveId);
+    const date = today();
+    const item: Record<string, unknown> = {
+      title: lesson.title, meta: lesson.meta, badge: "Interaktivní", badgeClass: "interactive",
+      kind: "interactive", url: lesson.url, date, source: "interactive-library", interactiveId,
+    };
+    data.materials = normalizeMaterials([item, ...remaining]);
+    data.incrementLessonCountOnMaterialAdd = false;
+    await env.DB.prepare(`UPDATE student_profiles SET payload_json = ?1, updated_at = CURRENT_TIMESTAMP WHERE student_id = ?2`)
+      .bind(JSON.stringify(data), student.id).run();
+    return redirect(`${PREFIX}/admin/library?assigned=${encodeURIComponent(student.display_name)}#interaktivni-zapisy`);
+  }
+  const bucket = env.MATERIALS;
+  if (!bucket) throw new PortalError(503, "Private material storage is not configured yet.");
   const key = String(form.get("key") || "").trim();
   if (!key.startsWith(R2_PREFIX) || key.includes("..") || key.includes("\\")) throw new PortalError(400, "Invalid library key.");
   const object = await bucket.head(key);
