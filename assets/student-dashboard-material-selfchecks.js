@@ -49,7 +49,8 @@
 
     const url = String(material.url || "").trim();
     if (url) {
-      const link = node("a", "download", "Otevřít PDF");
+      const isPdf = /\.pdf(?:[?#].*)?$/i.test(url) || /pdf/i.test(String(material.badge || ""));
+      const link = node("a", "download", isPdf ? "Otevřít PDF" : "Spustit interaktivní materiál");
       link.href = url;
       link.target = "_blank";
       link.rel = "noopener";
