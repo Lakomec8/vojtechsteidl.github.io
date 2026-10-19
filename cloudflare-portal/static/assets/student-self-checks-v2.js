@@ -602,6 +602,7 @@
       item.append(renderAnswerLine("Tvoje odpověď", answerLabel(result, result.answer)));
       if (!result.correct) item.append(renderAnswerLine("Správně", answerLabel(result, result.correctAnswer), "self-check-correct-answer"));
       const explanation = node("div", "self-check-v2-explanation");
+      explanation.append(node("strong", "", "Vysvětlení: "));
       appendRichText(explanation, result.explanation);
       item.append(explanation);
       details.append(item);
