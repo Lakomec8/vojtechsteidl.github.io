@@ -14,6 +14,7 @@
   let activePayload = null;
   let currentQuestionIndex = 0;
   const answers = new Map();
+  let submitting = false;
 
   if (window.location.hash === "#tasks") {
     document.querySelector('[data-view="tasks"]')?.click();
@@ -167,7 +168,12 @@
   function latestResult(assignment) {
     if (assignment.latest_score === null || assignment.latest_max_score === null) return "Zatím bez pokusu";
     const percent = Math.round((assignment.latest_score / assignment.latest_max_score) * 100);
-    return `Poslední výsledek ${assignment.latest_score}/${assignment.latest_max_score} (${percent} %)`;
+    const progress = assignment.latest_is_partial === 1
+      ? " · Částečný pokus (" + (assignment.latest_answered_count ?? "?") +
+        "/" + (assignment.latest_total_questions ?? assignment.question_count) + " úloh)"
+      : "";
+    return "Poslední výsledek " + assignment.latest_score + "/" + assignment.latest_max_score +
+      " (" + percent + " %)" + progress;
   }
 
   function renderAssignments(payload) {
@@ -265,6 +271,7 @@
     activePayload = null;
     currentQuestionIndex = 0;
     answers.clear();
+    submitting = false;
     title.textContent = "Načítám test…";
     topic.textContent = "Diagnostika";
     content.replaceChildren(node("div", "empty", "Načítám otázky…"));
@@ -455,13 +462,39 @@
     });
     bottom.append(prev, next);
     card.append(bottom);
+
+    const answeredCount = answers.size;
+    const totalQuestions = activePayload.questions.length;
+    const stop = node("div", "self-check-v2-stop");
+    const stopDescription = node("p", "self-check-v2-stop-description",
+      answeredCount + "/" + totalQuestions + " úloh zodpovězeno. " +
+      "Pokud už nechceš pokračovat, můžeš uložit částečný výsledek.");
+    const stopButton = node("button", "self-check-v2-stop-button",
+      answeredCount === totalQuestions
+        ? "Vyhodnotit celý test"
+        : "Ukončit a vyhodnotit dosavadní odpovědi");
+    stopButton.type = "button";
+    stopButton.disabled = answeredCount === 0 || submitting;
+    stopButton.addEventListener("click", () => {
+      if (answers.size === activePayload.questions.length) {
+        submitActiveTest(false);
+        return;
+      }
+      const maximum = activePayload.questions.length;
+      if (window.confirm(
+        "Opravdu ukončit test po " + answers.size + " z " + maximum +
+        " úlohách? Vyhodnotí se pouze zodpovězené úlohy a pokus bude uložen jako nedokončený."
+      )) submitActiveTest(true);
+    });
+    stop.append(stopDescription, stopButton);
+    card.append(stop);
     questionHost.replaceChildren(card);
   }
 
-  async function submitActiveTest() {
-    if (!activePayload) return;
+  async function submitActiveTest(partial = false) {
+    if (!activePayload || submitting) return;
     const firstUnanswered = activePayload.questions.findIndex((question) => !answers.has(question.id));
-    if (firstUnanswered !== -1) {
+    if (!partial && firstUnanswered !== -1) {
       currentQuestionIndex = firstUnanswered;
       renderQuestion();
       const host = content.querySelector(".self-check-v2-question");
@@ -469,6 +502,8 @@
       return;
     }
 
+    if (answers.size === 0) return;
+    submitting = true;
     const payloadAnswers = {};
     for (const [questionId, answer] of answers.entries()) payloadAnswers[questionId] = answer;
     const questionHost = content.querySelector(".self-check-v2-question-host");
@@ -478,7 +513,7 @@
       const payload = await api(`./api/self-checks/${encodeURIComponent(activeAssignmentId)}/submit`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ answers: payloadAnswers }),
+        body: JSON.stringify({ answers: payloadAnswers, partial }),
       });
       renderResult(payload);
       if (!payload.preview) {
@@ -489,6 +524,8 @@
       renderQuestion();
       const host = content.querySelector(".self-check-v2-question");
       host?.prepend(node("div", "self-check-error", error.message));
+    } finally {
+      submitting = false;
     }
   }
 
@@ -533,8 +570,26 @@
     score.append(node("strong", "", `${payload.score}/${payload.maxScore}`), node("span", "", `${payload.percent} %`));
     const copy = node("div", "self-check-v2-result-copy");
     copy.append(node("h3", "", payload.saved ? "Uložený výsledek" : "Výsledek diagnostiky"),
-      node("p", "", resultFeedback(payload.percent)));
+      node("p", "", payload.isPartial
+        ? "Předčasně ukončený test. Hodnocení zahrnuje pouze zodpovězené otázky."
+        : resultFeedback(payload.percent)));
     hero.append(score, copy);
+    if (payload.isPartial) {
+      const partialNote = node("section", "self-check-v2-partial-note");
+      const answered = payload.answeredCount ?? payload.results.length;
+      const total = payload.totalQuestions ?? answered;
+      const fullPoints = payload.fullMaxScore;
+      const detail = fullPoints
+        ? " · plný test má " + fullPoints + " bodů"
+        : "";
+      partialNote.append(
+        node("strong", "", "Částečný výsledek · " + answered + "/" + total + " úloh"),
+        node("p", "", "Úspěšnost " + payload.percent + " % je počítaná pouze z " +
+          answered + " zodpovězených úloh" + detail +
+          ". Zbylé otázky nejsou započteny jako chyby. Výsledek neovlivňuje celkový studijní průměr."),
+      );
+      shell.append(partialNote);
+    }
     if (payload.saved) {
       const savedHead = node("div", "self-check-v2-saved-head");
       savedHead.append(node("strong", "", "Rozbor dokončeného testu"),
@@ -552,7 +607,9 @@
         selection.append(node("span", "", "Historie pokusů"));
         const picker = node("select", "self-check-v2-history-picker");
         history.forEach((attempt, index) => {
-          const opt = node("option", "", "Pokus " + (history.length - index) +
+          const opt = node("option", "",
+            "Pokus " + (history.length - index) +
+            (attempt.isPartial ? " · částečný" : " · celý") +
             " · " + attempt.score + "/" + attempt.maxScore +
             " · " + formatDate(attempt.submittedAt));
           opt.value = attempt.id;
