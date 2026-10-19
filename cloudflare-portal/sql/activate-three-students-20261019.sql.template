@@ -4,8 +4,6 @@
 -- Activation affects portal login only; financial/calendar tutoring identities
 -- remain inactive until hourly rates are agreed and set separately.
 
-BEGIN TRANSACTION;
-
 UPDATE students
    SET email = '__JAN_ZAPLETAL_EMAIL__',
        enabled = 1,
@@ -32,8 +30,6 @@ UPDATE students
    AND enabled = 0
    AND email = 'pending-karolina-lhotska-20261019@portal.invalid'
    AND substr('__KAROLINA_LHOTSKA_EMAIL__', 1, 2) <> '__';
-
-COMMIT;
 
 -- Expect three enabled profiles, each backed by student_profiles and a calendar identity link.
 SELECT s.id, s.display_name, s.enabled,
