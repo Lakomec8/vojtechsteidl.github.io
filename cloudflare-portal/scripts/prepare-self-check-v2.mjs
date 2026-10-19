@@ -30,12 +30,12 @@ let html = await readFile(portalPath, "utf8");
 
 html = html.replace(
   /\s*<link rel="stylesheet" href="assets\/student-self-checks-math\.css\?v=[^"]+">/,
-  '\n  <link rel="stylesheet" href="assets/student-katex/katex.min.css?v=0.16.11">\n  <link rel="stylesheet" href="assets/student-self-checks-v2.css?v=20260907-2">',
+  '\n  <link rel="stylesheet" href="assets/student-katex/katex.min.css?v=0.16.11">\n  <link rel="stylesheet" href="assets/student-self-checks-v2.css?v=20261019-3">',
 );
 
 html = html.replace(
   /\s*<script src="assets\/student-self-checks\.js\?v=[^"]+"><\/script>\s*<script src="assets\/student-self-checks-math\.js\?v=[^"]+"><\/script>/,
-  '\n  <script src="assets/student-katex/katex.min.js?v=0.16.11"></script>\n  <script src="assets/student-self-checks-v2.js?v=20260907-2"></script>',
+  '\n  <script src="assets/student-katex/katex.min.js?v=0.16.11"></script>\n  <script src="assets/student-self-checks-v2.js?v=20261019-3"></script>',
 );
 
 if (
