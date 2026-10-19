@@ -78,46 +78,74 @@
     tryOpen();
   }
 
+  function showSavedResult(assignment) {
+    window.dispatchEvent(new CustomEvent("student:self-check-open-saved-result", {
+      detail: { assignmentId: assignment.id },
+    }));
+  }
+
   function renderTests(assignments) {
     testList.replaceChildren();
-    const latestAssignment = (Array.isArray(assignments) ? assignments : [])
-      .slice()
-      .sort((a, b) => String(b.assigned_at || "").localeCompare(String(a.assigned_at || "")))[0];
-    if (!latestAssignment) {
+    const rows = Array.isArray(assignments) ? assignments : [];
+    const latestAssigned = rows.slice().sort((a, b) =>
+      String(b.assigned_at || "").localeCompare(String(a.assigned_at || "")))[0];
+    const latestCompleted = rows
+      .filter((a) => a.latest_score != null && a.latest_max_score != null)
+      .sort((a, b) => String(b.latest_submitted_at || "").localeCompare(
+        String(a.latest_submitted_at || "")))[0];
+    const displayed = [latestAssigned];
+    // When a newer test is awaiting completion, retain the last completed
+    // test alongside it so that past mistakes remain accessible.
+    if (latestCompleted && latestCompleted.id !== latestAssigned?.id) {
+      displayed.push(latestCompleted);
+    }
+    if (!latestAssigned) {
       testList.append(node("div", "empty", "Zatím nemáš přiřazený žádný diagnostický test."));
       return;
     }
 
-    for (const assignment of [latestAssignment]) {
+    for (const [index, assignment] of displayed.entries()) {
       const item = node("article", "item dashboard-test-card");
       const main = node("div", "item-main");
+      if (index === 1) main.append(node("span", "dashboard-test-kicker", "POSLEDNÍ DOKONČENÝ TEST"));
       main.append(
         node("h3", "", assignment.title || "Diagnostický test"),
-        node("p", "", assignment.description || ""),
+        node("p", "", String(assignment.description || "")
+          .replace(/\[\[calculator:[^\]]+\]\]/gi, "").trim()),
       );
       const meta = node("div", "self-check-meta");
       meta.append(
         node("span", "badge", assignment.topic || "Test"),
-        node("span", "", `${assignment.question_count} otázek`),
-        node("span", "", `asi ${assignment.estimated_minutes} min`),
+        node("span", "", String(assignment.question_count) + " otázek"),
+        node("span", "", "asi " + assignment.estimated_minutes + " min"),
       );
       main.append(meta);
 
-      if (assignment.latest_score != null && assignment.latest_max_score != null) {
-        const percent = Math.round((assignment.latest_score / assignment.latest_max_score) * 100);
+      const completed = assignment.latest_score != null && assignment.latest_max_score != null;
+      if (completed) {
+        const percent = assignment.latest_max_score > 0
+          ? Math.round(assignment.latest_score / assignment.latest_max_score * 100) : 0;
         main.append(node("p", "dashboard-test-result",
-          `Poslední výsledek: ${assignment.latest_score}/${assignment.latest_max_score} (${percent} %)`));
+          "Poslední výsledek: " + assignment.latest_score + "/" + assignment.latest_max_score + " (" + percent + " %)"));
       } else {
         main.append(node("p", "dashboard-test-result", "Zatím bez výsledku"));
       }
 
       item.append(main);
-      if (Number(assignment.available) === 1) {
-        const button = node("button", "primary", assignment.latest_score == null ? "Spustit test" : "Zkusit znovu");
-        button.type = "button";
-        button.addEventListener("click", () => openTestInMaterials(assignment));
-        item.append(button);
+      const buttons = node("div", "dashboard-test-actions");
+      if (completed) {
+        const review = node("button", "secondary dashboard-review-button", "Zobrazit odpovědi");
+        review.type = "button";
+        review.addEventListener("click", () => showSavedResult(assignment));
+        buttons.append(review);
       }
+      if (Number(assignment.available) === 1) {
+        const launch = node("button", "primary", completed ? "Zkusit znovu" : "Spustit test");
+        launch.type = "button";
+        launch.addEventListener("click", () => openTestInMaterials(assignment));
+        buttons.append(launch);
+      }
+      if (buttons.childNodes.length) item.append(buttons);
       testList.append(item);
     }
   }
@@ -135,6 +163,15 @@
       testList.replaceChildren(node("div", "empty", error.message));
     }
   }
+
+  window.addEventListener("student:self-check-submitted", async () => {
+    try {
+      const saved = await api("./api/self-checks");
+      renderTests(saved.assignments);
+    } catch {
+      // The existing dashboard remains visible; another visit reloads the result.
+    }
+  });
 
   load();
 })();
