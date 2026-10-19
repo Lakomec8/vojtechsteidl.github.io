@@ -759,7 +759,7 @@ export async function handleSelfCheckRoute(request: Request, env: Env): Promise<
     const submitMatch = url.pathname.match(/^\/student-portal\/api\/self-checks\/([^/]+)\/submit$/);
     if (submitMatch) {
       if (request.method !== "POST") return plain("Method not allowed", 405);
-      return submitAssignment(request, env, decodeURIComponent(submitMatch[1]));
+      return await submitAssignment(request, env, decodeURIComponent(submitMatch[1]));
     }
 
     const detailMatch = url.pathname.match(/^\/student-portal\/api\/self-checks\/([^/]+)$/);
