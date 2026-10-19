@@ -56,3 +56,12 @@ button,input{font:inherit}button{cursor:pointer}
 /* Honor dynamic visibility for optional navigation and dashboard sections. */
 [hidden]{display:none!important}
 .dashboard-upcoming,.timeline-card,.links-card{margin-top:18px}
+
+/* Direct answer-review entry points for students and administrators. */
+.dashboard-test-card{flex-wrap:wrap}
+.dashboard-test-actions{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end;align-items:center}
+.dashboard-test-actions button{min-height:39px;font-size:12px;padding:9px 12px}
+.dashboard-test-kicker{display:block;color:#475569;letter-spacing:.08em;font-size:10px;font-weight:800;margin-bottom:7px}
+.metric-review{margin-top:9px;font-size:12px;padding:7px 10px;line-height:1.25}
+@media(max-width:1100px){.dashboard-test-card{flex-direction:column;align-items:stretch}.dashboard-test-actions{justify-content:flex-start}}
+@media(max-width:560px){.dashboard-test-actions{display:grid;grid-template-columns:1fr}.dashboard-test-actions button{width:100%}}
