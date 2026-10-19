@@ -68,6 +68,10 @@ jobs:
         working-directory: cloudflare-portal
         run: npm run test:public-capacity
 
+      - name: Verify calendar synchronization writes
+        working-directory: cloudflare-portal
+        run: npm run test:calendar-ingestion
+
       - name: Apply production database migrations
         working-directory: cloudflare-portal
         run: npm run db:migrate:remote

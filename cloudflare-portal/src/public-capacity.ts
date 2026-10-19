@@ -212,8 +212,8 @@ async function activeBookings(env: Env): Promise<BookingRow[]> {
 
 async function calendarSyncedAt(env: Env): Promise<string | null> {
   const row = await env.DB.prepare(`
-    SELECT MAX(last_synced_at) AS last_synced_at
-      FROM public_calendar_busy
+    SELECT last_synced_at
+      FROM calendar_ingestion_state WHERE id = 1
   `).first<{ last_synced_at: string | null }>();
   return row?.last_synced_at || null;
 }

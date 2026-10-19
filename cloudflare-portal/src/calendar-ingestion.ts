@@ -286,6 +286,12 @@ async function upsertOccurrence(env: Env, occurrence: CalendarOccurrence, synced
         ELSE 'planned'
       END,
       last_synced_at = excluded.last_synced_at
+    WHERE tutoring_calendar_events.student_id IS NOT excluded.student_id
+       OR tutoring_calendar_events.summary IS NOT excluded.summary
+       OR tutoring_calendar_events.starts_at IS NOT excluded.starts_at
+       OR tutoring_calendar_events.ends_at IS NOT excluded.ends_at
+       OR tutoring_calendar_events.duration_minutes IS NOT excluded.duration_minutes
+       OR tutoring_calendar_events.status = 'cancelled'
   `).bind(
     occurrence.googleEventId,
     primaryStudentId,
@@ -296,24 +302,29 @@ async function upsertOccurrence(env: Env, occurrence: CalendarOccurrence, synced
     syncedAt,
   ).run();
 
-  await env.DB.prepare(`DELETE FROM tutoring_calendar_event_students WHERE google_event_id = ?1`)
-    .bind(occurrence.googleEventId)
-    .run();
-  for (const studentId of occurrence.studentIds) {
-    await env.DB.prepare(`
-      INSERT OR IGNORE INTO tutoring_calendar_event_students (google_event_id, student_id)
-      VALUES (?1, ?2)
-    `).bind(occurrence.googleEventId, studentId).run();
-  }
+  const participants = await env.DB.prepare(`SELECT student_id FROM tutoring_calendar_event_students WHERE google_event_id = ?1`)
+    .bind(occurrence.googleEventId).all<{ student_id: string }>();
+  const existing = new Set((participants.results || []).map((row) => row.student_id));
+  const desired = new Set(occurrence.studentIds);
+  const changes = [
+    ...[...existing].filter((id) => !desired.has(id)).map((id) =>
+      env.DB.prepare(`DELETE FROM tutoring_calendar_event_students WHERE google_event_id = ?1 AND student_id = ?2`)
+        .bind(occurrence.googleEventId, id)),
+    ...[...desired].filter((id) => !existing.has(id)).map((id) =>
+      env.DB.prepare(`INSERT OR IGNORE INTO tutoring_calendar_event_students (google_event_id, student_id) VALUES (?1, ?2)`)
+        .bind(occurrence.googleEventId, id)),
+  ];
+  if (changes.length) await env.DB.batch(changes);
 }
 
 async function syncBusyOccurrences(
   env: Env,
   occurrences: BusyOccurrence[],
-  rangeStart: Date,
-  rangeEnd: Date,
   syncedAt: string,
 ): Promise<void> {
+  const previous = await env.DB.prepare(`SELECT calendar_event_id FROM public_calendar_busy`)
+    .all<{ calendar_event_id: string }>();
+  const seen = new Set(occurrences.map((occurrence) => occurrence.calendarEventId));
   const statements = occurrences.map((occurrence) => env.DB.prepare(`
       INSERT INTO public_calendar_busy (calendar_event_id, starts_at, ends_at, last_synced_at)
       VALUES (?1, ?2, ?3, ?4)
@@ -321,6 +332,8 @@ async function syncBusyOccurrences(
         starts_at = excluded.starts_at,
         ends_at = excluded.ends_at,
         last_synced_at = excluded.last_synced_at
+      WHERE public_calendar_busy.starts_at IS NOT excluded.starts_at
+         OR public_calendar_busy.ends_at IS NOT excluded.ends_at
     `).bind(
       occurrence.calendarEventId,
       occurrence.startsAt,
@@ -331,18 +344,11 @@ async function syncBusyOccurrences(
     await env.DB.batch(statements.slice(offset, offset + 100));
   }
 
-  await env.DB.prepare(`
-    DELETE FROM public_calendar_busy
-     WHERE last_synced_at <> ?1
-       AND starts_at <= ?2
-       AND ends_at >= ?3
-  `).bind(syncedAt, rangeEnd.toISOString(), rangeStart.toISOString()).run();
-
-  await env.DB.prepare(`
-    DELETE FROM public_calendar_busy
-     WHERE ends_at < ?1
-        OR starts_at > ?2
-  `).bind(rangeStart.toISOString(), rangeEnd.toISOString()).run();
+  const removed = (previous.results || []).filter((row) => !seen.has(row.calendar_event_id));
+  for (let offset = 0; offset < removed.length; offset += 100) {
+    await env.DB.batch(removed.slice(offset, offset + 100).map((row) =>
+      env.DB.prepare(`DELETE FROM public_calendar_busy WHERE calendar_event_id = ?1`).bind(row.calendar_event_id)));
+  }
 }
 
 export async function syncGoogleCalendarToD1(env: CalendarEnv): Promise<{ imported: number; busy: number; cancelled: number; skipped: boolean }> {
@@ -370,7 +376,7 @@ export async function syncGoogleCalendarToD1(env: CalendarEnv): Promise<{ import
   for (const occurrence of occurrences) {
     await upsertOccurrence(env, occurrence, syncedAt);
   }
-  await syncBusyOccurrences(env, busyOccurrences, rangeStart, rangeEnd, syncedAt);
+  await syncBusyOccurrences(env, busyOccurrences, syncedAt);
   await autoMapPublicTutoringSeries(env, events);
 
   const planned = await env.DB.prepare(`
@@ -392,6 +398,10 @@ export async function syncGoogleCalendarToD1(env: CalendarEnv): Promise<{ import
     `).bind(row.google_event_id, syncedAt).run();
     cancelled += Number(result.meta.changes || 0);
   }
+
+  // Publish freshness only after the complete calendar snapshot succeeded.
+  await env.DB.prepare(`INSERT INTO calendar_ingestion_state (id, last_synced_at) VALUES (1, ?1)
+    ON CONFLICT(id) DO UPDATE SET last_synced_at = excluded.last_synced_at`).bind(syncedAt).run();
 
   return { imported: occurrences.length, busy: busyOccurrences.length, cancelled, skipped: false };
 }

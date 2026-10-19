@@ -251,21 +251,8 @@ export default {
       url.pathname === "/student-portal/api/profile" ||
       (url.hostname === "portal.vojtechsteidl.eu" && url.pathname === "/api/profile")
     );
-    const shouldSettleBeforeRead = request.method === "GET" && (
-      url.pathname === "/student-portal/admin/tutoring/" ||
-      isProfileRead
-    );
-    if (shouldSettleBeforeRead) {
-      try {
-        await syncAndSettle(env);
-      } catch (error) {
-        console.error(JSON.stringify({
-          event: "tutoring_sync_on_load_error",
-          message: error instanceof Error ? error.message : "unknown",
-          settlement_skipped: true,
-        }));
-      }
-    }
+    // Reads use the last successful scheduled snapshot; never rewrite the
+    // entire calendar as a side effect of opening a student profile.
 
     const response = await tutoringWorker.fetch(request as WorkerRequest, env);
     if (!isProfileRead) return response;
