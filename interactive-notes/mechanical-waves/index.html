@@ -7,8 +7,8 @@
   <meta name="description" content="Interaktivní studijní laboratoř mechanického vlnění: rovnice, animace, vlnová délka, fáze a přechod mezi prostředími.">
   <meta name="theme-color" content="#13263d">
   <title>Mechanické vlnění · Interaktivní laboratoř | Vojtěch Steidl</title>
-  <link rel="stylesheet" href="./style.css?v=1">
-  <script src="./app.js?v=1" defer></script>
+  <link rel="stylesheet" href="./style.css?v=2">
+  <script src="./app.js?v=2" defer></script>
 </head>
 <body>
   <header class="topbar">
@@ -35,7 +35,7 @@
     <section class="lab-section active" id="lab-wave" aria-labelledby="heading-wave">
       <div class="chapter"><span class="section-id">01 / Vznik a šíření vlnění</span><h2 id="heading-wave">Vlní se prostředí, ne samotná látka</h2><p>Částice prostředí kmitají kolem rovnovážných poloh, zatímco porucha a energie postupují prostorem. Přepni příčnou a podélnou vlnu a sleduj označené částice.</p></div>
       <div class="equation-card">
-        <p class="equation-name">Pohybový zákon vlny šířící se do +x</p>
+        <p class="equation-name">Harmonické postupné vlnění v modelu</p>
         <div class="equation">y(x, t) = A · sin [2π (f · t − x/λ)]</div>
         <div class="derived" id="wave-equation">v = f · λ</div>
         <p class="equation-explain">Amplituda A určuje maximální výchylku. Frekvence f určuje počet kmitů za sekundu. Vlnová délka λ je vzdálenost nejbližších bodů ve stejné fázi.</p>
@@ -46,30 +46,47 @@
         <div class="controls cols-3">
           <label class="control"><span>Amplituda <b id="wave-A-label"></b></span><input id="wave-A" type="range" min="2" max="20" step="1" value="10"><small>Maximální výchylka částic</small></label>
           <label class="control"><span>Frekvence <b id="wave-f-label"></b></span><input id="wave-f" type="range" min="0.5" max="3" step="0.1" value="1.2"><small>Počet kmitů za sekundu</small></label>
-          <label class="control"><span>Vlnová délka <b id="wave-l-label"></b></span><input id="wave-l" type="range" min="1" max="8" step="0.2" value="4"><small>Rozestup stejných fází</small></label>
+          <label class="control"><span>Vlnová délka <b id="wave-l-label"></b></span><input id="wave-l" type="range" min="1" max="12" step="0.2" value="4"><small id="wave-l-note">Rozestup stejných fází</small></label>
         </div>
+        <label class="model-switch"><input type="checkbox" id="wave-lock-speed"><span><strong>Stejné prostředí – neměnná rychlost</strong><small id="wave-medium-hint">Volný model: zadáváš f i λ a porovnáváš vlny s různými rychlostmi.</small></span></label>
         <div class="readings"><div><span>Perioda T = 1/f</span><strong id="wave-T"></strong></div><div><span>Rychlost v = fλ</span><strong id="wave-v"></strong></div><div><span>Čas animace</span><strong id="wave-time"></strong></div></div>
         <div class="actions"><button id="wave-play" class="primary" type="button">Pozastavit animaci</button><button id="wave-reset" type="button">Vrátit výchozí hodnoty</button></div>
       </div>
-      <div class="observation"><strong>Vyzkoušej.</strong><p>Nech λ beze změny a zdvojnásob frekvenci. Jak se změní rychlost v? Pak změň jen amplitudu. Změní se v našem modelu rychlost šíření?</p><button type="button" data-check="wave">Ověřit předpověď</button><p class="feedback" id="wave-feedback" hidden>Ze vztahu v = fλ plyne: při stejné λ dvojnásobná frekvence znamená dvojnásobnou rychlost. Samotná amplituda rychlost v tomto modelu nemění.</p></div>
+      <div class="observation"><strong>Vyzkoušej.</strong><p>Nejdřív změň f při pevné λ. Potom zapni „Stejné prostředí“ a opakuj změnu frekvence. Jak se musí změnit λ, aby rychlost zůstala stejná? Ovlivní samotná amplituda rychlost?</p><button type="button" data-check="wave">Ověřit předpověď</button><p class="feedback" id="wave-feedback" hidden>Při pevné λ platí v = fλ, takže zdvojnásobení f zdvojnásobí v. Jde ale o porovnání vln s různou rychlostí. V jednom nedisperzním prostředí zůstává v přibližně konstantní a při zvýšení f se λ zkrátí. Zapni přepínač „Stejné prostředí“ a ověř to.</p></div>
+      <div class="calculation-check" aria-label="Procvičení na školním příkladu">
+        <div><span class="check-kicker">VÝPOČET PO EXPERIMENTU</span><h3>1. Rychlost vlnění</h3><p>T = 2,0 ms, λ = 2,9 m. Urči rychlost v v m/s.</p></div>
+        <form class="check-form" data-calc="wave" novalidate>
+          <label for="wave-answer">Číselný výsledek <span class="small-muted">(desetinná čárka je povolena)</span></label>
+          <div class="check-entry"><input type="text" id="wave-answer" inputmode="decimal" autocomplete="off" placeholder="Napiš výsledek" required><button type="submit">Zkontrolovat</button></div>
+          <p class="check-feedback" id="wave-check-feedback" aria-live="polite"></p>
+        </form>
+      </div>
     </section>
     <section class="lab-section" id="lab-phase" aria-labelledby="heading-phase" hidden>
       <div class="chapter"><span class="section-id">02 / Fáze a vlnová délka</span><h2 id="heading-phase">Dva body, stejný rytmus. Jiná fáze.</h2><p>Táhni barevné body po vlně nebo uprav jejich polohu posuvníky. Sleduj, kdy kmitají stejně, opačně a proč záleží na vzdálenosti měřené v násobcích λ.</p></div>
-      <div class="equation-card"><p class="equation-name">Fázový rozdíl ve stejném okamžiku</p><div class="equation">|Δφ| = 2π · |x₂ − x₁| / λ</div><div class="derived" id="phase-equation"></div><p class="equation-explain">Stejná fáze: Δx = nλ. Opačná fáze: Δx = (n + ½)λ. Fázový rozdíl pro porovnání stavů vždy posuzuj modulo 2π.</p></div>
+      <div class="equation-card"><p class="equation-name">Fázový rozdíl ve stejném okamžiku</p><div class="equation">|Δφ| = 2π · |x₂ − x₁| / λ</div><div class="derived" id="phase-equation"></div><p class="equation-explain">Stejná fáze: Δx = nλ. Opačná fáze: Δx = (n + ½)λ. Při porovnávání stavů rozlišuj nezredukovaný fázový posun a fázi modulo 2π; úhel π odpovídá 180°.</p></div>
       <div class="experiment"><div class="experiment-top"><strong>Porovnej dva body</strong><span class="helper">Bod A a B můžeš táhnout myší nebo prstem</span></div><div class="canvas-surface"><canvas id="phase-canvas" role="img" aria-label="Vlna s dvěma posuvnými body a porovnáním jejich kmitání"></canvas><div class="canvas-label">Sleduj také průběh kmitání A a B ve spodním grafu</div></div>
         <div class="controls cols-3">
           <label class="control"><span>Vlnová délka <b id="phase-l-label"></b></span><input id="phase-l" type="range" min="1" max="8" step="0.1" value="4"></label>
           <label class="control"><span>Poloha A · x₁ <b id="phase-x1-label"></b></span><input id="phase-x1" type="range" min="0" max="10" step="0.1" value="2"></label>
           <label class="control"><span>Poloha B · x₂ <b id="phase-x2-label"></b></span><input id="phase-x2" type="range" min="0" max="10" step="0.1" value="4"></label>
         </div>
-        <div class="readings"><div><span>Vzdálenost |Δx|</span><strong id="phase-distance"></strong></div><div><span>Fáze modulo 2π</span><strong id="phase-mod"></strong></div><div><span>Interpretace</span><strong id="phase-status"></strong></div></div>
+        <div class="readings"><div><span>Vzdálenost |Δx|</span><strong id="phase-distance"></strong></div><div><span>Fáze modulo 2π (rad / °)</span><strong id="phase-mod"></strong></div><div><span>Interpretace</span><strong id="phase-status"></strong></div></div>
         <div class="actions"><button type="button" class="primary" id="phase-play">Pozastavit animaci</button><button type="button" id="phase-same">Nastavit stejnou fázi</button><button type="button" id="phase-opposite">Nastavit opačnou fázi</button></div>
       </div>
       <div class="observation"><strong>Vyzkoušej.</strong><p>Nastav Δx = λ/2 a sleduj oba časové průběhy. Pak nastav Δx = λ. Ověř, proč v prvním případě kmitají opačně a ve druhém synchronně.</p><button type="button" data-check="phase">Zobrazit vysvětlení</button><p class="feedback" id="phase-feedback" hidden>Pro Δx = λ/2 vyjde |Δφ| = π: když je bod A nahoře, B je dole. Pro Δx = λ je |Δφ| = 2π, tedy stav kmitání je v každém okamžiku shodný.</p></div>
+      <div class="calculation-check" aria-label="Procvičení na školním příkladu">
+        <div><span class="check-kicker">VÝPOČET PO EXPERIMENTU</span><h3>2. Fázový rozdíl</h3><p>f = 450 Hz, v = 360 m/s, Δx = 0,20 m. Kolik činí |Δφ| v násobcích π?</p></div>
+        <form class="check-form" data-calc="phase" novalidate>
+          <label for="phase-answer">Číselný výsledek <span class="small-muted">(desetinná čárka je povolena)</span></label>
+          <div class="check-entry"><input type="text" id="phase-answer" inputmode="decimal" autocomplete="off" placeholder="Napiš výsledek" required><button type="submit">Zkontrolovat</button></div>
+          <p class="check-feedback" id="phase-check-feedback" aria-live="polite"></p>
+        </form>
+      </div>
     </section>
     <section class="lab-section" id="lab-instant" aria-labelledby="heading-instant" hidden>
-      <div class="chapter"><span class="section-id">03 / Rovnice postupného vlnění</span><h2 id="heading-instant">Jedna rovnice. Dvě souřadnice.</h2><p>Výchylka závisí současně na místě x a čase t. Posouvej měřicí bod, měň okamžik pozorování a v reálném čase sleduj dosazení i výsledek.</p></div>
-      <div class="equation-card"><p class="equation-name">Okamžitá výchylka harmonické vlny</p><div class="equation">y(x, t) = A · sin [2π (t/T − x/λ) + φ₀]</div><div class="derived" id="instant-equation"></div><p class="equation-explain">Vzorec předpokládá postup do +x. Pokud zdroj začne kmitat až v čase t = 0, bod do příchodu čela vlny (t &lt; x/v) nekmitá.</p></div>
+      <div class="chapter"><span class="section-id">03 / Rovnice postupného vlnění</span><h2 id="heading-instant">Jedna rovnice, dvě proměnné.</h2><p>Výchylka závisí současně na místě x a čase t. Posouvej měřicí bod, měň okamžik pozorování a v reálném čase sleduj dosazení i výsledek.</p></div>
+      <div class="equation-card"><p class="equation-name">Okamžitá výchylka harmonické vlny</p><div class="equation">y(x, t) = A · sin [2π (t/T − x/λ) + φ₀]</div><div class="derived" id="instant-equation"></div><p class="equation-explain">Vzorec předpokládá postup do +x. Pokud zdroj spustíme v čase t = 0, bod před příchodem čela vlny (t &lt; x/v) nekmitá. Při φ₀ ≠ 0 může idealizovaný skokový začátek vytvořit nespojitost na čele vlny.</p></div>
       <div class="experiment"><div class="experiment-top"><strong>Měřicí laboratoř</strong><span class="helper">Čárkovaná svislice označuje vybrané x</span></div><div class="canvas-surface"><canvas id="instant-canvas" role="img" aria-label="Okamžitá poloha harmonické vlny, měřicí bod a čelo vlny"></canvas><div class="canvas-label">Zdroj spuštěný v t = 0 · čelo vlny postupuje rychlostí v</div></div>
         <div class="controls cols-3">
           <label class="control"><span>Amplituda A <b id="instant-A-label"></b></span><input id="instant-A" type="range" min="2" max="20" step="1" value="10"></label>
@@ -83,11 +100,19 @@
         <div class="actions"><button type="button" class="primary" id="instant-run">Přehrát běh času</button><button type="button" id="instant-zero">Zastavit a vrátit čas na nulu</button></div>
       </div>
       <div class="observation"><strong>Vyzkoušej.</strong><p>Nastav x = 6 m a t = 1 s. Dorazila už vlna? Pak přidávej čas, dokud čelo nedorazí na měřicí bod. Všimni si rozdílu mezi dosazením do sinusovky a fyzikálním začátkem šíření.</p><button type="button" data-check="instant">Vysvětlit souvislost</button><p class="feedback" id="instant-feedback" hidden>Rovnice popisuje harmonické kmitání za čelem vlny. Pro zdroj spuštěný v t = 0 musíš nejprve ověřit t ≥ x/v. Do té doby zůstává bod v klidu a výchylka je nula.</p></div>
+      <div class="calculation-check" aria-label="Procvičení na školním příkladu">
+        <div><span class="check-kicker">VÝPOČET PO EXPERIMENTU</span><h3>3. Okamžitá výchylka</h3><p>A = 3 cm, T = 0,10 s, λ = 20 m, x = 5 m, t = 0,10 s, φ₀ = 0. Urči y v cm.</p></div>
+        <form class="check-form" data-calc="instant" novalidate>
+          <label for="instant-answer">Číselný výsledek <span class="small-muted">(desetinná čárka je povolena)</span></label>
+          <div class="check-entry"><input type="text" id="instant-answer" inputmode="decimal" autocomplete="off" placeholder="Napiš výsledek" required><button type="submit">Zkontrolovat</button></div>
+          <p class="check-feedback" id="instant-check-feedback" aria-live="polite"></p>
+        </form>
+      </div>
     </section>
     <section class="lab-section" id="lab-medium" aria-labelledby="heading-medium" hidden>
       <div class="chapter"><span class="section-id">04 / Přechod mezi prostředími</span><h2 id="heading-medium">Frekvence zůstává. Vlnová délka se mění.</h2><p>Sleduj vlnění, které na rozhraní dvou prostředí změní rychlost. Uvidíš, proč se při stejné frekvenci zkracuje nebo prodlužuje vlnová délka.</p></div>
-      <div class="equation-card"><p class="equation-name">Zachování frekvence na rozhraní</p><div class="equation">f₁ = f₂ &nbsp;·&nbsp; v₁/λ₁ = v₂/λ₂</div><div class="derived" id="medium-equation"></div><p class="equation-explain">Model zobrazuje vlnu dopadající kolmo na rozhraní. Amplitudu ponecháváme pro názornost stejnou a neuvažujeme odraz vlny.</p></div>
-      <div class="experiment"><div class="experiment-top"><strong>Dvě prostředí, jedna frekvence</strong><span class="helper">Svislá čára je rozhraní</span></div><div class="canvas-surface"><canvas id="medium-canvas" role="img" aria-label="Vlna mění rychlost a vlnovou délku na rozhraní dvou prostředí"></canvas><div class="canvas-label">Modrá část: prostředí 1 · světlejší část: prostředí 2</div></div>
+      <div class="equation-card"><p class="equation-name">Zachování frekvence na rozhraní</p><div class="equation">f₁ = f₂ &nbsp; a &nbsp; v₁/λ₁ = v₂/λ₂</div><div class="derived" id="medium-equation"></div><p class="equation-explain">Model zobrazuje vlnu dopadající kolmo na rozhraní. Amplitudu ponecháváme pro názornost stejnou a neuvažujeme odraz vlny.</p></div>
+      <div class="experiment"><div class="experiment-top"><strong>Dvě prostředí, jedna frekvence</strong><span class="helper">Svislá čára je rozhraní; zanedbáváme odraz</span></div><div class="canvas-surface"><canvas id="medium-canvas" role="img" aria-label="Vlna mění rychlost a vlnovou délku na rozhraní dvou prostředí"></canvas><div class="canvas-label">Modrá část: prostředí 1 · světlejší část: prostředí 2</div></div>
         <div class="controls cols-3">
           <label class="control"><span>Frekvence f <b id="medium-f-label"></b></span><input id="medium-f" type="range" min="0.5" max="3" step="0.1" value="1"></label>
           <label class="control"><span>Rychlost v₁ <b id="medium-v1-label"></b></span><input id="medium-v1" type="range" min="1" max="8" step="0.1" value="3"></label>
@@ -97,6 +122,14 @@
         <div class="actions"><button class="primary" type="button" id="medium-play">Pozastavit animaci</button><button type="button" id="medium-slower">Druhé prostředí pomalejší</button><button type="button" id="medium-faster">Druhé prostředí rychlejší</button></div>
       </div>
       <div class="observation"><strong>Vyzkoušej.</strong><p>Přepni druhé prostředí z pomalejšího na rychlejší. Porovnej rozestupy vrcholů v obou částech obrázku a výsledky vypočtené z λ = v/f.</p><button type="button" data-check="medium">Vysvětlit souvislost</button><p class="feedback" id="medium-feedback" hidden>Frekvenci určuje zdroj a na stacionárním rozhraní se nemění. Proto λ₂/λ₁ = v₂/v₁. Při vyšší rychlosti je vlnová délka delší, při nižší kratší.</p></div>
+      <div class="calculation-check" aria-label="Procvičení na školním příkladu">
+        <div><span class="check-kicker">VÝPOČET PO EXPERIMENTU</span><h3>4. Přechod do jiného prostředí</h3><p>V prvním prostředí v₁ = 300 m/s a λ₁ = 2 m. V druhém λ₂ = 3 m. Urči v₂ v m/s.</p></div>
+        <form class="check-form" data-calc="medium" novalidate>
+          <label for="medium-answer">Číselný výsledek <span class="small-muted">(desetinná čárka je povolena)</span></label>
+          <div class="check-entry"><input type="text" id="medium-answer" inputmode="decimal" autocomplete="off" placeholder="Napiš výsledek" required><button type="submit">Zkontrolovat</button></div>
+          <p class="check-feedback" id="medium-check-feedback" aria-live="polite"></p>
+        </form>
+      </div>
     </section>
     <footer class="footer"><span>Vojtěch Steidl · Interaktivní výukové materiály</span><span>Mechanické vlnění · Vztah → předpověď → experiment → vysvětlení</span></footer>
   </main>
