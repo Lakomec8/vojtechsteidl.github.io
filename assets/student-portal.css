@@ -65,3 +65,6 @@ button,input{font:inherit}button{cursor:pointer}
 .metric-review{margin-top:9px;font-size:12px;padding:7px 10px;line-height:1.25}
 @media(max-width:1100px){.dashboard-test-card{flex-direction:column;align-items:stretch}.dashboard-test-actions{justify-content:flex-start}}
 @media(max-width:560px){.dashboard-test-actions{display:grid;grid-template-columns:1fr}.dashboard-test-actions button{width:100%}}
+
+
+.dashboard-test-partial{margin:5px 0 0;color:#53697c;font-size:12px;font-weight:650;line-height:1.5}
