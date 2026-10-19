@@ -4,6 +4,8 @@ on:
   pull_request:
     paths:
       - "interactive-notes/functions/**"
+      - "interactive-notes/fractions/**"
+      - "scripts/test-fractions.mjs"
       - "scripts/validate_interactive_materials.py"
       - ".github/workflows/validate-interactive-materials.yml"
   push:
@@ -11,6 +13,8 @@ on:
       - main
     paths:
       - "interactive-notes/functions/**"
+      - "interactive-notes/fractions/**"
+      - "scripts/test-fractions.mjs"
       - "scripts/validate_interactive_materials.py"
       - ".github/workflows/validate-interactive-materials.yml"
 
@@ -34,3 +38,8 @@ jobs:
 
       - name: Check JavaScript syntax
         run: node --check interactive-notes/functions/app.js
+
+      - name: Check premium fractions lesson
+        run: |
+          node --check interactive-notes/fractions/app.js
+          node scripts/test-fractions.mjs

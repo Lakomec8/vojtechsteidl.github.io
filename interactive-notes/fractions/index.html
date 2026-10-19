@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="cs">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#f4f4ef">
+<meta name="robots" content="noindex,nofollow">
+<meta name="description" content="Interaktivní studijní lekce o zlomcích. Názorné modely, krácení, rozšiřování, porovnávání a převody jednotek.">
+<title>Zlomky do hloubky · Interaktivní zápis | Vojtěch Steidl</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="./style.css?v=20261019-1">
+<script src="./app.js?v=20261019-1" defer></script>
+</head>
+<body>
+<a class="skip" href="#uvod">Přejít na obsah</a>
+<header class="topbar">
+  <a class="identity" href="/student-portal/"><span class="identity-symbol">∑</span><span>VOJTĚCH STEIDL <small>STUDIJNÍ ATELIÉR</small></span></a>
+  <div class="topbar-right"><span class="top-label">MATEMATIKA / ZÁKLADNÍ ŠKOLA</span><a class="back-link" href="/student-portal/">← Studentská zóna</a></div>
+</header>
+<div class="page">
+<aside class="rail" aria-label="Obsah lekce">
+  <div class="rail-overline">PRŮVODCE LEKCÍ</div>
+  <nav class="lesson-nav">
+    <a href="#uvod" class="current"><b>00</b><span>Úvod</span></a>
+    <a href="#pochopeni"><b>01</b><span>Co zlomek znamená</span></a>
+    <a href="#rozsirovani"><b>02</b><span>Stejná hodnota, jiný zápis</span></a>
+    <a href="#kraceni"><b>03</b><span>Krácení krok za krokem</span></a>
+    <a href="#porovnavani"><b>04</b><span>Porovnávání zlomků</span></a>
+    <a href="#jednotky"><b>05</b><span>Zlomky v praxi</span></a>
+    <a href="#overeni"><b>06</b><span>Ověření porozumění</span></a>
+  </nav>
+  <div class="rail-note"><span class="rail-note-icon">✦</span><strong>Jak s lekcí pracovat?</strong><p>Nejdříve odhadni výsledek. Potom změň parametr, pozoruj obrázek a vlastními slovy vysvětli proč.</p></div>
+  <div class="rail-footer">VERZE 1.0 <span>·</span> 2026</div>
+</aside>
+<main>
+<section class="hero" id="uvod">
+  <div class="hero-copy"><div class="eyebrow"><span class="tiny-line"></span> INTERAKTIVNÍ ZÁPIS / 01</div>
+  <h1>Porozumět <em>zlomkům.</em><br>Neučit se je nazpaměť.</h1>
+  <p>Každý zlomek vyjadřuje část celku. Rozděluj, skládej, porovnávej a sleduj, proč mají různě zapsané zlomky často úplně stejnou hodnotu.</p>
+  <div class="hero-actions"><a class="button dark" href="#pochopeni">Začít experimentovat <span>↗</span></a><span class="hero-meta"><span class="dot"></span> 6 tematických zastavení</span></div></div>
+  <div class="hero-art" aria-hidden="true"><div class="art-halo"></div><div class="art-circle"><svg viewBox="0 0 260 260"><circle cx="130" cy="130" r="112" fill="#fafaf5"/><path d="M130 130 L130 18 A112 112 0 0 1 242 130 Z" fill="#e4e9e5"/><path d="M130 130 L242 130 A112 112 0 0 1 130 242 Z" fill="#d5e7de"/><path d="M130 130 L130 242 A112 112 0 0 1 18 130 Z" fill="#438c80"/><path d="M130 130 L18 130 A112 112 0 0 1 130 18 Z" fill="#438c80"/><circle cx="130" cy="130" r="112" stroke="#304b49" stroke-width="1.2" fill="none"/><path d="M130 18 V242 M18 130 H242" stroke="#fafaf5" stroke-width="3"/></svg></div><span class="art-caption">JEDEN CELEK · ČTYŘI STEJNÉ DÍLY</span><div class="art-badge"><span>2</span><i></i><span>4</span></div></div>
+</section>
+
+<div class="chapter-intro"><span>JEDNA MYŠLENKA, VÍCE PODOB</span><div class="chapter-intro-line"></div><span>POSOUVEJ · POZORUJ · POCHOP</span></div>
+
+<section class="chapter" id="pochopeni">
+  <div class="chapter-heading"><span class="chapter-n">01 / ZÁKLADNÍ PŘEDSTAVA</span><h2>Co vlastně <em>znamená</em> zlomek?</h2><p>Jmenovatel určuje, <strong>na kolik stejných částí</strong> celek rozdělíme. Čitatel říká, <strong>kolik těchto částí</strong> bereme.</p></div>
+  <div class="lab">
+    <div class="lab-toolbar"><span class="lab-kicker">ŽIVÝ MODEL</span><span class="live"><span></span> MĚNÍ SE S PARAMETRY</span></div>
+    <div class="lab-layout">
+      <div class="lab-controls">
+        <div class="math-frame" id="meaningFormula" aria-live="polite"></div>
+        <div class="variable"><label for="meaningD">Jmenovatel <strong id="meaningDOut">4</strong></label><input id="meaningD" type="range" min="2" max="12" value="4" step="1"><div class="range-ends"><span>2 díly</span><span>12 dílů</span></div></div>
+        <div class="variable"><label for="meaningN">Čitatel <strong id="meaningNOut">3</strong></label><input id="meaningN" type="range" min="0" max="4" value="3" step="1"><div class="range-ends"><span>0 dílů</span><span id="meaningNMax">4 díly</span></div></div>
+        <button class="quiet-button" id="meaningReset" type="button">↺ Vrátit 3/4</button>
+      </div>
+      <div class="lab-stage">
+        <div class="scene-switch" role="group" aria-label="Způsob znázornění zlomku"><button type="button" data-view="circle" aria-pressed="true">Kruh</button><button type="button" data-view="strip" aria-pressed="false">Pruh</button><button type="button" data-view="tiles" aria-pressed="false">Dílky</button></div>
+        <div id="meaningVisual" class="meaning-visual" aria-live="polite"></div>
+        <div class="data-strip"><div><small>ČÁST CELKU</small><strong id="meaningPercent"></strong></div><div><small>DESETINNÝ ZÁPIS</small><strong id="meaningDecimal"></strong></div></div>
+      </div>
+    </div>
+    <div class="insight" id="meaningInsight" aria-live="polite"></div>
+  </div>
+  <div class="teacher-note"><span>POZOR NA DETAIL</span><p>Části musí mít <strong>stejnou velikost</strong>. Rozdělení koláče na čtyři různě velké kusy samo o sobě neznamená, že každý kus představuje jednu čtvrtinu.</p></div>
+</section>
+
+<section class="chapter" id="rozsirovani">
+  <div class="chapter-heading"><span class="chapter-n">02 / EKVIVALENTNÍ ZLOMKY</span><h2>Více dílků. <em>Stejný</em> celek.</h2><p>Pokud čitatele i jmenovatele vynásobíme stejným nenulovým číslem, hodnota zlomku se nezmění. Mění se jen způsob, jakým jsme celek rozdělili.</p></div>
+  <div class="equation-hero"><math display="block" aria-label="a lomeno b rovná se a krát k lomeno b krát k pro k různé od nuly"><mfrac><mi>a</mi><mi>b</mi></mfrac><mo>=</mo><mfrac><mrow><mi>a</mi><mo>·</mo><mi>k</mi></mrow><mrow><mi>b</mi><mo>·</mo><mi>k</mi></mrow></mfrac><mspace width="1em"/><mtext>pro</mtext><mspace width=".4em"/><mi>k</mi><mo>≠</mo><mn>0</mn></math><small>ROZŠIŘOVÁNÍ ZLOMKU</small></div>
+  <div class="lab">
+    <div class="lab-toolbar"><span class="lab-kicker">SROVNÁVACÍ LABORATOŘ</span><span class="live"><span></span> OBA PRUHY ZOBRAZUJÍ TOTÉŽ</span></div>
+    <div class="preset-row" role="group" aria-label="Výchozí zlomek"><span>VYBER ZLOMEK</span><button class="preset is-selected" data-base="1/2" type="button">1/2</button><button class="preset" data-base="2/3" type="button">2/3</button><button class="preset" data-base="3/4" type="button">3/4</button><button class="preset" data-base="2/5" type="button">2/5</button></div>
+    <div class="equiv-layout"><div class="equiv-side"><small>PŮVODNÍ ZÁPIS</small><div id="equivLeftMath" class="equiv-math"></div><div id="equivLeftBar"></div></div><div class="equiv-arrow">=</div><div class="equiv-side"><small>ROZŠÍŘENÝ ZÁPIS</small><div id="equivRightMath" class="equiv-math"></div><div id="equivRightBar"></div></div></div>
+    <div class="factor-panel"><label for="factorSlider">Rozšiřujeme číslem <strong id="factorOut">3</strong></label><input type="range" id="factorSlider" min="1" max="6" value="3" step="1"><p id="equivSentence"></p></div>
+    <div class="insight" id="equivInsight"></div>
+  </div>
+</section>
+
+<section class="chapter" id="kraceni">
+  <div class="chapter-heading"><span class="chapter-n">03 / KRÁCENÍ</span><h2>Zjednodušuj. <em>Hodnotu</em> neměň.</h2><p>Krácení je obrácený postup k rozšiřování. V každém kroku vydělíme čitatele i jmenovatele stejným společným dělitelem.</p></div>
+  <div class="lab reduction-lab">
+    <div class="lab-toolbar"><span class="lab-kicker">KROKOVÝ TRENAŽÉR</span><span class="lab-chip" id="reduceStatus">PŘIPRAVENO</span></div>
+    <div class="preset-row"><span>ZAČNI S</span><button type="button" class="reduce-preset is-selected" data-start="12/18">12/18</button><button type="button" class="reduce-preset" data-start="18/24">18/24</button><button type="button" class="reduce-preset" data-start="15/25">15/25</button><button type="button" class="reduce-preset" data-start="21/28">21/28</button></div>
+    <div class="reduction-grid"><div class="reduction-display"><small>AKTUÁLNÍ ZLOMEK</small><div id="reduceMath" class="big-math"></div><div id="reduceBar"></div><div id="reduceGcd" class="gcd-note"></div></div>
+    <div class="reduction-actions"><p class="control-question">Kterým číslem můžeš vydělit <strong>obě</strong> čísla beze zbytku?</p><div id="divisorButtons" class="divisors"></div><div id="reduceFeedback" class="feedback" role="status" aria-live="polite">Vyber společného dělitele.</div><button class="quiet-button" id="reduceUndo" type="button">↶ Zpět o krok</button></div></div>
+    <div class="history"><small>TVŮJ POSTUP</small><div id="reduceHistory" class="history-content"></div></div>
+  </div>
+  <div class="teacher-note positive"><span>JAK POZNÁŠ KONEC?</span><p>Ve <strong>základním tvaru</strong> jsou čitatel a jmenovatel nesoudělná čísla — jejich největší společný dělitel je 1. Třeba 12/18 lze zkrátit na 2/3, ale zlomek 2/3 už dále krátit nelze.</p></div>
+</section>
+
+<section class="chapter" id="porovnavani">
+  <div class="chapter-heading"><span class="chapter-n">04 / POROVNÁVÁNÍ</span><h2>Který zlomek je <em>větší?</em></h2><p>Na číselné ose vidíš samotnou velikost zlomku. Nemusí mít stejného jmenovatele, aby šlo určit, který představuje větší část celku.</p></div>
+  <div class="lab"><div class="lab-toolbar"><span class="lab-kicker">ČÍSELNÁ OSA</span><span class="live"><span></span> OBA BODY JSOU POHYBLIVÉ</span></div>
+    <div class="compare-grid">
+      <div class="compare-control" data-side="a"><div class="compare-heading"><span class="swatch a"></span> ZLOMEK A <div id="compareMathA"></div></div><label for="compareDA">Počet stejných dílů <output id="compareDAOut"></output></label><input id="compareDA" type="range" min="2" max="10" value="4"><label for="compareNA">Vybarvené díly <output id="compareNAOut"></output></label><input id="compareNA" type="range" min="0" max="4" value="3"><div id="compareBarA"></div></div>
+      <div class="compare-control" data-side="b"><div class="compare-heading"><span class="swatch b"></span> ZLOMEK B <div id="compareMathB"></div></div><label for="compareDB">Počet stejných dílů <output id="compareDBOut"></output></label><input id="compareDB" type="range" min="2" max="10" value="6"><label for="compareNB">Vybarvené díly <output id="compareNBOut"></output></label><input id="compareNB" type="range" min="0" max="6" value="4"><div id="compareBarB"></div></div>
+    </div>
+    <div id="numberLine" class="number-line" role="img" aria-label="Číselná osa se zlomky"></div>
+    <div id="compareOutcome" class="comparison-outcome" aria-live="polite"></div>
+  </div>
+  <div class="teacher-note"><span>JINÁ CESTA</span><p>Pro kladné jmenovatele můžeš porovnat i <strong>křížové součiny</strong>. Chceš-li porovnat a/b a c/d, porovnej hodnoty a·d a c·b. Na číselné ose si pak správnost ověř.</p></div>
+</section>
+
+<section class="chapter" id="jednotky">
+  <div class="chapter-heading"><span class="chapter-n">05 / MATEMATIKA V PRAXI</span><h2>Zlomek je také <em>množství.</em></h2><p>Kolik gramů je dvě pětiny kilogramu? Nejde o nový typ příkladu: pouze hledáme určený podíl z většího celku.</p></div>
+  <div class="lab"><div class="lab-toolbar"><span class="lab-kicker">PŘEVODY JEDNOTEK</span><span class="lab-chip">APLIKACE</span></div>
+    <div class="unit-preset-row" role="group" aria-label="Druh převodu"><button type="button" class="unit-preset is-selected" data-unit="kg">Kilogramy → gramy</button><button type="button" class="unit-preset" data-unit="m">Metry → centimetry</button><button type="button" class="unit-preset" data-unit="l">Litry → mililitry</button></div>
+    <div class="units-grid"><div class="lab-controls unit-controls"><div class="variable"><label for="unitD">Na kolik částí? <strong id="unitDOut"></strong></label><input id="unitD" type="range" min="2" max="10" value="5"></div><div class="variable"><label for="unitN">Kolik částí? <strong id="unitNOut"></strong></label><input id="unitN" type="range" min="1" max="5" value="2"></div>
+    <div class="unit-problem" id="unitProblem"></div><div class="answer-controls"><label for="unitAnswer">Kolik je to v menších jednotkách?</label><div class="answer-line"><input id="unitAnswer" type="number" step="any" inputmode="decimal" placeholder="Tvůj výsledek"><button type="button" id="unitCheck" class="button dark">Ověřit</button></div><div id="unitFeedback" role="status" class="feedback" aria-live="polite"></div></div></div>
+    <div class="unit-visual"><div class="unit-visual-header"><span>JEDEN CELEK</span><strong id="unitWhole"></strong></div><div id="unitBar" class="large-unit-bar"></div><div class="unit-visual-labels"><span>0</span><span id="unitScaleEnd"></span></div><div id="unitReveal" class="unit-reveal" hidden></div><button class="quiet-button" id="unitShow" type="button">Zobrazit postup řešení</button></div></div>
+  </div>
+</section>
+
+<section class="chapter final-chapter" id="overeni">
+  <div class="chapter-heading"><span class="chapter-n">06 / SAMOSTATNÉ OVĚŘENÍ</span><h2>Teď už to zkus <em>bez nápovědy.</em></h2><p>Čtyři krátké úlohy ověří, zda rozumíš významu zlomku, ekvivalentním zápisům, krácení a převodům jednotek. Nejde o diagnostický test; výsledky se nikam neodesílají.</p></div>
+  <div class="practice-shell"><div class="practice-header"><div><span>KRÁTKÝ CHECKPOINT</span><strong id="practiceScore">0 / 4</strong></div><div class="practice-progress"><span id="practiceProgress"></span></div></div><div id="practiceQuestions" class="practice-questions"></div><div class="practice-end"><p id="practiceSummary">Odpověz na všechny otázky a zjisti, které principy už ovládáš.</p><button class="button outlined" type="button" id="practiceReset">↺ Zkusit znovu</button></div></div>
+</section>
+<footer><span>© 2026 Vojtěch Steidl · Interaktivní matematika</span><span>Zlomek není jen zápis. Je to vztah části a celku.</span><a href="#uvod">Zpět nahoru ↑</a></footer>
+</main></div></body></html>

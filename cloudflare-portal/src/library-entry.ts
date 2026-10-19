@@ -24,9 +24,9 @@ const INTERACTIVE = [
   },
   {
     "id": "fractions",
-    "title": "Zlomky a krácení",
-    "meta": "ZŠ · ekvivalentní zlomky a plošné modely",
-    "url": "/interactive-notes/laboratore/?topic=fractions"
+    "title": "Zlomky: od názorné představy k jistotě",
+    "meta": "Prémiová interaktivní lekce · krácení, rozšiřování, porovnávání a jednotky",
+    "url": "/interactive-notes/fractions/"
   },
   {
     "id": "equations",
