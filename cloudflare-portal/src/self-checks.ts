@@ -5,6 +5,7 @@ import {
   selectedStudentForPrincipal,
 } from "./entry";
 import { selfCheckSummaryForStudent } from "./student-learning";
+import { adminSelfCheckResults } from "./admin-self-check-results";
 
 const HOSTS = new Set(["vojtechsteidl.eu", "www.vojtechsteidl.eu"]);
 const PREFIX = "/student-portal";
@@ -483,7 +484,12 @@ async function adminPage(request: Request, env: Env, url: URL): Promise<Response
     const state = assignment.available ? "Aktivní" : "Historický výsledek";
     return `<article class="assignment">
       <div><strong>${escapeHtml(assignment.display_name)}</strong><span>${escapeHtml(assignment.test_title)}</span><small>${escapeHtml(assignment.topic)} · ${state} · ${due} · Poslední výsledek: ${escapeHtml(lastAttempt)}${attemptDate}</small></div>
-      <a href="${PREFIX}/admin/view/${encodeURIComponent(assignment.student_id)}#tasks">Otevřít náhled</a>
+      <div class="assignment-actions">
+        ${assignment.latest_score !== null
+          ? '<a class="review-link" href="' + ADMIN_ROOT + '/results/' + encodeURIComponent(assignment.id) + '">Rozbor odpovědí</a>'
+          : '<span class="muted">Zatím bez výsledku</span>'}
+        <a href="${PREFIX}/admin/view/${encodeURIComponent(assignment.student_id)}#tasks">Náhled testu</a>
+      </div>
     </article>`;
   }).join("") || `<p class="empty">Zatím není přiřazen žádný self-check.</p>`;
 
@@ -491,7 +497,7 @@ async function adminPage(request: Request, env: Env, url: URL): Promise<Response
 <html lang="cs"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="robots" content="noindex,nofollow"><title>Self-checky | Administrace</title>
 <style>
-body{font-family:Inter,system-ui,sans-serif;background:#f4f7fb;color:#102a43;margin:0}.wrap{width:min(920px,calc(100% - 32px));margin:42px auto}.box{background:#fff;border:1px solid #d9e2ec;border-radius:18px;padding:24px;margin-bottom:20px}h1,h2{margin-top:0}a{color:#2563eb;font-weight:700}.muted,.empty{color:#627d98}.notice{padding:13px 16px;margin-bottom:18px;border-radius:12px;background:#ecfdf5;color:#166534}.form-grid{display:grid;grid-template-columns:1fr 1.4fr .8fr;gap:14px;align-items:end}label{display:grid;gap:7px;font-weight:700}select,input{width:100%;padding:11px;border:1px solid #bcccdc;border-radius:10px;background:#fff}button{padding:12px 16px;border:0;border-radius:10px;background:#2563eb;color:#fff;font-weight:800;cursor:pointer}.assignment,.test-card{display:flex;align-items:center;justify-content:space-between;gap:18px;padding:16px 0;border-top:1px solid #e7edf4}.assignment:first-of-type,.test-card:first-of-type{border-top:0}.assignment div,.test-card div{display:grid;gap:4px}.assignment span,.test-card span{font-weight:700}.assignment small,.test-card small{color:#627d98;line-height:1.5}@media(max-width:720px){.form-grid{grid-template-columns:1fr}.assignment,.test-card{align-items:flex-start;flex-direction:column}}
+body{font-family:Inter,system-ui,sans-serif;background:#f4f7fb;color:#102a43;margin:0}.wrap{width:min(920px,calc(100% - 32px));margin:42px auto}.box{background:#fff;border:1px solid #d9e2ec;border-radius:18px;padding:24px;margin-bottom:20px}h1,h2{margin-top:0}a{color:#2563eb;font-weight:700}.muted,.empty{color:#627d98}.notice{padding:13px 16px;margin-bottom:18px;border-radius:12px;background:#ecfdf5;color:#166534}.form-grid{display:grid;grid-template-columns:1fr 1.4fr .8fr;gap:14px;align-items:end}label{display:grid;gap:7px;font-weight:700}select,input{width:100%;padding:11px;border:1px solid #bcccdc;border-radius:10px;background:#fff}button{padding:12px 16px;border:0;border-radius:10px;background:#2563eb;color:#fff;font-weight:800;cursor:pointer}.assignment,.test-card{display:flex;align-items:center;justify-content:space-between;gap:18px;padding:16px 0;border-top:1px solid #e7edf4}.assignment:first-of-type,.test-card:first-of-type{border-top:0}.assignment div,.test-card div{display:grid;gap:4px}.assignment .assignment-actions{display:flex;align-items:center;justify-content:flex-end;gap:12px;flex-wrap:wrap}.review-link{padding:9px 12px;border-radius:8px;background:#edf4fb;color:#184a70;white-space:nowrap}.assignment span,.test-card span{font-weight:700}.assignment small,.test-card small{color:#627d98;line-height:1.5}@media(max-width:720px){.form-grid{grid-template-columns:1fr}.assignment,.test-card{align-items:flex-start;flex-direction:column}}
 </style></head><body><main class="wrap">
 <p><a href="${PREFIX}/admin">← Studentské zóny</a></p>
 ${notice}
@@ -503,7 +509,7 @@ ${notice}
 <button type="submit">Přiřadit</button>
 </form></section>
 <section class="box"><h2>Knihovna testů</h2>${testCards}</section>
-<section class="box"><h2>Přiřazení a výsledky</h2>${assignmentRows}</section>
+<section class="box"><h2>Přiřazení a výsledky</h2><p class="muted">U odevzdaného testu otevři rozbor: uvidíš historii pokusů, správné i chybné možnosti, přidělené body a vysvětlení.</p>${assignmentRows}</section>
 </main></body></html>`);
 }
 
@@ -557,7 +563,7 @@ export async function enhanceAdminLandingWithSelfChecks(response: Response): Pro
   }
   const enhanced = body.replace(
     marker,
-    `<p style="margin:0 0 18px"><a href="${ADMIN_ROOT}" style="color:#2563eb;font-weight:700">Přiřadit self-checky →</a></p>${marker}`,
+    `<p style="margin:0 0 18px"><a href="${ADMIN_ROOT}" style="color:#2563eb;font-weight:700">Self-checky a výsledky →</a></p>${marker}`,
   );
   const headers = new Headers(response.headers);
   headers.delete("Content-Length");
@@ -588,6 +594,11 @@ export async function handleSelfCheckRoute(request: Request, env: Env): Promise<
 
     if (url.pathname === ADMIN_ROOT || url.pathname === `${ADMIN_ROOT}/`) {
       return adminPage(request, env, url);
+    }
+
+    const resultsMatch = url.pathname.match(/^\/student-portal\/admin\/self-checks\/results\/([^/]+)$/);
+    if (resultsMatch) {
+      return adminSelfCheckResults(request, env, decodeURIComponent(resultsMatch[1]));
     }
 
     if (url.pathname === `${ADMIN_ROOT}/assign`) {
