@@ -272,8 +272,9 @@ function frame(now){
   if(state.active!=="instant"&&state.run[state.active])state.time[state.active]+=dt;
   if(state.active==="instant"&&state.run.instant){
    let t=v("instant-t")+dt;
-   if(t>=12){t=12;state.run.instant=false;set("instant-run","Přehrát běh času");redraw();}
+   if(t>=12){t=12;state.run.instant=false;set("instant-run","Přehrát běh času");}
    $("instant-t").value=String(t);
+   if(!state.run.instant)redraw();
   }
   if(state.run[state.active] && now-lastDraw>=30){redraw();lastDraw=now;}
  }
