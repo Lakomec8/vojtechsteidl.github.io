@@ -205,12 +205,20 @@
       if (!assignment.available) meta.append(node("span", "badge good", "Dokončeno"));
       main.append(heading, copy, meta, latest);
       card.append(main);
+      const controls = node("div", "self-check-v2-card-actions");
+      if (assignment.latest_score != null && assignment.latest_max_score != null) {
+        const review = node("button", "secondary self-check-review", "Zobrazit odpovědi");
+        review.type = "button";
+        review.addEventListener("click", () => openSavedResult(assignment.id));
+        controls.append(review);
+      }
       if (assignment.available) {
         const button = node("button", "primary self-check-start", assignment.latest_score === null ? "Spustit test" : "Zkusit znovu");
         button.type = "button";
         button.addEventListener("click", () => openAssignment(assignment.id));
-        card.append(button);
+        controls.append(button);
       }
+      if (controls.childNodes.length) card.append(controls);
       list.append(card);
     }
   }
@@ -223,6 +231,33 @@
   function closeDialog() {
     if (typeof dialog.close === "function") dialog.close();
     else dialog.removeAttribute("open");
+  }
+
+  async function openSavedResult(assignmentId, attemptId = "") {
+    if (!assignmentId) return;
+    activeAssignmentId = assignmentId;
+    activePayload = null;
+    preview = false;
+    title.textContent = "Uložené výsledky…";
+    topic.textContent = "Rozbor testu";
+    content.replaceChildren(node("div", "empty", "Načítám odpovědi z dokončeného testu…"));
+    showDialog();
+
+    try {
+      const path = "./api/self-checks/" + encodeURIComponent(assignmentId) + "/results" +
+        (attemptId ? "?attempt=" + encodeURIComponent(attemptId) : "");
+      const payload = await api(path);
+      if (!payload.saved || !Array.isArray(payload.results)) {
+        throw new Error("Uložený výsledek se nepodařilo načíst.");
+      }
+      activePayload = { assignment: payload.assignment };
+      preview = Boolean(payload.preview);
+      title.textContent = payload.assignment?.title || "Uložený test";
+      topic.textContent = payload.assignment?.topic || "Výsledky";
+      renderResult(payload);
+    } catch (error) {
+      content.replaceChildren(node("div", "self-check-error", error.message));
+    }
   }
 
   async function openAssignment(assignmentId) {
@@ -458,6 +493,7 @@
   }
 
   function answerLabel(result, answerId) {
+    if (!answerId) return "Bez odpovědi";
     return result.options.find((option) => option.id === answerId)?.label || answerId;
   }
 
@@ -496,8 +532,39 @@
     const score = node("div", "self-check-v2-score");
     score.append(node("strong", "", `${payload.score}/${payload.maxScore}`), node("span", "", `${payload.percent} %`));
     const copy = node("div", "self-check-v2-result-copy");
-    copy.append(node("h3", "", "Výsledek diagnostiky"), node("p", "", resultFeedback(payload.percent)));
+    copy.append(node("h3", "", payload.saved ? "Uložený výsledek" : "Výsledek diagnostiky"),
+      node("p", "", resultFeedback(payload.percent)));
     hero.append(score, copy);
+    if (payload.saved) {
+      const savedHead = node("div", "self-check-v2-saved-head");
+      savedHead.append(node("strong", "", "Rozbor dokončeného testu"),
+        node("span", "", payload.submittedAt
+          ? new Intl.DateTimeFormat("cs-CZ", {
+              timeZone: "Europe/Prague", day: "numeric", month: "numeric", year: "numeric",
+              hour: "2-digit", minute: "2-digit",
+            }).format(new Date(payload.submittedAt))
+          : ""));
+      if (payload.preview) savedHead.append(node("div", "self-check-preview-note",
+        "Administrátorský náhled skutečně uloženého výsledku studenta."));
+      const history = Array.isArray(payload.history) ? payload.history : [];
+      if (history.length > 1) {
+        const selection = node("label", "self-check-v2-history");
+        selection.append(node("span", "", "Historie pokusů"));
+        const picker = node("select", "self-check-v2-history-picker");
+        history.forEach((attempt, index) => {
+          const opt = node("option", "", "Pokus " + (history.length - index) +
+            " · " + attempt.score + "/" + attempt.maxScore +
+            " · " + formatDate(attempt.submittedAt));
+          opt.value = attempt.id;
+          opt.selected = attempt.id === payload.attemptId;
+          picker.append(opt);
+        });
+        picker.addEventListener("change", () => openSavedResult(activeAssignmentId, picker.value));
+        selection.append(picker);
+        savedHead.append(selection);
+      }
+      shell.append(savedHead);
+    }
     shell.append(hero);
 
     const breakdown = resultBreakdown(payload.results);
@@ -515,7 +582,7 @@
       priority.append(node("strong", "", `Priorita: ${weakest.category}. `), document.createTextNode("Projdi vysvětlení u chyb v této oblasti a potom zkus další pokus."));
       shell.append(priority);
     }
-    if (payload.preview) shell.append(node("div", "self-check-preview-note", "Administrátorský náhled: výsledek nebyl uložen do historie studenta."));
+    if (payload.preview && !payload.saved) shell.append(node("div", "self-check-preview-note", "Administrátorský náhled: výsledek nebyl uložen do historie studenta."));
 
     const details = node("div", "self-check-v2-results");
     for (const result of payload.results) {
@@ -524,6 +591,7 @@
       const head = node("div", "self-check-v2-answer-head");
       head.append(node("h4", "", `Úloha ${result.position}${parsed.category ? ` · ${parsed.category}` : ""}`), node("span", "self-check-v2-answer-state", result.correct ? "Správně" : "K opravě"));
       item.append(head);
+      if (parsed.instruction) item.append(node("p", "self-check-v2-answer-line", parsed.instruction));
       if (parsed.math) {
         const math = node("div", "self-check-v2-answer-math");
         renderMath(math, parsed.math, true);
@@ -538,6 +606,28 @@
       item.append(explanation);
       details.append(item);
     }
+    if (payload.saved) {
+      const filter = node("div", "self-check-v2-saved-filter");
+      const allButton = node("button", "secondary active", "Všechny odpovědi");
+      const errorsButton = node("button", "secondary", "Jen chyby (" +
+        payload.results.filter((result) => !result.correct).length + ")");
+      allButton.type = "button";
+      errorsButton.type = "button";
+      const empty = node("p", "self-check-v2-saved-empty", "V tomto pokusu nejsou žádné chyby.");
+      empty.hidden = true;
+      const setFilter = (onlyMistakes) => {
+        [...details.children].forEach((item, index) => {
+          item.hidden = onlyMistakes && Boolean(payload.results[index].correct);
+        });
+        allButton.classList.toggle("active", !onlyMistakes);
+        errorsButton.classList.toggle("active", onlyMistakes);
+        empty.hidden = !onlyMistakes || payload.results.some((result) => !result.correct);
+      };
+      allButton.addEventListener("click", () => setFilter(false));
+      errorsButton.addEventListener("click", () => setFilter(true));
+      filter.append(allButton, errorsButton);
+      shell.append(filter, empty);
+    }
     shell.append(details);
 
     const actions = node("div", "self-check-v2-result-actions");
@@ -547,7 +637,9 @@
     const done = node("button", "primary", "Hotovo");
     done.type = "button";
     done.addEventListener("click", closeDialog);
-    actions.append(retry, done);
+    if (!payload.saved) actions.append(retry);
+    else done.textContent = "Zavřít rozbor";
+    actions.append(done);
     shell.append(actions);
     content.append(shell);
   }
@@ -561,6 +653,10 @@
     }
   }
 
+  window.addEventListener("student:self-check-open-saved-result", (event) => {
+    const id = event.detail?.assignmentId;
+    if (typeof id === "string" && id) openSavedResult(id);
+  });
   close.addEventListener("click", closeDialog);
   dialog.addEventListener("cancel", (event) => {
     event.preventDefault();
