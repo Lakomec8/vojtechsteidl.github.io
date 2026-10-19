@@ -151,7 +151,7 @@ assert.match(modal,/window\.addEventListener\("student:self-check-open-saved-res
 assert.match(modal,/Zobrazit odpovědi/);
 assert.match(modal,/Jen chyby/);
 assert.match(modal,/openSavedResult/);
-assert.match(portal,/student-dashboard-material-selfchecks\.js\?v=20261019-3/);
-assert.match(preparation,/student-self-checks-v2\.js\?v=20261019-3/);
+assert.match(portal,/student-dashboard-material-selfchecks\.js\?v=20261019-4/);
+assert.match(preparation,/student-self-checks-v2\.js\?v=20261019-4/);
 assert(dbStatements.every(x=>/^\s*SELECT\b/i.test(x)));
 console.log("Stored self-check history passed: own attempts, admin preview, forbidden foreign access, read-only archived results, math answers, and dashboard wiring.");
