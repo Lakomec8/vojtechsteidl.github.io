@@ -33,3 +33,16 @@
 .self-check-v2-saved-empty{border:1px dashed #cbd5e1;border-radius:10px;padding:15px;margin:12px 0;color:#64748b}
 .self-check-v2-answer[hidden]{display:none!important}
 @media(max-width:700px){.self-check-v2-card-actions{width:100%;flex-direction:row;flex-wrap:wrap}.self-check-v2-card-actions button{flex:1}.self-check-v2-history-picker{width:100%}}
+
+
+/* Voluntary completion: a partial result is always visibly distinguished
+   from a completed diagnostic, including on small screens. */
+.self-check-v2-stop{display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;margin-top:17px;padding:15px 17px;border:1px dashed #aec0d2;border-radius:13px;background:#f9fbfd}
+.self-check-v2-stop-description{flex:1 1 210px;margin:0;font-size:12px;line-height:1.6;color:#475569}
+.self-check-v2-stop-button{flex:0 1 auto;padding:11px 15px;border:1px solid #b6c7d7;border-radius:10px;background:white;color:#254767;font:inherit;font-size:12px;font-weight:800;cursor:pointer}
+.self-check-v2-stop-button:hover:not(:disabled){border-color:#6988a6;background:#eef5fc}
+.self-check-v2-stop-button:disabled{opacity:.45;cursor:not-allowed}
+.self-check-v2-partial-note{padding:16px 20px;margin:14px 0 0;border:1px solid #b5c7dc;border-radius:14px;background:#eff5fb;color:#223f5c}
+.self-check-v2-partial-note strong{font-size:14px;font-weight:850}
+.self-check-v2-partial-note p{margin:7px 0 0;font-size:12px;line-height:1.65}
+@media(max-width:600px){.self-check-v2-stop{padding:13px}.self-check-v2-stop-button{width:100%}}
