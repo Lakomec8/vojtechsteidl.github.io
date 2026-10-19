@@ -12,7 +12,7 @@ const js=fs.readFileSync(dir+"/app.js","utf8");
 new vm.Script(js,{filename:"mechanical-waves-app.js"});
 assert(html.includes("v₁/λ₁ = v₂/λ₂"),"Boundary frequency equation must be dimensionally correct");
 assert(css.includes("#phase-canvas{touch-action:none}"),"Touch drag must not scroll the page");
-assert(html.includes('style.css?v=2')&&html.includes('app.js?v=2'),"Cache-busted assets missing");
+assert(html.includes('style.css?v=2')&&html.includes('app.js?v=3'),"Cache-busted assets missing");
 assert.equal((html.match(/data-calc="/g)||[]).length,4,"All four labs require a calculation exercise");
 
 function fakeDom(prefersReducedMotion=false){
@@ -104,6 +104,9 @@ assert.equal(Number(d.e("phase-x1").value),6);
 assert.equal(Number(d.e("phase-x2").value),10);
 assert.equal(d.e("phase-status").textContent,"Opačná fáze");
 assert.match(d.e("phase-mod").textContent,/180,0°/);
+d.e("phase-school").dispatch("click");
+assert.match(d.e("phase-l-label").textContent,/0,8/);
+assert.match(d.e("phase-equation").textContent,/1,571/);
 // Numeric feedback follows the actual school formulas and supports Czech decimals.
 for(const [lab,value] of [["wave","1 450"],["phase","0,5"],["instant","-3"],["medium","450"]]){
  d.e(lab+"-answer").value=value;
@@ -121,6 +124,16 @@ d.e("instant-run").dispatch("click");
 d.runFrame(1000);d.runFrame(1100);
 assert.equal(Number(d.e("instant-t").value),12);
 assert.match(d.e("instant-t-label").textContent,/12,00/);
+d.e("instant-school").dispatch("click");
+assert.equal(Number(d.e("instant-T").value),0.1);
+assert.equal(Number(d.e("instant-l").value),20);
+assert.match(d.e("instant-v").textContent,/200,00/);
+assert.match(d.e("instant-y").textContent,/-3,00/);
+d.collections.tabs.find(x=>x.dataset.tab==="medium").dispatch("click");
+d.e("medium-demo").dispatch("click");
+assert.match(d.e("medium-l1").textContent,/2,00/);
+assert.match(d.e("medium-l2").textContent,/3,00/);
+assert.match(d.e("medium-ratio").textContent,/1,50/);
 const reduced=load(true);
 assert.equal(reduced.e("wave-play").textContent,"Spustit animaci");
 assert.equal(reduced.e("phase-play").textContent,"Spustit animaci");
