@@ -99,7 +99,7 @@ const qbuttons=document.querySelectorAll("[data-answer]");
 // The handler was attached to a previous set in the mocked selector, so invoke
 // the current quiz answer via the actual rendered markup and controls separately.
 assert.equal(qbuttons.length,4);
-assert.match(get("quizMount").innerHTML,/−6x/);
+assert.match(get("quizMount").innerHTML,/−\s*6x/);
 assert.equal(get("quizNext").disabled,true);
 get("quizRestart").click();
 assert.equal(get("quizScore").textContent,"Správně 0 / 0");
