@@ -5,6 +5,8 @@ on:
     paths:
       - "interactive-notes/functions/**"
       - "interactive-notes/fractions/**"
+      - "interactive-notes/quadratics/**"
+      - "scripts/test-quadratics.mjs"
       - "scripts/test-fractions.mjs"
       - "scripts/validate_interactive_materials.py"
       - ".github/workflows/validate-interactive-materials.yml"
@@ -14,6 +16,8 @@ on:
     paths:
       - "interactive-notes/functions/**"
       - "interactive-notes/fractions/**"
+      - "interactive-notes/quadratics/**"
+      - "scripts/test-quadratics.mjs"
       - "scripts/test-fractions.mjs"
       - "scripts/validate_interactive_materials.py"
       - ".github/workflows/validate-interactive-materials.yml"
@@ -43,3 +47,8 @@ jobs:
         run: |
           node --check interactive-notes/fractions/app.js
           node scripts/test-fractions.mjs
+
+      - name: Check interactive quadratic lesson
+        run: |
+          node --check interactive-notes/quadratics/app.js
+          node scripts/test-quadratics.mjs
