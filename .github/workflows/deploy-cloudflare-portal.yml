@@ -92,6 +92,10 @@ jobs:
         working-directory: cloudflare-portal
         run: python3 scripts/test-karolina-quadratics-content.py
 
+      - name: Validate three-column student resources and dashboard test actions
+        working-directory: cloudflare-portal
+        run: node scripts/test-student-resource-columns.mjs
+
       - name: Apply production database migrations
         working-directory: cloudflare-portal
         run: npm run db:migrate:remote
