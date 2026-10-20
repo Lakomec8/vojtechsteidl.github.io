@@ -6,6 +6,8 @@ on:
       - "interactive-notes/functions/**"
       - "interactive-notes/fractions/**"
       - "interactive-notes/quadratics/**"
+      - "interactive-notes/inequalities/**"
+      - "scripts/test-inequalities.mjs"
       - "scripts/test-quadratics.mjs"
       - "scripts/test-fractions.mjs"
       - "scripts/validate_interactive_materials.py"
@@ -17,6 +19,8 @@ on:
       - "interactive-notes/functions/**"
       - "interactive-notes/fractions/**"
       - "interactive-notes/quadratics/**"
+      - "interactive-notes/inequalities/**"
+      - "scripts/test-inequalities.mjs"
       - "scripts/test-quadratics.mjs"
       - "scripts/test-fractions.mjs"
       - "scripts/validate_interactive_materials.py"
@@ -52,3 +56,9 @@ jobs:
         run: |
           node --check interactive-notes/quadratics/app.js
           node scripts/test-quadratics.mjs
+
+      - name: Check interactive inequalities lesson
+        run: |
+          node --check interactive-notes/inequalities/app.mjs
+          node --check interactive-notes/inequalities/math.mjs
+          node scripts/test-inequalities.mjs
