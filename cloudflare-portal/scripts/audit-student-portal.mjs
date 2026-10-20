@@ -104,6 +104,28 @@ const payload = runD1(`
              AND lesson.source = 'google_calendar'
              AND lesson.payment_status <> 'cancelled') AS latest_calendar_lesson_date,
          (SELECT COUNT(*)
+            FROM tutoring_calendar_events AS event
+           WHERE event.status = 'planned'
+             AND datetime(event.starts_at) >= datetime('now')
+             AND (event.student_id = link.tutoring_student_id
+                  OR EXISTS (
+                    SELECT 1
+                      FROM tutoring_calendar_event_students AS participant
+                     WHERE participant.google_event_id = event.google_event_id
+                       AND participant.student_id = link.tutoring_student_id
+                  ))) AS upcoming_calendar_lesson_count,
+         (SELECT MIN(event.starts_at)
+            FROM tutoring_calendar_events AS event
+           WHERE event.status = 'planned'
+             AND datetime(event.starts_at) >= datetime('now')
+             AND (event.student_id = link.tutoring_student_id
+                  OR EXISTS (
+                    SELECT 1
+                      FROM tutoring_calendar_event_students AS participant
+                     WHERE participant.google_event_id = event.google_event_id
+                       AND participant.student_id = link.tutoring_student_id
+                  ))) AS next_calendar_lesson_start,
+         (SELECT COUNT(*)
             FROM self_check_attempts AS attempt
            WHERE attempt.student_id = s.id) AS self_check_attempt_count,
          (SELECT group_concat(test.id || ':' || test.title, '|')
@@ -204,6 +226,8 @@ for (const row of rows) {
     effectiveCompletedLessonsCount: effectiveCompleted,
     expectedCalendarLessonCount: expectedCompleted,
     latestCalendarLessonDate: row.latest_calendar_lesson_date,
+    upcomingCalendarLessonCount: Number(row.upcoming_calendar_lesson_count || 0),
+    nextCalendarLessonStart: row.next_calendar_lesson_start,
     selfCheckAttemptCount: Number(row.self_check_attempt_count || 0),
     activeSelfChecks: splitPipe(row.active_self_checks),
     latestSelfCheck: row.latest_self_check_score == null
