@@ -1,0 +1,55 @@
+/* Inequalities premium lesson: reuses the quadratic design vocabulary. */
+:root{--sign-positive:#267963;--sign-negative:#b87853;--sign-purple:#8271ab;--sign-background:#eef5ee}
+.hero-interval svg{max-width:410px;filter:drop-shadow(0 16px 32px rgba(31,82,62,.07))}
+.choice-row{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:7px;margin:14px 0 23px}
+.choice-row button{border:1px solid #d9e6dc;border-radius:9px;background:white;min-width:0;padding:10px 8px;font:600 23px/1 var(--math);color:#617e6d}
+.choice-row button[aria-pressed=true]{background:#205748;border-color:#205748;color:white}
+.choice-row button:hover:not([aria-pressed=true]){background:#eaf5ed}
+.numeric-answer{font:600 clamp(23px,2.5vw,30px)/1.4 var(--math);color:#245f4d;min-height:38px;overflow-wrap:anywhere}
+.compact-worked{margin:22px 0!important;padding:16px 18px}
+.compact-worked p{margin-top:7px!important}
+#linearCanvas{height:315px}.check-row{display:flex;flex-wrap:wrap;gap:8px 18px;margin:12px 0 21px}
+.check-row label{display:flex;align-items:center;gap:8px;font-size:12px;color:#537063;font-weight:700;cursor:pointer}
+.check-row input{width:17px;height:17px;accent-color:#367d65}
+#intervalCanvas{height:250px}
+.system-control{border:1px solid #dce8e0;background:#fcfefa;border-radius:13px;padding:15px;margin:18px 0}
+.system-control>strong{display:flex;align-items:center;justify-content:space-between;font-size:13px;color:#2d604f;margin:0 0 14px}
+.system-control .range-field{margin-bottom:12px}
+.system-control .check-row{margin:0;gap:8px}
+.swatch{height:9px;width:9px;border-radius:50%;display:inline-block}
+.swatch-a{background:var(--green)}.swatch-b{background:var(--sign-purple)}
+#systemCanvas{height:375px}.system-stats{grid-template-columns:repeat(2,minmax(0,1fr));border:1px solid #e2eae2;border-radius:10px;overflow:hidden;margin-top:14px}
+.system-stats>div{padding:13px 12px}
+.system-stats strong{font:600 18px/1.4 var(--math);white-space:normal}
+#productCanvas,#rationalCanvas{height:250px}
+#quadraticCanvas{height:335px}
+.signboard{margin:12px 1px 7px;border:1px solid #e1e9e2;border-radius:10px;padding:14px;background:#fcfdfa;overflow-x:auto}
+.sign-heading{font-size:10px;letter-spacing:.12em;font-weight:800;color:#729584;margin-bottom:13px}
+.sign-table{min-width:310px;width:100%;border-collapse:collapse;text-align:center;font-size:11px;color:#49695c}
+.sign-table td,.sign-table th{border-bottom:1px solid #e5eee7;padding:10px 6px}
+.sign-table thead th{color:#7e9b89;font-size:10px;font-weight:800}
+.sign-table tbody th{text-align:left;font-weight:800;white-space:nowrap;color:#436b59}
+.sign-table tbody tr:last-child td,.sign-table tbody tr:last-child th{border:0}
+.sign-table .pos{color:var(--sign-positive);font-size:18px;font-weight:800}
+.sign-table .neg{color:var(--sign-negative);font-size:18px;font-weight:800}
+.sign-table .zero{color:#826dac;font-size:15px}
+.sign-table .excluded{color:#b66851;font-weight:800;font-size:14px}
+.link-subtle{display:inline-block;text-decoration:none;margin-top:15px}
+#productFormula math,#rationalFormula math,#quadFormula math{font-size:clamp(23px,2.35vw,30px)}
+#productFormula,#rationalFormula,#quadFormula{min-height:65px;max-width:100%;padding:5px 0 12px}
+#productAnswer,#rationalAnswer,#quadAnswer{font:600 18px/1.7 var(--math);word-break:break-word}
+.learning-panel .small-copy{line-height:1.85}
+#rationalHole{margin-top:13px}
+.track-picker{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:22px}
+.track-picker button{border:1px solid #d4e5d8;background:#fbfdfa;padding:12px 17px;font-size:12px;font-weight:800;color:#4c7260;border-radius:9px}
+.track-picker button[aria-pressed=true]{background:#1e5344;color:white;border-color:#1e5344}
+.quiz-card .quiz-options button{line-height:1.5}
+.quiz-explainer{font-size:13px;line-height:1.75}
+.quiz-options button:disabled{cursor:default}
+.solver-equation{font-size:23px;color:#274d3d;font-family:var(--math);white-space:normal}
+.solver-steps .step-math{font-size:20px}
+#workedSteps .solve-step p{font-size:13px}
+@media(min-width:1350px){#linearCanvas{height:360px}#productCanvas,#rationalCanvas{height:290px}#systemCanvas{height:410px}}
+@media(max-width:1230px){.lab-columns{grid-template-columns:minmax(0,1fr)}.choice-row button{font-size:20px}}
+@media(max-width:890px){#systemCanvas{height:330px}#linearCanvas{height:320px}}
+@media(max-width:580px){.hero h1{font-size:clamp(42px,10vw,61px)}.choice-row button{font-size:22px}.system-control{padding:13px}.check-row{gap:9px}.check-row label{font-size:11px}.signboard{margin:9px 0}.track-picker{display:grid;grid-template-columns:1fr 1fr}.track-picker button{padding:10px 8px}#intervalCanvas{height:190px}#linearCanvas,#systemCanvas,#quadraticCanvas{height:255px}#productCanvas,#rationalCanvas{height:215px}.system-stats strong{font-size:14px}.system-stats small{font-size:9px}}
