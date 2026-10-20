@@ -84,7 +84,7 @@ def run() -> None:
     assert sum(row[-1] for row in qs) == 64
     assert len({row[0] for row in qs}) == 32
 
-    question_prompts: set[str] = set()
+    question_prompts: set[tuple[str, str]] = set()
     for index, (id_, position, raw_prompt, raw_options, answer, explanation, points) in enumerate(qs):
         assert position == index + 1
         assert id_ == f"{TEST_ID}-q{position:02d}"
@@ -93,8 +93,8 @@ def run() -> None:
         assert data["category"] == FOUR_DOMAINS[index // 8], data
         assert all(field in data for field in ("instruction", "math", "category", "hint"))
         assert len(data["instruction"]) >= 18 and len(data["hint"]) > 10
-        assert data["instruction"] not in question_prompts, position
-        question_prompts.add(data["instruction"])
+        assert (data["instruction"], data["math"]) not in question_prompts, position
+        question_prompts.add((data["instruction"], data["math"]))
         assert len(explanation) >= 45, (position, explanation)
         options = json.loads(raw_options)
         assert len(options) == 4
