@@ -88,6 +88,10 @@ jobs:
         working-directory: cloudflare-portal
         run: npm run test:self-check-dashboard-ui
 
+      - name: Verify Karolína's quadratic diagnostic and assignment in SQLite
+        working-directory: cloudflare-portal
+        run: python3 scripts/test-karolina-quadratics-content.py
+
       - name: Apply production database migrations
         working-directory: cloudflare-portal
         run: npm run db:migrate:remote
