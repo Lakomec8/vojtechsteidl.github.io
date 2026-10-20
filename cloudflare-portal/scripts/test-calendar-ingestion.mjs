@@ -52,6 +52,8 @@ try {
   // require a tutoring marker in the title (never import private meetings).
   db.exec(`INSERT INTO tutoring_calendar_aliases(normalized_alias, alias, tutoring_student_id)
            VALUES ('bobby', 'Bobby', 'bob')`);
+  // Prior test deliberately marked the fixture as completed; isolate alias tests.
+  db.exec(\"UPDATE tutoring_calendar_events SET status='planned'\");
   fail = false; cancelled = false; title = 'Bobby doučko'; hour = '150000';
   await syncGoogleCalendarToD1(env);
   assert.deepEqual(db.prepare('SELECT student_id FROM tutoring_calendar_event_students').all().map((r)=>r.student_id), ['bob']);
