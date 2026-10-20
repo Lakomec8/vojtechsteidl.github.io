@@ -38,6 +38,12 @@ jobs:
           node --check interactive-notes/quadratics/app.js
           node scripts/test-quadratics.mjs
 
+      - name: Verify interactive inequalities and systems
+        run: |
+          node --check interactive-notes/inequalities/app.mjs
+          node --check interactive-notes/inequalities/math.mjs
+          node scripts/test-inequalities.mjs
+
       - name: Publish online math tutoring landing page
         run: python scripts/publish_online_tutoring.py
 
