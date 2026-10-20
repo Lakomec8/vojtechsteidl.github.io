@@ -2,8 +2,9 @@
   "use strict";
 
   const materialList = document.getElementById("dashboardMaterialsList");
+  const interactiveList = document.getElementById("dashboardInteractiveList");
   const testList = document.getElementById("dashboardTestsList");
-  if (!materialList || !testList) return;
+  if (!materialList || !interactiveList || !testList) return;
 
   function node(tag, className, text) {
     const element = document.createElement(tag);
@@ -58,6 +59,43 @@
       item.append(link);
     }
     materialList.append(item);
+  }
+
+  function renderInteractive(profile) {
+    interactiveList.replaceChildren();
+    const notes = (Array.isArray(profile.materials) ? profile.materials : [])
+      .filter((material) => material.kind === "interactive" ||
+        /\/interactive-notes\//i.test(String(material.url || "")))
+      .slice()
+      .sort((a, b) => String(b.date || "").localeCompare(String(a.date || "")));
+    const latest = notes[0];
+    if (!latest) {
+      interactiveList.append(node("div", "empty", "Zatím tu není přiřazený žádný interaktivní zápis."));
+      return;
+    }
+
+    const item = node("article", "item dashboard-interactive-card");
+    const main = node("div", "item-main");
+    main.append(
+      node("h3", "", latest.title || "Interaktivní zápis"),
+      node("p", "", latest.meta || latest.date || "Matematická laboratoř"),
+    );
+    item.append(main, node("span", "badge", "Interaktivní zápis"));
+    const url = String(latest.url || "").trim();
+    // Only open existing lesson pages; do not execute untrusted custom URLs.
+    if (/^\/interactive-notes\/[a-z0-9-]+\/?(?:[?#].*)?$/i.test(url) ||
+        /^https:\/\/(?:www\.)?vojtechsteidl\.eu\/interactive-notes\/[a-z0-9-]+\/?(?:[?#].*)?$/i.test(url)) {
+      const link = node("a", "secondary resource-lesson-link", "Otevřít zápis ↗");
+      link.href = url;
+      link.target = "_blank";
+      link.rel = "noopener";
+      item.append(link);
+    }
+    if (notes.length > 1) {
+      item.append(node("p", "resource-other-count",
+        "Další přiřazené zápisy: " + (notes.length - 1)));
+    }
+    interactiveList.append(item);
   }
 
   function openTestInMaterials(assignment) {
@@ -177,9 +215,11 @@
         api("./api/self-checks"),
       ]);
       renderMaterial(profile);
+      renderInteractive(profile);
       renderTests(Array.isArray(selfChecks.assignments) ? selfChecks.assignments : []);
     } catch (error) {
       materialList.replaceChildren(node("div", "empty", error.message));
+      interactiveList.replaceChildren(node("div", "empty", error.message));
       testList.replaceChildren(node("div", "empty", error.message));
     }
   }
