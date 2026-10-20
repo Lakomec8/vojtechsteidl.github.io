@@ -12,6 +12,7 @@ ROOT = Path(__file__).resolve().parents[1]
 MODULES = [
     ROOT / "interactive-notes" / "functions" / "index.html",
     ROOT / "interactive-notes" / "quadratics" / "index.html",
+    ROOT / "interactive-notes" / "inequalities" / "index.html",
 ]
 
 
