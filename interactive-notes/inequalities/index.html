@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="cs"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#f5f5f0"><meta name="robots" content="noindex,nofollow">
+<meta name="description" content="Interaktivní matematický zápis: nerovnice, intervaly, soustavy, znaménkové rozbory, lomené i kvadratické nerovnice.">
+<title>Nerovnice a soustavy · Interaktivní zápis | Vojtěch Steidl</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Instrument+Serif:ital@0;1&family=STIX+Two+Math&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../quadratics/style.css?v=20261020-1"><link rel="stylesheet" href="./style.css?v=20261020-1">
+<script type="module" src="./app.mjs?v=20261020-1"></script>
+</head><body>
+<a class="skip" href="#uvod">Přejít na lekci</a>
+<header class="site-head"><a class="brand" href="/student-portal/"><span class="brand-mark">∩</span><span>VOJTĚCH STEIDL<small>INTERAKTIVNÍ ATELIÉR</small></span></a><div class="top-right"><span class="subject">MATEMATIKA / ZŠ A SŠ</span><a class="return" href="/student-portal/">← Studentská zóna</a></div></header>
+<div class="layout"><aside class="rail">
+<p class="overline">MAPA LEKCE</p>
+<nav aria-label="Obsah"><a href="#uvod"><span>00</span> Úvod</a><a href="#linearni"><span>01</span> Jedna nerovnice</a><a href="#intervaly"><span>02</span> Intervaly</a><a href="#soustavy"><span>03</span> Soustavy a průnik</a><a href="#soucin"><span>04</span> Znaménková tabulka</a><a href="#lomene"><span>05</span> Lomené nerovnice</a><a href="#kvadraticke"><span>06</span> Kvadratické nerovnice</a><a href="#postup"><span>07</span> Řešení krok za krokem</a><a href="#overeni"><span>08</span> Ověření porozumění</a></nav>
+<div class="rail-card"><span>HLAVNÍ MYŠLENKA</span><strong>Řešení je množina. Ne vždy jedno číslo.</strong><p>Nejdřív vyslov odhad. Potom změň parametr a pozoruj, které body na ose splňují podmínku.</p></div>
+<p class="rail-foot">2026 / MATEMATICKÁ LABORATOŘ 02</p>
+</aside>
+<main>
+<section class="hero" id="uvod"><div class="hero-text">
+<div class="eyebrow"><i></i> INTERAKTIVNÍ MATEMATICKÁ LABORATOŘ</div>
+<h1>Kde nerovnost <em>platí?</em><br>A kde už ne?</h1>
+<p>Řeš nerovnice nejen symbolicky, ale geometricky. Nauč se číst otevřené a uzavřené krajní body, spojovat podmínky a určit správné intervaly i tam, kde se mění znaménko.</p>
+<div class="hero-actions"><a href="#linearni" class="primary">Začít experimentovat <span>↗</span></a><span class="reading">8 tematických zastavení · dvě úrovně procvičování</span></div>
+</div>
+<div class="hero-visual hero-interval" aria-hidden="true"><svg viewBox="0 0 410 315">
+<defs><pattern id="hero-grid" width="33" height="33" patternUnits="userSpaceOnUse"><path d="M33 0H0V33" fill="none" stroke="#dfe9e1" stroke-width="1"/></pattern><linearGradient id="segment" x1="0" x2="1"><stop stop-color="#327c6a"/><stop offset="1" stop-color="#6fb096"/></linearGradient></defs>
+<rect width="410" height="315" rx="18" fill="url(#hero-grid)"/><line x1="35" y1="156" x2="375" y2="156" stroke="#b7cbbc" stroke-width="2"/>
+<path d="M150 156H310" stroke="url(#segment)" stroke-width="10" stroke-linecap="round"/>
+<g stroke="#a8bcb1" stroke-width="2"><path d="M90 147V165M150 147V165M210 147V165M270 147V165M330 147V165"/></g><g fill="#71887c" font-family="Georgia" font-size="18" text-anchor="middle"><text x="90" y="191">−2</text><text x="150" y="191">−1</text><text x="210" y="191">0</text><text x="270" y="191">1</text><text x="330" y="191">2</text></g>
+<circle cx="150" cy="156" r="9" fill="#fffefa" stroke="#367e6f" stroke-width="4"/><circle cx="310" cy="156" r="9" fill="#367e6f" stroke="#fffefa" stroke-width="3"/>
+<g fill="#325f51" font-size="27" font-family="Georgia"><text x="110" y="94">x &gt; −1</text><text x="233" y="247">x ≤ 2</text></g><g stroke="#a2baab" stroke-dasharray="5 6"><path d="M150 121V142M310 170V225"/></g>
+</svg><div class="graphic-label">PODMÍNKY · PRŮNIK · MNOŽINA ŘEŠENÍ</div></div>
+</section>
+<div class="chapter-divider"><span>OD JEDNOHO ZNAMÉNKA K SOUSTAVĚ</span><i></i><span>OD ČÍSELNÉ OSY KE GRAFU</span></div>
+
+<section class="section" id="linearni"><header class="section-head">
+<div class="chapter-no">01 / LINEÁRNÍ NEROVNICE</div><h2>Nejde jen o číslo. <em>Jde o směr.</em></h2>
+<p>Při přičítání stejného čísla se znaménko nemění. Při násobení či dělení <strong>záporným číslem</strong> se ale směr nerovnosti obrátí. Pozoruj výsledek na přímce i na ose.</p></header>
+<div class="formula-paper"><span>PRAVIDLO PRO ZÁPORNÝ NÁSOBEK</span><math display="block"><mrow><mi>a</mi><mo>&lt;</mo><mi>b</mi><mo>,</mo><mspace width=".5em"/><mi>k</mi><mo>&lt;</mo><mn>0</mn><mo>⇒</mo><mi>k</mi><mi>a</mi><mo>&gt;</mo><mi>k</mi><mi>b</mi></mrow></math><span class="formula-tail">Znaménko se obrací právě při změně znaménka násobitele.</span></div>
+<div class="lab"><div class="lab-top"><span>01 / LINEÁRNÍ NEROVNICE POD LUPOU</span><strong class="live-status"><i></i> GRAF + ČÍSELNÁ OSA</strong></div>
+<div class="lab-columns"><div class="controls"><div class="equation-display"><small>UPRAVOVANÁ NEROVNICE</small><div class="dynamic-math" id="linearFormula"></div></div>
+<div class="choice-row" role="group" aria-label="Znaménko nerovnosti"><button type="button" data-linear-op=">">&gt;</button><button type="button" data-linear-op="≥">≥</button><button type="button" data-linear-op="<">&lt;</button><button type="button" data-linear-op="≤">≤</button></div>
+<label class="range-field" for="linearA"><span>Koeficient a <output id="linearAOut"></output></span><input type="range" id="linearA" min="-4" max="4" step="1" value="-2"></label>
+<label class="range-field" for="linearB"><span>Koeficient b <output id="linearBOut"></output></span><input type="range" id="linearB" min="-6" max="6" step="1" value="4"></label>
+<div class="worked compact-worked"><div class="worked-title">VÝSLEDEK PO ÚPRAVĚ</div><div id="linearAnswer" class="numeric-answer"></div><p id="linearExplain"></p></div>
+<button type="button" class="subtle" id="linearReset">↺ Původní příklad</button></div>
+<div class="stage"><div class="stage-toolbar">ZELENÁ = SPLŇUJE NEROVNOST</div><canvas id="linearCanvas" role="img" aria-label="Lineární funkce, osa x a vyznačené řešení lineární nerovnice."></canvas><p class="canvas-help">Přes kořen vede hranice. Prázdné kolečko znamená &lt; nebo &gt;, plné ≤ nebo ≥.</p><div class="insight" id="linearInsight"></div></div></div></div>
+<div class="note"><b>ČASTÁ CHYBA</b><p>Z nerovnosti <strong>−2x &gt; 6</strong> vychází <strong>x &lt; −3</strong>, nikoli x &gt; −3. Dělení −2 <em>obrátí</em> znaménko. Při dělení výrazem obsahujícím x nejprve musíš znát jeho znaménko.</p></div>
+</section>
+
+<section class="section" id="intervaly"><header class="section-head">
+<div class="chapter-no">02 / JAZYK MNOŽIN</div><h2>Co opravdu znamená <em>krajní bod?</em></h2>
+<p>Ostrá nerovnost krajní bod vylučuje, neostrá ho zahrnuje. Čísla na ose tvoří množinu, kterou zapisujeme intervalem. U nekonečna nikdy nepoužíváme uzavřenou hranici.</p></header>
+<div class="identity-cards"><article><span>OSTRÁ NEROVNOST</span><math display="block"><mrow><mn>1</mn><mo>&lt;</mo><mi>x</mi><mo>&lt;</mo><mn>4</mn></mrow></math><p>Řešení je (1; 4). Čísla 1 ani 4 sem nepatří.</p></article><article><span>NEOSTRÁ NEROVNOST</span><math display="block"><mrow><mn>1</mn><mo>≤</mo><mi>x</mi><mo>≤</mo><mn>4</mn></mrow></math><p>Řešení je ⟨1; 4⟩. Oba krajní body sem patří.</p></article></div>
+<div class="lab"><div class="lab-top"><span>02 / STAVITELNÝ INTERVAL</span><strong class="live-status"><i></i> NAJDI I PRÁZDNOU MNOŽINU</strong></div>
+<div class="two-panel"><div class="stage"><canvas id="intervalCanvas" role="img" aria-label="Číselná osa s intervalem a otevřenými či uzavřenými konci."></canvas><div class="insight" id="intervalInsight"></div></div>
+<div class="learning-panel"><h3>Postav vlastní interval</h3><p>Nastav dvě hranice. Krajní body můžeš zapnout či vypnout — rozhoduje, zda rovnost platí.</p>
+<label class="range-field" for="iLower"><span>Levá hranice <output id="iLowerOut"></output></span><input type="range" id="iLower" min="-6" max="6" step="1" value="-2"></label>
+<label class="range-field" for="iUpper"><span>Pravá hranice <output id="iUpperOut"></output></span><input type="range" id="iUpper" min="-6" max="6" step="1" value="3"></label>
+<div class="check-row"><label><input type="checkbox" id="iLeftClosed" checked> Zahrnout levou mez</label><label><input type="checkbox" id="iRightClosed"> Zahrnout pravou mez</label></div>
+<div class="result-highlight" id="intervalAnswer"></div><button class="subtle" id="intervalPoint" type="button">Experiment: jen jeden bod</button></div></div></div>
+</section>
+
+<section class="section" id="soustavy"><header class="section-head"><div class="chapter-no">03 / SOUSTAVY NEROVNIC</div><h2>Současně platí? <em>Hledej průnik.</em></h2><p>Slovo <strong>„a zároveň“</strong> znamená průnik množin (∩). Slovo <strong>„nebo“</strong> znamená sjednocení (∪). Není správné vzít z každého řádku libovolnou část výsledku.</p></header>
+<div class="formula-paper"><span>DVĚ PODMÍNKY SOUČASNĚ</span><math display="block"><mrow><mi>x</mi><mo>∈</mo><mi>A</mi><mspace width=".5em"/><mo>∧</mo><mspace width=".5em"/><mi>x</mi><mo>∈</mo><mi>B</mi><mo>⇔</mo><mi>x</mi><mo>∈</mo><mi>A</mi><mo>∩</mo><mi>B</mi></mrow></math><span class="formula-tail">Sjednocení ∪ naopak znamená „alespoň jedna podmínka“.</span></div>
+<div class="lab"><div class="lab-top"><span>03 / DVĚ PODMÍNKY · JEDEN VÝSLEDEK</span><strong class="live-status"><i></i> PRŮNIK A SJEDNOCENÍ</strong></div>
+<div class="lab-columns"><div class="controls">
+<div class="preset-head">RŮZNÉ SITUACE</div><div class="presets"><button type="button" data-system-preset="overlap">Překryv</button><button type="button" data-system-preset="empty">Žádný průnik</button><button type="button" data-system-preset="point">Jediný bod</button><button type="button" data-system-preset="inside">Jeden uvnitř druhého</button></div>
+<div class="system-control"><strong>Podmínka A <span class="swatch swatch-a"></span></strong><label class="range-field" for="aLo"><span>Od <output id="aLoOut"></output></span><input type="range" id="aLo" min="-6" max="6" step="1" value="-3"></label><label class="range-field" for="aHi"><span>Do <output id="aHiOut"></output></span><input type="range" id="aHi" min="-6" max="6" step="1" value="2"></label><div class="check-row"><label><input type="checkbox" id="aLi" checked> Levá včetně</label><label><input type="checkbox" id="aRi" checked> Pravá včetně</label></div></div>
+<div class="system-control"><strong>Podmínka B <span class="swatch swatch-b"></span></strong><label class="range-field" for="bLo"><span>Od <output id="bLoOut"></output></span><input type="range" id="bLo" min="-6" max="6" step="1" value="1"></label><label class="range-field" for="bHi"><span>Do <output id="bHiOut"></output></span><input type="range" id="bHi" min="-6" max="6" step="1" value="5"></label><div class="check-row"><label><input type="checkbox" id="bLi"> Levá včetně</label><label><input type="checkbox" id="bRi" checked> Pravá včetně</label></div></div>
+</div><div class="stage"><div class="stage-toolbar">VÝSLEDEK JE VIDĚT NA TŘETÍ OSE</div><canvas id="systemCanvas" role="img" aria-label="Tři číselné osy: interval A, interval B a jejich průnik."></canvas><div class="stats system-stats"><div><small>MNOŽINA A</small><strong id="systemA"></strong></div><div><small>MNOŽINA B</small><strong id="systemB"></strong></div><div><small>PRŮNIK A ∩ B</small><strong id="systemIntersection"></strong></div><div><small>SJEDNOCENÍ A ∪ B</small><strong id="systemUnion"></strong></div></div><div class="insight" id="systemInsight"></div></div></div></div>
+<div class="note"><b>HRANIČNÍ PŘÍPAD</b><p>Pokud se dva intervaly dotýkají v jediném bodě, průnik je <strong>jednobodová množina</strong> jen tehdy, když tento bod patří do obou intervalů. Jinak je průnik prázdný.</p></div>
+</section>
+
+<section class="section" id="soucin"><header class="section-head"><div class="chapter-no">04 / SOUČIN A ZNAMÉNKA</div><h2>Kde je výraz <em>kladný?</em></h2><p>U součinu lineárních činitelů nestačí najít kořeny. Je potřeba zjistit <strong>znaménko na každém intervalu</strong>. V každém z nich stačí vyzkoušet libovolné vnitřní číslo.</p></header>
+<div class="lab"><div class="lab-top"><span>04 / ŽIVÁ ZNAMÉNKOVÁ TABULKA</span><strong class="live-status"><i></i> KOŘENY A ZNAMÉNKA</strong></div>
+<div class="two-panel"><div class="stage"><canvas id="productCanvas" role="img" aria-label="Číselná osa znaménkového rozboru součinu dvou lineárních faktorů."></canvas><div class="signboard"><div class="sign-heading">ZNAMÉNKOVÁ TABULKA — TESTOVACÍ BODY</div><div id="productSignTable"></div></div></div><div class="learning-panel"><h3>Dva činitelé. Čtyři znaménka.</h3><div id="productFormula" class="dynamic-math"></div><div class="choice-row" role="group" aria-label="Znaménko nerovnosti součinu"><button type="button" data-product-op=">">&gt;</button><button type="button" data-product-op="≥">≥</button><button type="button" data-product-op="<">&lt;</button><button type="button" data-product-op="≤">≤</button></div>
+<label class="range-field" for="pRoot1"><span>První kořen r₁ <output id="pRoot1Out"></output></span><input type="range" id="pRoot1" min="-5" max="5" step="1" value="-3"></label>
+<label class="range-field" for="pRoot2"><span>Druhý kořen r₂ <output id="pRoot2Out"></output></span><input type="range" id="pRoot2" min="-5" max="5" step="1" value="2"></label>
+<div class="choice-row" role="group" aria-label="Znaménko koeficientu součinu"><button type="button" data-leading="1">a = +1</button><button type="button" data-leading="-1">a = −1</button></div>
+<div class="result-highlight" id="productAnswer"></div><div class="small-copy" id="productInsight"></div></div></div></div>
+<div class="worked"><div class="worked-title">CO SE STANE, KDYŽ KOŘENY SPLYNOU?</div><p>Je-li r₁ = r₂, dostáváš druhou mocninu <math><msup><mrow><mo>(</mo><mi>x</mi><mo>−</mo><mi>r</mi><mo>)</mo></mrow><mn>2</mn></msup></math>. Znaménko se při přechodu přes dvojnásobný kořen nemění. U neostré nerovnosti lze kořen zahrnout, u ostré nikoli.</p></div>
+</section>
+
+<section class="section" id="lomene"><header class="section-head"><div class="chapter-no">05 / LOMENÉ NEROVNICE</div><h2>Jeden bod je <em>zakázaný.</em></h2><p>Jmenovatel nesmí být nula — ani tehdy, když lze čitatele a jmenovatele formálně vykrátit. Rozděluj osu v nulových bodech <strong>čitatele i jmenovatele</strong> a sleduj znaménko zlomku.</p></header>
+<div class="lab"><div class="lab-top"><span>05 / NULOVÝ BOD × ZAKÁZANÝ BOD</span><strong class="live-status"><i></i> ODLIŠUJ KOŘEN OD PÓLU</strong></div>
+<div class="two-panel"><div class="stage"><canvas id="rationalCanvas" role="img" aria-label="Číselná osa pro řešení lomené nerovnice s vyznačeným vyloučeným bodem jmenovatele."></canvas><div class="signboard"><div class="sign-heading">ROZDĚLENÍ REÁLNÉ OSY</div><div id="rationalSignTable"></div></div></div>
+<div class="learning-panel"><h3>Když jmenovatel mizí</h3><div id="rationalFormula" class="dynamic-math"></div><div class="choice-row" role="group" aria-label="Znaménko lomené nerovnosti"><button type="button" data-rational-op=">">&gt;</button><button type="button" data-rational-op="≥">≥</button><button type="button" data-rational-op="<">&lt;</button><button type="button" data-rational-op="≤">≤</button></div>
+<label class="range-field" for="rNumerator"><span>Nulový bod čitatele u <output id="rNumeratorOut"></output></span><input type="range" id="rNumerator" min="-5" max="5" step="1" value="-2"></label>
+<label class="range-field" for="rDenominator"><span>Zakázaný bod jmenovatele v <output id="rDenominatorOut"></output></span><input type="range" id="rDenominator" min="-5" max="5" step="1" value="2"></label>
+<div class="result-highlight" id="rationalAnswer"></div><div class="small-copy" id="rationalInsight"></div><button class="subtle" type="button" id="rationalHole">Experiment: stejné u a v</button></div></div></div>
+<div class="note"><b>PAST</b><p><math><mfrac><mrow><mi>x</mi><mo>−</mo><mn>2</mn></mrow><mrow><mi>x</mi><mo>−</mo><mn>2</mn></mrow></mfrac></math> má hodnotu 1 pro všechna x <strong>kromě x = 2</strong>. Výraz není v x = 2 definován. Krácení tento zakázaný bod nevrátí.</p></div>
+</section>
+
+<section class="section" id="kvadraticke"><header class="section-head"><div class="chapter-no">06 / GRAFICKÁ INTERPRETACE</div><h2>Vrátíme se k <em>parabole.</em></h2><p>Kvadratickou nerovnici můžeš řešit také graficky. Pokud parabola leží nad osou x, platí f(x) &gt; 0. Pod osou platí f(x) &lt; 0. V průsečících s osou x je funkce rovna nule.</p></header>
+<div class="lab"><div class="lab-top"><span>06 / KOŘENY ZE ZNAMÉNKOVÉ TABULKY</span><strong class="live-status"><i></i> PROPOJENÍ S PŘEDCHOZÍM EXPERIMENTEM</strong></div><div class="two-panel"><div class="stage"><canvas id="quadraticCanvas" role="img" aria-label="Kvadratická funkce se zeleně označenými úseky, kde je splněna nerovnice."></canvas></div>
+<div class="learning-panel"><h3>Stejné kořeny, jiný pohled</h3><p>Graf zde používá <strong>stejné kořeny, koeficient a znaménko nerovnosti</strong> jako předchozí znaménková laboratoř. Vrať se o kapitolu výš, posuň kořeny a sleduj, co se změnilo.</p><div class="dynamic-math" id="quadFormula"></div><div class="result-highlight" id="quadAnswer"></div><div class="small-copy" id="quadInsight"></div><a href="#soucin" class="subtle link-subtle">← Změnit parametry součinu</a></div></div></div>
+</section>
+
+<section class="section" id="postup"><header class="section-head"><div class="chapter-no">07 / PROPOJENÍ POSTUPŮ</div><h2>Umíš vysvětlit <em>každý krok?</em></h2><p>Vyber typickou nerovnici nebo soustavu a odkrývej jednotlivé kroky. Nejdřív se pokus výsledek předpovědět bez výpočtu.</p></header>
+<div class="lab solver"><div class="lab-top"><span>07 / ŘEŠENÍ S KOMENTÁŘEM</span><strong>NEJDŘÍV VYSLOV ODHAD</strong></div><div class="solver-inner">
+<div class="solver-presets" role="group" aria-label="Zadání příkladů"><button type="button" data-solved="0">Záporný koeficient</button><button type="button" data-solved="1">Soustava nerovnic</button><button type="button" data-solved="2">Součin</button><button type="button" data-solved="3">Lomená nerovnice</button><button type="button" data-solved="4">Dvojnásobný kořen</button></div>
+<div class="solver-equation" id="workedPrompt"></div><div class="solver-steps" id="workedSteps" aria-live="polite"></div>
+<div class="solver-actions"><button type="button" id="nextStep" class="primary">Odhalit další krok →</button><button type="button" id="restartSteps" class="subtle">↺ Vrátit kroky</button></div></div></div>
+<div class="property-grid"><article><span>BEZPEČNÝ POSTUP</span><h3>Nejdřív definiční obor</h3><p>Ověř, kde má výraz smysl. Potom najdi kritická čísla, rozděl osu, urč znaménka a zapiš výsledek.</p></article><article><span>KONTROLA ŘEŠENÍ</span><h3>Vyzkoušej bod uvnitř i mimo</h3><p>Z každého intervalu dosadíš jeden testovací bod. Krajní čísla kontroluj zvlášť: smí patřit do řešení?</p></article></div>
+</section>
+
+<section class="section assessment" id="overeni"><header class="section-head"><div class="chapter-no">08 / AKTIVNÍ PROCVIČOVÁNÍ</div><h2>Poznat řešení. <em>A zdůvodnit ho.</em></h2><p>Dvě úrovně podle náročnosti. Základní cesta procvičuje intervaly, lineární nerovnice a soustavy. Výzva přidává součiny, lomené nerovnice a hraniční případy.</p></header>
+<div class="quiz-shell">
+<div class="track-picker" role="group" aria-label="Náročnost procvičování"><button type="button" data-track="basic">Základní úroveň</button><button type="button" data-track="challenge">Rozšířená výzva</button></div>
+<div class="quiz-progress"><span id="quizCounter"></span><span id="quizScore"></span></div><div class="quiz-track"><div id="quizBar"></div></div><div class="quiz-card" id="quizMount" aria-live="polite"></div>
+<div class="quiz-actions"><button id="quizNext" class="primary" type="button" disabled>Další otázka →</button><button id="quizRestart" class="subtle" type="button">↺ Zkusit znovu</button></div>
+</div><p class="tiny-note">Otázky vyhodnocuje pouze tato stránka. Výsledky se neodesílají ani nezapisují jako studentský diagnostický test.</p>
+</section>
+<footer><div><strong>VOJTĚCH STEIDL · INTERAKTIVNÍ ZÁPIS</strong><p>Nerovnice a soustavy nerovnic · precizní práce s intervaly a znaménky.</p></div><a href="#uvod">↑ Zpět na začátek</a></footer>
+</main></div></body></html>
