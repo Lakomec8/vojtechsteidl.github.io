@@ -91,8 +91,13 @@ function isTransparent(event: IcalEvent): boolean {
 }
 
 function calendarTitleMatchesStudent(summary: string, student: TutoringStudent): boolean {
-  return calendarTitleContainsStudent(summary, student.display_name) ||
-    (student.aliases || []).some((alias) => calendarTitleContainsStudent(summary, alias));
+  if (calendarTitleContainsStudent(summary, student.display_name)) return true;
+  // A short first-name alias is accepted only on an actual tutoring event.
+  // A private "Anna birthday" calendar entry must never become a lesson.
+  if (!normalizeText(summary).split(" ").some((part) =>
+    part === "doucko" || part === "doucovani"
+  )) return false;
+  return (student.aliases || []).some((alias) => calendarTitleContainsStudent(summary, alias));
 }
 
 function matchesAnyStudent(event: IcalEvent, students: TutoringStudent[]): boolean {
