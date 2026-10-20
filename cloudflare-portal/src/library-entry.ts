@@ -194,8 +194,13 @@ function normalizeMaterials(materials: Array<Record<string, unknown>>): Array<Re
     .map(({ material }) => material);
   const current = new Set(["Aktuální PDF", "Aktuální materiál", "Nové PDF"]);
   for (const material of sorted) if (current.has(String(material.badge || ""))) material.badge = material.kind === "interactive" ? "Interaktivní" : "PDF";
-  const latest = sorted.find((material) => material.url && material.kind !== "interactive");
-  if (latest) latest.badge = String(latest.url).toLowerCase().includes(".pdf") ? "Aktuální PDF" : "Aktuální materiál";
+  // The newest assigned resource must be the single current material, even
+  // when it is an interactive lesson rather than a PDF. The dashboard keeps
+  // its separate PDF-only fallback for the PDF card.
+  const latest = sorted.find((material) => material.url);
+  if (latest) latest.badge = latest.kind === "interactive" || String(latest.url).includes("/interactive-notes/")
+    ? "Aktuální materiál"
+    : String(latest.url).toLowerCase().includes(".pdf") ? "Aktuální PDF" : "Aktuální materiál";
   return sorted;
 }
 
