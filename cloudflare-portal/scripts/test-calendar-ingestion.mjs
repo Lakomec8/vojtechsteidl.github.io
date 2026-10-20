@@ -67,6 +67,6 @@ try {
            VALUES ('bob-other','Bobby Novák',500)`);
   await syncGoogleCalendarToD1(env);
   assert.equal(db.prepare('SELECT status FROM tutoring_calendar_events').get().status, 'cancelled',
-    'Short alias must be disabled when another active student's canonical name matches it');
+    "Short alias must be disabled when another active student has the same first name");
   console.log('Calendar ingestion: unchanged snapshot = 1 write; moves, participants, cancellation, restoration, completed status and failed feed verified.');
 } finally { globalThis.fetch = originalFetch; db.close(); }
