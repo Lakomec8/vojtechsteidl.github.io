@@ -98,8 +98,8 @@ vm.runInNewContext(vmCode,{document,window:{devicePixelRatio:1,addEventListener(
 assert.match(get("linearAnswer").textContent,/x < 2/);
 assert.match(get("intervalAnswer").textContent,/-2; 3/);
 assert.match(get("systemIntersection").textContent,/1; 2/);
-assert.match(get("productAnswer").textContent,/−3; 2/);
-assert.match(get("rationalAnswer").textContent,/−2/);
+assert.match(get("productAnswer").textContent,/-3; 2/);
+assert.match(get("rationalAnswer").textContent,/-2/);
 assert.match(get("productSignTable").innerHTML,/sign-table/);
 assert.equal(get("quizCounter").textContent,"Otázka 1 z 8");
 groups.get("[data-system-preset]")[2].click();
