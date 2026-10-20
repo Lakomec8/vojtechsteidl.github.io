@@ -13,6 +13,7 @@ MODULES = [
     ROOT / "interactive-notes" / "functions" / "index.html",
     ROOT / "interactive-notes" / "quadratics" / "index.html",
     ROOT / "interactive-notes" / "inequalities" / "index.html",
+    ROOT / "interactive-notes" / "limits" / "index.html",
 ]
 
 
