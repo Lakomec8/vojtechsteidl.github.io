@@ -11,6 +11,12 @@ const MAX_UPLOAD_BYTES = 25 * 1024 * 1024;
 // Master katalog: stránky zůstávají jednou v repozitáři, student dostává pouze odkaz.
 const INTERACTIVE = [
   {
+    "id": "limits-masterclass",
+    "title": "Limity funkcí: kam se funkce blíží?",
+    "meta": "Prémiový interaktivní zápis · živé grafy, jednostranné limity, neurčité tvary, nekonečno a ε–δ experiment",
+    "url": "/interactive-notes/limits/"
+  },
+  {
     "id": "inequalities",
     "title": "Nerovnice a soustavy: od číselné osy ke znaménkovému rozboru",
     "meta": "Prémiová interaktivní lekce · intervaly, průniky, součiny, lomené a kvadratické nerovnice",
