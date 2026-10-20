@@ -96,7 +96,7 @@ const document={getElementById:get,querySelectorAll(selector){
 const vmCode=app.replace(/^import .*? from "\.\/math\.mjs";\n/m,"const {intervalFromBounds,intersection,union,notation,linear,quadratic,rational,system,belongs,relation,endpoint} = _model;\n");
 vm.runInNewContext(vmCode,{document,window:{devicePixelRatio:1,addEventListener(){}},_model:M,Math,Number,Array,Set,Intl},{timeout:10000});
 assert.match(get("linearAnswer").textContent,/x < 2/);
-assert.match(get("intervalAnswer").textContent,/−2; 3/);
+assert.match(get("intervalAnswer").textContent,/-2; 3/);
 assert.match(get("systemIntersection").textContent,/1; 2/);
 assert.match(get("productAnswer").textContent,/−3; 2/);
 assert.match(get("rationalAnswer").textContent,/−2/);
