@@ -152,7 +152,7 @@ function renderProduct(){
  document.querySelectorAll("[data-leading]").forEach(el=>el.setAttribute("aria-pressed",String(Number(el.dataset.leading)===a)));
  const fn=x=>a*(x-r1)*(x-r2),roots=r.roots;
  $("productSignTable").innerHTML=signTable(roots,fn,[],"Součin");
- const g=canvas("productCanvas");if(g){axisSet(g.ctx,g.w,g.h*.50,r.parts,COLOR.green,"ŘEŠENÍ SOUČINOVÉ NEROVNICE"); roots.forEach(x=>label(g.ctx,"r = "+fmt(x),axis(g.ctx,g.w,g.h*.50)(x),g.h*.28,COLOR.orange));}
+ const g=canvas("productCanvas");if(g){const X=axisSet(g.ctx,g.w,g.h*.50,r.parts,COLOR.green,"ŘEŠENÍ SOUČINOVÉ NEROVNICE");roots.forEach(x=>label(g.ctx,"r = "+fmt(x),X(x),g.h*.28,COLOR.orange));}
  renderQuadratic();
 }
 function renderRational(){
