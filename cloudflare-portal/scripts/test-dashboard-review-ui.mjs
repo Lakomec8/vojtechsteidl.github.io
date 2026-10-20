@@ -55,7 +55,7 @@ class Element {
   scrollIntoView(){}
 }
 const nodes=new Map();
-for(const id of ["selfChecksList","selfCheckDialog","selfCheckContent","selfCheckTitle","selfCheckTopic","selfCheckClose","dashboardMaterialsList","dashboardTestsList","selfCheckScore"]){
+for(const id of ["selfChecksList","selfCheckDialog","selfCheckContent","selfCheckTitle","selfCheckTopic","selfCheckClose","dashboardMaterialsList","dashboardInteractiveList","dashboardTestsList","selfCheckScore"]){
   const element=new Element(id==="selfCheckDialog"?"dialog":"div");
   element.id=id;
   nodes.set(id,element);
