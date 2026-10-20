@@ -9,7 +9,7 @@
   <meta http-equiv="Pragma" content="no-cache">
   <meta http-equiv="Expires" content="0">
   <title>Studentský portál | Vojtěch Steidl</title>
-  <link rel="stylesheet" href="assets/student-portal.css?v=20261019-3">
+  <link rel="stylesheet" href="assets/student-portal.css?v=20261020-1">
   <link rel="stylesheet" href="assets/student-self-checks-math.css?v=20260829-1">
   <link rel="stylesheet" href="assets/student-payment.css?v=20260827-1">
 </head>
@@ -54,20 +54,27 @@
           <div class="metric" id="taskMetric"><span>Aktivní úkoly</span><strong id="activeCount">0</strong><small id="taskMetricCopy">Žádný aktivní úkol</small></div>
           <div class="metric"><span>Následující hodina</span><strong id="nextDate">–</strong><small id="nextDateCopy">–</small></div>
         </div>
-        <section class="resource-grid dashboard-resources" aria-label="Aktuální materiál a diagnostické testy">
-          <article class="card resource-panel resource-panel-pdf">
-            <div class="resource-label">PDF MATERIÁL</div>
-            <h2>Aktuální materiál</h2>
-            <p class="card-intro">Nejnovější podklad k výuce najdeš vždy přehledně na jednom místě.</p>
-            <div class="list" id="dashboardMaterialsList"><div class="empty">Načítám aktuální materiál…</div></div>
-            <div class="actions"><button class="secondary" type="button" data-open="materials">Všechny materiály</button></div>
+        <section class="resource-grid dashboard-resources" aria-label="Výukové zdroje: PDF, interaktivní zápisy a self-checky">
+          <article class="card resource-panel resource-panel-pdf" aria-labelledby="dashboardPdfTitle">
+            <div class="resource-label"><span class="resource-number">01</span> MATERIÁLY K TISKU</div>
+            <h2 id="dashboardPdfTitle">PDF materiály</h2>
+            <p class="card-intro">Zápisy a podklady, které můžeš otevřít, stáhnout a vytisknout.</p>
+            <div class="list" id="dashboardMaterialsList"><div class="empty">Načítám PDF materiály…</div></div>
+            <div class="actions"><button class="secondary" type="button" data-open="materials" data-resource-target="materialsPdfTitle">Všechny PDF materiály <span aria-hidden="true">↗</span></button></div>
           </article>
-          <article class="card resource-panel resource-panel-test">
-            <div class="resource-label">DIAGNOSTICKÝ TEST</div>
-            <h2>Ověř si znalosti</h2>
-            <p class="card-intro">Prohlédni si poslední test i jednotlivé správné a chybné odpovědi.</p>
+          <article class="card resource-panel resource-panel-interactive" aria-labelledby="dashboardInteractiveTitle">
+            <div class="resource-label"><span class="resource-number">02</span> INTERAKTIVNÍ VÝUKA</div>
+            <h2 id="dashboardInteractiveTitle">Interaktivní zápisy</h2>
+            <p class="card-intro">Experimenty, grafy a vysvětlení, se kterými můžeš pracovat.</p>
+            <div class="list" id="dashboardInteractiveList"><div class="empty">Načítám interaktivní zápisy…</div></div>
+            <div class="actions"><button class="secondary" type="button" data-open="materials" data-resource-target="materialsInteractiveTitle">Všechny zápisy <span aria-hidden="true">↗</span></button></div>
+          </article>
+          <article class="card resource-panel resource-panel-test" aria-labelledby="dashboardTestTitle">
+            <div class="resource-label"><span class="resource-number">03</span> DIAGNOSTIKA</div>
+            <h2 id="dashboardTestTitle">Self-check</h2>
+            <p class="card-intro">Ověř si znalosti a vrať se k výsledkům i vysvětleným chybám.</p>
             <div class="list" id="dashboardTestsList"><div class="empty">Načítám přiřazené testy…</div></div>
-            <div class="actions"><button class="secondary" type="button" data-open="materials">Všechny testy</button></div>
+            <div class="actions"><button class="secondary" type="button" data-open="materials" data-resource-target="materialsTestsTitle">Všechny self-checky <span aria-hidden="true">↗</span></button></div>
           </article>
         </section>
         <div class="grid">
@@ -87,21 +94,26 @@
         <section class="card timeline-card" id="timelineCard" hidden><h2>Časová osa výuky</h2><div class="list" id="timelineList"></div></section>
       </section>
       <section class="view" id="materials">
-        <div class="resource-grid materials-resources">
+        <div class="resource-grid materials-resources" aria-label="Kompletní materiály: PDF, interaktivní zápisy a self-checky">
           <section class="card resource-panel resource-panel-pdf" aria-labelledby="materialsPdfTitle">
-            <div class="resource-label">PDF MATERIÁL</div>
-            <h2 id="materialsPdfTitle">Materiály a historie</h2>
-            <p class="card-intro">Aktuální materiál je nahoře. Starší dokumenty zůstávají dostupné níže.</p>
+            <div class="resource-label"><span class="resource-number">01</span> MATERIÁLY K TISKU</div>
+            <h2 id="materialsPdfTitle">PDF materiály</h2>
+            <p class="card-intro">Nejnovější materiály nahoře. Starší zápisy jsou dostupné k otevření a tisku.</p>
             <div class="list" id="materialsList"></div>
           </section>
+          <section class="card resource-panel resource-panel-interactive interactive-notes-section" id="interactiveNotesSection" aria-labelledby="materialsInteractiveTitle">
+            <div class="resource-label"><span class="resource-number">02</span> INTERAKTIVNÍ VÝUKA</div>
+            <h2 id="materialsInteractiveTitle">Interaktivní zápisy</h2>
+            <p class="card-intro">Přiřazené lekce s živými grafy, experimenty a výkladem.</p>
+            <div class="list" id="interactiveNotesList"></div>
+          </section>
           <section class="card resource-panel resource-panel-test" aria-labelledby="materialsTestsTitle">
-            <div class="resource-label">DIAGNOSTICKÉ TESTY</div>
-            <h2 id="materialsTestsTitle">Testy a výsledky</h2>
-            <p class="card-intro">Po dokončení testu si můžeš kdykoli znovu projít své odpovědi a vysvětlení.</p>
+            <div class="resource-label"><span class="resource-number">03</span> DIAGNOSTIKA</div>
+            <h2 id="materialsTestsTitle">Self-check</h2>
+            <p class="card-intro">Spusť test nebo si prohlédni uložené výsledky a jednotlivé odpovědi.</p>
             <div class="list" id="selfChecksList"><div class="empty">Načítám přiřazené testy…</div></div>
           </section>
         </div>
-        <section class="card interactive-notes-section" id="interactiveNotesSection"><div class="resource-label">INTERAKTIVNÍ ZÁPISY</div><h2>Interaktivní zápisy</h2><p class="card-intro">Měň hodnoty, sleduj grafy a pochop souvislosti. Přiřazené zápisy se zobrazují zde a nemíchají se s PDF a self-checky.</p><div class="list" id="interactiveNotesList"></div></section>
         <section class="card links-card" id="linksCard" hidden><h2>Doplňkové odkazy k výuce</h2><p class="card-intro">Odkazy vybrané k materiálům a tématům hodin.</p><div class="list" id="linksList"></div></section>
       </section>
       <section class="view" id="tasks">
@@ -115,7 +127,7 @@
     <div id="selfCheckContent"></div>
   </dialog>
 
-  <script src="assets/student-portal.js?v=20261019-5"></script>
+  <script src="assets/student-portal.js?v=20261020-1"></script>
   <script>
     (() => {
       const metric = document.getElementById("lessonCount");
@@ -161,7 +173,7 @@
   </script>
   <script src="assets/student-self-checks.js?v=20261007-1"></script>
   <script src="assets/student-self-checks-math.js?v=20260829-1"></script>
-  <script src="assets/student-dashboard-material-selfchecks.js?v=20261019-5"></script>
+  <script src="assets/student-dashboard-material-selfchecks.js?v=20261020-1"></script>
   <script src="assets/student-next-lesson.js?v=20260827-1"></script>
   <script src="assets/student-payment.js?v=20260902-1"></script>
   <script src="assets/student-payment-qr-fix.js?v=20260827-2"></script>
