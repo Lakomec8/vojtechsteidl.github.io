@@ -11,6 +11,12 @@ const MAX_UPLOAD_BYTES = 25 * 1024 * 1024;
 // Master katalog: stránky zůstávají jednou v repozitáři, student dostává pouze odkaz.
 const INTERACTIVE = [
   {
+    "id": "quadratics",
+    "title": "Kvadratická funkce a rovnice: od grafu k vlastnostem",
+    "meta": "SŠ · živé paraboly, vrchol, monotónnost, omezenost, parita, diskriminant a řešení",
+    "url": "/interactive-notes/quadratics/"
+  },
+  {
     "id": "functions",
     "title": "Funkce: od předpisu ke grafu",
     "meta": "Matematika · grafy, transformace, definiční obor",
