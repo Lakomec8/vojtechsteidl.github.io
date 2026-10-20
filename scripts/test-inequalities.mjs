@@ -33,20 +33,20 @@ check(M.union([I(-2,1,false,false),I(1,5,true,true)]),"(-2; 5⟩","Union touchin
 check(M.union([I(-2,1,false,false),I(1,5,false,true)]),"(-2; 1) ∪ (1; 5⟩","Union excluding a missing point");
 assert(M.belongs(2,[I(2,3,true,false)]));assert(!M.belongs(3,[I(2,3,true,false)]));
 
-check(M.linear(-2,4,">").parts,"(-∞; 2)","Negative division reverses");
+check(M.linear(-2,4,">").parts,"(−∞; 2)","Negative division reverses");
 check(M.linear(-3,6,"≤").parts,"⟨2; +∞)","Negative division reversed, closed endpoint");
 check(M.linear(2,-4,"≥").parts,"⟨2; +∞)","Positive coefficient");
-check(M.linear(1,2,"<").parts,"(-∞; -2)","Strict upper bound");
+check(M.linear(1,2,"<").parts,"(−∞; -2)","Strict upper bound");
 check(M.quadratic(1,-3,2,"≤").parts,"⟨-3; 2⟩","Quadratic nonpositive");
-check(M.quadratic(1,-3,2,">").parts,"(-∞; -3) ∪ (2; +∞)","Quadratic positive");
+check(M.quadratic(1,-3,2,">").parts,"(−∞; -3) ∪ (2; +∞)","Quadratic positive");
 check(M.quadratic(-1,-2,2,"≥").parts,"⟨-2; 2⟩","Negative leading coefficient");
 check(M.quadratic(1,2,2,"<").parts,"∅","Squared polynomial strictly negative");
 check(M.quadratic(1,2,2,"≤").parts,"{2}","Squared polynomial nonpositive");
-check(M.quadratic(1,2,2,">").parts,"(-∞; 2) ∪ (2; +∞)","Squared polynomial strictly positive");
+check(M.quadratic(1,2,2,">").parts,"(−∞; 2) ∪ (2; +∞)","Squared polynomial strictly positive");
 check(M.quadratic(-1,2,2,"≥").parts,"{2}","Negative square nonnegative");
-check(M.rational(-2,2,"≥").parts,"(-∞; -2⟩ ∪ (2; +∞)","Rational pole excluded, zero included");
-check(M.rational(1,-3,"≥").parts,"(-∞; -3) ∪ ⟨1; +∞)","Swapped roots of rational");
-check(M.rational(2,2,">").parts,"(-∞; 2) ∪ (2; +∞)","Cancelled rational hole persists");
+check(M.rational(-2,2,"≥").parts,"(−∞; -2⟩ ∪ (2; +∞)","Rational pole excluded, zero included");
+check(M.rational(1,-3,"≥").parts,"(−∞; -3) ∪ ⟨1; +∞)","Swapped roots of rational");
+check(M.rational(2,2,">").parts,"(−∞; 2) ∪ (2; +∞)","Cancelled rational hole persists");
 check(M.rational(2,2,"<").parts,"∅","Cancelled rational expression always positive on domain");
 check(M.rational(2,2,"≤").parts,"∅","Cancelled rational expression always positive on domain");
 check(M.rational(-2,2,"<").parts,"(-2; 2)","Strict rational negativity");
