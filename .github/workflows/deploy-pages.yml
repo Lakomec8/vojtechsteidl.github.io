@@ -33,6 +33,11 @@ jobs:
       - name: Test interactive mechanical-waves lesson
         run: node scripts/test-mechanical-waves.mjs
 
+      - name: Verify premium quadratic lesson
+        run: |
+          node --check interactive-notes/quadratics/app.js
+          node scripts/test-quadratics.mjs
+
       - name: Publish online math tutoring landing page
         run: python scripts/publish_online_tutoring.py
 
