@@ -12,6 +12,7 @@ type IcalTime = any;
 type TutoringStudent = {
   id: string;
   display_name: string;
+  aliases?: string[];
 };
 
 type CalendarOccurrence = {
@@ -89,9 +90,14 @@ function isTransparent(event: IcalEvent): boolean {
   return String(event.component.getFirstPropertyValue("transp") || "").toUpperCase() === "TRANSPARENT";
 }
 
+function calendarTitleMatchesStudent(summary: string, student: TutoringStudent): boolean {
+  return calendarTitleContainsStudent(summary, student.display_name) ||
+    (student.aliases || []).some((alias) => calendarTitleContainsStudent(summary, alias));
+}
+
 function matchesAnyStudent(event: IcalEvent, students: TutoringStudent[]): boolean {
   const summary = String(event.summary || "").trim();
-  return students.some((student) => calendarTitleContainsStudent(summary, student.display_name));
+  return students.some((student) => calendarTitleMatchesStudent(summary, student));
 }
 
 function occurrenceFromDates(
@@ -104,7 +110,7 @@ function occurrenceFromDates(
   if (isCancelled(event)) return null;
   const summary = String(event.summary || "").trim();
   const studentIds = students
-    .filter((student) => calendarTitleContainsStudent(summary, student.display_name))
+    .filter((student) => calendarTitleMatchesStudent(summary, student))
     .map((student) => student.id)
     .sort();
   if (!studentIds.length) return null;
@@ -255,18 +261,40 @@ async function autoMapPublicTutoringSeries(env: Env, events: IcalEvent[]): Promi
 }
 
 async function activeStudents(env: Env): Promise<TutoringStudent[]> {
-  // Calendar matching must use the canonical tutoring identity, not the portal
-  // display name. A portal profile can deliberately have a different label
-  // (for example prusikova/"Anna" maps to tutoring identity anicka/"Anička").
-  // Using the portal label here caused valid Google Calendar events to be
-  // silently ignored and therefore made both completed and upcoming lessons stale.
-  const result = await env.DB.prepare(`
-    SELECT id, display_name
-      FROM tutoring_students
-     WHERE active = 1
-     ORDER BY id
-  `).all<TutoringStudent>();
-  return result.results || [];
+  // Calendar matching uses the canonical tutoring identity, plus ONLY the
+  // explicit, individually verified aliases in D1. Portal display names and
+  // email addresses must not be guessed or used to join private schedules.
+  const [result, aliases] = await Promise.all([
+    env.DB.prepare(`
+      SELECT id, display_name
+        FROM tutoring_students
+       WHERE active = 1
+       ORDER BY id
+    `).all<TutoringStudent>(),
+    env.DB.prepare(`
+      SELECT alias, tutoring_student_id
+        FROM tutoring_calendar_aliases
+       ORDER BY normalized_alias
+    `).all<{ alias: string; tutoring_student_id: string }>(),
+  ]);
+
+  const students = result.results || [];
+  const byId = new Map(students.map((student) => [student.id, student]));
+  for (const row of aliases.results || []) {
+    const owner = byId.get(row.tutoring_student_id);
+    if (!owner) continue;
+
+    // Guard future name collisions: "Karolína" must not silently assign a
+    // lesson to Losová if another active Karolína later enters the database.
+    const normalized = normalizeText(row.alias);
+    if (students.some((other) =>
+      other.id !== owner.id &&
+      normalizeText(other.display_name).split(" ").includes(normalized)
+    )) continue;
+    owner.aliases ??= [];
+    owner.aliases.push(row.alias);
+  }
+  return students;
 }
 
 async function upsertOccurrence(env: Env, occurrence: CalendarOccurrence, syncedAt: string): Promise<void> {
