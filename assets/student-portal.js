@@ -730,7 +730,15 @@
     });
 
     document.querySelectorAll("[data-open]").forEach((button) => {
-      button.addEventListener("click", () => openView(button.dataset.open));
+      button.addEventListener("click", () => {
+        openView(button.dataset.open);
+        const target = button.dataset.resourceTarget
+          ? document.getElementById(button.dataset.resourceTarget) : null;
+        if (target) {
+          window.requestAnimationFrame(() =>
+            target.scrollIntoView({ behavior: "smooth", block: "start" }));
+        }
+      });
     });
 
     $("search").addEventListener("input", (event) => {
