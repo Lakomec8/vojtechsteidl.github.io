@@ -11,6 +11,12 @@ const MAX_UPLOAD_BYTES = 25 * 1024 * 1024;
 // Master katalog: stránky zůstávají jednou v repozitáři, student dostává pouze odkaz.
 const INTERACTIVE = [
   {
+    "id": "inequalities",
+    "title": "Nerovnice a soustavy: od číselné osy ke znaménkovému rozboru",
+    "meta": "Prémiová interaktivní lekce · intervaly, průniky, součiny, lomené a kvadratické nerovnice",
+    "url": "/interactive-notes/inequalities/"
+  },
+  {
     "id": "quadratics",
     "title": "Kvadratická funkce a rovnice: od grafu k vlastnostem",
     "meta": "SŠ · živé paraboly, vrchol, monotónnost, omezenost, parita, diskriminant a řešení",
