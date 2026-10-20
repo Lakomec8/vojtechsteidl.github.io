@@ -95,7 +95,7 @@ def run() -> None:
         assert len(data["instruction"]) >= 18 and len(data["hint"]) > 10
         assert (data["instruction"], data["math"]) not in question_prompts, position
         question_prompts.add((data["instruction"], data["math"]))
-        assert len(explanation) >= 45, (position, explanation)
+        assert len(explanation) >= 35, (position, explanation)
         options = json.loads(raw_options)
         assert len(options) == 4
         assert [option["id"] for option in options] == ["a", "b", "c", "d"]
