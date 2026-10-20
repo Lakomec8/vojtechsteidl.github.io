@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="cs">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#f5f5f0">
+<meta name="robots" content="noindex,nofollow">
+<meta name="description" content="Interaktivní matematická laboratoř limit: grafy, jednostranné limity, neurčité tvary, nekonečno a epsilon-delta.">
+<title>Limity · Kam se funkce blíží? | Vojtěch Steidl</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="./style.css?v=20261020-1">
+<script>window.MathJax={tex:{inlineMath:[['\\(','\\)']],displayMath:[['\\[','\\]']]},svg:{fontCache:'global'},options:{skipHtmlTags:['script','noscript','style','textarea','pre']}};</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+<script defer src="./app.js?v=20261020-1"></script>
+</head>
+<body>
+<a class="skip" href="#uvod">Přejít na obsah</a>
+<header class="mast"><a class="identity" href="/student-portal/"><span class="monogram">∫</span><span>VOJTĚCH STEIDL<small>INTERAKTIVNÍ ATELIÉR</small></span></a><span class="mast-sub">MATEMATICKÁ ANALÝZA / SŠ—VŠ</span><a class="back" href="/student-portal/">← Studentská zóna</a></header>
+<div class="progress-line" id="scrollProgress"></div>
+<div class="layout">
+<aside class="rail" aria-label="Obsah lekce">
+  <p class="overline">PRŮVODCE / 08 ZASTAVENÍ</p>
+  <nav id="chapterNav">
+    <a href="#uvod"><span>00</span> Začínáme</a>
+    <a href="#laborator"><span>01</span> Živá limita</a>
+    <a href="#tri-pribehy"><span>02</span> Bod není okolí</a>
+    <a href="#strany"><span>03</span> Zleva a zprava</a>
+    <a href="#tabulka"><span>04</span> Čísla se blíží</a>
+    <a href="#vypocet"><span>05</span> Počítej s porozuměním</a>
+    <a href="#nekonecno"><span>06</span> Daleko za obzorem</a>
+    <a href="#presnost"><span>07</span> Jak přesná je limita?</a>
+    <a href="#zkouska"><span>08</span> Prověř si intuici</a>
+  </nav>
+  <div class="rail-note"><span class="sparkle">✳</span><strong>Pozoruj → odhadni → ověř</strong><p>Nesahej hned po vzorci. Nejprve předpověz, co se stane, když se k bodu přiblížíš.</p></div>
+  <div class="rail-foot">STUDIJNÍ EDICE 2026 / 01</div>
+</aside>
+<main>
+<section class="hero" id="uvod">
+ <div class="hero-copy">
+   <p class="eyebrow"><i></i> LEKCE 01 / MATEMATICKÁ ANALÝZA</p>
+   <h1>Nejde o to,<br><em>kde funkce je.</em><br>Jde o to, kam míří.</h1>
+   <p class="lead">Limita je příběh chování v okolí bodu. Pohybuj se po grafu, měň podmínky a pozoruj, proč někdy záleží méně na samotném bodě než na všem kolem něj.</p>
+   <div class="hero-actions"><a class="btn ink" href="#laborator">Otevřít laboratoř <span>↗</span></a><span class="reading">40–55 minut · 8 experimentů</span></div>
+   <div class="hero-formula">\( \displaystyle \lim_{x\to a}f(x)=L \)<span>Jedna značka. Zcela nový pohled na funkce.</span></div>
+ </div>
+ <div class="hero-graphic">
+   <div class="graphic-top"><span>FIG. 01 — CHOVÁNÍ V OKOLÍ</span><span class="live-dot">ŽIVÁ VIZUALIZACE</span></div>
+   <canvas id="heroCanvas" role="img" aria-label="Graf přímky s vynechaným bodem v x rovno jedna"></canvas>
+   <div class="hero-graphic-note"><span class="tiny-ring"></span><span>Bod chybí. Směr zůstává.</span><b>\(L=2\)</b></div>
+ </div>
+</section>
+<div class="main-content">
+<section class="intro-quote"><span class="large-number">01—08</span><div><p class="small-label">ZÁKLADNÍ MYŠLENKA</p><h2>Když se \(x\) blíží k \(a\),<br> ptáme se, zda se \(f(x)\) blíží k <em>jediné hodnotě.</em></h2><p>Hodnotu funkce přímo v bodě zatím necháváme stranou. Limitní proces pozoruje hodnoty v jeho okolí.</p></div></section>
+<section class="chapter" id="laborator">
+ <div class="chapter-heading"><div class="section-index">01 <span>/ EXPERIMENT</span></div><div><h2>Přibliž se. <em>Ještě blíž.</em></h2><p>Začni u funkce \(f(x)=\frac{x^2-1}{x-1}\), která je pro \(x\ne1\) rovna \(x+1\). V bodě \(x=1\) má graf prázdné místo.</p></div></div>
+ <div class="lab panel">
+   <div class="lab-main">
+    <div class="panel-top"><span>LAB / 01</span><span class="state-chip">Graf reaguje na každý pohyb</span></div>
+    <canvas id="approachCanvas" role="img" aria-label="Interaktivní graf limity v okolí bodu jedna"></canvas>
+    <div class="graph-caption"><span><i class="legend-line"></i> křivka \(f(x)\)</span><span><i class="legend-ring"></i> chybějící bod</span><span><i class="legend-dot"></i> sledovaný bod</span></div>
+   </div>
+   <div class="lab-controls">
+     <p class="small-label">NASTAV EXPERIMENT</p><h3>Jak blízko se dostaneš?</h3>
+     <p>Vyber směr a přibližuj \(x\) k jedničce. Sleduj vzdálenost hodnoty \(f(x)\) od dvojky.</p>
+     <div class="control-label">Směr přiblížení</div>
+     <div class="segmented" role="group" aria-label="Směr přiblížení"><button type="button" class="selected" data-direction="left">Zleva \(a^-\)</button><button type="button" data-direction="right">Zprava \(a^+\)</button></div>
+     <label class="control-label" for="approachRange">Přiblížení <output id="approachLevel">10⁻¹</output></label><input id="approachRange" type="range" min="0" max="5" step="1" value="1"><div class="range-labels"><span>Daleko</span><span>Těsně u bodu</span></div>
+     <div class="readouts"><div><span>Aktuální \(x\)</span><strong id="approachX" aria-live="polite">0,9</strong></div><div><span>\(f(x)\)</span><strong id="approachY">1,9</strong></div><div><span>\(|f(x)-2|\)</span><strong id="approachError">0,1</strong></div></div>
+     <button class="btn outline wide" type="button" id="animateApproach">Spustit přibližování ↗</button>
+     <div class="insight"><strong>Co se nemění?</strong><p>Čím blíže jsi k \(1\), tím blíže je hodnota funkce k \(2\). A to přesto, že \(f(1)\) neexistuje.</p><div class="display-math">\( \displaystyle \lim_{x\to1}\frac{x^2-1}{x-1}=2 \)</div></div>
+   </div>
+ </div>
+</section>
+<section class="chapter" id="tri-pribehy">
+ <div class="chapter-heading"><div class="section-index">02 <span>/ ROZDÍL</span></div><div><h2>Hodnota v bodě <em>není</em> limita.</h2><p>Změníme jediné: co se děje přesně v \(x=1\). Ponecháme stejný průběh v celém okolí.</p></div></div>
+ <div class="scenario-grid" role="group" aria-label="Vyber variantu hodnoty funkce v bodě"><button class="scenario active" type="button" data-case="normal"><span class="scenario-tag">A / SPOJITOST</span><strong>Všechno souhlasí</strong><span>\(f(1)=2\) a limita je \(2\).</span><span class="scenario-arrow">↗</span></button><button class="scenario" type="button" data-case="hole"><span class="scenario-tag">B / DÍRA</span><strong>Bod neexistuje</strong><span>\(f(1)\) není definováno.</span><span class="scenario-arrow">↗</span></button><button class="scenario" type="button" data-case="shift"><span class="scenario-tag">C / JINÁ HODNOTA</span><strong>Bod je jinde</strong><span>\(f(1)=4\), ale limita je \(2\).</span><span class="scenario-arrow">↗</span></button></div>
+ <div class="duo panel"><div class="duo-graph"><canvas id="caseCanvas" role="img" aria-label="Graf s měnící se definicí v jednom bodě"></canvas></div><div class="duo-text"><p class="small-label">AKTUÁLNÍ PŘÍPAD</p><h3 id="caseTitle">Spojitá funkce</h3><p id="caseCopy">Hodnota funkce v bodě a limita jsou stejné, protože funkce je spojitá.</p><div class="math-comparison"><div><span>Hodnota funkce</span><strong id="caseValue">\(f(1)=2\)</strong></div><div><span>Limita</span><strong>\(\lim_{x\to1}f(x)=2\)</strong></div></div><p class="takeaway">Zásadní poznatek: <strong>limita závisí na okolí bodu, nikoliv na hodnotě v samotném bodě.</strong></p></div></div>
+</section>
+<section class="chapter" id="strany">
+ <div class="chapter-heading"><div class="section-index">03 <span>/ SMĚR</span></div><div><h2>Jeden bod. <em>Dvě cesty.</em></h2><p>Limita zleva a limita zprava jsou dva nezávislé pohledy. Uvnitř grafu může být skok, asymptota, ale také dokonalá shoda.</p></div></div>
+ <div class="side-tabs" role="group" aria-label="Druh jednostranného chování"><button type="button" class="active" data-sidecase="jump">Skok</button><button type="button" data-sidecase="pole">Svislá asymptota</button><button type="button" data-sidecase="positive">Obě strany k +∞</button><button type="button" data-sidecase="meet">Stejná limita</button></div>
+ <div class="side-panel panel"><div class="side-figure"><canvas id="sidesCanvas" role="img" aria-label="Graf s vyznačenou limitou zleva a zprava"></canvas><div class="side-hint"><span class="swatch left"></span> směr zleva <span class="swatch right"></span> směr zprava</div></div><div class="side-info"><p class="small-label">VÝSLEDEK EXPERIMENTU</p><h3 id="sideTitle">Skok v grafu</h3><div class="side-result"><span>Zleva</span><strong id="sideLeft">\( \lim_{x\to0^-}f(x)=1 \)</strong><span>Zprava</span><strong id="sideRight">\( \lim_{x\to0^+}f(x)=3 \)</strong></div><div class="verdict" id="sideVerdict">Oboustranná limita neexistuje.</div><p id="sideExplanation">Dvě různé konečné hodnoty se nemohou spojit do jediné oboustranné limity.</p></div></div>
+ <div class="principle"><div class="principle-label">VĚTA / KONEČNÁ OBŮSTRANNÁ LIMITA</div><div>\[\lim_{x\to a}f(x)=L\quad\Longleftrightarrow\quad\lim_{x\to a^-}f(x)=\lim_{x\to a^+}f(x)=L\]</div><p>Díra nevadí. Skok ano. A zápis \(+\infty\) popisuje neomezený růst, nikoliv konečné číslo.</p></div>
+</section>
+<section class="chapter" id="tabulka">
+ <div class="chapter-heading"><div class="section-index">04 <span>/ ČÍSLA</span></div><div><h2>Uvidíš limitu <em>i bez grafu.</em></h2><p>Pozoruj, jak se výstupy ze dvou stran přibližují stejné hodnotě. Z tabulky získáme indicii; samotná konečná tabulka není důkazem limity.</p></div></div>
+ <div class="table-panel panel"><div class="table-intro"><div><p class="small-label">NUMERICKÝ MIKROSKOP</p><h3>\(f(x)=\dfrac{x^2-1}{x-1}\)</h3><p>Vyber přesnost a porovnej symetrické hodnoty kolem \(x=1\).</p></div><label for="precisionRange">Počet desetinných míst <strong id="precisionValue">3</strong><input id="precisionRange" type="range" min="1" max="6" value="3" step="1"></label></div><div class="table-scroll"><table><thead><tr><th>Směr</th><th>\(x\)</th><th>\(f(x)\)</th><th>\(|f(x)-2|\)</th></tr></thead><tbody id="limitTable"></tbody></table></div><div class="table-bottom"><span>ČÍM MENŠÍ VZDÁLENOST OD 1, TÍM MENŠÍ ODCHYLKA OD 2.</span><b>\(L=2\)</b></div></div>
+</section>
+<section class="chapter" id="vypocet">
+ <div class="chapter-heading"><div class="section-index">05 <span>/ POSTUP</span></div><div><h2>Teď už počítej. <em>A věz proč.</em></h2><p>Vyber úlohu. Nejdřív odhadni její tvar, potom odkrývej postup po jednotlivých matematicky odůvodněných krocích.</p></div></div>
+ <div class="method-tabs" role="group" aria-label="Typ řešené limity"><button type="button" class="active" data-method="direct">01 / Dosazení</button><button type="button" data-method="factor">02 / Krácení</button><button type="button" data-method="root">03 / Odmocnina</button><button type="button" data-method="infty">04 / Nekonečno</button></div>
+ <div class="method-card panel"><div class="method-head"><div><p class="small-label" id="methodCategory">SPOJITÁ FUNKCE</p><h3 id="methodTitle">Přímé dosazení</h3></div><div class="method-counter"><span>KROK</span><strong id="stepCounter">0 / 2</strong></div></div><div class="method-expression" id="methodExpression">\( \displaystyle \lim_{x\to2}(3x-1) \)</div><div class="method-question"><span class="small-label">PRVNÍ OTÁZKA</span><p id="methodPrompt">Je funkce v daném bodě spojitá, takže lze dosadit přímo?</p></div><div class="steps" id="methodSteps" aria-live="polite"></div><div class="method-actions"><button class="btn ink" id="nextStep" type="button">Odkrýt další krok <span>→</span></button><button class="btn plain" id="resetSteps" type="button">Začít znovu ↺</button></div></div>
+ <div class="note-row"><span>!</span><p><strong>Neurčitý tvar \(\frac{0}{0}\) není výsledek.</strong> Je to signál, že přímé dosazení nerozhodlo. Výraz může vyžadovat rozklad, racionalizaci či jinou metodu.</p></div>
+</section>
+<section class="chapter" id="nekonecno">
+ <div class="chapter-heading"><div class="section-index">06 <span>/ OBZOR</span></div><div><h2>Co když \(x\) roste <em>bez konce?</em></h2><p>Limita v nekonečnu sleduje chování pro stále větší argumenty. Vodorovnou asymptotu zde uvidíš doslova.</p></div></div>
+ <div class="infty-panel panel"><div class="infty-canvas"><div class="panel-top"><span>LAB / 06</span><span>Vodorovná asymptota \(y=2\)</span></div><canvas id="infinityCanvas" role="img" aria-label="Graf racionální funkce blížící se k vodorovné asymptotě y rovno dvě"></canvas></div><div class="infty-copy"><p class="small-label">ODDÁLIT · PŘIBLÍŽIT SE K NEKONEČNU</p><div class="display-math large">\(\displaystyle f(x)=\frac{2x+3}{x+1}\)</div><label class="control-label" for="infinityRange">Růst \(x\) <strong id="infinityX">10</strong></label><input type="range" id="infinityRange" min="0" max="4" step=".02" value="1"><div class="range-labels"><span>1</span><span>10 000</span></div><div class="infty-metrics"><span>Hodnota funkce</span><strong id="infinityY">2,090909</strong><span>Odchylka od 2</span><strong id="infinityError">0,090909</strong></div><p>Protože \(\frac{2x+3}{x+1}=2+\frac1{x+1}\), mizí přídavný člen pro \(x\to+\infty\).</p><div class="limit-result">\(\displaystyle\lim_{x\to+\infty}f(x)=2\)</div></div></div>
+</section>
+<section class="chapter" id="presnost">
+ <div class="chapter-heading"><div class="section-index">07 <span>/ PRO ZVÍDAVÉ</span></div><div><h2>Jak blízko je <em>dost blízko?</em></h2><p>Intuice dostane přesné matematické vyjádření: pokud požadujeme malou chybu výstupu \(\varepsilon\), jak malé okolí vstupu \(\delta\) stačí?</p></div></div>
+ <div class="epsilon-panel panel"><div class="epsilon-graph"><canvas id="epsilonCanvas" role="img" aria-label="Epsilon delta proužky a graf funkce 2x plus jedna"></canvas><div class="graph-caption"><span><i class="legend-fill"></i> výstupní pás \(\varepsilon\)</span><span><i class="legend-outline"></i> vstupní pás \(\delta\)</span></div></div><div class="epsilon-controls"><p class="small-label">FORMÁLNÍ DEFINICE / INTERAKTIVNĚ</p><h3>Urči bezpečné okolí.</h3><div class="display-math">\(f(x)=2x+1,\quad a=1,\ L=3\)</div><label for="epsilonRange" class="control-label">Požadovaná odchylka \(\varepsilon\) <output id="epsilonValue">0,60</output></label><input id="epsilonRange" type="range" min=".2" max="1.6" step=".05" value=".6"><label for="deltaRange" class="control-label">Tvoje okolí \(\delta\) <output id="deltaValue">0,20</output></label><input id="deltaRange" type="range" min=".05" max=".9" step=".05" value=".2"><div class="epsilon-status" id="epsilonStatus" aria-live="polite"></div><p class="epsilon-proof">Zde platí \(|f(x)-3|=2|x-1|\). Aby byla chyba výstupu menší než \(\varepsilon\), stačí zvolit <strong>\(\delta\le\varepsilon/2\)</strong>.</p></div></div>
+ <div class="formal"><p class="small-label">PŘESNÁ DEFINICE KONEČNÉ LIMITY</p><div class="display-math">\(\displaystyle \forall \varepsilon>0\;\exists\delta>0:\quad 0<|x-a|<\delta\ \Rightarrow\ |f(x)-L|<\varepsilon.\)</div><p>Každému, jakkoli přísnému požadavku na výstup odpovídá dostatečně těsné okolí vstupu. Vyloučení \(x=a\) vysvětluje, proč hodnota v samotném bodě nehraje roli.</p></div>
+</section>
+<section class="chapter last" id="zkouska">
+ <div class="chapter-heading"><div class="section-index">08 <span>/ SEBEOVĚŘENÍ</span></div><div><h2>Už limitu <em>vidíš?</em></h2><p>Šest otázek prověří porozumění. Odpovídej podle smyslu, ne podle memorovaného pravidla. Každou odpověď vysvětlíme.</p></div></div>
+ <div class="quiz-head panel"><div><p class="small-label">ZÁVĚREČNÝ CHECKPOINT</p><h3>Rozhoduj jako matematik.</h3><p>Bez časového tlaku. Odpovědi zůstávají jen na této stránce.</p></div><div class="quiz-stat"><strong id="quizScore">0 / 6</strong><span>SPRÁVNĚ VYŘEŠENO</span></div></div>
+ <div id="quizQuestions"></div>
+ <div class="quiz-footer"><button class="btn ink" type="button" id="resetQuiz">Zkusit znovu ↺</button><span id="quizMessage">Začni první otázkou a sleduj, co už umíš.</span></div>
+</section>
+<footer class="page-footer"><span>VOJTĚCH STEIDL / STUDIJNÍ ATELIÉR</span><span>MATEMATICKÁ ANALÝZA · LIMITY · 2026</span><a href="#uvod">Zpět nahoru ↑</a></footer>
+</div></main></div>
+</body></html>
