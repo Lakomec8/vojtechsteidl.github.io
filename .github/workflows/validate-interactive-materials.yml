@@ -7,8 +7,10 @@ on:
       - "interactive-notes/fractions/**"
       - "interactive-notes/quadratics/**"
       - "interactive-notes/inequalities/**"
+      - "interactive-notes/limits/**"
       - "scripts/test-inequalities.mjs"
       - "scripts/test-quadratics.mjs"
+      - "scripts/test-limits.mjs"
       - "scripts/test-fractions.mjs"
       - "scripts/validate_interactive_materials.py"
       - ".github/workflows/validate-interactive-materials.yml"
@@ -20,8 +22,10 @@ on:
       - "interactive-notes/fractions/**"
       - "interactive-notes/quadratics/**"
       - "interactive-notes/inequalities/**"
+      - "interactive-notes/limits/**"
       - "scripts/test-inequalities.mjs"
       - "scripts/test-quadratics.mjs"
+      - "scripts/test-limits.mjs"
       - "scripts/test-fractions.mjs"
       - "scripts/validate_interactive_materials.py"
       - ".github/workflows/validate-interactive-materials.yml"
@@ -56,6 +60,11 @@ jobs:
         run: |
           node --check interactive-notes/quadratics/app.js
           node scripts/test-quadratics.mjs
+
+      - name: Check premium limits lesson
+        run: |
+          node --check interactive-notes/limits/app.js
+          node scripts/test-limits.mjs
 
       - name: Check interactive inequalities lesson
         run: |
