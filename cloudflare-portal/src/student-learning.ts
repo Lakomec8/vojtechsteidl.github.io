@@ -69,17 +69,28 @@ export async function calendarUpcomingLessonsForStudent(
   env: Env,
 ): Promise<CalendarUpcomingLesson[]> {
   const result = await env.DB.prepare(
-    `SELECT event.google_event_id,
+    `SELECT DISTINCT event.google_event_id,
             event.starts_at,
             event.ends_at,
             event.duration_minutes
        FROM tutoring_calendar_events AS event
-       JOIN student_tutoring_links AS link
-         ON link.tutoring_student_id = event.student_id
-      WHERE link.student_id = ?1
+       JOIN (
+         SELECT participant.google_event_id, link.student_id AS portal_student_id
+           FROM tutoring_calendar_event_students AS participant
+           JOIN student_tutoring_links AS link
+             ON link.tutoring_student_id = participant.student_id
+         UNION
+         SELECT direct.google_event_id, link.student_id AS portal_student_id
+           FROM tutoring_calendar_events AS direct
+           JOIN student_tutoring_links AS link
+             ON link.tutoring_student_id = direct.student_id
+       ) AS belonging
+         ON belonging.google_event_id = event.google_event_id
+      WHERE belonging.portal_student_id = ?1
         AND event.status = 'planned'
         AND datetime(event.starts_at) >= datetime('now')
-      ORDER BY datetime(event.starts_at) ASC, event.google_event_id ASC`,
+      ORDER BY datetime(event.starts_at) ASC, event.google_event_id ASC
+      LIMIT 20`,
   ).bind(studentId).all<CalendarUpcomingLesson>();
 
   return result.results || [];
