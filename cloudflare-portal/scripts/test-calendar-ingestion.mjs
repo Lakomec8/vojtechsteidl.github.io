@@ -8,7 +8,7 @@ for (const file of ['0006_tutoring_os.sql', '0007_group_lessons.sql']) {
   db.exec(sql.slice(0, sql.indexOf('INSERT OR IGNORE')));
 }
 db.exec(`CREATE TABLE public_capacity_series (series_id TEXT PRIMARY KEY, public_label TEXT, capacity INTEGER, fallback_people INTEGER, enabled INTEGER, sort_order INTEGER);`);
-for (const file of ['0049_sync_public_calendar_busy.sql', '0054_calendar_ingestion_state.sql']) db.exec(readFileSync(new URL('../migrations/' + file, import.meta.url), 'utf8'));
+for (const file of ['0049_sync_public_calendar_busy.sql', '0054_calendar_ingestion_state.sql', '0067_explicit_calendar_student_aliases.sql']) db.exec(readFileSync(new URL('../migrations/' + file, import.meta.url), 'utf8'));
 db.exec(`INSERT INTO tutoring_students (id, display_name, hourly_rate) VALUES ('alice','Alice',500),('bob','Bob',500)`);
 let writes = 0;
 const DB = {
@@ -47,5 +47,26 @@ try {
   const marker = db.prepare('SELECT last_synced_at FROM calendar_ingestion_state').get().last_synced_at;
   fail = true; await assert.rejects(syncGoogleCalendarToD1(env), /503/);
   assert.equal(db.prepare('SELECT last_synced_at FROM calendar_ingestion_state').get().last_synced_at, marker);
+
+  // First-name aliases must be explicit, belong to active identities and
+  // require a tutoring marker in the title (never import private meetings).
+  db.exec(`INSERT INTO tutoring_calendar_aliases(normalized_alias, alias, tutoring_student_id)
+           VALUES ('bobby', 'Bobby', 'bob')`);
+  fail = false; cancelled = false; title = 'Bobby doučko'; hour = '150000';
+  await syncGoogleCalendarToD1(env);
+  assert.deepEqual(db.prepare('SELECT student_id FROM tutoring_calendar_event_students').all().map((r)=>r.student_id), ['bob']);
+  title = 'Bobby soukromá oslava';
+  await syncGoogleCalendarToD1(env);
+  assert.equal(db.prepare('SELECT status FROM tutoring_calendar_events').get().status, 'cancelled',
+    'A private event with only an alias must not import into tutoring');
+  title = 'Bobby doučko'; await syncGoogleCalendarToD1(env);
+  assert.equal(db.prepare('SELECT status FROM tutoring_calendar_events').get().status, 'planned');
+
+  // Duplicate first names must never cross-assign a lesson.
+  db.exec(`INSERT INTO tutoring_students(id,display_name,hourly_rate)
+           VALUES ('bob-other','Bobby Novák',500)`);
+  await syncGoogleCalendarToD1(env);
+  assert.equal(db.prepare('SELECT status FROM tutoring_calendar_events').get().status, 'cancelled',
+    'Short alias must be disabled when another active student's canonical name matches it');
   console.log('Calendar ingestion: unchanged snapshot = 1 write; moves, participants, cancellation, restoration, completed status and failed feed verified.');
 } finally { globalThis.fetch = originalFetch; db.close(); }
