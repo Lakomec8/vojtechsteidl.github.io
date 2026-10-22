@@ -11,6 +11,12 @@ const MAX_UPLOAD_BYTES = 25 * 1024 * 1024;
 // Master katalog: stránky zůstávají jednou v repozitáři, student dostává pouze odkaz.
 const INTERACTIVE = [
   {
+    "id": "linear-equations",
+    "title": "Lineární rovnice: obě strany v rovnováze",
+    "meta": "ZŠ / SŠ · živé váhy, grafické průsečíky, ekvivalentní úpravy, závorky, zlomky a řešení rovnic s parametrem",
+    "url": "/interactive-notes/linear-equations/"
+  },
+  {
     "id": "ode2",
     "title": "Diferenciální rovnice 2. řádu: homogenní a partikulární",
     "meta": "VŠ · interaktivní charakteristické kořeny, řešení počátečních úloh, partikulární ansatz, rezonance, 4 živé grafy",
