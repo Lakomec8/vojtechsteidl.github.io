@@ -68,6 +68,10 @@ jobs:
         working-directory: cloudflare-portal
         run: npm run test:public-capacity
 
+      - name: Exercise customer booking alerts and safe cancellation
+        working-directory: cloudflare-portal
+        run: npm run test:public-bookings
+
       - name: Verify calendar synchronization writes
         working-directory: cloudflare-portal
         run: npm run test:calendar-ingestion
