@@ -54,8 +54,8 @@ const INTERACTIVE = [
   },
   {
     "id": "waves",
-    "title": "Mechanické vlnění",
-    "meta": "Fyzika · animace vlnění, vlnová délka, fáze",
+    "title": "Mechanické vlnění: interaktivní laboratoř + 13 úloh",
+    "meta": "SŠ · příčné a podélné vlnění, fáze, okamžitá výchylka, rozhraní, prostor-čas a 13 řešených úloh z prezentace",
     "url": "/interactive-notes/mechanical-waves/"
   },
   {

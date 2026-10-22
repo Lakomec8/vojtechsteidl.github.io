@@ -35,3 +35,71 @@
 .check-feedback[data-result=correct]{color:#176445}
 .check-feedback[data-result=error]{color:#a2472b}
 @media(max-width:560px){.calculation-check{padding:18px 16px}.check-entry{flex-wrap:wrap}.check-entry input{flex-basis:100%}.check-entry button{width:100%}}
+
+
+/* Mechanics masterclass extension: explicit two-variable models and source exercises */
+.tabs{grid-template-columns:repeat(3,minmax(0,1fr))}
+.waveplus{min-width:0}
+.waveplus-graphs{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:15px}
+.waveplus-chart,.waveplus-map{border:1px solid var(--hair);border-radius:11px;overflow:hidden;background:#fbfdff;min-width:0}
+.waveplus-chart header,.waveplus-map header{display:flex;flex-direction:column;gap:3px;padding:14px 16px 9px;background:#fff;border-bottom:1px solid var(--hair)}
+.waveplus-chart header span,.waveplus-map header span{font-size:10px;letter-spacing:.1em;font-weight:800;color:var(--accent)}
+.waveplus-chart header strong,.waveplus-map header strong{font-size:15px;color:var(--ink)}
+.waveplus-chart canvas{width:100%;height:225px;display:block}
+.waveplus-chart p,.waveplus-map p{font-size:12px;line-height:1.65;color:var(--muted);padding:0 16px 15px;margin:0}
+.waveplus-map{margin-top:17px}
+.waveplus-map canvas{width:100%;height:245px;display:block}
+.waveplus-controls{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:17px 24px;margin-top:25px}
+.waveplus-controls label{display:block;font-size:12px;font-weight:750;color:var(--ink)}
+.waveplus-controls output{float:right;color:var(--accent);font-size:12px}
+.waveplus-controls input{display:block;width:100%;margin-top:11px;accent-color:#137f77}
+.waveplus-actions{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin:20px 0}
+.waveplus-actions button,.waveplus-bottom button,.waveplus-exercise button{border:1px solid var(--hair);border-radius:8px;background:#fff;padding:10px 14px;font-size:12px;font-weight:750;color:var(--ink);cursor:pointer}
+.waveplus-actions .waveplus-primary,.waveplus-bottom .waveplus-primary,.waveplus-exercise .waveplus-primary{background:#14324a;color:#fff;border-color:#14324a}
+.waveplus-metrics{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));border:1px solid var(--hair);border-radius:9px;overflow:hidden}
+.waveplus-metrics>div{padding:14px;background:#fbfdff;border-right:1px solid var(--hair)}
+.waveplus-metrics>div:last-child{border-right:0}
+.waveplus-metrics span{display:block;color:var(--muted);font-size:11px}.waveplus-metrics strong{display:block;color:var(--ink);font-size:17px;margin-top:4px}
+.waveplus-calculation{padding:20px;margin-top:16px;border-radius:9px;background:#eef7f7;border-left:4px solid #137f77}
+.waveplus-calculation strong{font-size:12px;color:#0e5a56}
+.waveplus-calculation p{line-height:1.65;font-size:13px;color:#20475a;margin:9px 0 0}
+.waveplus-calculation #space-phase-formula{font-family:Georgia,'Times New Roman',serif;font-size:clamp(14px,1.7vw,17px);overflow-wrap:anywhere}
+.waveplus-warning{margin-top:16px;padding:15px 17px;border-radius:9px;background:#fff9ee;color:#7e562d;line-height:1.65;font-size:12px}
+.waveplus-practice-top{display:grid;grid-template-columns:minmax(120px,180px) minmax(0,1fr);gap:24px;align-items:center}
+.waveplus-practice-top small{display:block;color:var(--muted);font-weight:800;letter-spacing:.08em;font-size:10px}
+.waveplus-practice-top strong{display:block;color:var(--ink);font-size:19px;margin-top:5px}
+.waveplus-track{height:8px;border-radius:12px;background:#e1e9ef;overflow:hidden}
+.waveplus-track span{display:block;height:100%;width:0;background:#13968b;transition:width .25s}
+.waveplus-tasknav{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin:24px 0}
+.exercise-tile{position:relative;min-height:80px;padding:11px!important;display:flex;flex-direction:column;gap:6px;text-align:left!important;border:1px solid var(--hair)!important;border-radius:8px!important;background:#fff!important;cursor:pointer;overflow:hidden}
+.exercise-tile small{font-size:9px;line-height:1.4;text-transform:uppercase;letter-spacing:.07em;color:var(--muted)}
+.exercise-tile strong{font-size:11px;line-height:1.4;color:var(--ink)}
+.exercise-tile.chosen{outline:2px solid #1a7a9c;outline-offset:-2px;background:#edf7f9!important}
+.exercise-tile.mastered{border-color:#92cfc1!important}
+.exercise-tile .tick{position:absolute;right:7px;top:7px;color:#0e786c;font-size:12px}
+.waveplus-exercise{border:1px solid var(--hair);border-radius:12px;background:#fff;padding:clamp(17px,3vw,31px)}
+.waveplus-exercise h3{font-size:clamp(23px,3vw,29px);letter-spacing:-.035em;margin:9px 0 14px;color:var(--ink)}
+.waveplus-question{font-size:15px;line-height:1.75;color:#354b5e;margin:0 0 24px;max-width:900px}
+.waveplus-taskbody{display:grid;grid-template-columns:1fr 1fr;gap:28px;border-top:1px solid var(--hair);padding-top:24px}
+.exercise-answer-label{display:block;color:var(--ink);font-weight:750;margin-bottom:9px;font-size:13px}
+.exercise-answer-label span{color:var(--muted)}
+#exercise-answer{width:min(340px,100%);height:45px;border:1px solid #a8bcca;border-radius:8px;padding:9px 12px;color:var(--ink);background:#fff;font-size:16px}
+.exercise-mini{color:var(--muted);font-size:11px;line-height:1.6}
+.exercise-choices{padding:0;margin:0 0 14px;border:0}
+.exercise-choices legend{font-weight:750;font-size:13px;margin-bottom:10px;color:var(--ink)}
+.exercise-choices label{display:flex;align-items:flex-start;gap:10px;margin:7px 0;padding:10px;border:1px solid var(--hair);border-radius:8px;font-size:12px;line-height:1.6;cursor:pointer}
+.exercise-choices input{accent-color:#137f77;margin-top:3px}
+.exercise-feedback{font-size:12px;line-height:1.7;min-height:1.7em;margin:10px 0}
+.exercise-feedback.is-good{color:#0b776b;font-weight:700}
+.exercise-feedback.is-error{color:#9b592e;font-weight:650}
+.waveplus-side .waveplus-actions{margin:0 0 14px}
+.waveplus-hint{border-left:3px solid #d48849;background:#fff8ee;padding:12px 14px;font-size:12px;line-height:1.7;color:#80542e}
+.exercise-step{display:flex;gap:12px;border-top:1px solid var(--hair);padding:11px 0}
+.exercise-step span{background:#e8f5f3;color:#12665e;font-weight:800;border-radius:7px;width:25px;height:25px;display:grid;place-items:center;flex-shrink:0;font-size:11px}
+.exercise-step p{margin:1px 0;color:#304f63;line-height:1.6;font-size:12px}
+.waveplus-comment{font-size:11px;line-height:1.7;background:#f4f8fb;color:var(--muted);padding:13px 15px;border-radius:8px;margin-top:20px}
+.waveplus-bottom{display:flex;justify-content:space-between;gap:10px;margin-top:24px;padding-top:18px;border-top:1px solid var(--hair)}
+.waveplus button:focus-visible{outline:3px solid #269d98;outline-offset:2px}
+@media(max-width:950px){.waveplus-tasknav{grid-template-columns:repeat(3,minmax(0,1fr))}.waveplus-controls{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:720px){.tabs{grid-template-columns:repeat(2,minmax(0,1fr))}.waveplus-graphs,.waveplus-taskbody{grid-template-columns:1fr}.waveplus-tasknav{grid-template-columns:repeat(2,minmax(0,1fr))}.waveplus-metrics{grid-template-columns:repeat(2,minmax(0,1fr))}.waveplus-metrics>div{border-bottom:1px solid var(--hair)}.waveplus-chart canvas{height:200px}.waveplus-map canvas{height:210px}}
+@media(max-width:470px){.waveplus-controls{grid-template-columns:1fr}.waveplus-tasknav{grid-template-columns:repeat(2,minmax(0,1fr))}.waveplus-practice-top{grid-template-columns:1fr;gap:10px}.waveplus-exercise{padding:15px}}

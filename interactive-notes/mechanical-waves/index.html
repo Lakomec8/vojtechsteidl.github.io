@@ -7,8 +7,9 @@
   <meta name="description" content="Interaktivní studijní laboratoř mechanického vlnění: rovnice, animace, vlnová délka, fáze a přechod mezi prostředími.">
   <meta name="theme-color" content="#13263d">
   <title>Mechanické vlnění · Interaktivní laboratoř | Vojtěch Steidl</title>
-  <link rel="stylesheet" href="./style.css?v=2">
+  <link rel="stylesheet" href="./style.css?v=3">
   <script src="./app.js?v=3" defer></script>
+  <script src="./advanced.js?v=1" defer></script>
 </head>
 <body>
   <header class="topbar">
@@ -31,6 +32,8 @@
       <button class="tab" type="button" data-tab="phase" aria-selected="false">02 <span>Fáze dvou bodů</span></button>
       <button class="tab" type="button" data-tab="instant" aria-selected="false">03 <span>Okamžitá výchylka</span></button>
       <button class="tab" type="button" data-tab="medium" aria-selected="false">04 <span>Změna prostředí</span></button>
+      <button class="tab" type="button" data-tab="space" aria-selected="false">05 <span>Prostor × čas</span></button>
+      <button class="tab" type="button" data-tab="practice" aria-selected="false">06 <span>13 úloh</span></button>
     </nav>
     <section class="lab-section active" id="lab-wave" aria-labelledby="heading-wave">
       <div class="chapter"><span class="section-id">01 / Vznik a šíření vlnění</span><h2 id="heading-wave">Vlní se prostředí, ne samotná látka</h2><p>Částice prostředí kmitají kolem rovnovážných poloh, zatímco porucha a energie postupují prostorem. Přepni příčnou a podélnou vlnu a sleduj označené částice.</p></div>
@@ -129,6 +132,73 @@
           <div class="check-entry"><input type="text" id="medium-answer" inputmode="decimal" autocomplete="off" placeholder="Napiš výsledek" required><button type="submit">Zkontrolovat</button></div>
           <p class="check-feedback" id="medium-check-feedback" aria-live="polite"></p>
         </form>
+      </div>
+    </section>
+
+    <section class="lab-section" id="lab-space" aria-labelledby="heading-space" hidden>
+      <div class="chapter">
+        <span class="section-id">05 / Prostor × čas / z prezentace Mechanické vlnění</span>
+        <h2 id="heading-space">Jedna vlna. Dva úplně jiné grafy.</h2>
+        <p>Na horním grafu zastavíme čas a měníme polohu. Na dolním zastavíme polohu a sledujeme běh času. Třetí obraz ukazuje obě proměnné současně. Všechny tři pohledy popisují tutéž rovnici.</p>
+      </div>
+      <div class="equation-card">
+        <p class="equation-name">Rovnice postupného harmonického vlnění ve směru +x</p>
+        <div class="equation">y(x,t) = A · sin [2π(t/T − x/λ)]</div>
+        <p class="equation-explain">V ustáleném ideálním modelu závisí výchylka na dvou proměnných. <strong>λ</strong> je perioda v prostoru, <strong>T</strong> perioda v čase. Rychlost v = λ/T. Nezaměňuj rychlost šíření vlny s okamžitou rychlostí částice.</p>
+      </div>
+      <div class="experiment waveplus">
+        <div class="experiment-top"><strong>Tři synchronizované pohledy na stejné kmitání</strong><span class="helper">Změň x nebo t a sleduj oranžový bod v grafech</span></div>
+        <div class="waveplus-graphs">
+          <article class="waveplus-chart"><header><span>01 / Zastavený čas</span><strong>Profil vlny y(x, t₀)</strong></header><canvas id="space-graph-x" role="img" aria-label="Výchylka v závislosti na poloze při pevném čase"></canvas><p>Vodorovnou osu tvoří <strong>poloha x</strong>. Zde měříme vlnovou délku λ.</p></article>
+          <article class="waveplus-chart"><header><span>02 / Pevný bod</span><strong>Kmitání y(x₀, t)</strong></header><canvas id="space-graph-t" role="img" aria-label="Výchylka v závislosti na čase v jednom bodě"></canvas><p>Vodorovnou osu tvoří <strong>čas t</strong>. Zde měříme periodu T.</p></article>
+        </div>
+        <article class="waveplus-map"><header><span>03 / Prostor a čas současně</span><strong>Časoprostorová mapa fáze</strong></header><canvas id="space-map" role="img" aria-label="Mapa fáze harmonické vlny v prostoru a čase"></canvas><p>Šikmé pruhy představují pohyb fázového stavu prostorem. Modrá označuje kladnou a oranžová zápornou výchylku; kříž označuje zvolený bod (x₀, t₀).</p></article>
+        <div class="waveplus-controls">
+          <label>Amplituda A <output id="space-A-out" for="space-A"></output><input type="range" id="space-A" min=".5" max="3" step=".1" value="2"></label>
+          <label>Perioda T <output id="space-T-out" for="space-T"></output><input type="range" id="space-T" min=".5" max="3" step=".1" value="1.5"></label>
+          <label>Vlnová délka λ <output id="space-lambda-out" for="space-lambda"></output><input type="range" id="space-lambda" min="1" max="8" step=".2" value="4"></label>
+          <label>Poloha x₀ <output id="space-x-out" for="space-x"></output><input type="range" id="space-x" min="0" max="12" step=".1" value="2"></label>
+          <label>Čas t₀ <output id="space-t-out" for="space-t"></output><input type="range" id="space-t" min="0" max="5" step=".02" value="1"></label>
+        </div>
+        <div class="waveplus-actions">
+          <button id="space-play" type="button" class="waveplus-primary">Spustit čas</button>
+          <button id="space-reset" type="button">Výchozí nastavení</button>
+          <button data-space-preset="same" type="button">Stejná fáze po λ</button>
+          <button data-space-preset="opposite" type="button">Opačná fáze po λ/2</button>
+          <button data-space-preset="travel" type="button">Zpoždění x/v</button>
+        </div>
+        <div id="space-readings" class="waveplus-metrics" aria-live="polite"></div>
+        <div class="waveplus-calculation"><strong>Dosazení do rovnice</strong><p id="space-phase-formula"></p><p id="space-propagation"></p></div>
+        <div class="waveplus-warning"><strong>Co je zde fyzikálně předpokládáno?</strong> Graf reprezentuje ustálené harmonické vlnění bez tlumení, odrazů a disperze. Z rovnice automaticky neplyne, že zdroj začal kmitat v čase t = 0 a vlna dosáhla všech míst okamžitě.</div>
+      </div>
+    </section>
+    <section class="lab-section" id="lab-practice" aria-labelledby="heading-practice" hidden>
+      <div class="chapter"><span class="section-id">06 / Pracovní list z přiložené prezentace · 13 úloh</span>
+        <h2 id="heading-practice">Nejdřív předpověz. Pak vypočítej.</h2>
+        <p>Úlohy vycházejí ze snímků 25–37 předlohy. Každou řeš samostatně: odpověď kontrolujeme, nápověda je volitelná a postup odhaluješ po jednotlivých krocích. Tři zadání navíc učí rozpoznat skryté fyzikální předpoklady.</p>
+      </div>
+      <div class="experiment waveplus">
+        <div class="waveplus-practice-top"><div><small>POSTUP UČENÍ</small><strong id="practice-counter">0 / 13 vyřešeno</strong></div><div class="waveplus-track"><span id="practice-meter"></span></div></div>
+        <div id="practice-nav" class="waveplus-tasknav" aria-label="Výběr úlohy"></div>
+        <article class="waveplus-exercise">
+          <span class="section-id" id="exercise-label">Úloha 1 / 13</span>
+          <h3 id="exercise-name"></h3>
+          <p id="exercise-prompt" class="waveplus-question"></p>
+          <div class="waveplus-taskbody">
+            <div>
+              <div id="exercise-response"></div>
+              <button id="exercise-submit" type="button" class="waveplus-primary">Zkontrolovat odpověď</button>
+              <p class="exercise-feedback" id="exercise-feedback" aria-live="polite"></p>
+            </div>
+            <aside class="waveplus-side">
+              <div class="waveplus-actions"><button type="button" id="exercise-hint-btn">Nápověda</button><button type="button" id="exercise-steps-btn">Odhalit první krok</button></div>
+              <p id="exercise-hint" class="waveplus-hint" hidden></p>
+              <div id="exercise-steps"></div>
+            </aside>
+          </div>
+          <div class="waveplus-comment" id="exercise-note"></div>
+          <nav class="waveplus-bottom"><button type="button" id="exercise-prev">← Předchozí</button><button type="button" id="exercise-next" class="waveplus-primary">Další úloha →</button></nav>
+        </article>
       </div>
     </section>
     <footer class="footer"><span>Vojtěch Steidl · Interaktivní výukové materiály</span><span>Mechanické vlnění · Vztah → předpověď → experiment → vysvětlení</span></footer>
