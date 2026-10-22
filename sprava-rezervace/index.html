@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="cs"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex,nofollow,noarchive"><meta name="referrer" content="no-referrer">
+<title>Správa rezervace | Vojtěch Steidl</title><link rel="stylesheet" href="../style.css">
+<style>
+body{background:#f4f8fd;color:#102a43}.booking-manage{width:min(640px,calc(100% - 2rem));margin:5rem auto 6rem;padding:clamp(1.3rem,4vw,2.5rem);border:1px solid #dbe5f1;background:#fff;border-radius:22px;box-shadow:0 22px 60px rgba(15,42,67,.08)}
+.booking-manage h1{font-size:clamp(1.8rem,5vw,2.7rem);line-height:1.14;letter-spacing:-.04em;margin:0 0 1.1rem}
+.booking-manage p{color:#52677d;line-height:1.7}
+.booking-manage .kicker{color:#2563eb;font-size:.75rem;font-weight:850;letter-spacing:.1em;text-transform:uppercase}
+.booking-manage button{border:0;border-radius:10px;padding:.95rem 1.35rem;background:#b42318;color:#fff;font:inherit;font-weight:800;cursor:pointer;margin:.6rem 0}
+.booking-manage button:disabled{opacity:.6;cursor:wait}
+.booking-manage a{color:#1d4ed8;text-decoration:underline;text-underline-offset:3px}
+.booking-manage [role="status"]{font-weight:700}
+</style></head><body>
+<main class="booking-manage">
+  <p class="kicker">Rezervace doučování</p><h1>Zrušení rezervovaného termínu</h1>
+  <p>Pokud vám termín nevyhovuje, můžete ho bezplatně zrušit nejpozději 24 hodin před začátkem. Pozdější zrušení nebo přesun prosím řešte e-mailem.</p>
+  <p>Zrušení je nevratné. Pro nový termín bude potřeba provést novou rezervaci.</p>
+  <button type="button" id="cancel" disabled>Ověřuji odkaz…</button>
+  <p id="result" role="status" aria-live="polite"></p>
+  <p><a href="/">Zpět na hlavní web</a> · <a href="mailto:info@vojtechsteidl.eu">info@vojtechsteidl.eu</a></p>
+</main>
+<script>
+(() => {
+  const button = document.getElementById("cancel");
+  const result = document.getElementById("result");
+  const params = new URLSearchParams(window.location.search);
+  const bookingId = params.get("id");
+  const cancellationToken = params.get("token");
+  if (!/^[0-9a-f-]{36}$/.test(bookingId || "") || !/^[0-9a-f]{64}$/.test(cancellationToken || "")) {
+    button.hidden = true;
+    result.textContent = "Odkaz je neúplný nebo neplatný. Napište na info@vojtechsteidl.eu.";
+    return;
+  }
+  button.textContent = "Zrušit rezervaci";
+  button.disabled = false;
+  button.addEventListener("click", async () => {
+    if (!window.confirm("Opravdu chcete zrušit tuto rezervaci?")) return;
+    button.disabled = true; button.textContent = "Ruším rezervaci…";
+    try {
+      const response = await fetch("https://capacity.vojtechsteidl.eu/api/public-bookings/cancel", {
+        method:"POST",headers:{"Content-Type":"application/json"},
+        body: JSON.stringify({bookingId,cancellationToken}),
+      });
+      const data = await response.json();
+      if (response.ok && data.ok) {
+        button.hidden = true;
+        result.textContent = "Rezervace byla zrušena a termín je opět volný.";
+        // Remove the secret from the browser URL and history after use.
+        window.history.replaceState(null,"","/sprava-rezervace/");
+      } else if (data.error === "too_late_for_self_service") {
+        result.textContent = "Do začátku zbývá méně než 24 hodin. Pro změnu termínu napište na info@vojtechsteidl.eu.";
+      } else {
+        result.textContent = "Rezervaci se nepodařilo zrušit. Napište na info@vojtechsteidl.eu.";
+      }
+    } catch {
+      result.textContent = "Spojení selhalo. Zkuste to znovu nebo napište na info@vojtechsteidl.eu.";
+    } finally {if (!button.hidden) {button.disabled=false;button.textContent="Zrušit rezervaci";}}
+  });
+})();
+</script></body></html>
