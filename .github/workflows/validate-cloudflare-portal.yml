@@ -44,6 +44,10 @@ jobs:
           node --check ../assets/student-self-checks.js
           node --check ../assets/student-dashboard-material-selfchecks.js
 
+      - name: Exercise customer booking alerts and safe cancellation
+        working-directory: cloudflare-portal
+        run: npm run test:public-bookings
+
       - name: Apply and verify local database migrations
         run: |
           npm run db:migrate:local
