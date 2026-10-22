@@ -192,7 +192,7 @@
     } catch (error) {
       status.textContent = error instanceof Error && error.message === "slot-unavailable"
         ? "Tento čas mezitím obsadil někdo jiný. Nabídku jsem obnovil; vyberte prosím jiný termín."
-        : "Rezervaci se nepodařilo bezpečně potvrdit. Zkuste to znovu nebo napište na vojtasteidl@seznam.cz.";
+        : "Rezervaci se nepodařilo bezpečně potvrdit. Zkuste to znovu nebo napište na info@vojtechsteidl.eu.";
       status.classList.add("error");
       await refreshCapacity();
     } finally { button.disabled = false; button.textContent = original; }
