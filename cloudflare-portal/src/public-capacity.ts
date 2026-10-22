@@ -520,3 +520,41 @@ async function sha256Hex(token: string): Promise<string> {
   const hash = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(token));
   return Array.from(new Uint8Array(hash), b => b.toString(16).padStart(2,"0")).join("");
 }
+
+
+/**
+ * Secure cancellation; proof is a 256-bit capability token, never the
+ * short, guessable confirmation code. Late changes go via email.
+ */
+export async function handlePublicBookingCancellation(request: Request, env: Env, ctx?: ExecutionContext): Promise<Response | null> {
+  const preflight = corsPreflight(request);
+  if (preflight) return preflight;
+  if (request.method !== "POST" || new URL(request.url).pathname !== PUBLIC_BOOKING_CANCEL_PATH) return null;
+  const origin = request.headers.get("Origin") || "";
+  if (!["https://vojtechsteidl.eu","https://www.vojtechsteidl.eu"].includes(origin)) {
+    return publicJson({error:"origin_not_allowed"},403,request);
+  }
+  try {
+    const data = await request.json() as Record<string,unknown>;
+    const id = textField(data.bookingId,80);
+    const token = textField(data.cancellationToken,128);
+    if (!/^[0-9a-f-]{36}$/.test(id) || !/^[0-9a-f]{64}$/.test(token)) {
+      return publicJson({error:"invalid_token"},400,request);
+    }
+    const booking = await env.DB.prepare("SELECT starts_at,status FROM public_bookings WHERE id=?1 AND cancellation_token_hash=?2")
+      .bind(id,await sha256Hex(token)).first<{starts_at:string;status:string}>();
+    if (!booking) return publicJson({error:"not_found"},404,request);
+    if (booking.status==="cancelled") return publicJson({ok:true,alreadyCancelled:true},200,request);
+    if (Date.now() >= new Date(booking.starts_at).getTime()-86_400_000) {
+      return publicJson({error:"too_late_for_self_service",contact:"info@vojtechsteidl.eu"},409,request);
+    }
+    await env.DB.batch([
+      env.DB.prepare("UPDATE public_bookings SET status='cancelled' WHERE id=?1 AND status='confirmed'").bind(id),
+      env.DB.prepare("DELETE FROM public_booking_locks WHERE booking_id=?1").bind(id),
+    ]);
+    if(ctx) ctx.waitUntil(dispatchBookingIntegrations(env,id));
+    return publicJson({ok:true,cancelled:true},200,request);
+  } catch {
+    return publicJson({error:"cancellation_unavailable"},503,request);
+  }
+}
