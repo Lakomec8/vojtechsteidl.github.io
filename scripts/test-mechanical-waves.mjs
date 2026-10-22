@@ -12,7 +12,13 @@ const js=fs.readFileSync(dir+"/app.js","utf8");
 new vm.Script(js,{filename:"mechanical-waves-app.js"});
 assert(html.includes("v₁/λ₁ = v₂/λ₂"),"Boundary frequency equation must be dimensionally correct");
 assert(css.includes("#phase-canvas{touch-action:none}"),"Touch drag must not scroll the page");
-assert(html.includes('style.css?v=2')&&html.includes('app.js?v=3'),"Cache-busted assets missing");
+assert(html.includes('style.css?v=3')&&html.includes('app.js?v=3')&&html.includes('advanced.js?v=1'),"Cache-busted assets missing");
+const advanced=fs.readFileSync(dir+"/advanced.js","utf8");
+new vm.Script(advanced,{filename:"mechanical-waves-advanced.js"});
+assert.equal((html.match(/data-tab=/g)||[]).length,6,"Six thematic labs must be navigable");
+assert(html.includes('id="lab-space"')&&html.includes('id="lab-practice"'),"Both new labs must be present");
+assert(advanced.includes("q = [")&&advanced.includes("Průseč")===false,"Guided exercise bank must be loaded");
+assert(advanced.includes("source")===false||advanced.length>10000,"Advanced module should not be empty");
 assert.equal((html.match(/data-calc="/g)||[]).length,4,"All four labs require a calculation exercise");
 
 function fakeDom(prefersReducedMotion=false){
