@@ -5,6 +5,7 @@
   const PRAGUE_TIME_ZONE = "Europe/Prague";
   const dayOrder = ["Pondělí", "Úterý", "Středa", "Čtvrtek", "Pátek"];
   const dayAbbreviations = { Pondělí: "PO", Úterý: "ÚT", Středa: "ST", Čtvrtek: "ČT", Pátek: "PÁ" };
+  const lessonCountLabel = (n) => n === 1 ? "lekce" : n >= 2 && n <= 4 ? "lekce" : "lekcí";
   const refreshIntervalMs = 15 * 60 * 1000;
   const timelineStart = 13 * 60;
   const timelineEnd = 20 * 60 + 30;
@@ -72,7 +73,7 @@
         </article>`;
       }).join("");
       return `<section class="calendar-day">
-        <div class="calendar-day-head"><div class="calendar-day-title"><span class="calendar-day-abbr">${esc(dayAbbreviations[day])}</span><span class="calendar-day-name">${esc(day)} · ${esc(date)}</span></div><span class="calendar-day-count">${daySlots.length} ${daySlots.length === 1 ? "lekce" : "lekcí"}</span></div>
+        <div class="calendar-day-head"><div class="calendar-day-title"><span class="calendar-day-abbr">${esc(dayAbbreviations[day])}</span> <span class="calendar-day-name">${esc(day)} · ${esc(date)}</span></div><span class="calendar-day-count">${daySlots.length} ${lessonCountLabel(daySlots.length)}</span></div>
         <div class="calendar-time-track" aria-label="${esc(day)} ${esc(date)}">${marks}${events}</div>
       </section>`;
     }).join("");
@@ -117,7 +118,7 @@
     if (!weekSummary) return;
     const diagnostic = data.availability?.diagnostic_30?.length || 0;
     const lesson = data.availability?.lesson_60?.length || 0;
-    weekSummary.textContent = `${diagnostic} možností pro 30 min zdarma · ${lesson} možností pro 60min lekci`;
+    weekSummary.textContent = `${diagnostic} možností pro 30 minut zdarma · ${lesson} možností pro 60minutovou lekci`;
   }
 
   function renderLiveStatus(isLive, syncedAt) {
@@ -125,7 +126,7 @@
     const synced = typeof syncedAt === "string" ? new Date(syncedAt) : null;
     const hasTimestamp = synced && !Number.isNaN(synced.getTime());
     liveStatus.textContent = isLive && hasTimestamp
-      ? `Europe/Prague · synchronizováno ${new Intl.DateTimeFormat("cs-CZ", { timeZone: PRAGUE_TIME_ZONE, hour: "2-digit", minute: "2-digit" }).format(synced)}`
+      ? `Kapacita aktualizována v ${new Intl.DateTimeFormat("cs-CZ", { timeZone: PRAGUE_TIME_ZONE, hour: "2-digit", minute: "2-digit" }).format(synced)}`
       : "Dostupnost nelze bezpečně ověřit";
     liveStatus.dataset.state = isLive && hasTimestamp ? "live" : "fallback";
   }
