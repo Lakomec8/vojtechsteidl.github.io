@@ -113,7 +113,7 @@
 <article class="card"><span class="tag">1. ročník VŠ</span><h3>Vysokoškolská matematika</h3><p>Limity, derivace, integrály a matice podle konkrétního předmětu a sylabu školy.</p><a href="#prihlaska" data-goal="vs">Mám zájem →</a></article>
 </div></div></section>
 <section class="process" id="jak-to-funguje"><div class="campaign-shell"><h2>Jak vznikne skupina</h2><p class="lead">Neslibuji místo v předem vypsaném termínu, který se nakonec nebude hodit. Nejdřív spojím kompatibilní zájemce.</p><div class="steps"><div class="step"><h3>1. Vyplníte nezávazný zájem</h3><p>Zvolíte cíl, úroveň a všechny časové možnosti, kdy můžete.</p></div><div class="step"><h3>2. Ověřím kompatibilitu</h3><p>Úvodní konzultace do 30 minut je zdarma. Ověříme úroveň i očekávání.</p></div><div class="step"><h3>3. Navrhnu společný termín</h3><p>Pokud se sejdou vhodní studenti, pošlu návrh. Zařazení je až po vzájemném potvrzení.</p></div></div></div></section>
-<section class="form-zone" id="prihlaska"><div class="campaign-shell form-grid"><aside class="pitch"><span class="section-kicker">Bez závazku</span><h2>Přihlaste zájem do skupiny.</h2><p class="lead">Přihláška není rezervace ani objednávka. Slouží k výběru vhodných studentů a společného času. Odpovím s návrhem dalšího kroku.</p><div class="price"><b>300 Kč / osoba</b><span>60 minut online · 2–4 studenti · úvodních 30 minut zdarma</span></div><p>Raději stručně napište více dostupných časů. Zvýší to pravděpodobnost nalezení společného termínu.</p><p>Dotazy: <a href="mailto:vojtasteidl@seznam.cz">vojtasteidl@seznam.cz</a></p><div class="campaign-trust"><img src="/foto.jpg" alt="Autentická fotografie lektora Vojtěcha Steidla" width="68" height="68" loading="lazy"><div><b>Vojtěch Steidl</b><span>Absolvent aplikované fyziky na Masarykově univerzitě. Výuka online po celé ČR.</span></div></div></aside>
+<section class="form-zone" id="prihlaska"><div class="campaign-shell form-grid"><aside class="pitch"><span class="section-kicker">Bez závazku</span><h2>Přihlaste zájem do skupiny.</h2><p class="lead">Přihláška není rezervace ani objednávka. Slouží k výběru vhodných studentů a společného času. Odpovím s návrhem dalšího kroku.</p><div class="price"><b>300 Kč / osoba</b><span>60 minut online · 2–4 studenti · úvodních 30 minut zdarma</span></div><p>Raději stručně napište více dostupných časů. Zvýší to pravděpodobnost nalezení společného termínu.</p><p>Dotazy: <a href="mailto:info@vojtechsteidl.eu">info@vojtechsteidl.eu</a></p><div class="campaign-trust"><img src="/foto.jpg" alt="Autentická fotografie lektora Vojtěcha Steidla" width="68" height="68" loading="lazy"><div><b>Vojtěch Steidl</b><span>Absolvent aplikované fyziky na Masarykově univerzitě. Výuka online po celé ČR.</span></div></div></aside>
 <form id="groupForm" novalidate>
 <input type="hidden" name="subject" value="Zájem o NOVOU online skupinu – firemní kampaň">
 <input type="hidden" name="source" value="skupiny_2026_firmy">
@@ -140,7 +140,7 @@
 </form>
 </div></section>
 </main>
-<footer><div class="campaign-shell">Vojtěch Steidl · Matematika a fyzika online · IČO 29857368 · <a href="/">Hlavní web</a> · <a href="mailto:vojtasteidl@seznam.cz">E-mail</a></div></footer>
+<footer><div class="campaign-shell">Vojtěch Steidl · Matematika a fyzika online · IČO 29857368 · <a href="/">Hlavní web</a> · <a href="mailto:info@vojtechsteidl.eu">E-mail</a></div></footer>
 <script>
 (function(){
 const form=document.getElementById('groupForm'),goal=form.querySelector('#goal'),vs=document.getElementById('vsFields'),syllabus=document.getElementById('syllabus'),status=document.getElementById('status'),availability=document.getElementById('availabilityValue');
@@ -163,7 +163,7 @@ const response=await fetch('https://api.web3forms.com/submit',{method:'POST',bod
 const data=await response.json();
 if(!response.ok||!data.success)throw Error('Formulář se nepodařilo odeslat.');
 form.reset();goal.value='';syncGoal();status.textContent='Děkuji. Nezávazný zájem dorazil; ozvu se s dalším postupem.';status.classList.add('success');
-}catch(error){status.textContent='Odeslání se nezdařilo. Údaje zůstaly vyplněné. Napište prosím na vojtasteidl@seznam.cz.';status.classList.add('error')}
+}catch(error){status.textContent='Odeslání se nezdařilo. Údaje zůstaly vyplněné. Napište prosím na info@vojtechsteidl.eu.';status.classList.add('error')}
 finally{button.disabled=false;button.textContent=original}
 });
 })();
