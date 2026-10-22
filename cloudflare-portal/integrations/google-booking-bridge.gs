@@ -20,6 +20,17 @@ function json_(data) {
   return ContentService.createTextOutput(JSON.stringify(data))
     .setMimeType(ContentService.MimeType.JSON);
 }
+/** Read-only deployment fingerprint; intentionally reveals no keys or account details. */
+function doGet() {
+  return json_({
+    ok: true,
+    deployment: "VojtechSteidl booking bridge",
+    mailProvider: "resend",
+    sender: "info@vojtechsteidl.eu",
+    version: "resend-2026-10-22-v2"
+  });
+}
+
 function calendar_() {
   var id = PropertiesService.getScriptProperties().getProperty("BOOKING_CALENDAR_ID") || "primary";
   var cal = id === "primary" ? CalendarApp.getDefaultCalendar() : CalendarApp.getCalendarById(id);
