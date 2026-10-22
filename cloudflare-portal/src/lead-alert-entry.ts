@@ -1,5 +1,6 @@
 import tutoringCronWorker from "./tutoring-cron-entry";
 import { handlePublicCapacityRequest } from "./public-capacity";
+import { dispatchPendingBookingIntegrations } from "./booking-delivery";
 import {
   LEAD_APP_PATH,
   LEAD_REFRESH_API_PATH,
@@ -259,6 +260,9 @@ export default {
   },
 
   scheduled(controller: ScheduledController, env: LeadEnv, ctx: ExecutionContext): void {
+    ctx.waitUntil(dispatchPendingBookingIntegrations(env).catch(error => {
+      console.error(JSON.stringify({ event:"booking_delivery_cron_error", errorType:error instanceof Error ? error.name : "unknown" }));
+    }));
     ctx.waitUntil(
       collectAndPush(env).catch((error) => {
         console.error(JSON.stringify({
