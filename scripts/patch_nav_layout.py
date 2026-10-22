@@ -61,6 +61,7 @@ PATCH = r'''
         padding: 0.75rem;
     }
 }
+.privacy-footer-link{display:inline-block;margin-left:1rem;color:inherit;text-decoration:underline;text-underline-offset:3px}
 /* Čitelný záhlavní kalendář v pětidenním rozvrhu */
 .calendar-day-title{display:flex;align-items:center;gap:8px}
 .calendar-day-title .calendar-day-abbr{display:inline-flex;align-items:center;justify-content:center;flex:0 0 auto;margin-right:3px}
@@ -143,6 +144,11 @@ for page in DIST.rglob("*.html"):
     )
     if unified != html:
         html = unified
+        changed = True
+
+    # Ochrana soukromí je přístupná z patičky všech veřejných stránek.
+    if "</footer>" in html and "/ochrana-osobnich-udaju/" not in html[html.rfind("<footer"):html.rfind("</footer>")+9]:
+        html = html.replace("</footer>", ' <a class="privacy-footer-link" href="/ochrana-osobnich-udaju/">Ochrana osobních údajů</a></footer>', 1)
         changed = True
 
     if changed:
