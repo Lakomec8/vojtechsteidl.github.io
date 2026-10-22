@@ -304,7 +304,7 @@ def assert_public_artifact() -> None:
     university_html = (DIST / "doucovani-vs-matematiky" / "index.html").read_text(encoding="utf-8")
     if "../test-vs-matematika-1-rocnik/" not in university_html:
         raise RuntimeError("University diagnostic link is missing from university math landing page")
-    if "Výuka probíhá pouze online" not in university_html:
+    if "Standardně online, osobně po domluvě" not in university_html:
         raise RuntimeError("University page must state the online-only model accurately")
 
     required_diagnostics = (
@@ -338,7 +338,7 @@ def assert_public_artifact() -> None:
         raise RuntimeError("Homepage positioning does not reflect online-only model")
 
     math_page = (DIST / "doucovani-matematiky" / "index.html").read_text(encoding="utf-8")
-    if "Výuka probíhá pouze online" not in math_page:
+    if "Standardně učím online po celé ČR" not in math_page:
         raise RuntimeError("Local tutoring page must state the online-only model accurately")
     if "../doucovani-vs-matematiky/" not in math_page:
         raise RuntimeError("University math internal link is missing from local tutoring page")
