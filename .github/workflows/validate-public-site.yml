@@ -126,7 +126,11 @@ jobs:
           grep -q 'Ukázka · integrály' .public-site/index.html
           ! grep -q 'vs-material-sheet' .public-site/index.html
           grep -q 'id="jak-to-funguje"' .public-site/index.html
-          grep -q '<h2>Studentská zóna</h2>' .public-site/index.html
+          grep -q '<h2>Studentská zóna – ukázka</h2>' .public-site/index.html
+          grep -q 'id="o-lektorovi"' .public-site/index.html
+          grep -q 'Bc. Vojtěch Steidl, MBA' .public-site/index.html
+          test -f .public-site/ochrana-osobnich-udaju/index.html
+          grep -q 'href="/ochrana-osobnich-udaju/"' .public-site/index.html
           grep -q 'blue-ecosystem-frame' .public-site/index.html
           ! grep -q '<section class="school-promo-section" id="diagnostika">' .public-site/index.html
           ! grep -q 'id="materialy"' .public-site/index.html
