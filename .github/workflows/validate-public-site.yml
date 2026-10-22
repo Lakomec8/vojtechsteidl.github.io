@@ -136,6 +136,13 @@ jobs:
           grep -q 'id="rezervace-terminu"' .public-site/index.html
           grep -q 'booking-step-heading' .public-site/index.html
           ! grep -q '728345633' .public-site/index.html
+          grep -q 'mailto:info@vojtechsteidl.eu' .public-site/index.html
+          grep -q 'info@vojtechsteidl.eu' .public-site/ochrana-osobnich-udaju/index.html
+          grep -q 'info@vojtechsteidl.eu' .public-site/podminky-doucovani/index.html
+          if grep -R -n -F 'vojtasteidl@seznam.cz' .public-site --include='*.html' --include='*.js'; then
+            echo 'Legacy personal email exposed in public site' >&2
+            exit 1
+          fi
           grep -q 'blue-ecosystem-frame' .public-site/index.html
           ! grep -q '<section class="school-promo-section" id="diagnostika">' .public-site/index.html
           ! grep -q 'id="materialy"' .public-site/index.html
