@@ -17,8 +17,8 @@ const advanced=fs.readFileSync(dir+"/advanced.js","utf8");
 new vm.Script(advanced,{filename:"mechanical-waves-advanced.js"});
 assert.equal((html.match(/data-tab=/g)||[]).length,6,"Six thematic labs must be navigable");
 assert(html.includes('id="lab-space"')&&html.includes('id="lab-practice"'),"Both new labs must be present");
-assert(advanced.includes("q = [")&&advanced.includes("Průseč")===false,"Guided exercise bank must be loaded");
-assert(advanced.includes("source")===false||advanced.length>10000,"Advanced module should not be empty");
+assert.equal((advanced.match(/\{tag:/g)||[]).length,13,"All 13 presentation exercises must be present");
+assert(advanced.includes("spacetime()")&&advanced.includes("renderSpace()"),"Space-time visualizations must be implemented");
 assert.equal((html.match(/data-calc="/g)||[]).length,4,"All four labs require a calculation exercise");
 
 function fakeDom(prefersReducedMotion=false){
