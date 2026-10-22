@@ -46,6 +46,7 @@ PUBLIC_DIRECTORIES = (
     "test-maturita-matematika",
     "test-vs-matematika-1-rocnik",
     "pro-skoly",
+    "ochrana-osobnich-udaju",
     "interactive-notes",
     "materialy-zdarma",
 )
