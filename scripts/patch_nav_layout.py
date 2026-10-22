@@ -15,6 +15,9 @@ PATCH = r'''
     flex-wrap: nowrap;
     white-space: nowrap;
 }
+.nav-links a[aria-current="page"]{color:#1d4ed8;text-decoration:underline;text-decoration-thickness:2px;text-underline-offset:6px}
+.nav-links a:focus-visible{outline:2px solid #2563eb;outline-offset:4px}
+
 
 @media (min-width: 1281px) {
     .nav {
@@ -91,11 +94,24 @@ NAV_SCRIPT = '''
     button.classList.toggle('active', open);
     button.setAttribute('aria-expanded', open ? 'true' : 'false');
   });
-  links.querySelectorAll('a').forEach(link => link.addEventListener('click', () => {
+  const close = () => {
     links.classList.remove('active');
     button.classList.remove('active');
     button.setAttribute('aria-expanded', 'false');
-  }));
+  };
+  links.querySelectorAll('a').forEach(link => link.addEventListener('click', close));
+  document.addEventListener('keydown', event => {
+    if (event.key === 'Escape' && links.classList.contains('active')) {
+      close();
+      button.focus();
+    }
+  });
+  document.addEventListener('click', event => {
+    if (!links.contains(event.target) && !button.contains(event.target)) close();
+  });
+  window.addEventListener('resize', () => {
+    if (window.innerWidth > 1280) close();
+  });
 })();
 </script>
 '''
@@ -142,6 +158,11 @@ for page in DIST.rglob("*.html"):
         count=1,
         flags=re.S,
     )
+    if page.resolve() == (DIST / "index.html").resolve():
+        # On the homepage stay in the document instead of unnecessary reload.
+        unified = unified.replace('href="/#', 'href="#')
+    if page.parent.name == "pro-skoly":
+        unified = unified.replace('href="/pro-skoly/"', 'href="/pro-skoly/" aria-current="page"', 1)
     if unified != html:
         html = unified
         changed = True
