@@ -82,6 +82,10 @@ type PublicBookingRow = {
   note: string;
   status: "confirmed" | "cancelled";
   created_at: string;
+  owner_create_state: string | null;
+  google_create_state: string | null;
+  owner_cancel_state: string | null;
+  google_cancel_state: string | null;
 };
 type SyncEvent = {
   id: string;
@@ -221,9 +225,11 @@ async function dashboardData(env: Env): Promise<{
                       LEFT JOIN tutoring_lead_trials AS t ON t.lead_id = l.id
                      ORDER BY datetime(l.first_seen_at) DESC
                      LIMIT 300`).all<LeadRow>(),
-    env.DB.prepare(`SELECT confirmation_code, booking_type, starts_at, ends_at, name, email, grade, topic, note, status, created_at
-                      FROM public_bookings
-                     ORDER BY datetime(starts_at) DESC
+    env.DB.prepare(`SELECT b.confirmation_code, b.booking_type, b.starts_at, b.ends_at, b.name, b.email, b.grade, b.topic, b.note, b.status, b.created_at,
+                           d.owner_create_state, d.google_create_state, d.owner_cancel_state, d.google_cancel_state
+                      FROM public_bookings AS b
+                      LEFT JOIN public_booking_dispatch AS d ON d.booking_id=b.id
+                     ORDER BY datetime(b.starts_at) DESC
                      LIMIT 100`).all<PublicBookingRow>(),
     env.DB.prepare("SELECT last_synced_at, completed_events, planned_events, note FROM tutoring_sync_state WHERE id = 1").first<SyncRow>(),
   ]);
@@ -357,6 +363,7 @@ function renderDashboard(data: Awaited<ReturnType<typeof dashboardData>>, email:
       <td><strong>${esc(booking.grade)}</strong><small>${esc(booking.topic)}</small></td>
       <td>${esc(booking.note || "—")}</td>
       <td>${esc(booking.status === "confirmed" ? "Potvrzeno" : "Zrušeno")}</td>
+      <td><strong>${esc(booking.status === "confirmed" ? (booking.owner_create_state === "sent" ? "E-mail: odeslán" : "E-mail: čeká") : (booking.owner_create_state === "sent" ? (booking.owner_cancel_state === "sent" ? "Storno oznámeno" : "Storno čeká") : "Bez oznámení"))}</strong><small>${esc(booking.status === "confirmed" ? (booking.google_create_state === "sent" ? "Google: zapsáno" : "Google: čeká na propojení") : (booking.google_create_state === "sent" ? (booking.google_cancel_state === "sent" ? "Google: odstraněno" : "Google: storno čeká") : "Google: nevytvořeno"))}</small></td>
     </tr>`).join("");
 
   const studentRows = studentStats.map((student) => `
@@ -505,7 +512,7 @@ function renderDashboard(data: Awaited<ReturnType<typeof dashboardData>>, email:
 
       <section class="view" id="finance"><div class="kpis"><article class="card kpi"><span class="kpi-label">Příjmy</span><strong>${esc(money(revenue))}</strong><small>${paidLessons.length} evidovaných úhrad</small></article><article class="card kpi"><span class="kpi-label">Výdaje</span><strong>${esc(money(deductibleExpenses))}</strong><small>${expenses.length ? expenses.length + " záznamů" : "Zatím bez záznamů"}</small></article><article class="card kpi"><span class="kpi-label">Pohledávky</span><strong>${esc(money(unpaid))}</strong><small>Žádná po splatnosti</small></article><article class="card kpi"><span class="kpi-label">Průměr / hodina</span><strong>${esc(money(Math.round(revenue / Math.max(1, totalMinutes / 60))))}</strong><small>Včetně historického baseline</small></article></div><article class="card wide-card"><div class="table-head"><div><h2>Daňová evidence příjmů</h2><span style="font-size:12px;color:var(--muted)">Dokončená lekce = úhrada převodem v den lekce</span></div><span class="chip">Google ID + student bez duplicit</span></div><table><thead><tr><th>Datum</th><th>Plátce / zdroj</th><th>Délka</th><th>Částka</th><th>Úhrada</th></tr></thead><tbody>${lessonRows}</tbody></table></article></section>
 
-      <section class="view" id="calendar"><div class="content-grid"><article class="card section"><div class="section-head"><div><h2>Časová osa · ${esc(monthName(currentMonth))}</h2><p>Dokončené a budoucí lekce z Google Calendar</p></div><span class="chip">${timelineEvents.length} událostí</span></div><div class="timeline">${timeline || '<div class="empty">V tomto měsíci nejsou žádné lekce.</div>'}</div></article><article class="card section"><div class="section-head"><div><h2>Stav synchronizace</h2><p>Google event ID je unikátní klíč</p></div><span class="sync-dot"></span></div><div class="tax-breakdown"><div class="tax-row"><span>Dokončeno</span><strong>${completedEvents.length}</strong></div><div class="tax-row"><span>Plánováno</span><strong>${plannedEvents.length}</strong></div><div class="tax-row"><span>Webové rezervace</span><strong>${bookings.filter((booking) => booking.status === "confirmed").length}</strong></div><div class="tax-row"><span>Poslední sync</span><strong>${esc(sync ? dateLabel(sync.last_synced_at, true) : "—")}</strong></div></div><div class="note" style="margin-top:20px">Budoucí události jsou pouze v časové ose. Do lekcí a příjmů se zapíší až po skončení.</div></article></div><article class="card wide-card"><div class="table-head"><div><h2>Rezervace z webu</h2><span style="font-size:12px;color:var(--muted)">Úvodní diagnostiky a placené online lekce</span></div><span class="chip">${bookings.length} rezervací</span></div><table><thead><tr><th>Termín</th><th>Zájemce</th><th>Typ</th><th>Úroveň / téma</th><th>Poznámka</th><th>Stav</th></tr></thead><tbody>${bookingRows || '<tr><td colspan="6">Zatím bez webových rezervací.</td></tr>'}</tbody></table></article></section>
+      <section class="view" id="calendar"><div class="content-grid"><article class="card section"><div class="section-head"><div><h2>Časová osa · ${esc(monthName(currentMonth))}</h2><p>Dokončené a budoucí lekce z Google Calendar</p></div><span class="chip">${timelineEvents.length} událostí</span></div><div class="timeline">${timeline || '<div class="empty">V tomto měsíci nejsou žádné lekce.</div>'}</div></article><article class="card section"><div class="section-head"><div><h2>Stav synchronizace</h2><p>Google event ID je unikátní klíč</p></div><span class="sync-dot"></span></div><div class="tax-breakdown"><div class="tax-row"><span>Dokončeno</span><strong>${completedEvents.length}</strong></div><div class="tax-row"><span>Plánováno</span><strong>${plannedEvents.length}</strong></div><div class="tax-row"><span>Webové rezervace</span><strong>${bookings.filter((booking) => booking.status === "confirmed").length}</strong></div><div class="tax-row"><span>Poslední sync</span><strong>${esc(sync ? dateLabel(sync.last_synced_at, true) : "—")}</strong></div></div><div class="note" style="margin-top:20px">Budoucí události jsou pouze v časové ose. Do lekcí a příjmů se zapíší až po skončení.</div></article></div><article class="card wide-card"><div class="table-head"><div><h2>Rezervace z webu</h2><span style="font-size:12px;color:var(--muted)">Úvodní diagnostiky a placené online lekce</span></div><span class="chip">${bookings.length} rezervací</span></div><table><thead><tr><th>Termín</th><th>Zájemce</th><th>Typ</th><th>Úroveň / téma</th><th>Poznámka</th><th>Stav</th><th>Notifikace / kalendář</th></tr></thead><tbody>${bookingRows || '<tr><td colspan="7">Zatím bez webových rezervací.</td></tr>'}</tbody></table></article></section>
 
       <section class="view" id="leads">
         <div class="kpis">
