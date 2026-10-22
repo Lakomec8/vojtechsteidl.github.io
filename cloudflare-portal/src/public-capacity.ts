@@ -1,4 +1,4 @@
-import { dispatchBookingIntegrations } from "./booking-delivery";
+import { dispatchBookingIntegrations } from "./booking-delivery.ts";
 const PUBLIC_CAPACITY_PATH = "/api/public-capacity";
 const PUBLIC_BOOKING_PATH = "/api/public-bookings";
 const PUBLIC_BOOKING_CANCEL_PATH = "/api/public-bookings/cancel";
