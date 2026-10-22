@@ -19,7 +19,8 @@
     "test:self-check-results": "node scripts/test-admin-self-check-results.mjs",
     "test:self-check-history": "node scripts/test-student-self-check-history.mjs",
     "test:self-check-dashboard-ui": "node scripts/test-dashboard-review-ui.mjs",
-    "test:self-check-partial": "node scripts/test-partial-self-checks.mjs"
+    "test:self-check-partial": "node scripts/test-partial-self-checks.mjs",
+    "test:public-bookings": "node --experimental-strip-types scripts/test-public-bookings.mjs"
   },
   "dependencies": {
     "ical.js": "^2.2.1",
