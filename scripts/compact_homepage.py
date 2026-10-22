@@ -281,34 +281,63 @@ CSS = r'''<style id="blue-spacious-homepage-v2">
 @media(max-width:980px){.blue-hero-grid{grid-template-columns:minmax(0,1fr) minmax(300px,.85fr);gap:1.4rem}.blue-hero-bio{grid-template-columns:120px minmax(0,1fr)}.blue-hero-portrait,.blue-hero-portrait img{min-height:265px}.blue-hero-bio-body{padding:1rem}}
 @media(max-width:760px){.blue-home-hero{padding:5.65rem 0 2.4rem}.blue-hero-grid{grid-template-columns:1fr;gap:1.25rem}.blue-home-hero h1{font-size:clamp(2.25rem,7.7vw,3.25rem)}.blue-hero-bio{grid-template-columns:125px minmax(0,1fr);min-height:0}.blue-hero-portrait,.blue-hero-portrait img{min-height:220px}.blue-hero-bio-body{padding:.95rem}.blue-capacity-standalone .booking-panel{grid-template-columns:1fr}}
 @media(max-width:500px){.blue-home-hero{padding:5.2rem 0 2.2rem}.blue-hero-bio{grid-template-columns:105px minmax(0,1fr)}.blue-hero-portrait,.blue-hero-portrait img{min-height:230px}.blue-hero-bio-facts span{font-size:.57rem}.blue-home-hero .blue-kicker{font-size:.57rem}.blue-meta{gap:.56rem}.blue-capacity-standalone .booking-panel .booking-form-fields{grid-template-columns:1fr}.blue-capacity-standalone .booking-panel .booking-type-grid{grid-template-columns:1fr}}
+
+/* Open editorial 50:50 composition. Both halves live on the same surface. */
+.blue-home-hero{padding:6.4rem 0 3.1rem;background:radial-gradient(circle at 90% 6%,rgba(96,165,250,.16),transparent 36%),linear-gradient(112deg,#0b223c 0%,#133d69 68%,#164c82 100%)}
+.blue-home-hero::after{display:none}
+.blue-hero-grid{grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:0;align-items:center}
+.blue-hero-intro{min-width:0;padding-right:clamp(1.4rem,3.5vw,3rem)}
+.blue-hero-overline{margin:0 0 .65rem;color:#b3d6ff;font-size:.7rem;font-weight:850;letter-spacing:.13em;text-transform:uppercase}
+.blue-home-hero .blue-kicker{display:inline-flex;max-width:100%;padding:.35rem .65rem;border:1px solid rgba(255,255,255,.15);background:rgba(255,255,255,.055);font-size:.62rem;letter-spacing:.02em}
+.blue-home-hero h1{max-width:590px;margin:.84rem 0 0;font-size:clamp(2.2rem,3.5vw,3.65rem);line-height:1.06;letter-spacing:-.052em}
+.blue-hero-copy{margin:.95rem 0 0;max-width:540px;font-size:.98rem;line-height:1.67}
+.blue-actions{margin-top:1.25rem}
+.blue-meta{margin-top:1.1rem;font-size:.74rem}
+.blue-hero-bio{display:grid;grid-template-columns:minmax(0,1fr) minmax(135px,37%);align-items:center;gap:clamp(.85rem,2.1vw,1.65rem);min-width:0;min-height:0;padding:0 0 0 clamp(1.3rem,3.3vw,2.85rem);border:0;border-left:1px solid rgba(255,255,255,.21);border-radius:0;background:none;box-shadow:none;overflow:visible;backdrop-filter:none}
+.blue-hero-bio-body{display:flex;flex-direction:column;align-items:flex-start;min-width:0;padding:0;color:#fff;order:1}
+.blue-hero-bio-eyebrow{margin:0 0 .6rem;color:#b3d6ff;font-size:.7rem;letter-spacing:.13em}
+.blue-hero-bio h2{margin:0;color:#fff;font-size:clamp(1.34rem,2.1vw,1.85rem);line-height:1.16;letter-spacing:-.045em}
+.blue-hero-bio-body>p:not(.blue-hero-bio-eyebrow){margin:.95rem 0 0;color:rgba(255,255,255,.8);font-size:.87rem;line-height:1.65}
+.blue-hero-bio-facts{display:grid;gap:.46rem;margin-top:1rem}
+.blue-hero-bio-facts span{display:flex;align-items:center;gap:.47rem;padding:0;border-radius:0;background:none;color:#d5e7fb;font-size:.73rem;font-weight:650}
+.blue-hero-bio-facts i{width:15px;color:#91c9ff}
+.blue-hero-bio-mail{margin-top:1.1rem;padding:0;color:#fff;font-size:.77rem;text-decoration:underline;text-underline-offset:4px}
+.blue-hero-portrait{order:2;align-self:stretch;display:flex;align-items:center;min-height:0;background:none;overflow:visible}
+.blue-hero-portrait img{display:block;width:100%;height:auto;min-height:0;max-height:300px;aspect-ratio:3/4;object-fit:cover;object-position:center 24%;border-radius:12px;box-shadow:0 10px 32px rgba(0,0,0,.16)}
+@media(max-width:1100px){.blue-hero-grid{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}.blue-hero-intro{padding-right:1.3rem}.blue-hero-bio{padding-left:1.35rem;gap:.9rem;grid-template-columns:minmax(0,1fr) minmax(116px,33%)}.blue-hero-bio h2{font-size:1.4rem}.blue-hero-bio-body>p:not(.blue-hero-bio-eyebrow){font-size:.79rem}.blue-hero-portrait img{max-height:275px}}
+@media(max-width:760px){.blue-home-hero{padding:5.5rem 0 2.65rem}.blue-hero-grid{grid-template-columns:1fr;gap:1.6rem}.blue-hero-intro{padding-right:0}.blue-home-hero h1{font-size:clamp(2.2rem,7.5vw,3.2rem);max-width:600px}.blue-hero-bio{padding:1.45rem 0 0;border:0;border-top:1px solid rgba(255,255,255,.22);gap:1.2rem;grid-template-columns:minmax(0,1fr) minmax(140px,28%)}.blue-hero-bio h2{font-size:clamp(1.45rem,4.2vw,1.9rem)}.blue-hero-bio-body>p:not(.blue-hero-bio-eyebrow){font-size:.85rem}.blue-hero-portrait img{max-height:240px}}
+@media(max-width:470px){.blue-home-hero{padding:5.2rem 0 2.2rem}.blue-hero-bio{grid-template-columns:minmax(0,1fr) 106px;gap:.75rem}.blue-hero-bio h2{font-size:1.25rem}.blue-hero-bio-body>p:not(.blue-hero-bio-eyebrow){font-size:.77rem;line-height:1.54;margin-top:.6rem}.blue-hero-bio-facts{gap:.35rem;margin-top:.75rem}.blue-hero-bio-facts span{font-size:.63rem}.blue-hero-portrait img{max-height:198px}.blue-hero-bio-mail{margin-top:.7rem}.blue-meta{gap:.65rem}}
 </style>'''
 
 HERO = r'''<section class="blue-home-hero">
   <div class="blue-shell blue-hero-grid">
-    <div class="blue-hero-intro">
-      <span class="blue-kicker"><i class="fas fa-circle-check"></i> Matematika a fyzika · ZŠ / SŠ / VŠ · online po celé ČR</span>
-      <h1>Doučování, které má mezi hodinami pokračování.</h1>
+    <div class="blue-hero-intro" aria-labelledby="introTitle">
+      <p class="blue-hero-overline">Co nabízím</p>
+      <span class="blue-kicker"><i class="fas fa-circle-check" aria-hidden="true"></i> Matematika a fyzika · ZŠ / SŠ / VŠ</span>
+      <h1 id="introTitle">Doučování, které má mezi hodinami pokračování.</h1>
       <p class="blue-hero-copy">Od rychlé pomoci před testem po dlouhodobou přípravu na přijímačky, maturitu nebo VŠ. Cílem není jen projít látku, ale vědět, co má student dělat dál.</p>
       <div class="blue-actions">
         <a class="blue-primary" href="#rezervace-terminu">Rezervovat 30 minut zdarma <i class="fas fa-arrow-right" aria-hidden="true"></i></a>
         <a class="blue-secondary" href="#jak-to-funguje">Jak výuka funguje</a>
       </div>
       <div class="blue-meta">
-        <span><i class="fas fa-clock"></i> 30 min úvod zdarma</span>
-        <span><i class="fas fa-laptop"></i> Online standardně</span>
-        <span><i class="fas fa-user-group"></i> Individuálně i ve skupině</span>
+        <span><i class="fas fa-laptop" aria-hidden="true"></i> Online po celé ČR</span>
+        <span><i class="fas fa-user-group" aria-hidden="true"></i> Individuálně i ve skupině</span>
       </div>
     </div>
     <aside class="blue-hero-bio" id="o-lektorovi" aria-labelledby="heroBioName">
-      <div class="blue-hero-portrait">
-        <img src="/foto.jpg" width="210" height="270" fetchpriority="high" alt="Vojtěch Steidl – lektor matematiky a fyziky">
-      </div>
       <div class="blue-hero-bio-body">
-        <p class="blue-hero-bio-eyebrow">Kdo vás bude učit</p>
+        <p class="blue-hero-bio-eyebrow">Kdo učí</p>
         <h2 id="heroBioName">Bc. Vojtěch Steidl, MBA</h2>
-        <p>Absolvent aplikované fyziky na Masarykově univerzitě. Matematiku a fyziku vysvětluji názorně, s vlastním zápisem a navazujícím procvičováním.</p>
-        <div class="blue-hero-bio-facts"><span><i class="fas fa-graduation-cap" aria-hidden="true"></i> Aplikovaná fyzika · MUNI</span><span><i class="fas fa-file-circle-check" aria-hidden="true"></i> Vlastní materiály</span></div>
-        <a class="blue-hero-bio-mail" href="mailto:info@vojtechsteidl.eu">Napsat přímo <i class="fas fa-arrow-up-right-from-square" aria-hidden="true"></i></a>
+        <p>Vystudoval jsem aplikovanou fyziku na Masarykově univerzitě. Matematiku a fyziku učím srozumitelně, na příkladech a s vlastními materiály, ke kterým se studenti mohou vracet.</p>
+        <div class="blue-hero-bio-facts">
+          <span><i class="fas fa-graduation-cap" aria-hidden="true"></i> Aplikovaná fyzika · MUNI</span>
+          <span><i class="fas fa-file-circle-check" aria-hidden="true"></i> Materiály po hodině</span>
+        </div>
+        <a class="blue-hero-bio-mail" href="mailto:info@vojtechsteidl.eu">Kontaktovat lektora <i class="fas fa-arrow-right" aria-hidden="true"></i></a>
+      </div>
+      <div class="blue-hero-portrait">
+        <img src="/foto.jpg" width="210" height="280" fetchpriority="high" alt="Vojtěch Steidl, lektor matematiky a fyziky">
       </div>
     </aside>
   </div>
