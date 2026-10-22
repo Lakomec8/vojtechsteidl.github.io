@@ -27,3 +27,54 @@ button:focus-visible,input:focus-visible,a:focus-visible{outline:3px solid #c184
 @media(max-width:900px){.mistake-grid{grid-template-columns:1fr 1fr}}
 @media(max-width:650px){.mistake-grid{grid-template-columns:1fr}.balance-values{grid-template-columns:1fr 1fr}.balance-values span:last-child{grid-column:1 / -1}.quiz-buttons{grid-template-columns:1fr 1fr}.stepper-head .large-math{font-size:16px}}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+
+
+/* Závěrečný test: odpovědi jsou samostatné volby, nikoli položky A–D. */
+#zkouska .quiz-buttons{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:11px;
+}
+#zkouska .quiz-buttons .answer-option{
+  display:flex;align-items:center;gap:13px;min-width:0;min-height:62px;
+  padding:14px 16px;text-align:left;line-height:1.55;
+  font-size:13px;font-weight:650;border:1px solid #d4e2d7;
+  border-radius:11px;background:#fcfdfa;color:#243e37;
+  white-space:normal;overflow-wrap:anywhere;
+  transition:border-color .15s ease,background-color .15s ease,transform .15s ease;
+}
+#zkouska .quiz-buttons .answer-option:not(:disabled):hover{
+  border-color:#89b09b;background:#f0f6f0;transform:translateY(-1px);
+}
+#zkouska .quiz-buttons .answer-option:disabled{opacity:1;cursor:default}
+#zkouska .quiz-buttons .answer-option .option-indicator{
+  flex:0 0 23px;width:23px;height:23px;display:grid;place-items:center;
+  border:1.5px solid #a6bcb0;background:#fff;border-radius:50%;
+  font-size:14px;font-weight:800;line-height:1;color:transparent;
+}
+#zkouska .quiz-buttons .answer-option .option-label{
+  flex:1;min-width:0;
+}
+#zkouska .quiz-buttons .answer-option.correct{
+  background:#e4f2e7;border-color:#63a77b;color:#245a41;
+}
+#zkouska .quiz-buttons .answer-option.correct .option-indicator{
+  background:#246853;border-color:#246853;color:white;
+}
+#zkouska .quiz-buttons .answer-option.incorrect{
+  background:#f9ebe6;border-color:#c67d6d;color:#7c4436;
+}
+#zkouska .quiz-buttons .answer-option.incorrect .option-indicator{
+  background:#aa5b49;border-color:#aa5b49;color:white;
+}
+#zkouska .quiz-buttons .answer-option:disabled:not(.correct):not(.incorrect){
+  color:#65766b;border-color:#e1e9e1;background:#fafbf9;
+}
+@media(max-width:720px){
+  #zkouska .quiz-buttons{grid-template-columns:1fr}
+  #zkouska .quiz-buttons .answer-option{min-height:54px;padding:12px 14px}
+}
+@media(prefers-reduced-motion:reduce){
+  #zkouska .quiz-buttons .answer-option{transition:none}
+  #zkouska .quiz-buttons .answer-option:not(:disabled):hover{transform:none}
+}
