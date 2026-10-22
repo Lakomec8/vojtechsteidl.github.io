@@ -111,6 +111,11 @@ jobs:
           grep -q 'Bc. Vojtěch Steidl, MBA' .public-site/index.html
           test -f .public-site/ochrana-osobnich-udaju/index.html
           grep -q 'href="/ochrana-osobnich-udaju/"' .public-site/index.html
+          test -f .public-site/podminky-doucovani/index.html
+          grep -q 'href="/podminky-doucovani/"' .public-site/index.html
+          grep -q 'id="rezervace-terminu"' .public-site/index.html
+          grep -q 'booking-step-heading' .public-site/index.html
+          ! grep -q '728345633' .public-site/index.html
           grep -q 'blue-ecosystem-frame' .public-site/index.html
           ! grep -q '<section class="school-promo-section" id="diagnostika">' .public-site/index.html
           ! grep -q 'id="materialy"' .public-site/index.html
