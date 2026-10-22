@@ -119,10 +119,13 @@ jobs:
           test -f .public-site/podminky-doucovani/index.html
           grep -q 'href="/podminky-doucovani/"' .public-site/index.html
           grep -q 'id="rezervace-terminu"' .public-site/index.html
-          grep -q 'class="booking-panel booking-inline" id="rezervace-terminu" hidden' .public-site/index.html
-          grep -q 'data-book-window' .public-site/assets/public-capacity.js
-          grep -q 'groupAvailableWindows' .public-site/assets/public-capacity.js
-          ! grep -q 'Rezervace ve třech krocích' .public-site/index.html
+          grep -q 'class="booking-panel" id="rezervace-terminu"' .public-site/index.html
+          grep -q 'renderBookingOptions' .public-site/assets/public-capacity.js
+          grep -q 'id="bookingTypeSummary"' .public-site/index.html
+          grep -q 'Rezervace termínu' .public-site/index.html
+          ! grep -q 'id="contactForm"' .public-site/index.html
+          grep -q 'class="blue-hero-bio"' .public-site/index.html
+          grep -q 'id="heroBioName"' .public-site/index.html
           ! grep -q '728345633' .public-site/index.html
           grep -q 'mailto:info@vojtechsteidl.eu' .public-site/index.html
           grep -q 'info@vojtechsteidl.eu' .public-site/ochrana-osobnich-udaju/index.html
