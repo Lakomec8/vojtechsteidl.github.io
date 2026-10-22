@@ -1,6 +1,6 @@
 import tutoringCronWorker from "./tutoring-cron-entry";
 import { handlePublicCapacityRequest } from "./public-capacity";
-import { dispatchPendingBookingIntegrations } from "./booking-delivery";
+import { dispatchPendingBookingIntegrations } from "./booking-delivery.ts";
 import {
   LEAD_APP_PATH,
   LEAD_REFRESH_API_PATH,
