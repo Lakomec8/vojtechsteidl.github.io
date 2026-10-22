@@ -1,5 +1,7 @@
+import { dispatchBookingIntegrations } from "./booking-delivery";
 const PUBLIC_CAPACITY_PATH = "/api/public-capacity";
 const PUBLIC_BOOKING_PATH = "/api/public-bookings";
+const PUBLIC_BOOKING_CANCEL_PATH = "/api/public-bookings/cancel";
 const DAY_NAMES = ["","Pondělí","Úterý","Středa","Čtvrtek","Pátek","Sobota","Neděle"];
 const PRAGUE_TIME_ZONE = "Europe/Prague";
 const BOOKING_TYPES = {
@@ -138,7 +140,7 @@ function publicJson(body: unknown, status = 200, request?: Request): Response {
 function corsPreflight(request: Request): Response | null {
   if (request.method !== "OPTIONS") return null;
   const url = new URL(request.url);
-  if (![PUBLIC_CAPACITY_PATH, PUBLIC_BOOKING_PATH].includes(url.pathname)) return null;
+  if (![PUBLIC_CAPACITY_PATH, PUBLIC_BOOKING_PATH, PUBLIC_BOOKING_CANCEL_PATH].includes(url.pathname)) return null;
   const origin = request.headers.get("Origin") || "";
   if (!["https://vojtechsteidl.eu", "https://www.vojtechsteidl.eu"].includes(origin)) {
     return new Response(null, { status: 403 });
@@ -437,7 +439,7 @@ export function bookingLocks(startAt: Date, duration: number): string[] {
   );
 }
 
-export async function handlePublicBookingRequest(request: Request, env: Env): Promise<Response | null> {
+export async function handlePublicBookingRequest(request: Request, env: Env, ctx?: ExecutionContext): Promise<Response | null> {
   const url = new URL(request.url);
   const preflight = corsPreflight(request);
   if (preflight) return preflight;
@@ -476,21 +478,28 @@ export async function handlePublicBookingRequest(request: Request, env: Env): Pr
     const endAt = new Date(allowed.endAt);
     const bookingId = crypto.randomUUID();
     const confirmationCode = `VS-${crypto.randomUUID().replaceAll("-", "").slice(0, 8).toUpperCase()}`;
+    const cancellationToken = crypto.randomUUID().replaceAll("-", "") + crypto.randomUUID().replaceAll("-", "");
+    const cancellationTokenHash = await sha256Hex(cancellationToken);
     const statements = [
       env.DB.prepare(`INSERT INTO public_bookings
-        (id, confirmation_code, booking_type, starts_at, ends_at, name, email, grade, topic, note)
-        VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10)`)
-        .bind(bookingId, confirmationCode, bookingType, startAt.toISOString(), endAt.toISOString(), name, email, grade, topic, note),
+        (id, confirmation_code, booking_type, starts_at, ends_at, name, email, grade, topic, note, cancellation_token_hash)
+        VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11)`)
+        .bind(bookingId, confirmationCode, bookingType, startAt.toISOString(), endAt.toISOString(), name, email, grade, topic, note, cancellationTokenHash),
+      env.DB.prepare("INSERT INTO public_booking_dispatch (booking_id) VALUES (?1)").bind(bookingId),
       ...bookingLocks(startAt, configuration.duration).map((interval) =>
         env.DB.prepare("INSERT INTO public_booking_locks (interval_start, booking_id) VALUES (?1, ?2)")
           .bind(interval, bookingId)
       ),
     ];
     await env.DB.batch(statements);
+    if (ctx) ctx.waitUntil(dispatchBookingIntegrations(env, bookingId));
 
     return publicJson({
       ok: true,
       confirmationCode,
+      bookingId,
+      cancellationToken,
+      cancellationAllowedUntil: new Date(startAt.getTime() - 86_400_000).toISOString(),
       booking: {
         type: bookingType,
         label: configuration.label,
@@ -505,4 +514,9 @@ export async function handlePublicBookingRequest(request: Request, env: Env): Pr
     console.error(JSON.stringify({ event: "public_booking_error", message }));
     return publicJson({ error: "booking_unavailable" }, 503, request);
   }
+}
+
+async function sha256Hex(token: string): Promise<string> {
+  const hash = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(token));
+  return Array.from(new Uint8Array(hash), b => b.toString(16).padStart(2,"0")).join("");
 }
