@@ -11,6 +11,12 @@ const MAX_UPLOAD_BYTES = 25 * 1024 * 1024;
 // Master katalog: stránky zůstávají jednou v repozitáři, student dostává pouze odkaz.
 const INTERACTIVE = [
   {
+    "id": "ode2",
+    "title": "Diferenciální rovnice 2. řádu: homogenní a partikulární",
+    "meta": "VŠ · interaktivní charakteristické kořeny, řešení počátečních úloh, partikulární ansatz, rezonance, 4 živé grafy",
+    "url": "/interactive-notes/ode2/"
+  },
+  {
     "id": "limits-masterclass",
     "title": "Limity funkcí: kam se funkce blíží?",
     "meta": "Prémiový interaktivní zápis · živé grafy, jednostranné limity, neurčité tvary, nekonečno a ε–δ experiment",
