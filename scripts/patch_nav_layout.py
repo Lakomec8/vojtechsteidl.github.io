@@ -61,7 +61,22 @@ PATCH = r'''
         padding: 0.75rem;
     }
 }
+/* Čitelný záhlavní kalendář v pětidenním rozvrhu */
+.calendar-day-title{display:flex;align-items:center;gap:8px}
+.calendar-day-title .calendar-day-abbr{display:inline-flex;align-items:center;justify-content:center;flex:0 0 auto;margin-right:3px}
+.calendar-day-title .calendar-day-name{min-width:0;white-space:normal}
+
 '''
+
+STANDARD_NAV = '''<ul class="nav-links" id="navLinks">
+  <li><a href="/#kapacita">Kapacita</a></li>
+  <li><a href="/#jak-to-funguje">Příprava</a></li>
+  <li><a href="/#o-lektorovi">O lektorovi</a></li>
+  <li><a href="/#cenik">Ceník</a></li>
+  <li><a href="/pro-skoly/">Pro školy</a></li>
+  <li><a href="/student-portal/" rel="nofollow" class="nav-student"><i class="fas fa-user-lock"></i> Studentská zóna</a></li>
+  <li><a href="/#kontakt" class="nav-contact">Kontakt</a></li>
+</ul>'''
 
 NAV_SCRIPT = '''
 <script data-responsive-nav>
@@ -116,6 +131,18 @@ for page in DIST.rglob("*.html"):
     has_menu_handler = re.search(r"hamburger\s*\.\s*addEventListener\s*\(\s*['\"]click['\"]", html)
     if 'class="hamburger"' in html and 'id="navLinks"' in html and not has_menu_handler and 'data-responsive-nav' not in html and '</body>' in html:
         html = html.replace('</body>', NAV_SCRIPT + '</body>', 1)
+        changed = True
+
+    # Jednotné menu – stejné cíle na všech veřejných podstránkách.
+    unified = re.sub(
+        r'<ul class="nav-links"[^>]*>.*?</ul>',
+        STANDARD_NAV,
+        html,
+        count=1,
+        flags=re.S,
+    )
+    if unified != html:
+        html = unified
         changed = True
 
     if changed:
