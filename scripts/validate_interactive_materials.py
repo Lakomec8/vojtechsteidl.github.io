@@ -14,6 +14,7 @@ MODULES = [
     ROOT / "interactive-notes" / "quadratics" / "index.html",
     ROOT / "interactive-notes" / "inequalities" / "index.html",
     ROOT / "interactive-notes" / "limits" / "index.html",
+    ROOT / "interactive-notes" / "linear-equations" / "index.html",
     ROOT / "interactive-notes" / "ode2" / "index.html",
 ]
 
