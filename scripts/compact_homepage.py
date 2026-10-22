@@ -155,28 +155,44 @@ CSS = r'''<style id="blue-spacious-homepage-v2">
   .booking-type-grid,.booking-form-fields{grid-template-columns:1fr}
   .booking-form-fields .full{grid-column:1}
 }
+
+.blue-about{padding:5rem 0;background:#fff;border-block:1px solid var(--home-line)}
+.blue-about-grid{display:grid;grid-template-columns:minmax(220px,.68fr) minmax(0,1.32fr);align-items:center;gap:clamp(1.5rem,5vw,5rem)}
+.blue-about-image{overflow:hidden;border-radius:24px;background:#eaf1f8;box-shadow:0 18px 45px rgba(16,42,67,.1)}
+.blue-about-image img{width:100%;max-height:400px;aspect-ratio:4/3;object-fit:cover;object-position:center 30%;display:block}
+.blue-about-image>span{display:block;padding:.95rem;font-size:.7rem;letter-spacing:.09em;font-weight:800;text-align:center;color:#254a70}
+.blue-about-content h2{margin:.4rem 0 1rem;color:#102a43;font-size:clamp(2rem,4vw,3.3rem);line-height:1.1}
+.blue-about-intro{font-size:1.05rem;max-width:690px;color:#475569;line-height:1.8}
+.blue-about-proofs{display:grid;gap:.65rem;margin:1.2rem 0}
+.blue-about-proofs span{color:#24415d;font-weight:650}.blue-about-proofs i{color:#1d4ed8;margin-right:.5rem}
+.blue-about-location{max-width:690px;color:#64748b;font-size:.91rem}
+.blue-about-link{display:inline-flex;align-items:center;gap:.6rem;font-weight:800;color:#1d4ed8;margin-top:.6rem}
+.blue-demo-watermark{display:block;padding:.45rem 1rem;font-size:.67rem;letter-spacing:.1em;font-weight:800;text-align:center;color:#345980;background:#e7f0ff}
+.blue-contact .consent a,.booking-form .booking-consent a{color:#1d4ed8;text-decoration:underline;text-underline-offset:3px}
+.blue-form .consent{font-size:.79rem;color:#4e647b;line-height:1.6}
+@media(max-width:760px){.blue-about-grid{grid-template-columns:1fr}.blue-about-image img{max-height:280px}.blue-about{padding:3.3rem 0}}
 </style>'''
 
 HERO = r'''<section class="blue-home-hero">
   <div class="blue-shell blue-hero-grid">
     <div>
-      <span class="blue-kicker"><i class="fas fa-circle-check"></i> Online po celé ČR · matematika a fyzika</span>
+      <span class="blue-kicker"><i class="fas fa-circle-check"></i> Online po celé ČR · osobní výuka u lektora na Vysočině po domluvě</span>
       <h1>Doučování, které má mezi hodinami pokračování.</h1>
       <p class="blue-hero-copy">Od rychlé pomoci před testem po dlouhodobou přípravu na přijímačky, maturitu nebo VŠ. Cílem není jen projít látku, ale vědět, co má student dělat dál.</p>
       <div class="blue-actions">
-        <a class="blue-primary" href="#kontakt">Domluvit úvodní konzultaci <i class="fas fa-arrow-right"></i></a>
-        <a class="blue-secondary" href="#kapacita">Podívat se na kapacitu</a>
+        <a class="blue-primary" href="#kapacita">Rezervovat 30 minut zdarma <i class="fas fa-arrow-right"></i></a>
+        <a class="blue-secondary" href="#jak-to-funguje">Jak výuka funguje</a>
       </div>
       <div class="blue-meta">
         <span><i class="fas fa-clock"></i> 30 min úvod zdarma</span>
-        <span><i class="fas fa-laptop"></i> pouze online</span>
+        <span><i class="fas fa-laptop"></i> online standardně</span>
         <span><i class="fas fa-user-group"></i> individuálně i ve skupině</span>
       </div>
     </div>
     <aside class="blue-hero-panel">
       <div class="blue-panel-head">
         <div><span class="blue-panel-label">Model spolupráce</span><strong>Jedna hodina není izolovaný ostrov.</strong></div>
-        <span class="blue-panel-pill">Online</span>
+        <span class="blue-panel-pill">Online / po domluvě</span>
       </div>
       <div class="blue-flow">
         <div class="blue-flow-step"><i class="fas fa-video"></i><div><strong>1. Lekce</strong><span>Vysvětlení, společné řešení, okamžitá zpětná vazba.</span></div><b>60 min</b></div>
@@ -189,6 +205,25 @@ HERO = r'''<section class="blue-home-hero">
         <div class="blue-panel-stat"><span>Diagnostika</span><strong>zdarma</strong></div>
       </div>
     </aside>
+  </div>
+</section>'''
+
+
+ABOUT = r'''<section class="blue-about" id="o-lektorovi" aria-labelledby="aboutTitle">
+  <div class="blue-shell blue-about-grid">
+    <div class="blue-about-image"><img src="/foto.jpg" loading="lazy" alt="Vojtěch Steidl, lektor matematiky a fyziky"><span>MATEMATIKA A FYZIKA · ZŠ / SŠ / VŠ</span></div>
+    <div class="blue-about-content">
+      <p class="eyebrow">Kdo výuku vede</p>
+      <h2 id="aboutTitle">Bc. Vojtěch Steidl, MBA</h2>
+      <p class="blue-about-intro">Vystudoval jsem aplikovanou fyziku na Masarykově univerzitě a profesně působím v projektovém řízení. Při doučování propojuji přesný matematický postup s názorným vysvětlením, které student dokáže použít i na nové úloze.</p>
+      <div class="blue-about-proofs">
+        <span><i class="fas fa-graduation-cap"></i> Aplikovaná fyzika, MUNI</span>
+        <span><i class="fas fa-diagram-project"></i> Profesní zkušenost s projektovým řízením</span>
+        <span><i class="fas fa-chart-line"></i> Vlastní interaktivní zápisy a diagnostiky</span>
+      </div>
+      <p class="blue-about-location">Online po celé ČR. Osobní lekce jsou možné po individuální domluvě u lektora v okolí Jihlavy; standardně za studenty nedojíždím.</p>
+      <a class="blue-about-link" href="#kapacita">Domluvit úvodní konzultaci <i class="fas fa-arrow-right"></i></a>
+    </div>
   </div>
 </section>'''
 
@@ -215,19 +250,19 @@ OFFER = r'''<section class="blue-goals" id="jak-to-funguje">
     <div class="blue-section-head">
       <div>
         <p class="eyebrow">Součást spolupráce</p>
-        <h2>Studentská zóna</h2>
-        <p>Technické věci mají pomáhat udržet návaznost, ne přidávat další administrativu.</p>
+        <h2>Studentská zóna – ukázka</h2>
+        <p>Takto může vypadat studijní přehled po zahájení spolupráce. Ukázka je ilustrační, nejde o skutečné údaje studenta.</p>
       </div>
     </div>
     <div class="blue-bento">
       <article class="blue-zone-card">
         <div>
-          <p class="eyebrow">Studentská zóna</p>
+          <p class="eyebrow">Ukázka prostředí pro studenty</p>
           <h3>Vše důležité na jednom místě.</h3>
           <p>Termíny, materiály, úkoly, průběh spolupráce a platby. Bez hledání starých e-mailů a souborů.</p>
-          <a href="/student-portal/" rel="nofollow">Vstoupit do studentské zóny <i class="fas fa-arrow-right" style="margin-left:.45rem"></i></a>
+          <a href="/student-portal/" rel="nofollow">Přihlášení pro současné studenty <i class="fas fa-arrow-right" style="margin-left:.45rem"></i></a>
         </div>
-        <div class="blue-portal-mini" aria-label="Ilustrační náhled studentské zóny">
+        <div class="blue-portal-mini" aria-label="Ilustrační náhled studentské zóny"><span class="blue-demo-watermark">ILUSTRAČNÍ UKÁZKA</span>
           <div class="blue-portal-top"><span></span><span></span><span></span></div>
           <div class="blue-portal-body">
             <div class="blue-portal-side"><strong>Student Zone</strong><div class="blue-portal-nav"><span class="active">Přehled</span><span>Materiály</span><span>Termíny</span><span>Platby</span></div></div>
@@ -257,7 +292,7 @@ OFFER = r'''<section class="blue-goals" id="jak-to-funguje">
         </div>
         <div class="capacity-legend" style="margin-bottom:1rem">
           <span><i class="legend-dot join"></i> probíhající lekce</span>
-          <span>Volný čas zůstává v ose prázdný</span>
+          <span>Volné termíny k rezervaci najdete pod kalendářem ↓</span>
           <span class="calendar-live-status" id="calendarLiveStatus">Ověřuji aktuálnost…</span>
         </div>
         <div class="weekly-calendar-wrap">
@@ -269,8 +304,8 @@ OFFER = r'''<section class="blue-goals" id="jak-to-funguje">
           <div class="booking-panel-copy">
             <p class="eyebrow">Rezervace pro nové zájemce</p>
             <h3>Vyberte typ a volný čas.</h3>
-            <p>Kalendář jména studentů nezobrazuje. Před potvrzením termín ještě jednou kontroluji proti živému Google Kalendáři a ostatním rezervacím.</p>
-            <span class="booking-security"><i class="fas fa-shield-halved"></i> Časové pásmo Europe/Prague</span>
+            <p>Vyberte typ lekce, potom konkrétní dostupný termín ze seznamu níže. Kalendář chrání soukromí studentů; dostupnost ještě ověřím před potvrzením. Pro osobní výuku u lektora napište přes kontaktní formulář.</p>
+            <span class="booking-security"><i class="fas fa-shield-halved"></i> Časy jsou uvedené pro Českou republiku</span>
           </div>
           <form class="booking-form" id="slotBookingForm">
             <div class="booking-type-grid" role="radiogroup" aria-label="Typ rezervace">
@@ -285,7 +320,7 @@ OFFER = r'''<section class="blue-goals" id="jak-to-funguje">
               <label>Ročník / úroveň<input type="text" name="grade" maxlength="80" placeholder="např. 9. třída, maturita, VŠ" required></label>
               <label>Téma<input type="text" name="topic" maxlength="160" placeholder="např. rovnice, derivace, fyzika" required></label>
               <label class="full">Poznámka<textarea name="note" maxlength="1000" placeholder="Co potřebujete probrat?"></textarea></label>
-              <label class="booking-consent"><input type="checkbox" required><span>Souhlasím se zpracováním údajů pro vytvoření a vyřízení rezervace.</span></label>
+              <p class="booking-consent">Údaje z rezervace slouží k její přípravě a potvrzení. <a href="/ochrana-osobnich-udaju/">Jak pracuji s osobními údaji</a>.</p>
               <label class="booking-honeypot" aria-hidden="true">Web<input type="text" name="website" tabindex="-1" autocomplete="off"></label>
               <button class="booking-submit" type="submit">Potvrdit rezervaci</button>
               <p class="form-status" id="slotBookingStatus" aria-live="polite"></p>
@@ -330,7 +365,7 @@ PRICING = r'''<section class="blue-pricing" id="cenik">
       </div>
     </div>
     <div class="blue-price-grid">
-      <article class="blue-price-card"><small>První krok</small><strong>Zdarma</strong><p>30min úvodní konzultace nebo diagnostika.</p><a href="#kontakt">Domluvit →</a></article>
+      <article class="blue-price-card"><small>První krok</small><strong>Zdarma</strong><p>30 minut úvodní konzultace nebo diagnostiky.</p><a href="#kapacita">Rezervovat termín →</a></article>
       <article class="blue-price-card featured"><small>Individuální lekce</small><strong>450 Kč</strong><p>60 minut, jednorázově nebo pravidelně podle aktuální potřeby.</p><a href="#kontakt">Vybrat individuální lekci →</a></article>
       <article class="blue-price-card"><small>Malá skupina</small><strong>300 Kč / osoba</strong><p>60 minut pro studenty s podobnou úrovní a stejným cílem.</p><a href="/skupiny/">Otevírané online skupiny →</a></article>
     </div>
@@ -355,7 +390,7 @@ CONTACT = r'''<section class="blue-contact" id="kontakt">
       <div class="form-group"><label for="grade">Ročník</label><select id="grade" name="grade" required><option value="" selected disabled>Vyberte</option><option value="1-stupen-zs">1. stupeň ZŠ</option><option value="2-stupen-zs">2. stupeň ZŠ</option><option value="stredni-skola">Střední škola</option><option value="vysoka-skola">Vysoká škola</option><option value="jine">Jiné</option></select></div>
       <div class="form-group"><label for="service">Cíl</label><select id="service" name="service" required><option value="" selected disabled>Vyberte</option><option value="skupinove-doucovani">Skupinová výuka / volný slot</option><option value="prubezne-doucovani">Průběžné doučování</option><option value="test">Příprava na test</option><option value="prijimacky">Přijímačky</option><option value="maturita">Maturita</option><option value="fyzika">Fyzika</option><option value="vysoka-skola">VŠ matematika</option><option value="jine">Jiné</option></select></div>
       <div class="form-group full"><label for="message">Zpráva</label><textarea id="message" name="message" placeholder="Téma, cíl a kdy se vám hodí online lekce." required></textarea></div>
-      <label class="consent"><input type="checkbox" id="consent" required><span>Souhlasím se zpracováním údajů za účelem vyřízení mé poptávky.</span></label>
+      <p class="consent">Odesláním poptávky poskytujete údaje potřebné pro její vyřízení. <a href="/ochrana-osobnich-udaju/">Informace o ochraně osobních údajů</a>.</p>
       <button type="submit" class="submit-button">Poslat nezávaznou poptávku</button>
       <p class="form-status" id="formStatus" aria-live="polite"></p>
     </form>
@@ -365,6 +400,7 @@ CONTACT = r'''<section class="blue-contact" id="kontakt">
 NAV = r'''<ul class="nav-links" id="navLinks">
   <li><a href="#kapacita">Kapacita</a></li>
   <li><a href="#jak-to-funguje">Příprava</a></li>
+  <li><a href="#o-lektorovi">O lektorovi</a></li>
   <li><a href="#cenik">Ceník</a></li>
   <li><a href="/student-portal/" rel="nofollow" class="nav-student"><i class="fas fa-user-lock"></i> Studentská zóna</a></li>
   <li><a href="#kontakt" class="nav-contact">Kontakt</a></li>
@@ -416,6 +452,7 @@ def main() -> None:
     html = replace_nav(html)
     html = replace_section(html, '<section class="hero">', HERO, "hero")
     html = replace_section(html, '<section class="capacity-strip" id="kapacita"', CAPACITY, "capacity")
+    html = html.replace(HERO, HERO + ABOUT, 1)
     html = replace_section(html, '<section class="section" id="studijni-cile">', OFFER, "goals")
     html = replace_section(html, '<section class="testimonials section" id="reference">', REFERENCE, "testimonials")
     html = replace_section(html, '<section class="pricing section" id="cenik">', PRICING, "pricing")
