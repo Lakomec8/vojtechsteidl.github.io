@@ -1,5 +1,5 @@
 (() => {
-  const CONTACT_EMAIL = 'vojtasteidl@seznam.cz';
+  const CONTACT_EMAIL = 'info@vojtechsteidl.eu';
   const TESTS = {
     '/test-prijimacky-9-matematika/': {
       name: 'Přijímačky 9. třída',
