@@ -84,13 +84,13 @@ jobs:
           grep -q 'Dostupnost termínů ověřuji' .public-site/index.html
           ! grep -q 'data-slot-id="mon-1745"' .public-site/index.html
           grep -q 'calendar-time-track' .public-site/index.html
-          grep -q 'grid-template-columns:repeat(5,minmax(190px,1fr))' .public-site/index.html
+          grep -q 'grid-template-columns:repeat(5,minmax(175px,1fr))' .public-site/index.html
           grep -q 'name="booking_type" value="diagnostic_30"' .public-site/index.html
           grep -q 'name="booking_type" value="lesson_60"' .public-site/index.html
           grep -q 'id="bookingStartAt"' .public-site/index.html
           grep -q 'src="/assets/public-capacity.js"' .public-site/index.html
           grep -q 'id="calendarWeekLabel">Následující týden' .public-site/index.html
-          grep -q 'id="calendarWeekSummary">Načítám aktuální možnosti' .public-site/index.html
+          grep -q 'id="calendarWeekSummary">Načítám dostupné termíny' .public-site/index.html
           grep -q 'id="calendarLiveStatus">Ověřuji aktuálnost' .public-site/index.html
           grep -q 'window.setInterval(refreshCapacity, refreshIntervalMs)' .public-site/assets/public-capacity.js
           grep -q 'https://capacity.vojtechsteidl.eu' .public-site/assets/public-capacity.js
@@ -114,7 +114,10 @@ jobs:
           test -f .public-site/podminky-doucovani/index.html
           grep -q 'href="/podminky-doucovani/"' .public-site/index.html
           grep -q 'id="rezervace-terminu"' .public-site/index.html
-          grep -q 'booking-step-heading' .public-site/index.html
+          grep -q 'class="booking-panel booking-inline" id="rezervace-terminu" hidden' .public-site/index.html
+          grep -q 'data-book-window' .public-site/assets/public-capacity.js
+          grep -q 'groupAvailableWindows' .public-site/assets/public-capacity.js
+          ! grep -q 'Rezervace ve třech krocích' .public-site/index.html
           ! grep -q '728345633' .public-site/index.html
           grep -q 'mailto:info@vojtechsteidl.eu' .public-site/index.html
           grep -q 'info@vojtechsteidl.eu' .public-site/ochrana-osobnich-udaju/index.html
