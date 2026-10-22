@@ -4,6 +4,8 @@
  * Script Properties (Google Apps Script > Project Settings > Script Properties):
  *   BOOKING_WEBHOOK_SECRET = a newly generated random 32+ character secret
  *   BOOKING_CALENDAR_ID = "primary" or the exact calendar ID to populate
+ *   RESEND_API_KEY = a Resend API key with Sending access, stored ONLY in Script Properties
+ *   Verified Resend domain: vojtechsteidl.eu (sender: info@vojtechsteidl.eu)
  *
  * Deploy > New deployment > Web app:
  *   Execute as: Me; Who has access: Anyone
@@ -30,6 +32,48 @@ function lessonName_(data) {
 function formatDate_(iso) {
   return Utilities.formatDate(new Date(iso), "Europe/Prague", "d. M. yyyy HH:mm");
 }
+/**
+ * Send transactional notifications from the verified tutoring domain.
+ * No fallback to MailApp: a failure must NEVER expose the script owner's
+ * personal Gmail address to a customer.
+ *
+ * Stable phase-specific keys make retries idempotent for 24 hours at Resend.
+ * The existing Script Properties record provides long-term deduplication.
+ */
+function sendBrandedBookingEmail_(booking, phase, subject, body) {
+  var key = PropertiesService.getScriptProperties().getProperty("RESEND_API_KEY");
+  if (!key || key.indexOf("re_") !== 0) {
+    throw new Error("Resend is not configured");
+  }
+  if (!booking || !/^[0-9a-f-]{36}$/.test(String(booking.bookingId || ""))) {
+    throw new Error("Invalid booking");
+  }
+  var payload = {
+    from: "Vojtěch Steidl <info@vojtechsteidl.eu>",
+    to: [String(booking.email || "")],
+    reply_to: "info@vojtechsteidl.eu",
+    subject: subject,
+    text: body
+  };
+  var response = UrlFetchApp.fetch("https://api.resend.com/emails", {
+    method: "post",
+    contentType: "application/json",
+    headers: {
+      "Authorization": "Bearer " + key,
+      "Idempotency-Key": "tutoring-booking/" + booking.bookingId + "/" + phase
+    },
+    payload: JSON.stringify(payload),
+    muteHttpExceptions: true
+  });
+  var code = response.getResponseCode();
+  if (code < 200 || code >= 300) {
+    // Do not log API keys, message contents, customer addresses or response bodies.
+    throw new Error("Resend request failed with HTTP " + code);
+  }
+  var result = JSON.parse(response.getContentText() || "{}");
+  if (!result.id) throw new Error("Resend response did not include a message ID");
+}
+
 function doPost(e) {
   var props = PropertiesService.getScriptProperties();
   var expected = props.getProperty("BOOKING_WEBHOOK_SECRET");
@@ -67,16 +111,17 @@ function doPost(e) {
         props.setProperty(eventKey, eventId);
       }
       if (!props.getProperty(mailKey)) {
-        MailApp.sendEmail({
-          to:data.email, replyTo:"info@vojtechsteidl.eu",
-          subject:"Potvrzení rezervace " + data.code + " – Vojtěch Steidl",
-          body:"Dobrý den,\n\nvaše rezervace doučování je potvrzena.\n" +
+
+        sendBrandedBookingEmail_(
+          data, "confirmed",
+          "Potvrzení rezervace " + data.code + " – Vojtěch Steidl",
+          "Dobrý den,\n\nvaše rezervace doučování je potvrzena.\n" +
             lessonName_(data) + "\nTermín: " + formatDate_(data.startAt) +
             " (Praha)\nKód rezervace: " + data.code +
             "\n\nZrušení alespoň 24 hodin předem je zdarma. " +
             "Pro změny odpovězte na tento e-mail nebo pište na info@vojtechsteidl.eu." +
             "\n\nVojtěch Steidl\nhttps://vojtechsteidl.eu/"
-        });
+        );
         props.setProperty(mailKey,"sent");
       }
       return json_({ok:true,eventId:eventId || ""});
@@ -86,14 +131,15 @@ function doPost(e) {
       props.setProperty(cancelKey,"cancelled");
     }
     if (props.getProperty(mailKey) && props.getProperty(mailKey) !== "cancelled") {
-      MailApp.sendEmail({
-        to:data.email, replyTo:"info@vojtechsteidl.eu",
-        subject:"Zrušení rezervace " + data.code + " – Vojtěch Steidl",
-        body:"Dobrý den,\n\nrezervace " + data.code + " na " +
+
+      sendBrandedBookingEmail_(
+        data, "cancelled",
+        "Zrušení rezervace " + data.code + " – Vojtěch Steidl",
+        "Dobrý den,\n\nrezervace " + data.code + " na " +
           formatDate_(data.startAt) + " byla zrušena.\n" +
           "Nový termín si můžete vybrat na https://vojtechsteidl.eu/#kapacita." +
           "\n\nVojtěch Steidl"
-      });
+      );
       props.setProperty(mailKey,"cancelled");
     }
     return json_({ok:true,eventId:eventId || ""});
