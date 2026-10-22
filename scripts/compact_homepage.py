@@ -188,6 +188,64 @@ CSS = r'''<style id="blue-spacious-homepage-v2">
 .blue-capacity-standalone .weekly-calendar-wrap:focus-visible{outline:3px solid #2563eb;outline-offset:3px}
 @media(max-width:1080px){.calendar-swipe-hint{display:block;margin:.55rem 0 .25rem;font-size:.76rem;color:#52677d}}
 
+
+/* Unified calendar/booking: accessible selectable free windows and compact inline contact form */
+.blue-capacity-standalone{padding:4rem 0 4.4rem;background:linear-gradient(180deg,#fff,#f7faff)}
+.blue-capacity-standalone .capacity-compact-heading{display:flex;justify-content:space-between;align-items:center;gap:1rem;margin-bottom:1.2rem}
+.blue-capacity-standalone .capacity-compact-heading h2{font-size:clamp(1.8rem,3.5vw,2.7rem);line-height:1.12}
+.blue-capacity-standalone .capacity-explainer{max-width:700px;margin:.55rem 0 0}
+.blue-capacity-standalone .capacity-compact-heading .booking-security{margin:0;white-space:nowrap}
+.calendar-booking-toolbar{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.9rem;padding:.85rem 1rem;margin-bottom:.8rem;background:#fff;border:1px solid #dae6f1;border-radius:15px}
+.calendar-booking-type{display:flex;flex-wrap:wrap;gap:.4rem}
+.booking-chip{position:relative;cursor:pointer}.booking-chip input{position:absolute;opacity:0;inset:0;cursor:pointer}
+.booking-chip span{display:block;padding:.63rem .9rem;border-radius:10px;border:1px solid #d0e0ed;background:#f8fbff;color:#345573;font-size:.8rem;font-weight:850}
+.booking-chip input:checked+span{color:#fff;background:#16456e;border-color:#16456e}
+.booking-chip input:focus-visible+span{outline:3px solid #60a5fa;outline-offset:3px}
+.calendar-booking-meta{display:flex;flex-direction:column;gap:.12rem;text-align:right}
+.blue-capacity-standalone .calendar-booking-meta .calendar-week-label{margin:0;color:#153b63}
+.blue-capacity-standalone .calendar-booking-meta .calendar-week-summary{margin:0;font-size:.75rem;color:#66809b;font-weight:650}
+.calendar-legend-free{background:#1aa46b!important}
+.blue-capacity-standalone .weekly-calendar{grid-template-columns:repeat(5,minmax(175px,1fr));min-width:930px;gap:.65rem}
+.blue-capacity-standalone .calendar-day{padding:.75rem;border:1px solid #d8e6f1;background:#edf5fd;border-radius:15px;box-shadow:0 9px 20px rgba(15,42,67,.055)}
+.blue-capacity-standalone .calendar-day-head{margin-bottom:.6rem;padding-bottom:.6rem;border-color:#d4e4f2}
+.blue-capacity-standalone .calendar-day-abbr{color:#163f67;font-size:1rem}
+.blue-capacity-standalone .calendar-day-name,.blue-capacity-standalone .calendar-day-count{color:#5b7894}
+.blue-capacity-standalone .calendar-time-track{height:430px;margin-left:2.1rem;background:repeating-linear-gradient(to bottom,#d7e6f2 0,#d7e6f2 1px,transparent 1px,transparent 13.3333%)}
+.blue-capacity-standalone .calendar-hour{left:-2.1rem;width:1.9rem;color:#738ca6}
+.blue-capacity-standalone .calendar-event{padding:.24rem .4rem;min-height:0;border-radius:7px;box-shadow:0 3px 8px rgba(15,42,67,.06)}
+.blue-capacity-standalone .calendar-event.join{background:#fff;border-color:#cddfec;border-left:3px solid #4e87bf}
+.blue-capacity-standalone .calendar-event.full{background:#f8fafc;border-color:#dce6ef;border-left:3px solid #94a3b8}
+.blue-capacity-standalone .calendar-event strong{font-size:.66rem}
+.blue-capacity-standalone .calendar-event small{font-size:.54rem}
+.blue-capacity-standalone .calendar-window{position:absolute;z-index:4;left:.12rem;right:.12rem;display:flex;flex-direction:column;align-items:flex-start;justify-content:center;gap:.08rem;padding:.24rem .4rem;min-height:0;overflow:hidden;text-align:left;border:1px solid #62cca1;border-left:3px solid #179266;border-radius:7px;background:#dff9ed;color:#125f47;box-shadow:0 3px 9px rgba(21,148,104,.07);cursor:pointer}
+.blue-capacity-standalone .calendar-window:hover,.blue-capacity-standalone .calendar-window:focus-visible{background:#c1f2dc;border-color:#0f8658;z-index:5;outline:2px solid #15946b;outline-offset:1px}
+.blue-capacity-standalone .calendar-window.is-selected{background:#aaf0cd;outline:2px solid #0a8154}
+.calendar-window-time{font-size:.65rem;font-weight:900;line-height:1.15}
+.calendar-window-label{font-size:.63rem;font-weight:750;line-height:1.15}
+.calendar-action-status{margin:.4rem 0 0;color:#9a3412;font-size:.78rem;font-weight:750}
+.booking-panel.booking-inline{display:block;max-width:900px;margin:1rem auto 0;padding:1.2rem 1.3rem;border:1px solid #b9dbce;border-radius:17px;background:#fff;box-shadow:0 14px 32px rgba(15,42,67,.07);scroll-margin-top:90px}
+.booking-panel.booking-inline[hidden]{display:none!important}
+.booking-inline-head{display:flex;justify-content:space-between;gap:1rem;align-items:flex-start;padding-bottom:.8rem;border-bottom:1px solid #e4edf4}
+.booking-inline-head .eyebrow{margin:0;color:#17815c}.booking-inline-head h3{margin:.15rem 0 .25rem;font-size:1.16rem;color:#153957}.booking-inline-head p{margin:0;color:#617b94;font-size:.77rem}
+.booking-dismiss{display:inline-flex;align-items:center;gap:.35rem;padding:.5rem .7rem;border:1px solid #d9e5f0;border-radius:9px;background:#fff;color:#516f87;font:inherit;font-size:.75rem;font-weight:750;cursor:pointer}
+.booking-dismiss:hover{background:#f0f6fc}
+.booking-inline .booking-form-fields{grid-template-columns:repeat(4,minmax(0,1fr));gap:.65rem;margin-top:1rem}
+.booking-inline .booking-form-fields .booking-time-field{grid-column:1/-1;max-width:480px}
+.booking-inline .booking-form-fields input,.booking-inline .booking-form-fields select{min-height:42px}
+.booking-inline .booking-extra{border:1px solid #e0eaf2;border-radius:9px}
+.booking-inline .booking-extra summary{padding:.6rem .8rem;display:flex;justify-content:space-between;color:#58728b;font-size:.76rem;font-weight:800;cursor:pointer;list-style:none}
+.booking-inline .booking-extra summary::-webkit-details-marker{display:none}
+.booking-inline .booking-extra[open] summary i{transform:rotate(180deg)}
+.booking-inline .booking-extra label{padding:0 .8rem .8rem}
+.booking-inline .booking-extra textarea{min-height:65px}
+.booking-inline .booking-terms{grid-column:1/4;margin:.4rem 0 0;font-size:.72rem;font-weight:500}
+.booking-inline .booking-submit{grid-column:4;align-self:center;white-space:nowrap}
+.booking-inline .form-status{margin:.65rem 0 0;font-size:.79rem}
+.booking-inline .form-status:empty{display:none}
+.booking-inline.is-complete .booking-form-fields{display:none}
+@media(max-width:980px){.blue-capacity-standalone .capacity-compact-heading{align-items:flex-start;flex-direction:column}.blue-capacity-standalone .capacity-compact-heading .booking-security{white-space:normal}}
+@media(max-width:760px){.blue-capacity-standalone{padding:3rem 0}.calendar-booking-meta{text-align:left}.blue-capacity-standalone .weekly-calendar{grid-template-columns:repeat(5,175px);min-width:max-content}.blue-capacity-standalone .calendar-time-track{height:430px}.booking-inline .booking-form-fields{grid-template-columns:repeat(2,minmax(0,1fr))}.booking-inline .booking-terms,.booking-inline .booking-submit{grid-column:1/-1}.booking-inline .booking-submit{width:100%}.booking-panel.booking-inline{padding:1rem}}
+@media(max-width:480px){.booking-inline .booking-form-fields{grid-template-columns:1fr}.booking-inline .booking-form-fields .booking-time-field{grid-column:1}.booking-chip span{font-size:.73rem;padding:.55rem .65rem}}
 </style>'''
 
 HERO = r'''<section class="blue-home-hero">
@@ -297,62 +355,58 @@ OFFER = r'''<section class="blue-goals" id="jak-to-funguje">
     </div>
   </div>
 </section>
-<section class="blue-capacity-standalone" id="kapacita">
+<section class="blue-capacity-standalone" id="kapacita" aria-labelledby="capacityBookingTitle">
   <div class="blue-shell">
-        <div class="blue-section-head">
-          <div>
-            <p class="eyebrow">Stávající kapacita</p>
-            <h2>Týdenní kalendář</h2>
-            <p class="capacity-explainer">Barevné bloky ukazují probíhající výuku. Volné místo na ose samo o sobě není rezervace – potvrzené dostupné termíny vyberete níže.</p>
-            <a class="booking-jump" href="#rezervace-terminu"><i class="fas fa-calendar-check" aria-hidden="true"></i> Vybrat dostupný termín <span aria-hidden="true">↓</span></a>
-            <p class="calendar-week-label" id="calendarWeekLabel">Následující týden</p>
-            <p class="calendar-week-summary" id="calendarWeekSummary">Načítám aktuální možnosti…</p>
-          </div>
-        </div>
-        <div class="capacity-legend" style="margin-bottom:1rem">
-          <span><i class="legend-dot join"></i> probíhající lekce</span>
-          <span>Volné termíny k rezervaci najdete pod kalendářem ↓</span>
-          <span class="calendar-live-status" id="calendarLiveStatus">Ověřuji aktuálnost…</span>
-        </div>
-        <p class="calendar-swipe-hint" aria-hidden="true"><i class="fas fa-arrows-left-right"></i> Posunutím zobrazíte ostatní dny.</p>
-        <div class="weekly-calendar-wrap" role="region" aria-label="Týdenní rozvrh lekcí" tabindex="0">
-          <div class="weekly-calendar timeline-calendar" id="weeklyCalendar" aria-live="polite">
-            <p class="calendar-empty" role="status">Dostupnost termínů ověřuji v Google Kalendáři…</p>
-          </div>
-        </div>
-        <div class="booking-panel" id="rezervace-terminu">
-          <div class="booking-panel-copy">
-            <p class="eyebrow">Rezervace pro nové zájemce</p>
-            <h3>Rezervace ve třech krocích</h3>
-            <p>Vyberte typ lekce, potom konkrétní dostupný termín ze seznamu níže. Kalendář chrání soukromí studentů; dostupnost ještě ověřím před potvrzením. Pro osobní výuku u lektora napište přes kontaktní formulář.</p>
-            <span class="booking-security"><i class="fas fa-shield-halved"></i> Časy jsou uvedené pro Českou republiku</span>
-          </div>
-          <form class="booking-form" id="slotBookingForm">
-            <p class="booking-step-heading"><span>01</span> Typ lekce</p>
-            <div class="booking-type-grid" role="radiogroup" aria-label="Typ rezervace">
-              <label class="booking-type"><input type="radio" name="booking_type" value="diagnostic_30" checked><span><strong>30 minut zdarma</strong><small>Úvodní online diagnostika / zkušební konzultace</small></span></label>
-              <label class="booking-type"><input type="radio" name="booking_type" value="lesson_60"><span><strong>60 minut · 450 Kč</strong><small>Standardní placená online lekce</small></span></label>
-            </div>
-            <p id="bookingTypeSummary" class="calendar-week-summary"></p>
-            <div class="booking-form-fields">
-              <label class="full" for="bookingStartAt"><span class="booking-step-heading"><span>02</span> Dostupný termín</span><select id="bookingStartAt" name="start_at" required disabled><option value="">Ověřuji dostupnost…</option></select></label>
-              <p class="booking-step-heading booking-form-section"><span>03</span> Kontaktní údaje</p>
-              <label>Jméno<input type="text" name="name" autocomplete="name" maxlength="100" required></label>
-              <label>E-mail<input type="email" name="email" autocomplete="email" maxlength="160" required></label>
-              <label>Ročník / úroveň<input type="text" name="grade" maxlength="80" placeholder="např. 9. třída, maturita, VŠ" required></label>
-              <label>Téma<input type="text" name="topic" maxlength="160" placeholder="např. rovnice, derivace, fyzika" required></label>
-              <label class="full">Poznámka<textarea name="note" maxlength="1000" placeholder="Co potřebujete probrat?"></textarea></label>
-              <p class="booking-consent">Údaje z rezervace slouží k její přípravě a potvrzení. <a href="/ochrana-osobnich-udaju/">Jak pracuji s osobními údaji</a>.</p>
-              <label class="booking-honeypot" aria-hidden="true">Web<input type="text" name="website" tabindex="-1" autocomplete="off"></label>
-              <p class="booking-terms">Lekci lze bezplatně zrušit nejpozději 24 hodin předem. Při pozdější změně se domluvíme individuálně. <a href="/podminky-doucovani/">Podmínky výuky a storno</a>.</p>
-              <button class="booking-submit" type="submit">Potvrdit rezervaci</button>
-              <p class="form-status" id="slotBookingStatus" aria-live="polite"></p>
-            </div>
-          </form>
-        </div>
+    <div class="blue-section-head capacity-compact-heading">
+      <div><p class="eyebrow">Termíny a rezervace</p><h2 id="capacityBookingTitle">Vyberte si termín přímo v kalendáři.</h2>
+        <p class="capacity-explainer">Zelené bloky jsou volné termíny. Modré ukazují probíhající výuku. Vyberte délku lekce a klikněte na zelený blok.</p></div>
+      <span class="booking-security"><i class="fas fa-shield-halved" aria-hidden="true"></i> Dostupnost z Google Kalendáře</span>
+    </div>
+    <div class="calendar-booking-toolbar">
+      <div class="calendar-booking-type" role="radiogroup" aria-label="Typ lekce">
+        <label class="booking-chip"><input type="radio" name="booking_type" value="diagnostic_30" checked><span>30 minut zdarma</span></label>
+        <label class="booking-chip"><input type="radio" name="booking_type" value="lesson_60"><span>60 minut · 450 Kč</span></label>
       </div>
-    </section>'''
-
+      <div class="calendar-booking-meta"><strong class="calendar-week-label" id="calendarWeekLabel">Následující týden</strong>
+        <span class="calendar-week-summary" id="calendarWeekSummary">Načítám dostupné termíny…</span></div>
+    </div>
+    <div class="capacity-legend" style="margin-bottom:.7rem">
+      <span><i class="legend-dot calendar-legend-free"></i> Volný termín – klikněte</span>
+      <span><i class="legend-dot join"></i> Probíhající lekce</span>
+      <span class="calendar-live-status" id="calendarLiveStatus">Ověřuji aktuálnost…</span>
+    </div>
+    <p class="calendar-swipe-hint" aria-hidden="true"><i class="fas fa-arrows-left-right"></i> Kalendář lze posouvat do stran.</p>
+    <div class="weekly-calendar-wrap" role="region" aria-label="Kalendář s možností rezervace" tabindex="0">
+      <div class="weekly-calendar timeline-calendar" id="weeklyCalendar" aria-live="polite">
+        <p class="calendar-empty" role="status">Dostupnost termínů ověřuji v Google Kalendáři…</p>
+      </div>
+    </div>
+    <p class="calendar-action-status" id="calendarActionStatus" aria-live="polite" role="status"></p>
+    <div class="booking-panel booking-inline" id="rezervace-terminu" hidden>
+      <div class="booking-inline-head">
+        <div><p class="eyebrow">Váš vybraný termín</p><h3 id="bookingSelectedTitle">Dokončete rezervaci</h3>
+          <p id="bookingSelectedMeta">Upřesněte čas a doplňte kontaktní údaje.</p></div>
+        <button type="button" class="booking-dismiss" id="bookingDismiss" aria-label="Zavřít formulář rezervace"><i class="fas fa-xmark" aria-hidden="true"></i> Zavřít</button>
+      </div>
+      <form class="booking-form" id="slotBookingForm">
+        <div class="booking-form-fields">
+          <label class="full booking-time-field" for="bookingStartAt">Vybraný čas
+            <select id="bookingStartAt" name="start_at" required disabled><option value="">Klikněte na zelený blok v kalendáři</option></select>
+          </label>
+          <label>Jméno<input type="text" name="name" autocomplete="name" maxlength="100" required></label>
+          <label>E-mail<input type="email" name="email" autocomplete="email" maxlength="160" required></label>
+          <label>Ročník / úroveň<input type="text" name="grade" maxlength="80" placeholder="např. 9. třída, VŠ" required></label>
+          <label>Téma<input type="text" name="topic" maxlength="160" placeholder="např. rovnice, derivace" required></label>
+          <details class="booking-extra full"><summary>Chci doplnit poznámku <i class="fas fa-chevron-down" aria-hidden="true"></i></summary><label>Poznámka<textarea name="note" maxlength="1000" placeholder="Co potřebujete probrat?"></textarea></label></details>
+          <label class="booking-honeypot" aria-hidden="true">Web<input type="text" name="website" tabindex="-1" autocomplete="off"></label>
+          <p class="booking-terms">Údaje slouží k rezervaci. <a href="/ochrana-osobnich-udaju/">Ochrana údajů</a> · Bezplatné storno nejpozději 24 hodin předem. <a href="/podminky-doucovani/">Podmínky výuky</a>.</p>
+          <button class="booking-submit" type="submit">Potvrdit rezervaci <i class="fas fa-arrow-right" aria-hidden="true"></i></button>
+        </div>
+        <p class="form-status" id="slotBookingStatus" aria-live="polite"></p>
+      </form>
+    </div>
+  </div>
+</section>'''
 REFERENCE = r'''<section class="blue-reference" id="reference">
   <div class="blue-shell">
     <div class="blue-review-head">
