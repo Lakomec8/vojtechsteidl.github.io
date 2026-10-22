@@ -48,6 +48,7 @@ PUBLIC_DIRECTORIES = (
     "pro-skoly",
     "ochrana-osobnich-udaju",
     "podminky-doucovani",
+    "sprava-rezervace",
     "interactive-notes",
     "materialy-zdarma",
 )
