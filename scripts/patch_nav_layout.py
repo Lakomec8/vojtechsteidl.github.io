@@ -171,6 +171,9 @@ for page in DIST.rglob("*.html"):
     if "</footer>" in html and "/ochrana-osobnich-udaju/" not in html[html.rfind("<footer"):html.rfind("</footer>")+9]:
         html = html.replace("</footer>", ' <a class="privacy-footer-link" href="/ochrana-osobnich-udaju/">Ochrana osobních údajů</a></footer>', 1)
         changed = True
+    if "</footer>" in html and "/podminky-doucovani/" not in html[html.rfind("<footer"):html.rfind("</footer>")+9]:
+        html = html.replace("</footer>", ' <a class="privacy-footer-link" href="/podminky-doucovani/">Podmínky výuky a storno</a></footer>', 1)
+        changed = True
 
     if changed:
         page.write_text(html, encoding="utf-8")
