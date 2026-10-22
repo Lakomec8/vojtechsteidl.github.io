@@ -118,7 +118,7 @@ def patch_public_entrypoint() -> None:
           "url":"https://vojtechsteidl.eu/",
           "image":"https://vojtechsteidl.eu/foto.jpg",
           "jobTitle":"Lektor matematiky a fyziky",
-          "email":"vojtasteidl@seznam.cz",
+          "email":"info@vojtechsteidl.eu",
           "knowsAbout":["matematika","fyzika","doučování","vysokoškolská matematika"]
         },
         {
