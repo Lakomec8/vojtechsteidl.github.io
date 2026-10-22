@@ -47,6 +47,7 @@ PUBLIC_DIRECTORIES = (
     "test-vs-matematika-1-rocnik",
     "pro-skoly",
     "ochrana-osobnich-udaju",
+    "podminky-doucovani",
     "interactive-notes",
     "materialy-zdarma",
 )
