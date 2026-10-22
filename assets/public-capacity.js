@@ -15,9 +15,15 @@
   const liveStatus = document.getElementById("calendarLiveStatus");
   const form = document.getElementById("slotBookingForm");
   const status = document.getElementById("slotBookingStatus");
-  const typeInputs = form ? Array.from(form.querySelectorAll('input[name="booking_type"]')) : [];
+  const typeInputs = Array.from(document.querySelectorAll('.calendar-booking-type input[name="booking_type"]'));
   const timeSelect = document.getElementById("bookingStartAt");
-  const typeSummary = document.getElementById("bookingTypeSummary");
+  const panel = document.getElementById("rezervace-terminu");
+  const selectedTitle = document.getElementById("bookingSelectedTitle");
+  const selectedMeta = document.getElementById("bookingSelectedMeta");
+  const dismiss = document.getElementById("bookingDismiss");
+  const actionStatus = document.getElementById("calendarActionStatus");
+  let selectedWindowKey = null;
+  let currentWindows = [];
   let currentData = null;
   let refreshInFlight = null;
   let lastRefreshAt = 0;
@@ -47,40 +53,89 @@
       .format(new Date(Date.UTC(year, month - 1, day + dayIndex, 12)));
   }
 
+  const selectedType = () => typeInputs.find((input) => input.checked)?.value || "diagnostic_30";
+  const shortTitle = (value) => String(value).length > 27 ? String(value).slice(0, 26).trimEnd() + "…" : String(value);
+
+  // Collapse overlapping 15-minute candidate starts into distinct, genuinely
+  // available calendar windows. Only API-confirmed availability becomes clickable.
+  function groupAvailableWindows(options) {
+    const groups = [];
+    const ordered = [...options].sort((a, b) => a.startAt.localeCompare(b.startAt));
+    for (const option of ordered) {
+      const range = parseTimeRange(option.time);
+      if (!range || !dayOrder.includes(option.day) || !Number.isFinite(Date.parse(option.startAt))) continue;
+      const previous = groups[groups.length - 1];
+      if (previous && previous.day === option.day && range.start <= previous.lastStart + 15 && range.start > previous.lastStart) {
+        previous.lastStart = range.start;
+        previous.end = Math.max(previous.end, range.end);
+        previous.options.push(option);
+      } else {
+        groups.push({ key: option.startAt, day: option.day, start: range.start, lastStart: range.start, end: range.end, options: [option] });
+      }
+    }
+    return groups;
+  }
+
+  function timelineExtent(slots, windows) {
+    const times = [...slots.map((slot) => parseTimeRange(slot.time)),
+      ...windows.map((w) => ({ start: w.start, end: w.end }))].filter(Boolean);
+    return {
+      start: Math.min(timelineStart, ...times.map((x) => Math.floor(x.start / 60) * 60)),
+      end: Math.max(timelineEnd, ...times.map((x) => Math.ceil(x.end / 60) * 60)),
+    };
+  }
+
   function renderTimeline(slots, week) {
-    const hourMarks = [];
-    for (let minute = timelineStart; minute <= timelineEnd; minute += 60) hourMarks.push(minute);
+    const type = selectedType();
+    currentWindows = groupAvailableWindows(currentData?.availability?.[type] || []);
+    const extent = timelineExtent(slots, currentWindows);
+    const span = extent.end - extent.start;
+    const heightPx = Math.max(430, Math.round(430 * span / timelineMinutes));
+    const marks = [];
+    for (let m = extent.start; m <= extent.end; m += 60) marks.push(m);
     calendarEl.innerHTML = dayOrder.map((day, dayIndex) => {
       const daySlots = slots.filter((slot) => slot.day === day);
+      const windows = currentWindows.filter((w) => w.day === day);
       const date = dateForDay(week, dayIndex);
-      const marks = hourMarks.map((minute) => {
-        const top = ((minute - timelineStart) / timelineMinutes) * 100;
+      const guides = marks.map((minute) => {
+        const top = ((minute - extent.start) / span) * 100;
         const label = `${Math.floor(minute / 60).toString().padStart(2, "0")}:00`;
         return `<span class="calendar-hour" style="top:${top}%">${esc(label)}</span>`;
       }).join("");
       const events = daySlots.map((slot) => {
         const range = parseTimeRange(slot.time);
         if (!range) return "";
-        const start = Math.max(timelineStart, range.start);
-        const end = Math.min(timelineEnd, range.end);
-        if (end <= start) return "";
-        const top = ((start - timelineStart) / timelineMinutes) * 100;
-        const height = ((end - start) / timelineMinutes) * 100;
+        const top = ((Math.max(extent.start, range.start) - extent.start) / span) * 100;
+        const bottom = Math.min(extent.end, range.end);
+        if (bottom <= extent.start || top >= 100) return "";
+        const blockHeight = ((bottom - Math.max(extent.start, range.start)) / span) * 100;
         const state = slot.kind === "full" ? "full" : "join";
-        const occupancy = state === "join" ? `${Number(slot.people)}/${Number(slot.capacity)} míst` : "obsazeno";
-        return `<article class="calendar-event ${state}" style="top:${top}%;height:calc(${height}% - 3px)">
-          <span class="calendar-event-time">${esc(slot.time)}</span><strong>${esc(slot.title)}</strong><small>${esc(occupancy)}</small>
+        const occupancy = state === "join" && Number.isFinite(Number(slot.people)) && Number.isFinite(Number(slot.capacity))
+          ? `${Number(slot.people)}/${Number(slot.capacity)} míst` : "Probíhá výuka";
+        return `<article class="calendar-event ${state}" title="${esc(slot.title)} · ${esc(slot.time)}" style="top:${top}%;height:calc(${blockHeight}% - 3px)">
+          <span class="calendar-event-time">${esc(slot.time)}</span><strong>${esc(shortTitle(slot.title))}</strong><small>${esc(occupancy)}</small>
         </article>`;
       }).join("");
+      const bookable = windows.map((w) => {
+        const top = ((w.start - extent.start) / span) * 100;
+        const blockHeight = ((w.end - w.start) / span) * 100;
+        const formatMinutes = (m) => `${String(Math.floor(m / 60)).padStart(2, "0")}:${String(m % 60).padStart(2, "0")}`;
+        const period = `${formatMinutes(w.start)}–${formatMinutes(w.end)}`;
+        const index = currentWindows.indexOf(w);
+        const isSelected = selectedWindowKey === w.key ? " is-selected" : "";
+        return `<button type="button" class="calendar-window${isSelected}" data-book-window="${index}"
+          aria-label="${esc(day)} ${esc(date)}, volný čas ${esc(period)}. Vybrat rezervaci."
+          title="Rezervovat · ${esc(period)}" style="top:${top}%;height:calc(${blockHeight}% - 3px)">
+          <span class="calendar-window-time">${esc(period)}</span><span class="calendar-window-label">Volno · vybrat →</span>
+        </button>`;
+      }).join("");
       return `<section class="calendar-day">
-        <div class="calendar-day-head"><div class="calendar-day-title"><span class="calendar-day-abbr">${esc(dayAbbreviations[day])}</span> <span class="calendar-day-name">${esc(day)} · ${esc(date)}</span></div><span class="calendar-day-count">${daySlots.length} ${lessonCountLabel(daySlots.length)}</span></div>
-        <div class="calendar-time-track" aria-label="${esc(day)} ${esc(date)}">${marks}${events}</div>
+        <div class="calendar-day-head"><div class="calendar-day-title"><span class="calendar-day-abbr">${esc(dayAbbreviations[day])}</span><span class="calendar-day-name">${esc(day)} · ${esc(date)}</span></div><span class="calendar-day-count">${daySlots.length} ${lessonCountLabel(daySlots.length)}</span></div>
+        <div class="calendar-time-track" aria-label="${esc(day)} ${esc(date)}" style="height:${heightPx}px">${guides}${events}${bookable}</div>
       </section>`;
     }).join("");
     calendarEl.dataset.live = "true";
   }
-
-  const selectedType = () => typeInputs.find((input) => input.checked)?.value || "diagnostic_30";
 
   function formatBookingOption(option) {
     const date = new Intl.DateTimeFormat("cs-CZ", { timeZone: PRAGUE_TIME_ZONE, weekday: "long", day: "numeric", month: "numeric" })
@@ -90,18 +145,40 @@
 
   function renderBookingOptions() {
     if (!timeSelect || !currentData) return;
-    const type = selectedType();
-    const options = currentData.availability?.[type] || [];
+    const current = currentWindows.find((w) => w.key === selectedWindowKey);
+    if (!current) {
+      if (selectedWindowKey && panel && !panel.classList.contains("is-complete")) {
+        panel.hidden = true;
+        if (actionStatus) actionStatus.textContent = "Vybraný termín už není volný. Vyberte prosím jiný zelený blok.";
+      }
+      selectedWindowKey = null;
+      timeSelect.disabled = true;
+      timeSelect.innerHTML = '<option value="">Klikněte na volné místo v kalendáři</option>';
+      return;
+    }
     const previous = timeSelect.value;
-    timeSelect.innerHTML = `<option value="">${options.length ? "Vyberte volný čas" : "Pro tento typ teď není volný čas"}</option>` + options.map((option) =>
+    timeSelect.innerHTML = current.options.map((option) =>
       `<option value="${esc(option.startAt)}">${esc(formatBookingOption(option))}</option>`
     ).join("");
-    if (options.some((option) => option.startAt === previous)) timeSelect.value = previous;
-    timeSelect.disabled = options.length === 0;
-    if (typeSummary) {
-      const configuration = currentData.bookingTypes?.[type];
-      typeSummary.textContent = configuration ? `${configuration.duration} minut · ${configuration.price} · online` : "";
-    }
+    timeSelect.value = current.options.some((option) => option.startAt === previous) ? previous : current.options[0].startAt;
+    timeSelect.disabled = false;
+    if (selectedTitle) selectedTitle.textContent = selectedType() === "diagnostic_30"
+      ? "30 minut zdarma · online" : "60 minut · 450 Kč · online";
+    if (selectedMeta) selectedMeta.textContent = `${current.day} · ${current.options.length} ${current.options.length === 1 ? "dostupný začátek" : "možností začátku"}`;
+  }
+
+  function pickWindow(index) {
+    const window = currentWindows[index];
+    if (!window || !currentData || !panel) return;
+    selectedWindowKey = window.key;
+    panel.hidden = false;
+    panel.classList.remove("is-complete");
+    if (status) { status.textContent = ""; status.className = "form-status"; }
+    if (actionStatus) actionStatus.textContent = "";
+    renderBookingOptions();
+    calendarEl.querySelectorAll(".calendar-window").forEach((button) =>
+      button.classList.toggle("is-selected", button.dataset.bookWindow === String(index)));
+    panel.scrollIntoView({ behavior: window.matchMedia?.("x") ? "auto" : "smooth", block: "nearest" });
   }
 
   function renderWeekLabel(week) {
