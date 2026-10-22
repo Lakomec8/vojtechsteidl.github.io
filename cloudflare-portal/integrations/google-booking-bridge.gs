@@ -20,7 +20,7 @@ function json_(data) {
 }
 function calendar_() {
   var id = PropertiesService.getScriptProperties().getProperty("BOOKING_CALENDAR_ID") || "primary";
-  var cal = CalendarApp.getCalendarById(id);
+  var cal = id === "primary" ? CalendarApp.getDefaultCalendar() : CalendarApp.getCalendarById(id);
   if (!cal) throw new Error("Calendar not accessible");
   return cal;
 }
