@@ -171,6 +171,23 @@ CSS = r'''<style id="blue-spacious-homepage-v2">
 .blue-contact .consent a,.booking-form .booking-consent a{color:#1d4ed8;text-decoration:underline;text-underline-offset:3px}
 .blue-form .consent{font-size:.79rem;color:#4e647b;line-height:1.6}
 @media(max-width:760px){.blue-about-grid{grid-template-columns:1fr}.blue-about-image img{max-height:280px}.blue-about{padding:3.3rem 0}}
+
+/* P2: jasná konverzní cesta – rozvrh a rezervační formulář zůstávají oddělené */
+.capacity-explainer{max-width:680px;margin:.65rem 0 1rem;font-size:.86rem;line-height:1.55;color:#52677d}
+.booking-jump{display:inline-flex;align-items:center;gap:.65rem;margin-top:.45rem;padding:.72rem 1rem;border-radius:11px;background:#1d4ed8;color:#fff!important;font-size:.82rem;font-weight:800;text-decoration:none;box-shadow:0 8px 20px rgba(29,78,216,.16)}
+.booking-jump:hover,.booking-jump:focus-visible{background:#1642b5;outline-offset:3px}
+.booking-jump span{margin-left:.3rem}
+.calendar-swipe-hint{display:none}
+#rezervace-terminu{scroll-margin-top:105px}
+.booking-step-heading{display:flex;align-items:center;gap:.55rem;margin:0 0 .65rem;color:#213d62;font-size:.79rem;font-weight:850}
+.booking-step-heading>span{display:inline-grid;place-items:center;flex:0 0 auto;width:28px;height:28px;border-radius:50%;background:#dbeafe;color:#1d4ed8;font-size:.71rem;font-weight:850}
+.booking-form-section{grid-column:1/-1;margin:.65rem 0 .2rem}
+.booking-form .booking-form-fields label.full .booking-step-heading{margin:0 0 .3rem;font-size:.79rem}
+.booking-terms{grid-column:1/-1;margin:.35rem 0 0;color:#52677d;font-size:.73rem;line-height:1.6}
+.booking-terms a{color:#1d4ed8;font-weight:750;text-decoration:underline;text-underline-offset:3px}
+.blue-capacity-standalone .weekly-calendar-wrap:focus-visible{outline:3px solid #2563eb;outline-offset:3px}
+@media(max-width:1080px){.calendar-swipe-hint{display:block;margin:.55rem 0 .25rem;font-size:.76rem;color:#52677d}}
+
 </style>'''
 
 HERO = r'''<section class="blue-home-hero">
@@ -286,6 +303,8 @@ OFFER = r'''<section class="blue-goals" id="jak-to-funguje">
           <div>
             <p class="eyebrow">Stávající kapacita</p>
             <h2>Týdenní kalendář</h2>
+            <p class="capacity-explainer">Barevné bloky ukazují probíhající výuku. Volné místo na ose samo o sobě není rezervace – potvrzené dostupné termíny vyberete níže.</p>
+            <a class="booking-jump" href="#rezervace-terminu"><i class="fas fa-calendar-check" aria-hidden="true"></i> Vybrat dostupný termín <span aria-hidden="true">↓</span></a>
             <p class="calendar-week-label" id="calendarWeekLabel">Následující týden</p>
             <p class="calendar-week-summary" id="calendarWeekSummary">Načítám aktuální možnosti…</p>
           </div>
@@ -295,26 +314,29 @@ OFFER = r'''<section class="blue-goals" id="jak-to-funguje">
           <span>Volné termíny k rezervaci najdete pod kalendářem ↓</span>
           <span class="calendar-live-status" id="calendarLiveStatus">Ověřuji aktuálnost…</span>
         </div>
-        <div class="weekly-calendar-wrap">
+        <p class="calendar-swipe-hint" aria-hidden="true"><i class="fas fa-arrows-left-right"></i> Posunutím zobrazíte ostatní dny.</p>
+        <div class="weekly-calendar-wrap" role="region" aria-label="Týdenní rozvrh lekcí" tabindex="0">
           <div class="weekly-calendar timeline-calendar" id="weeklyCalendar" aria-live="polite">
             <p class="calendar-empty" role="status">Dostupnost termínů ověřuji v Google Kalendáři…</p>
           </div>
         </div>
-        <div class="booking-panel">
+        <div class="booking-panel" id="rezervace-terminu">
           <div class="booking-panel-copy">
             <p class="eyebrow">Rezervace pro nové zájemce</p>
-            <h3>Vyberte typ a volný čas.</h3>
+            <h3>Rezervace ve třech krocích</h3>
             <p>Vyberte typ lekce, potom konkrétní dostupný termín ze seznamu níže. Kalendář chrání soukromí studentů; dostupnost ještě ověřím před potvrzením. Pro osobní výuku u lektora napište přes kontaktní formulář.</p>
             <span class="booking-security"><i class="fas fa-shield-halved"></i> Časy jsou uvedené pro Českou republiku</span>
           </div>
           <form class="booking-form" id="slotBookingForm">
+            <p class="booking-step-heading"><span>01</span> Typ lekce</p>
             <div class="booking-type-grid" role="radiogroup" aria-label="Typ rezervace">
               <label class="booking-type"><input type="radio" name="booking_type" value="diagnostic_30" checked><span><strong>30 minut zdarma</strong><small>Úvodní online diagnostika / zkušební konzultace</small></span></label>
               <label class="booking-type"><input type="radio" name="booking_type" value="lesson_60"><span><strong>60 minut · 450 Kč</strong><small>Standardní placená online lekce</small></span></label>
             </div>
             <p id="bookingTypeSummary" class="calendar-week-summary"></p>
             <div class="booking-form-fields">
-              <label class="full">Volný termín<select id="bookingStartAt" name="start_at" required disabled><option value="">Ověřuji dostupnost…</option></select></label>
+              <label class="full" for="bookingStartAt"><span class="booking-step-heading"><span>02</span> Dostupný termín</span><select id="bookingStartAt" name="start_at" required disabled><option value="">Ověřuji dostupnost…</option></select></label>
+              <p class="booking-step-heading booking-form-section"><span>03</span> Kontaktní údaje</p>
               <label>Jméno<input type="text" name="name" autocomplete="name" maxlength="100" required></label>
               <label>E-mail<input type="email" name="email" autocomplete="email" maxlength="160" required></label>
               <label>Ročník / úroveň<input type="text" name="grade" maxlength="80" placeholder="např. 9. třída, maturita, VŠ" required></label>
@@ -322,6 +344,7 @@ OFFER = r'''<section class="blue-goals" id="jak-to-funguje">
               <label class="full">Poznámka<textarea name="note" maxlength="1000" placeholder="Co potřebujete probrat?"></textarea></label>
               <p class="booking-consent">Údaje z rezervace slouží k její přípravě a potvrzení. <a href="/ochrana-osobnich-udaju/">Jak pracuji s osobními údaji</a>.</p>
               <label class="booking-honeypot" aria-hidden="true">Web<input type="text" name="website" tabindex="-1" autocomplete="off"></label>
+              <p class="booking-terms">Lekci lze bezplatně zrušit nejpozději 24 hodin předem. Při pozdější změně se domluvíme individuálně. <a href="/podminky-doucovani/">Podmínky výuky a storno</a>.</p>
               <button class="booking-submit" type="submit">Potvrdit rezervaci</button>
               <p class="form-status" id="slotBookingStatus" aria-live="polite"></p>
             </div>
@@ -366,7 +389,7 @@ PRICING = r'''<section class="blue-pricing" id="cenik">
     </div>
     <div class="blue-price-grid">
       <article class="blue-price-card"><small>První krok</small><strong>Zdarma</strong><p>30 minut úvodní konzultace nebo diagnostiky.</p><a href="#kapacita">Rezervovat termín →</a></article>
-      <article class="blue-price-card featured"><small>Individuální lekce</small><strong>450 Kč</strong><p>60 minut, jednorázově nebo pravidelně podle aktuální potřeby.</p><a href="#kontakt">Vybrat individuální lekci →</a></article>
+      <article class="blue-price-card featured"><small>Individuální lekce</small><strong>450 Kč</strong><p>60 minut, jednorázově nebo pravidelně podle aktuální potřeby. Zrušení nejpozději 24 hodin předem zdarma.</p><a href="#kontakt">Vybrat individuální lekci →</a></article>
       <article class="blue-price-card"><small>Malá skupina</small><strong>300 Kč / osoba</strong><p>60 minut pro studenty s podobnou úrovní a stejným cílem.</p><a href="/skupiny/">Otevírané online skupiny →</a></article>
     </div>
   </div>
