@@ -95,7 +95,7 @@ jobs:
           grep -q 'id="bookingStartAt"' .public-site/index.html
           grep -q 'src="/assets/public-capacity.js"' .public-site/index.html
           grep -q 'id="calendarWeekLabel">Následující týden' .public-site/index.html
-          grep -q 'id="calendarWeekSummary">Načítám dostupné termíny' .public-site/index.html
+          grep -q 'id="calendarWeekSummary">Načítám aktuální možnosti' .public-site/index.html
           grep -q 'id="calendarLiveStatus">Ověřuji aktuálnost' .public-site/index.html
           grep -q 'window.setInterval(refreshCapacity, refreshIntervalMs)' .public-site/assets/public-capacity.js
           grep -q 'https://capacity.vojtechsteidl.eu' .public-site/assets/public-capacity.js
