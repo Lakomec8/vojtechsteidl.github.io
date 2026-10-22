@@ -8,6 +8,7 @@ on:
       - "interactive-notes/quadratics/**"
       - "interactive-notes/inequalities/**"
       - "interactive-notes/limits/**"
+      - "interactive-notes/linear-equations/**"
       - "scripts/test-inequalities.mjs"
       - "scripts/test-quadratics.mjs"
       - "scripts/test-limits.mjs"
@@ -23,6 +24,7 @@ on:
       - "interactive-notes/quadratics/**"
       - "interactive-notes/inequalities/**"
       - "interactive-notes/limits/**"
+      - "interactive-notes/linear-equations/**"
       - "scripts/test-inequalities.mjs"
       - "scripts/test-quadratics.mjs"
       - "scripts/test-limits.mjs"
@@ -65,6 +67,9 @@ jobs:
         run: |
           node --check interactive-notes/limits/app.js
           node scripts/test-limits.mjs
+
+      - name: Check linear equations interactive module
+        run: node --check interactive-notes/linear-equations/app.js
 
       - name: Check interactive inequalities lesson
         run: |
