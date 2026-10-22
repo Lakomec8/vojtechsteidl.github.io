@@ -184,7 +184,10 @@
       if (!response.ok) throw new Error(response.status === 409 ? "slot-unavailable" : "booking-failed");
       const when = new Intl.DateTimeFormat("cs-CZ", { timeZone: PRAGUE_TIME_ZONE, weekday: "long", day: "numeric", month: "numeric", hour: "2-digit", minute: "2-digit" })
         .format(new Date(result.booking.startAt));
-      status.innerHTML = `<strong>Rezervace je potvrzená.</strong> ${esc(result.booking.label)} · ${esc(when)}. Kód: <strong>${esc(result.confirmationCode)}</strong>`;
+      const management = result.bookingId && result.cancellationToken
+        ? `<a class="booking-management-link" href="/sprava-rezervace/?id=${encodeURIComponent(result.bookingId)}&amp;token=${encodeURIComponent(result.cancellationToken)}" rel="nofollow">Zrušit rezervaci nejpozději 24 hodin předem →</a>`
+        : "";
+      status.innerHTML = `<strong>Termín je uložený a rezervovaný.</strong> ${esc(result.booking.label)} · ${esc(when)}. Kód: <strong>${esc(result.confirmationCode)}</strong>. ${management}<small>Odkaz na správu rezervace si uložte. O případné změně vás budu informovat e-mailem.</small>`;
       status.classList.add("success");
       form.reset();
       if (typeInputs[0]) typeInputs[0].checked = true;
