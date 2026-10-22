@@ -44,6 +44,10 @@ jobs:
           node --check ../assets/student-self-checks.js
           node --check ../assets/student-dashboard-material-selfchecks.js
 
+      - name: Verify branded sender and prevent accidental personal Gmail exposure
+        working-directory: cloudflare-portal
+        run: npm run test:branded-booking-mail
+
       - name: Exercise customer booking alerts and safe cancellation
         working-directory: cloudflare-portal
         run: npm run test:public-bookings
