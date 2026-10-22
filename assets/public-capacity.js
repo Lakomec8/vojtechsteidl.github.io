@@ -168,9 +168,9 @@
   }
 
   function pickWindow(index) {
-    const window = currentWindows[index];
-    if (!window || !currentData || !panel) return;
-    selectedWindowKey = window.key;
+    const chosen = currentWindows[index];
+    if (!chosen || !currentData || !panel) return;
+    selectedWindowKey = chosen.key;
     panel.hidden = false;
     panel.classList.remove("is-complete");
     if (status) { status.textContent = ""; status.className = "form-status"; }
@@ -178,7 +178,8 @@
     renderBookingOptions();
     calendarEl.querySelectorAll(".calendar-window").forEach((button) =>
       button.classList.toggle("is-selected", button.dataset.bookWindow === String(index)));
-    panel.scrollIntoView({ behavior: window.matchMedia?.("x") ? "auto" : "smooth", block: "nearest" });
+    const reducedMotion = window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
+    panel.scrollIntoView({ behavior: reducedMotion ? "auto" : "smooth", block: "nearest" });
   }
 
   function renderWeekLabel(week) {
@@ -193,9 +194,10 @@
 
   function renderSummary(data) {
     if (!weekSummary) return;
-    const diagnostic = data.availability?.diagnostic_30?.length || 0;
-    const lesson = data.availability?.lesson_60?.length || 0;
-    weekSummary.textContent = `${diagnostic} možností pro 30 minut zdarma · ${lesson} možností pro 60minutovou lekci`;
+    const choices = currentWindows.length;
+    weekSummary.textContent = choices
+      ? `${choices} ${choices === 1 ? "volný časový úsek" : "volných časových úseků"} · klikněte na zelený blok`
+      : "Pro tento typ lekce aktuálně není volný termín";
   }
 
   function renderLiveStatus(isLive, syncedAt) {
@@ -231,6 +233,9 @@
         currentData = null;
         calendarEl.dataset.live = "false";
         calendarEl.innerHTML = '<p class="calendar-empty" role="status">Dostupnost nyní nelze ověřit. Rezervaci proto dočasně nepřijímám.</p>';
+        currentWindows = [];
+        selectedWindowKey = null;
+        if (panel && !panel.classList.contains("is-complete")) panel.hidden = true;
         if (timeSelect) { timeSelect.innerHTML = '<option value="">Dostupnost nelze ověřit</option>'; timeSelect.disabled = true; }
         if (weekSummary) weekSummary.textContent = "Aktuální termíny se nepodařilo ověřit.";
         renderLiveStatus(false);
@@ -238,7 +243,28 @@
     return refreshInFlight;
   }
 
-  typeInputs.forEach((input) => input.addEventListener("change", renderBookingOptions));
+  typeInputs.forEach((input) => input.addEventListener("change", () => {
+    selectedWindowKey = null;
+    if (panel) { panel.hidden = true; panel.classList.remove("is-complete"); }
+    if (actionStatus) actionStatus.textContent = "";
+    if (status) status.textContent = "";
+    if (currentData) {
+      renderTimeline(currentData.slots, currentData.week);
+      renderSummary(currentData);
+      renderBookingOptions();
+    }
+  }));
+  calendarEl.addEventListener("click", (event) => {
+    const button = event.target instanceof Element ? event.target.closest("[data-book-window]") : null;
+    if (button) pickWindow(Number(button.dataset.bookWindow));
+  });
+  dismiss?.addEventListener("click", () => {
+    selectedWindowKey = null;
+    panel.hidden = true;
+    panel.classList.remove("is-complete");
+    if (currentData) renderTimeline(currentData.slots, currentData.week);
+    if (actionStatus) actionStatus.textContent = "";
+  });
   form?.addEventListener("submit", async (event) => {
     event.preventDefault();
     const button = form.querySelector('button[type="submit"]');
@@ -267,7 +293,10 @@
       status.innerHTML = `<strong>Termín je uložený a rezervovaný.</strong> ${esc(result.booking.label)} · ${esc(when)}. Kód: <strong>${esc(result.confirmationCode)}</strong>. ${management}<small>Odkaz na správu rezervace si uložte. O případné změně vás budu informovat e-mailem.</small>`;
       status.classList.add("success");
       form.reset();
-      if (typeInputs[0]) typeInputs[0].checked = true;
+      selectedWindowKey = null;
+      panel?.classList.add("is-complete");
+      if (selectedTitle) selectedTitle.textContent = "Rezervace je potvrzená";
+      if (selectedMeta) selectedMeta.textContent = "Podrobnosti najdete ve svém e-mailu.";
       await refreshCapacity();
     } catch (error) {
       status.textContent = error instanceof Error && error.message === "slot-unavailable"
