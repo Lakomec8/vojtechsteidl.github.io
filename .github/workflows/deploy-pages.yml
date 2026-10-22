@@ -50,6 +50,11 @@ jobs:
       - name: Build compact homepage
         run: python scripts/compact_homepage.py
 
+      - name: Test unified calendar booking and customer registration
+        run: |
+          node --check assets/public-capacity.js
+          node scripts/test-integrated-booking.mjs
+
       - name: Keep navigation to one row or hamburger
         run: python scripts/patch_nav_layout.py
 
