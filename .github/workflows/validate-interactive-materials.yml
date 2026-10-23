@@ -13,6 +13,7 @@ on:
       - "scripts/test-quadratics.mjs"
       - "scripts/test-limits.mjs"
       - "scripts/test-fractions.mjs"
+      - "scripts/test-mechanics-motion-forces.mjs"
       - "scripts/validate_interactive_materials.py"
       - ".github/workflows/validate-interactive-materials.yml"
   push:
@@ -52,6 +53,11 @@ jobs:
 
       - name: Check JavaScript syntax
         run: node --check interactive-notes/functions/app.js
+
+      - name: Check mechanics motion and forces lesson
+        run: |
+          node --check interactive-notes/mechanics-motion-forces/app.js
+          node scripts/test-mechanics-motion-forces.mjs
 
       - name: Check premium fractions lesson
         run: |

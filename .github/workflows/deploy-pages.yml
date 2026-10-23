@@ -33,6 +33,9 @@ jobs:
       - name: Test interactive mechanical-waves lesson
         run: node scripts/test-mechanical-waves.mjs
 
+      - name: Test mechanics motion and forces lesson
+        run: node scripts/test-mechanics-motion-forces.mjs
+
       - name: Verify premium quadratic lesson
         run: |
           node --check interactive-notes/quadratics/app.js

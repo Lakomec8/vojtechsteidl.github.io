@@ -5,6 +5,7 @@ Doučování matematiky a fyziky v Jihlavě a online.
 ## Interaktivní materiály
 
 - [`Funkce: od předpisu ke grafu`](interactive-notes/functions/index.html) — plnohodnotná interaktivní lekce s grafickou laboratoří, procvičováním a závěrečným testem.
+- [`Mechanika: rychlost, vztažné soustavy a síly`](interactive-notes/mechanics-motion-forces/index.html) — relativní pohyb, průměrná rychlost, Newtonovy zákony a krokované diagramy sil.
 
 Kontrola interaktivních materiálů:
 

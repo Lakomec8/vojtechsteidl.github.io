@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="cs">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <meta name="description" content="Interaktivní česká laboratoř mechaniky: relativní pohyb, skládání rychlostí, průměrná rychlost, Newtonovy zákony a diagramy sil.">
+  <meta name="theme-color" content="#071827">
+  <title>Mechanika: rychlost, vztažné soustavy a síly | Vojtěch Steidl</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&amp;family=Manrope:wght@600;700;800&amp;display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./style.css?v=1">
+  <script>window.MathJax={tex:{inlineMath:[['\\(','\\)']]},svg:{fontCache:'global'}};</script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+  <script src="./app.js?v=1" defer></script>
+</head>
+<body>
+  <header class="topbar"><div class="wrap top-row">
+    <a class="brand" href="https://vojtechsteidl.eu/student-portal/">Vojtěch Steidl <span>/ Interaktivní zápisy</span></a>
+    <span class="top-subtitle">Fyzika · mechanika · SŠ</span>
+  </div></header>
+
+  <main class="wrap">
+    <section class="hero">
+      <div><p class="eyebrow">Interaktivní studijní laboratoř</p><h1>Pohyb závisí na tom, <em>odkud se díváš.</em></h1><p class="lead">Loď, proud, chůze po palubě i pozorovatel na břehu. Nejdřív slož rychlosti, potom rozlož síly — a u každého kroku uvidíš výpočet i fyzikální význam.</p></div>
+      <aside class="hero-card"><span class="pulse"></span><div><strong>Živý model</strong><p>Každý posuvník mění scénu, vektory i výpočet současně.</p></div></aside>
+    </section>
+
+    <nav class="tabs" aria-label="Kapitoly mechaniky">
+      <button class="tab active" type="button" data-tab="relative" aria-selected="true"><small>01</small><span>Vztažné soustavy</span></button>
+      <button class="tab" type="button" data-tab="average" aria-selected="false"><small>02</small><span>Průměrná rychlost</span></button>
+      <button class="tab" type="button" data-tab="forces" aria-selected="false"><small>03</small><span>Výslednice sil</span></button>
+      <button class="tab" type="button" data-tab="incline" aria-selected="false"><small>04</small><span>Nakloněná rovina</span></button>
+      <button class="tab" type="button" data-tab="practice" aria-selected="false"><small>05</small><span>Ověření</span></button>
+    </nav>
+
+    <section class="lesson active" id="lab-relative" aria-labelledby="relative-title">
+      <header class="chapter"><p class="section-id">01 / Relativní pohyb</p><h2 id="relative-title">Stejný člověk, dvě různé rychlosti</h2><p>Rychlost má vždy dva indexy: <b>co</b> měříme a <b>vůči čemu</b>. Pro pohyb podél řeky platí vektorový řetězec 
+        <span class="math">\(\vec v_{\mathrm{člověk,břeh}}=\vec v_{\mathrm{člověk,loď}}+\vec v_{\mathrm{loď,voda}}+\vec v_{\mathrm{voda,břeh}}\)</span>.</p></header>
+
+      <div class="formula-strip"><span>Aktuální skládání</span><strong id="relative-equation">2,0 + 4,0 + 1,0 = 7,0 m/s →</strong><p id="relative-meaning">Pozorovatel na břehu vidí člověka pohybovat se doprava rychlostí 7,0 m/s.</p></div>
+      <div class="experiment">
+        <div class="experiment-head"><div><small>Říční laboratoř</small><strong>Loď, paluba a břeh</strong></div><div class="segmented" role="group" aria-label="Vztažná soustava"><button type="button" class="frame active" data-frame="shore">Pohled ze břehu</button><button type="button" class="frame" data-frame="boat">Pohled z lodi</button></div></div>
+        <div class="canvas-wrap"><canvas id="relative-canvas" role="img" aria-label="Animace lodi, proudu, člověka na palubě a rychlostních vektorů"></canvas><div class="canvas-note" id="relative-note">Vztažná soustava: břeh je v klidu</div></div>
+        <div class="control-grid three">
+          <label class="control"><span>Loď vůči vodě <output id="boat-speed-out">4,0 m/s</output></span><input id="boat-speed" type="range" min="-6" max="6" step="0.5" value="4"><small>Znaménko určuje směr přídě</small></label>
+          <label class="control"><span>Proud vůči břehu <output id="current-speed-out">1,0 m/s</output></span><input id="current-speed" type="range" min="-3" max="3" step="0.5" value="1"><small>Kladně po proudu doprava</small></label>
+          <label class="control"><span>Člověk vůči lodi <output id="person-speed-out">2,0 m/s</output></span><input id="person-speed" type="range" min="-3" max="3" step="0.5" value="2"><small>Chůze po palubě</small></label>
+        </div>
+        <div class="vector-ledger" aria-label="Přehled rychlostí"><div><i class="dot teal"></i><span>Loď / voda</span><strong id="boat-water-value">4,0 m/s →</strong></div><div><i class="dot cyan"></i><span>Voda / břeh</span><strong id="water-shore-value">1,0 m/s →</strong></div><div><i class="dot amber"></i><span>Člověk / loď</span><strong id="person-boat-value">2,0 m/s →</strong></div><div class="total"><i class="dot coral"></i><span>Člověk / břeh</span><strong id="person-shore-value">7,0 m/s →</strong></div></div>
+        <div class="actions"><button id="relative-play" type="button" class="primary">Pozastavit animaci</button><button id="relative-reset" type="button">Výchozí situace</button><button type="button" class="preset" data-relative="opposite">Chůze proti plavbě</button><button type="button" class="preset" data-relative="cancel">Člověk stojí vůči břehu</button></div>
+      </div>
+      <div class="insight-grid"><article><span>Člověk stojí na palubě</span><h3>
+        \(\vec v_{ČB}=\vec v_{LV}+\vec v_{VB}\)</h3><p>„Stojí“ znamená pouze 
+        \(\vec v_{ČL}=0\). Vůči břehu se stále pohybuje s lodí.</p></article><article><span>Souhlasné směry</span><h3>Velikosti sčítáme</h3><p>Kladné vektory míří doprava. Výsledná šipka je delší.</p></article><article><span>Opačné směry</span><h3>Znaménka rozhodují</h3><p>Vektor vlevo zapisujeme záporně. Někdy se rychlosti přesně vyruší.</p></article></div>
+    </section>
+
+    <section class="lesson" id="lab-average" aria-labelledby="average-title" hidden>
+      <header class="chapter"><p class="section-id">02 / Průměr není aritmetický průměr</p><h2 id="average-title">Celková dráha ku celkovému času</h2><p>Průměrná <b>rychlost pohybu</b> používá celkovou uraženou dráhu. Průměrná <b>vektorová rychlost</b> používá výsledné přemístění — po návratu na start je proto nulová.</p></header>
+      <div class="dual-formula"><div><span>Průměrná rychlost</span><strong>
+        \(v_p=\dfrac{s_1+s_2}{t_1+t_2}\)</strong><em id="avg-speed-value">4,8 m/s</em></div><div><span>Průměrná vektorová rychlost</span><strong>
+        \(\vec v_p=\dfrac{\Delta\vec x}{\Delta t}\)</strong><em id="avg-vector-value">0,0 m/s</em></div></div>
+      <div class="experiment">
+        <div class="experiment-head"><div><small>Cesta tam a zpět</small><strong>Dvě části, jeden správný průměr</strong></div><div class="segmented" role="group" aria-label="Režim zadání"><button type="button" class="avg-mode active" data-mode="distance">Stejné vzdálenosti</button><button type="button" class="avg-mode" data-mode="time">Stejné časy</button></div></div>
+        <div class="canvas-wrap compact"><canvas id="average-canvas" role="img" aria-label="Pohyb po trase tam a zpět s časovou osou"></canvas><div class="canvas-note" id="average-note">Po návratu: Δx = 0 m, ale dráha s &gt; 0 m</div></div>
+        <div class="control-grid two"><label class="control"><span>Rychlost tam <output id="speed-a-out">8,0 m/s</output></span><input id="speed-a" type="range" min="1" max="15" step="0.5" value="8"></label><label class="control"><span>Rychlost zpět <output id="speed-b-out">3,0 m/s</output></span><input id="speed-b" type="range" min="1" max="15" step="0.5" value="3"></label><label class="control" id="distance-control"><span>Vzdálenost jedním směrem <output id="distance-out">120 m</output></span><input id="distance" type="range" min="40" max="300" step="10" value="120"></label><label class="control hidden" id="time-control"><span>Čas každé části <output id="leg-time-out">20 s</output></span><input id="leg-time" type="range" min="5" max="60" step="5" value="20"></label></div>
+        <div class="calculation" id="average-calculation"><span>Dosazení krok za krokem</span><ol><li>Dráha: s = 120 + 120 = 240 m</li><li>Čas: t = 120/8 + 120/3 = 55 s</li><li>vₚ = 240/55 = 4,36 m/s</li></ol></div>
+      </div>
+      <div class="trap"><strong>Chyták:</strong><p id="average-trap">Při stejných vzdálenostech není výsledek (8 + 3)/2. Pomalejší část trvá déle, a proto má v časovém průměru větší váhu.</p></div>
+      <div class="example-row"><article><span>Stejné vzdálenosti</span><h3>Harmonický průměr</h3><p>
+        \(v_p=\frac{2v_1v_2}{v_1+v_2}\)</p></article><article><span>Stejné časy</span><h3>Aritmetický průměr</h3><p>
+        \(v_p=\frac{v_1+v_2}{2}\)</p></article><article><span>Návrat na start</span><h3>Dvě různé odpovědi</h3><p>
+        \(v_p&gt;0\), ale 
+        \(\vec v_p=0\).</p></article></div>
+    </section>
+
+    <section class="lesson" id="lab-forces" aria-labelledby="forces-title" hidden>
+      <header class="chapter"><p class="section-id">03 / Newtonovy zákony a výslednice</p><h2 id="forces-title">Pohyb mění výsledná síla, ne jedna vybraná šipka</h2><p>Každou sílu kreslíme na konkrétní těleso. Vektorový součet je 
+        \(\sum\vec F\) a určuje zrychlení podle 
+        \(\sum\vec F=m\vec a\).</p></header>
+      <div class="law-grid"><article><b>I</b><div><strong>Zákon setrvačnosti</strong><p>Když 
+        \(\sum\vec F=0\), těleso stojí nebo se pohybuje rovnoměrně přímočaře.</p></div></article><article><b>II</b><div><strong>Zákon síly</strong><p>
+        \(\sum\vec F=m\vec a\). Zrychlení má směr výslednice.</p></div></article><article><b>III</b><div><strong>Akce a reakce</strong><p>Dvojice sil působí na <em>různá</em> tělesa, proto se v jednom FBD neruší.</p></div></article></div>
+      <div class="experiment">
+        <div class="experiment-head"><div><small>Free-body diagram</small><strong>Bedna na vodorovné podložce</strong></div><span class="status-chip" id="force-state">Zrychluje doprava</span></div>
+        <div class="force-layout"><div class="canvas-wrap square"><canvas id="forces-canvas" role="img" aria-label="Free-body diagram bedny s tíhou, normálovou, tažnou a třecí silou"></canvas></div><div class="side-panel"><div class="control-stack"><label class="control"><span>Hmotnost m <output id="mass-out">20 kg</output></span><input id="mass" type="range" min="2" max="50" step="1" value="20"></label><label class="control"><span>Tažná síla F <output id="pull-out">90 N</output></span><input id="pull" type="range" min="0" max="250" step="1" value="90"></label><label class="control"><span>Součinitel tření μ <output id="mu-out">0,25</output></span><input id="mu" type="range" min="0" max="0.8" step="0.05" value="0.25"></label></div><div class="result-panel"><span>Vodorovná výslednice</span><strong id="net-force">41,0 N →</strong><p id="force-calc">Fₜř = μN = 49,0 N; Fᵣ = 90 − 49 = 41,0 N</p><div><span>Zrychlení</span><b id="acceleration">2,05 m/s² →</b></div></div></div></div>
+        <div class="actions"><button type="button" class="primary force-preset" data-force="balanced">Nulová výslednice</button><button type="button" class="force-preset" data-force="heavy">Stejná síla, větší hmotnost</button><button type="button" class="force-preset" data-force="smooth">Bez tření</button></div>
+      </div>
+      <div class="concept-callout"><div class="mini-fbd"><span class="up">N ↑</span><i></i><span class="down">F<sub>G</sub> ↓</span></div><div><strong>Tíha není reakce podložky.</strong><p>
+        \(\vec F_G\) působí Země na těleso; 
+        \(\vec N\) působí podložka na těleso. V klidu na vodorovné podložce mají shodnou velikost, ale nejsou akce–reakce. Reakcí k tíze je gravitační síla tělesa na Zemi.</p></div></div>
+    </section>
+
+    <section class="lesson" id="lab-incline" aria-labelledby="incline-title" hidden>
+      <header class="chapter"><p class="section-id">04 / Rozklad sil</p><h2 id="incline-title">Na nakloněné rovině otoč souřadnice</h2><p>Rozložíme tíhu do směru po rovině a kolmo k ní. Pak je 
+        \(F_{G\parallel}=mg\sin\alpha\) a 
+        \(F_{G\perp}=mg\cos\alpha\).</p></header>
+      <div class="experiment">
+        <div class="experiment-head"><div><small>Kroková konstrukce</small><strong>Od tíhy k pohybu po svahu</strong></div><span class="step-count" id="incline-step-label">Krok 1 / 4 · Nakresli tíhu</span></div>
+        <div class="force-layout"><div class="canvas-wrap square"><canvas id="incline-canvas" role="img" aria-label="Nakloněná rovina s rozkladem tíhy, normálovou a třecí silou"></canvas></div><div class="side-panel"><div class="control-stack"><label class="control"><span>Úhel α <output id="angle-out">30°</output></span><input id="angle" type="range" min="0" max="55" step="1" value="30"></label><label class="control"><span>Hmotnost m <output id="incline-mass-out">10 kg</output></span><input id="incline-mass" type="range" min="1" max="30" step="1" value="10"></label><label class="control"><span>Součinitel tření μ <output id="incline-mu-out">0,20</output></span><input id="incline-mu" type="range" min="0" max="0.7" step="0.05" value="0.2"></label></div><div class="step-text" id="incline-step-text"><span>1</span><p>Tíha 
+          \(\vec F_G=m\vec g\) míří vždy svisle dolů, ne kolmo k rovině.</p></div><div class="actions"><button id="incline-prev" type="button">← Předchozí</button><button id="incline-next" type="button" class="primary">Další krok →</button></div></div></div>
+        <div class="metric-grid"><div><span>Po rovině dolů</span><strong id="parallel-force">49,1 N</strong></div><div><span>Kolmo do roviny</span><strong id="perp-force">85,0 N</strong></div><div><span>Max. tření</span><strong id="friction-force">17,0 N</strong></div><div><span>Zrychlení po rovině</span><strong id="incline-accel">3,21 m/s²</strong></div></div>
+        <div class="calculation" id="incline-calculation"><span>Projekce do osy podél roviny</span><ol><li>F∥ = mg sin 30° = 49,1 N</li><li>N = mg cos 30° = 85,0 N</li><li>Fₜř = μN = 17,0 N</li><li>a = (F∥ − Fₜř)/m = 3,21 m/s²</li></ol></div>
+      </div>
+    </section>
+
+    <section class="lesson" id="lab-practice" aria-labelledby="practice-title" hidden>
+      <header class="chapter"><p class="section-id">05 / Self-check</p><h2 id="practice-title">Rozhodni, spočítej, vysvětli</h2><p>Čtyři krátké úlohy kombinují relativní pohyb, průměrnou rychlost a síly. Zpětná vazba vysvětluje fyziku, ne jen správnou možnost.</p></header>
+      <div class="practice-shell">
+        <div class="progress-row"><strong id="quiz-progress">Úloha 1 / 4</strong><div class="progress"><span id="quiz-meter"></span></div><em id="quiz-score">0 správně</em></div>
+        <article class="quiz-card"><span class="quiz-topic" id="quiz-topic">Vztažné soustavy</span><h3 id="quiz-question"></h3><div id="quiz-answers" class="quiz-answers"></div><p id="quiz-feedback" class="quiz-feedback" aria-live="polite"></p><div class="solution-steps" id="quiz-solution" hidden></div><div class="quiz-nav"><button id="quiz-prev" type="button">← Předchozí</button><button id="quiz-next" type="button" class="primary">Další úloha →</button></div></article>
+      </div>
+      <div class="summary-card"><p class="section-id">Tahák na závěr</p><div><span><b>1.</b> Zvol vztažnou soustavu.</span><span><b>2.</b> Vektory opatři znaménky.</span><span><b>3.</b> U průměru sečti celé dráhy a časy.</span><span><b>4.</b> Do FBD kresli jen síly působící na zvolené těleso.</span></div></div>
+    </section>
+
+    <footer><span>Vojtěch Steidl · Interaktivní výukové materiály</span><span>Mechanika · pozoruj → předpověz → vypočítej → ověř</span></footer>
+  </main>
+</body>
+</html>

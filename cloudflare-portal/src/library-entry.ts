@@ -11,6 +11,12 @@ const MAX_UPLOAD_BYTES = 25 * 1024 * 1024;
 // Master katalog: stránky zůstávají jednou v repozitáři, student dostává pouze odkaz.
 const INTERACTIVE = [
   {
+    "id": "mechanics-motion-forces",
+    "title": "Mechanika: rychlost, vztažné soustavy a síly",
+    "meta": "SŠ · loď a proud, skládání rychlostí, průměrná rychlost, Newtonovy zákony, výslednice a free-body diagrams",
+    "url": "/interactive-notes/mechanics-motion-forces/"
+  },
+  {
     "id": "solid-sections",
     "title": "Řezy těles: konstrukční mosty mezi stěnami",
     "meta": "SŠ · 3 prostorové konstrukce, pomocné průsečíky mimo krychli, rovnoběžné stopy a krokované 3D řešení",
