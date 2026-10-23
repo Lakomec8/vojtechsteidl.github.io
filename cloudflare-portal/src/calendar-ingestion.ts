@@ -13,6 +13,7 @@ type TutoringStudent = {
   id: string;
   display_name: string;
   aliases?: string[];
+  calendarSeriesIds?: string[];
 };
 
 type CalendarOccurrence = {
@@ -100,9 +101,14 @@ function calendarTitleMatchesStudent(summary: string, student: TutoringStudent):
   return (student.aliases || []).some((alias) => calendarTitleContainsStudent(summary, alias));
 }
 
+function calendarEventMatchesStudent(event: IcalEvent, student: TutoringStudent): boolean {
+  const seriesId = googleBaseEventId(String(event.uid || ""));
+  if (seriesId && (student.calendarSeriesIds || []).includes(seriesId)) return true;
+  return calendarTitleMatchesStudent(String(event.summary || "").trim(), student);
+}
+
 function matchesAnyStudent(event: IcalEvent, students: TutoringStudent[]): boolean {
-  const summary = String(event.summary || "").trim();
-  return students.some((student) => calendarTitleMatchesStudent(summary, student));
+  return students.some((student) => calendarEventMatchesStudent(event, student));
 }
 
 function occurrenceFromDates(
@@ -115,7 +121,7 @@ function occurrenceFromDates(
   if (isCancelled(event)) return null;
   const summary = String(event.summary || "").trim();
   const studentIds = students
-    .filter((student) => calendarTitleMatchesStudent(summary, student))
+    .filter((student) => calendarEventMatchesStudent(event, student))
     .map((student) => student.id)
     .sort();
   if (!studentIds.length) return null;
@@ -269,7 +275,7 @@ async function activeStudents(env: Env): Promise<TutoringStudent[]> {
   // Calendar matching uses the canonical tutoring identity, plus ONLY the
   // explicit, individually verified aliases in D1. Portal display names and
   // email addresses must not be guessed or used to join private schedules.
-  const [result, aliases] = await Promise.all([
+  const [result, aliases, seriesMappings] = await Promise.all([
     env.DB.prepare(`
       SELECT id, display_name
         FROM tutoring_students
@@ -281,6 +287,11 @@ async function activeStudents(env: Env): Promise<TutoringStudent[]> {
         FROM tutoring_calendar_aliases
        ORDER BY normalized_alias
     `).all<{ alias: string; tutoring_student_id: string }>(),
+    env.DB.prepare(`
+      SELECT series_id, tutoring_student_id
+        FROM tutoring_calendar_series_students
+       ORDER BY series_id, tutoring_student_id
+    `).all<{ series_id: string; tutoring_student_id: string }>(),
   ]);
 
   const students = result.results || [];
@@ -298,6 +309,12 @@ async function activeStudents(env: Env): Promise<TutoringStudent[]> {
     )) continue;
     owner.aliases ??= [];
     owner.aliases.push(row.alias);
+  }
+  for (const row of seriesMappings.results || []) {
+    const owner = byId.get(row.tutoring_student_id);
+    if (!owner) continue;
+    owner.calendarSeriesIds ??= [];
+    owner.calendarSeriesIds.push(row.series_id);
   }
   return students;
 }

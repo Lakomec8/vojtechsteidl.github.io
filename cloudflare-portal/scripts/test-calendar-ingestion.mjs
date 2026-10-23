@@ -9,6 +9,12 @@ for (const file of ['0006_tutoring_os.sql', '0007_group_lessons.sql']) {
 }
 db.exec(`CREATE TABLE public_capacity_series (series_id TEXT PRIMARY KEY, public_label TEXT, capacity INTEGER, fallback_people INTEGER, enabled INTEGER, sort_order INTEGER);`);
 for (const file of ['0049_sync_public_calendar_busy.sql', '0054_calendar_ingestion_state.sql', '0067_explicit_calendar_student_aliases.sql']) db.exec(readFileSync(new URL('../migrations/' + file, import.meta.url), 'utf8'));
+db.exec(`CREATE TABLE tutoring_calendar_series_students (
+  series_id TEXT NOT NULL,
+  tutoring_student_id TEXT NOT NULL,
+  PRIMARY KEY (series_id, tutoring_student_id),
+  FOREIGN KEY (tutoring_student_id) REFERENCES tutoring_students(id) ON DELETE CASCADE
+);`);
 db.exec(`INSERT INTO tutoring_students (id, display_name, hourly_rate) VALUES ('alice','Alice',500),('bob','Bob',500)`);
 let writes = 0;
 const DB = {
@@ -70,5 +76,12 @@ try {
   await syncGoogleCalendarToD1(env);
   assert.equal(db.prepare('SELECT status FROM tutoring_calendar_events').get().status, 'cancelled',
     "Short alias must be disabled when another active student has the same first name");
+
+  // Generic titles are paired only by an explicit Google Calendar series ID.
+  db.exec(`INSERT INTO tutoring_calendar_series_students(series_id,tutoring_student_id)
+           VALUES ('test','alice')`);
+  title = 'Fyzika doučko';
+  await syncGoogleCalendarToD1(env);
+  assert.deepEqual(db.prepare('SELECT student_id FROM tutoring_calendar_event_students').all().map((r)=>r.student_id), ['alice']);
   console.log('Calendar ingestion: unchanged snapshot = 1 write; moves, participants, cancellation, restoration, completed status and failed feed verified.');
 } finally { globalThis.fetch = originalFetch; db.close(); }
