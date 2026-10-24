@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="cs">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#f5f3ee">
+<meta name="robots" content="noindex,nofollow">
+<meta name="description" content="Interaktivní zápis definičního oboru funkcí: zlomky, odmocniny, kvadratické nerovnice, průnik podmínek a procvičování.">
+<title>Definiční obor funkce · Interaktivní zápis | Vojtěch Steidl</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="./style.css?v=20261024-1">
+<script>window.MathJax={tex:{inlineMath:[['\\(','\\)']],displayMath:[['\\[','\\]']]},svg:{fontCache:'global'},options:{skipHtmlTags:['script','noscript','style','textarea','pre']}};</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+<script defer src="./app.js?v=20261024-1"></script>
+</head>
+<body>
+<a class="skip" href="#uvod">Přejít na lekci</a>
+<header class="mast"><a class="identity" href="/student-portal/"><span class="monogram">D</span><span>VOJTĚCH STEIDL<small>INTERAKTIVNÍ ATELIÉR</small></span></a><span class="mast-sub">FUNKCE / SŠ—VŠ</span><a class="back" href="/student-portal/">← Studentská zóna</a></header>
+<div class="scroll-line" id="scrollProgress"></div>
+<div class="layout">
+<aside class="rail" aria-label="Obsah lekce">
+ <p class="overline">MAPA / 08 ZASTAVENÍ</p>
+ <nav id="chapterNav"><a href="#uvod"><span>00</span> Co je dovoleno</a><a href="#kompas"><span>01</span> Kompas podmínek</a><a href="#laborator"><span>02</span> Živá laboratoř</a><a href="#prunik"><span>03</span> Průnik podmínek</a><a href="#kvadraticka"><span>04</span> Znaménková tabulka</a><a href="#vzory"><span>05</span> Vzorové úlohy</a><a href="#sbirka"><span>06</span> Stupňované úlohy</a><a href="#zkouska"><span>07</span> Self-check</a></nav>
+ <div class="rail-note"><b>ČTYŘI OTÁZKY</b><p>Co omezuje výraz? Kde jsou kritické body? Které intervaly vyhoví? Je krajní bod součástí?</p></div>
+ <p class="rail-foot">STUDIJNÍ EDICE · 23/10/2026</p>
+</aside>
+<main>
+<section class="hero" id="uvod">
+ <div class="hero-copy"><p class="eyebrow"><i></i> DEFINIČNÍ OBOR / OD PODMÍNKY K INTERVALU</p><h1>Nejdřív zjisti,<br><em>kde smíš počítat.</em></h1><p class="lead">Definiční obor není formalita na konci. Je to mapa všech vstupů, pro které má předpis v reálných číslech smysl.</p><div class="hero-actions"><a class="btn ink" href="#laborator">Otevřít laboratoř <span>↗</span></a><span>45–60 minut · 4 experimenty · 18 úloh</span></div><div class="hero-formula">\(D(f)=\{x\in\mathbb R\mid f(x)\text{ má smysl}\}\)<small>Každá část výrazu přidává podmínku. Výsledkem je jejich průnik.</small></div></div>
+ <div class="hero-visual"><div class="visual-top"><span>MAPA POVOLENÝCH VSTUPŮ</span><span class="live-dot">ŽIVÁ OSA</span></div><canvas id="heroLine" role="img" aria-label="Číselná osa s průnikem dvou podmínek"></canvas><div class="hero-legend"><span><i class="swatch mint"></i> první podmínka</span><span><i class="swatch gold"></i> druhá podmínka</span><strong>průnik = výsledek</strong></div></div>
+</section>
+<div class="content">
+<section class="chapter intro" id="kompas"><header class="chapter-head"><span class="chapter-no">01 / KOMPAS</span><div><h2>Tři symboly rozhodují o všem.</h2><p>Neuč se seznam výsledků. Přelož zápis na přesnou podmínku a tu vyřeš.</p></div></header>
+ <div class="rule-grid">
+  <article><span class="rule-symbol">÷</span><small>JMENOVATEL</small><h3>Nesmí být nula</h3><div class="math">\(\dfrac{A(x)}{B(x)}\Rightarrow B(x)\ne0\)</div><p>Nulové body jmenovatele vyškrtneme. I když se faktor později zkrátí, díra v původním oboru zůstává.</p></article>
+  <article><span class="rule-symbol">√</span><small>SUDÁ ODMOCNINA</small><h3>Radikand je nezáporný</h3><div class="math">\(\sqrt{A(x)}\Rightarrow A(x)\ge0\)</div><p>Nula je dovolena: \(\sqrt0=0\). Proto bývá krajní bod uzavřený.</p></article>
+  <article><span class="rule-symbol">1/√</span><small>ODMOCNINA DOLE</small><h3>Radikand je kladný</h3><div class="math">\(\dfrac1{\sqrt{A(x)}}\Rightarrow A(x)>0\)</div><p>Musí platit obě pravidla současně: odmocnina existuje a jmenovatel není nula.</p></article>
+  <article><span class="rule-symbol">log</span><small>LOGARITMUS</small><h3>Argument je kladný</h3><div class="math">\(\log A(x)\Rightarrow A(x)>0\)</div><p>Nula ani záporná čísla nejsou v reálném logaritmu přípustná.</p></article>
+ </div>
+ <div class="micro-note"><b>Bez omezení:</b> polynomy, liché odmocniny a absolutní hodnota jsou definované pro všechna reálná čísla — pokud nejsou součástí jiného omezení.</div>
+</section>
+
+<section class="chapter" id="laborator"><header class="chapter-head"><span class="chapter-no">02 / ŽIVÝ MODEL</span><div><h2>Změň koeficienty. Sleduj, jak se obor láme.</h2><p>Stejný kvadratický výraz \(q(x)=ax^2+bx+c\) vložíme do čtyř různých konstrukcí. Graf, kritické body, podmínka i interval se přepočítají současně.</p></div></header>
+ <div class="lab">
+  <div class="lab-top"><span>LAB / 01 · KVADRATICKÝ VNITŘEK</span><strong><i></i> OKAMŽITÝ PŘEPOČET</strong></div>
+  <div class="mode-tabs" role="group" aria-label="Typ funkce"><button class="active" type="button" data-mode="polynomial">Polynom</button><button type="button" data-mode="rational">Zlomek</button><button type="button" data-mode="root">Odmocnina</button><button type="button" data-mode="rootden">Odmocnina ve jmenovateli</button></div>
+  <div class="lab-grid">
+   <div class="controls">
+    <div class="formula-box"><small>AKTUÁLNÍ FUNKCE</small><div id="liveFormula">\(f(x)=x^2-4\)</div></div>
+    <label><span>Koeficient \(a\) <output id="aOut">1</output></span><input id="coefA" type="range" min="-3" max="3" step="1" value="1"></label>
+    <label><span>Koeficient \(b\) <output id="bOut">0</output></span><input id="coefB" type="range" min="-6" max="6" step="1" value="0"></label>
+    <label><span>Koeficient \(c\) <output id="cOut">−4</output></span><input id="coefC" type="range" min="-8" max="8" step="1" value="-4"></label>
+    <div class="preset-label">DIDAKTICKÉ PŘÍPADY</div><div class="presets"><button data-preset="two">Dva kořeny</button><button data-preset="double">Dvojnásobný</button><button data-preset="none">Bez kořenů</button><button data-preset="linear">Lineární mezní případ</button></div>
+   </div>
+   <div class="stage"><div class="stage-title"><span>GRAF FUNKCE</span><span id="graphHint">Polynom je definovaný všude</span></div><canvas id="domainGraph" role="img" aria-label="Graf funkce s vyznačenými zakázanými body"></canvas><div class="axis-card"><div class="stage-title"><span>DEFINIČNÍ OBOR NA OSE</span><span>plný bod = patří · prázdný = nepatří</span></div><canvas id="numberLine" role="img" aria-label="Číselná osa s vyznačeným definičním oborem"></canvas></div></div>
+  </div>
+  <div class="lab-results"><article><small>PODMÍNKA</small><strong id="conditionResult">bez omezení</strong></article><article><small>KRITICKÉ BODY</small><strong id="criticalResult">−2; 2</strong></article><article class="domain-result"><small>DEFINIČNÍ OBOR</small><strong id="domainResult">\(\mathbb R\)</strong></article></div>
+  <div class="explanation" id="domainExplanation">Polynom je součet mocnin s nezápornými celočíselnými exponenty, proto je definovaný pro každé reálné x.</div>
+ </div>
+</section>
+
+<section class="chapter" id="prunik"><header class="chapter-head"><span class="chapter-no">03 / VÍCE PODMÍNEK</span><div><h2>Podmínky se nesčítají. <em>Protínají se.</em></h2><p>U kombinovaných výrazů řeš každou podmínku zvlášť. Teprve potom nech na ose jen hodnoty, které vyhovují všem.</p></div></header>
+ <div class="intersection-lab panel"><div class="intersection-copy"><small>INTERAKTIVNÍ PRŮNIK</small><h3>\(g_t(x)=\dfrac{\sqrt{x-t}}{x-2}\)</h3><p>Čitatel požaduje \(x\ge t\). Jmenovatel současně požaduje \(x\ne2\). Posuň parametr \(t\) přes zakázaný bod.</p><label><span>Parametr \(t\) <output id="tOut">−1</output></span><input id="tRange" type="range" min="-4" max="5" step="1" value="-1"></label><div class="intersection-result" id="intersectionResult"></div><div class="boundary-callout" id="boundaryCallout"></div></div><div><canvas id="intersectionLine" role="img" aria-label="Tři číselné osy zobrazující dvě podmínky a jejich průnik"></canvas><div class="logic-strip"><span>\(x\ge t\)</span><b>∩</b><span>\(x\ne2\)</span><b>=</b><strong id="intersectionDomain"></strong></div></div></div>
+ <div class="mistakes"><article><b>Častá chyba 01</b><h3>„Nebo“ místo „a zároveň“</h3><p>Každá část téhož předpisu musí existovat. Proto bereme <strong>průnik</strong>, nikoli sjednocení podmínek.</p></article><article><b>Častá chyba 02</b><h3>Ztracená díra po krácení</h3><p>U \(\frac{(x-2)(x+1)}{x-2}\) platí výsledek \(x+1\) jen pro \(x\ne2\). Původní funkce v bodě 2 stále neexistuje.</p></article><article><b>Častá chyba 03</b><h3>Špatný krajní bod</h3><p>\(\sqrt{x}\) dovolí \(x=0\), ale \(1/\sqrt{x}\) už ne. Rozdíl mezi \(\ge0\) a \(>0\) mění plný bod na prázdný.</p></article></div>
+</section>
+
+<section class="chapter" id="kvadraticka"><header class="chapter-head"><span class="chapter-no">04 / KVADRATICKÁ NEROVNICE</span><div><h2>Nuly rozdělí osu. Znaménko vyberou intervaly.</h2><p>Pro výraz pod odmocninou nestačí kořeny pouze najít. Potřebuješ rozhodnout, kde je celý kvadratický výraz kladný, nulový či záporný.</p></div></header>
+ <div class="sign-workshop panel"><div class="sign-intro"><small>VZOROVÝ RADIKAND</small><h3>\(\sqrt{x^2-2x-3}\)</h3><p>Řešíme \(x^2-2x-3\ge0\). Odkryj postup po jednom rozhodnutí.</p><button class="btn ink" id="nextSignStep" type="button">Odkrýt krok 1 →</button><button class="btn ghost" id="resetSign" type="button">↺ Znovu</button></div><div><div class="step-stack" id="signSteps" aria-live="polite"></div><div class="sign-table" id="signTable" aria-label="Znaménková tabulka kvadratického výrazu"></div></div></div>
+</section>
+
+<section class="chapter" id="vzory"><header class="chapter-head"><span class="chapter-no">05 / KOMPLETNÍ ŘEŠENÍ</span><div><h2>Šest vzorů. Každý s důvodem.</h2><p>Vyber typ úlohy a odkrývej jen tolik řešení, kolik právě potřebuješ.</p></div></header>
+ <div class="solver panel"><div class="solver-menu" id="solverMenu"></div><div class="solver-main"><div class="solver-heading"><small id="solverLevel"></small><h3 id="solverTitle"></h3><div id="solverExpression"></div></div><div class="step-stack" id="solverSteps"></div><div class="solver-actions"><button class="btn ink" id="nextSolverStep" type="button">Další krok →</button><button class="btn ghost" id="resetSolver" type="button">↺ Skrýt řešení</button></div></div></div>
+</section>
+
+<section class="chapter" id="sbirka"><header class="chapter-head"><span class="chapter-no">06 / TRÉNINKOVÁ SBÍRKA</span><div><h2>Od jistoty k syntéze.</h2><p>Nejdřív vyslov podmínku nahlas. Pak výsledek zapiš intervalem a množinově jej zkontroluj.</p></div></header>
+ <div class="level-filter" role="group" aria-label="Obtížnost"><button class="active" data-level="all">Všechny</button><button data-level="1">Rozjezd</button><button data-level="2">Kombinace</button><button data-level="3">Výzva</button></div><div class="exercise-grid" id="exerciseGrid"></div>
+</section>
+
+<section class="chapter assessment" id="zkouska"><header class="chapter-head"><span class="chapter-no">07 / SELF-CHECK</span><div><h2>Rozhoduj podle důvodu, ne podle dojmu.</h2><p>Deset krátkých otázek s okamžitou zpětnou vazbou. Chybná volba ti řekne, které pravidlo je potřeba opravit.</p></div></header>
+ <div class="quiz-shell"><div class="quiz-status"><span id="quizCounter">Otázka 1 z 10</span><strong id="quizScore">Správně 0 / 0</strong></div><div class="quiz-track"><i id="quizBar"></i></div><div id="quizMount" class="quiz-card" aria-live="polite"></div><div class="quiz-actions"><button class="btn ink" id="quizNext" type="button" disabled>Další otázka →</button><button class="btn ghost" id="quizRestart" type="button">↺ Začít znovu</button></div></div>
+ <div class="final-check"><b>POSLEDNÍ KONTROLA PŘED ODEVZDÁNÍM</b><span>① všechny jmenovatele ≠ 0</span><span>② sudé odmocniny ≥ 0</span><span>③ odmocniny ve jmenovateli &gt; 0</span><span>④ logaritmy &gt; 0</span><span>⑤ podmínky protnuty</span><span>⑥ krajní body správně otevřené či uzavřené</span></div>
+</section>
+<footer><div><strong>VOJTĚCH STEIDL · INTERAKTIVNÍ ZÁPIS</strong><p>Definiční obor funkce · návaznost na přípravu k limitám z 23. 10. 2026</p></div><a href="#uvod">↑ Zpět nahoru</a></footer>
+</div></main></div>
+</body>
+</html>

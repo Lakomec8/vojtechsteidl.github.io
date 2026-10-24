@@ -41,6 +41,11 @@ jobs:
           node --check interactive-notes/quadratics/app.js
           node scripts/test-quadratics.mjs
 
+      - name: Verify function-domain interactive lesson
+        run: |
+          node --check interactive-notes/domains/app.js
+          node scripts/test-domains.mjs
+
       - name: Verify interactive inequalities and systems
         run: |
           node --check interactive-notes/inequalities/app.mjs

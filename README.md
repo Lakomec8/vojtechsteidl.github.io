@@ -6,6 +6,7 @@ Doučování matematiky a fyziky v Jihlavě a online.
 
 - [`Funkce: od předpisu ke grafu`](interactive-notes/functions/index.html) — plnohodnotná interaktivní lekce s grafickou laboratoří, procvičováním a závěrečným testem.
 - [`Mechanika: rychlost, vztažné soustavy a síly`](interactive-notes/mechanics-motion-forces/index.html) — relativní pohyb, průměrná rychlost, Newtonovy zákony a krokované diagramy sil.
+- [`Definiční obor funkce: kde smíš počítat?`](interactive-notes/domains/index.html) — zlomky, odmocniny, kvadratické nerovnice, průnik podmínek a interaktivní procvičování.
 
 Kontrola interaktivních materiálů:
 

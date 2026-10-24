@@ -11,6 +11,12 @@ const MAX_UPLOAD_BYTES = 25 * 1024 * 1024;
 // Master katalog: stránky zůstávají jednou v repozitáři, student dostává pouze odkaz.
 const INTERACTIVE = [
   {
+    "id": "function-domains",
+    "title": "Definiční obor funkce: kde smíš počítat?",
+    "meta": "SŠ / úvod VŠ · zlomky, odmocniny, kvadratické nerovnice, průnik podmínek, logaritmy a 18 úloh",
+    "url": "/interactive-notes/domains/"
+  },
+  {
     "id": "mechanics-motion-forces",
     "title": "Mechanika: rychlost, vztažné soustavy a síly",
     "meta": "SŠ · loď a proud, skládání rychlostí, průměrná rychlost, Newtonovy zákony, výslednice a free-body diagrams",
