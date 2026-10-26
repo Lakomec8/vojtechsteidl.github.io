@@ -1,0 +1,68 @@
+name: Publish thermal physics PDF for Šimon
+on:
+  push:
+    branches: [main]
+    paths:
+      - "docs/overleaf/vnitrni-energie/main.tex"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: simon-thermal-pdf-publish
+  cancel-in-progress: false
+
+jobs:
+  build-and-upload:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Compile Overleaf source to PDF
+        uses: xu-cheng/latex-action@v4
+        with:
+          working_directory: docs/overleaf/vnitrni-energie
+          root_file: main.tex
+          compiler: latexmk
+          args: -pdf -file-line-error -halt-on-error -interaction=nonstopmode
+      - name: Check the generated PDF
+        run: |
+          test -s docs/overleaf/vnitrni-energie/main.pdf
+          file docs/overleaf/vnitrni-energie/main.pdf | grep -q PDF
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Install portal upload dependencies
+        working-directory: cloudflare-portal
+        run: npm install --no-audit --no-fund
+      - name: Upload PDF to private R2 and assign it to Šimon in D1
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -n "$CLOUDFLARE_API_TOKEN"
+          test -n "$CLOUDFLARE_ACCOUNT_ID"
+          mkdir -p /tmp/simon-thermal-pdf
+          base64 -w 0 docs/overleaf/vnitrni-energie/main.pdf > /tmp/simon-thermal-pdf/source.b64
+          cat > /tmp/simon-thermal-pdf/META.json <<'JSON'
+          {
+            "displayName": "Šimon",
+            "files": [{
+              "source": "source.b64",
+              "fileName": "2026-10-26_vnitrni-energie_prenos-tepla_roztaznost.pdf",
+              "title": "Vnitřní energie, přenos tepla a teplotní roztažnost",
+              "date": "2026-10-26"
+            }]
+          }
+          JSON
+          node cloudflare-portal/scripts/upload-student-material-queue.mjs /tmp/simon-thermal-pdf/META.json
+      - name: Provide downloadable build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: vnitrni-energie-pdf
+          path: docs/overleaf/vnitrni-energie/main.pdf
+          retention-days: 7
