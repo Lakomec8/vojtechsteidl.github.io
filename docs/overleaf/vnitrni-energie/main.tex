@@ -12,7 +12,7 @@
 \usepackage[most]{tcolorbox}
 \usepackage{tikz}
 \usetikzlibrary{arrows.meta,positioning,calc,decorations.pathmorphing}
-\usepackage{titlesec,fancyhdr,lastpage,hyperref}
+\usepackage{titlesec,fancyhdr,lastpage,hyperref,needspace}
 \hypersetup{colorlinks=true,linkcolor=blue!50!black,urlcolor=blue!50!black}
 \definecolor{VSNavy}{HTML}{17324D}
 \definecolor{VSBlue}{HTML}{2F6B9A}
@@ -192,6 +192,7 @@ Příklady: dilatační spáry mostů a kolejí, změna délky kovových trubek,
 U izotropních pevných látek pro malé teplotní změny přibližně platí plošná roztažnost $\Delta S\approx 2\alpha S_0\Delta T$ a objemová $\Delta V\approx 3\alpha V_0\Delta T$.
 U kapalin se zpravidla sleduje roztažnost objemová. \textbf{Voda mezi $0$ a $4\,^\circ$C} představuje důležitou výjimku: při ohřevu směrem ke $4\,^\circ$C její hustota roste.
 
+\Needspace{10\baselineskip}
 \begin{solvedbox}
 \textbf{Řešený příklad 3: Ocelová tyč}\\
 Ocelová tyč má délku $l_0=2{,}0\unit m$. Při ohřevu o $50\unit K$ urči prodloužení, jestliže $\alpha=12\cdot10^{-6}\unit{K^{-1}}$.
@@ -246,5 +247,35 @@ Q=0{,}5\cdot4200\cdot20=\boxed{42\,000\unit J=42\unit{kJ}}.
 $\Delta l=\alpha l_0\Delta T$.\\
 \textbf{Kontrola:} teplotní rozdíl je v K nebo $^\circ$C stejný, ale ve vzorci pro záření používej absolutní teplotu v \emph{kelvinech}.
 \end{theorybox}
+\section*{Na co si dát pozor u testu}
+\begin{tabular}{@{}p{.32\linewidth}p{.61\linewidth}@{}}
+\toprule
+\textbf{Častá chyba} & \textbf{Správný postup}\\
+\midrule
+„Těleso obsahuje teplo.“ & Těleso má vnitřní energii; teplo je způsob přenosu energie.\\
+Všechny ohřevy jsou stejné. & Rozliš vedení, proudění a záření. V praxi se kombinují.\\
+Radiace s $T$ v $^\circ$C. & Ve vztahu $P\sim T^4$ používej vždy kelviny.\\
+Záměna délky a prodloužení. & $\Delta l$ je \emph{změna}; výsledná délka je $l_0+\Delta l$.\\
+Použití $Q=mc\Delta T$ při tání. & Při změně skupenství se používá skupenské teplo.\\
+\bottomrule
+\end{tabular}
+
+\subsection*{Rozšiřující úloha: směšování vody}
+Do tepelně izolované nádoby nalijeme $0{,}20\unit{kg}$ vody o $60\,^\circ$C a
+$0{,}30\unit{kg}$ vody o $20\,^\circ$C. Zanedbej teplo přijaté nádobou i okolím.
+Urči výslednou rovnovážnou teplotu $T$.
+
+\emph{Myšlenka:} teplo odevzdané teplejší vodou je stejně velké jako teplo přijaté chladnější vodou:
+\begin{align*}
+m_1c(60-T)&=m_2c(T-20),\\
+0{,}20(60-T)&=0{,}30(T-20),\\
+12-0{,}20T&=0{,}30T-6,\\
+18&=0{,}50T,\qquad \boxed{T=36\,^\circ\mathrm C}.
+\end{align*}
+Měrná tepelná kapacita se vykrátila, protože obě části tvoří voda.
+
+\textbf{Rychlá kontrola:} Výsledných $36\,^\circ$C je mezi $20$ a $60\,^\circ$C a blíže teplotě většího množství chladnější vody.
+
+\vspace{2mm}
 \textbf{Další krok:} interaktivní laboratoř a test \href{https://vojtechsteidl.eu/interactive-notes/thermal-energy/}{\texttt{vojtechsteidl.eu/interactive-notes/thermal-energy/}}.
 \end{document}
