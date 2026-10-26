@@ -1,0 +1,250 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[czech]{babel}
+\usepackage{lmodern}
+\usepackage{microtype}
+\usepackage{geometry}
+\geometry{top=21mm,bottom=22mm,left=20mm,right=20mm}
+\usepackage{amsmath,amssymb,mathtools}
+\usepackage{enumitem,booktabs,multicol}
+\usepackage{xcolor}
+\usepackage[most]{tcolorbox}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,positioning,calc,decorations.pathmorphing}
+\usepackage{titlesec,fancyhdr,lastpage,hyperref}
+\hypersetup{colorlinks=true,linkcolor=blue!50!black,urlcolor=blue!50!black}
+\definecolor{VSNavy}{HTML}{17324D}
+\definecolor{VSBlue}{HTML}{2F6B9A}
+\definecolor{VSTeal}{HTML}{2A8C82}
+\definecolor{VSGrey}{HTML}{576879}
+\definecolor{VSLine}{HTML}{DBE3EB}
+\definecolor{VSFog}{HTML}{F4F7FA}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{5.2pt}
+\setlist[itemize]{topsep=3pt,itemsep=2pt,leftmargin=1.3em}
+\setlist[enumerate]{topsep=4pt,itemsep=6pt,leftmargin=1.55em}
+\titleformat{\section}{\Large\bfseries\color{VSNavy}}{\thesection.}{.75em}{}
+\titleformat{\subsection}{\large\bfseries\color{VSBlue}}{\thesubsection}{.7em}{}
+\titlespacing*{\section}{0pt}{16pt}{8pt}
+\titlespacing*{\subsection}{0pt}{12pt}{6pt}
+\pagestyle{fancy}\fancyhf{}
+\fancyhead[L]{\footnotesize\color{VSNavy}\textbf{VOJTĚCH STEIDL}}
+\fancyhead[R]{\footnotesize\color{VSGrey}Fyzika \,/\, termika}
+\fancyfoot[L]{\footnotesize\color{VSGrey}Výukový zápis a řešené příklady}
+\fancyfoot[R]{\footnotesize\color{VSGrey}\thepage\,/\,\pageref{LastPage}}
+\renewcommand{\headrulewidth}{.35pt}
+\renewcommand{\footrulewidth}{0pt}
+\newtcolorbox{theorybox}[1][]{enhanced,breakable,colback=VSFog,colframe=VSLine,boxrule=.55pt,arc=2mm,left=3mm,right=3mm,top=2mm,bottom=2mm,#1}
+\newtcolorbox{solvedbox}[1][]{enhanced,breakable,colback=white,colframe=VSTeal!70!black,boxrule=.8pt,arc=1.5mm,left=3.5mm,right=3.5mm,top=2.5mm,bottom=2.5mm,#1}
+\newif\ifshowanswers
+\showanswerstrue % Pro verzi bez závěrečných výsledků změň na \showanswersfalse.
+\newcommand{\unit}[1]{\,\mathrm{#1}}
+\begin{document}
+
+{\color{VSBlue}\footnotesize\bfseries FYZIKA SŠ \quad / \quad TERMODYNAMIKA \quad / \quad STUDIJNÍ ZÁPIS}\par
+\vspace{4mm}
+{\Huge\bfseries\color{VSNavy}Vnitřní energie a přenos tepla}\par
+{\Large\color{VSBlue}Vedení, proudění, záření a teplotní roztažnost}\par
+\vspace{3mm}
+{\color{VSGrey}\rule{\linewidth}{.6pt}}\par
+\vspace{2mm}
+\textbf{Co budeš po lekci umět:} rozlišit teplotu, vnitřní energii, teplo a práci; určit směr přenosu energie; rozpoznat vedení, proudění a záření; řešit úlohy na $Q=mc\Delta T$ a délkovou roztažnost.
+
+\begin{theorybox}
+\textbf{Čtyři pojmy, které se nesmějí plést}
+
+\begin{tabular}{@{}p{.18\linewidth}p{.76\linewidth}@{}}
+\toprule
+\textbf{Pojem} & \textbf{Přesný význam} \\
+\midrule
+Teplota $T$ & Stavová veličina vyjadřující tepelný stav tělesa; v kelvinech K, běžně také v \,$^\circ$C.\\
+Vnitřní energie $U$ & Energie související s mikroskopickým pohybem a vzájemným působením částic tělesa. Jednotka J.\\
+Teplo $Q$ & Energie přenesená \emph{v důsledku teplotního rozdílu}. Není to zásoba „uvnitř“ tělesa. Jednotka J.\\
+Práce $W$ & Jiný způsob předávání energie, např. stlačováním plynu nebo třením. Jednotka J.\\
+\bottomrule
+\end{tabular}
+\end{theorybox}
+
+\section{Vnitřní energie a její změna}
+Vnitřní energie zahrnuje mikroskopickou kinetickou a potenciální energii částic. Může se změnit \textbf{konáním práce}, \textbf{přenosem tepla} nebo oběma způsoby současně.
+
+Pro zvolenou znaménkovou konvenci, kdy $W_{\mathrm{na}}$ značí \emph{práci vykonanou na soustavě}, platí:
+\[
+\boxed{\Delta U=Q+W_{\mathrm{na}}}
+\]
+Kladné $Q$ znamená teplo přijaté soustavou; záporné $Q$ teplo odevzdané. Při stlačování plynu okolím je $W_{\mathrm{na}}>0$.
+Některé učebnice užívají práci vykonanou \emph{soustavou} $W_{\mathrm{od}}$ a zapisují $\Delta U=Q-W_{\mathrm{od}}$. Oba zápisy jsou ekvivalentní.
+
+\textbf{Příklady změny vnitřní energie:}
+\begin{itemize}
+\item Třením dlaní konáme práci; dlaně se ohřejí.
+\item Kovovou lžíci ponoříme do teplé vody; energii získává přenosem tepla.
+\item Rychlým stlačením vzduchu v pumpičce konáme práci; vzduch se může zahřát.
+\end{itemize}
+
+\subsection{Kolik tepla je potřeba k ohřevu?}
+\begin{theorybox}
+Při změně teploty \textbf{bez změny skupenství} a za předpokladu přibližně konstantní měrné tepelné kapacity:
+\[
+\boxed{Q=mc\Delta T},\qquad \Delta T=T_2-T_1.
+\]
+$m$ je hmotnost v kg; $c$ měrná tepelná kapacita v $\mathrm{J\,kg^{-1}\,K^{-1}}$; rozdíl teplot $\Delta T$ lze vyjádřit ve stupních Celsia i v kelvinech (číselně se shoduje).
+Pro vodu v běžném školním výpočtu bereme $c_{\mathrm{voda}}\approx 4200\unit{J\,kg^{-1}\,K^{-1}}$.
+\end{theorybox}
+
+\begin{solvedbox}
+\textbf{Řešený příklad 1: Ohřev vody}\\
+Jakou energii potřebujeme pro ohřátí $0{,}25\unit{kg}$ vody z $20\,^\circ\mathrm C$ na $60\,^\circ\mathrm C$? Zanedbej tepelné ztráty.
+
+\textbf{1. Známé veličiny:} $m=0{,}25\unit{kg}$, $c=4200\unit{J\,kg^{-1}K^{-1}}$ a $\Delta T=60-20=40\unit{K}$.
+
+\textbf{2. Dosazení s jednotkami:}
+\begin{align*}
+Q&=mc\Delta T\\
+ &=0{,}25\unit{kg}\cdot4200\unit{J\,kg^{-1}K^{-1}}\cdot40\unit{K}\\
+ &=42\,000\unit{J}.
+\end{align*}
+\textbf{3. Výsledek:}\quad $\boxed{Q=42\unit{kJ}}$.
+\end{solvedbox}
+
+\section{Tři způsoby přenosu tepla}
+Energie se při tepelném kontaktu samovolně přenáší z oblasti \textbf{vyšší teploty} do oblasti \textbf{nižší teploty}. Rozdíl je v \emph{mechanismu} přenosu.
+
+\subsection{Vedení (kondukce)}
+Při \textbf{vedení} se energie předává mikroskopickými interakcemi mezi sousedními částicemi \emph{bez makroskopického proudění látky}. U kovů se významně uplatňují i volné elektrony.
+
+\begin{center}
+\begin{tikzpicture}[>=Latex,font=\small]
+\fill[orange!45] (0,0) rectangle (1.4,.72);
+\fill[blue!17] (1.4,0) rectangle (7.0,.72);
+\draw[VSNavy] (0,0) rectangle (7,.72);
+\foreach \x in {2,3,4,5,6} {\draw[-{Latex[length=2mm]},very thick,VSTeal] (\x-.25,.36)--(\x+.38,.36);}
+\node[below] at (.7,-.12) {teplý konec};
+\node[below] at (6,-.12) {chladný konec};
+\node[above] at (3.5,.78) {kovová tyč: přenos energie};
+\end{tikzpicture}
+\end{center}
+\textbf{Příklady:} zahřívání rukojeti kovové lžíce; tepelný most v konstrukci domu. Dřevo a vzduch bývají horší vodiče než kovy.
+
+Pro rovinnou vrstvu při ustáleném jednorozměrném vedení přibližně platí:
+\[
+\boxed{P=\frac{Q}{t}=\lambda A\frac{T_{\mathrm{teplá}}-T_{\mathrm{studená}}}{d}}
+\]
+kde $\lambda$ je tepelná vodivost v $\mathrm{W\,m^{-1}\,K^{-1}}$, $A$ plocha a $d$ tloušťka vrstvy. \textbf{Silnější izolace} za stejných podmínek snižuje tepelný tok.
+
+\subsection{Proudění (konvekce)}
+Při \textbf{proudění} přenáší energii pohybující se kapalina nebo plyn. Při přirozené konvekci vzniká pohyb vlivem rozdílů hustoty a vztlaku; u nucené konvekce jej vytváří čerpadlo či ventilátor.
+
+\begin{center}
+\begin{tikzpicture}[>=Latex,font=\small]
+\draw[VSNavy,thick,rounded corners=2pt] (0,0) rectangle (7.1,2.05);
+\fill[orange!25] (.15,.12) rectangle (6.95,.35);
+\draw[->,very thick,red!75!black] (1.4,.45) .. controls (1.05,1.35) and (1.65,1.55) .. (2.7,1.7);
+\draw[->,very thick,red!75!black] (3.2,.5) .. controls (3.35,1.4) and (4,1.55) .. (4.5,1.68);
+\draw[->,very thick,blue!70!black] (5.7,1.72) .. controls (6,1.25) and (5.95,.8) .. (5.4,.46);
+\draw[->,very thick,blue!70!black] (.65,1.7) .. controls (.45,1.2) and (.55,.7) .. (1,.42);
+\node[below] at (3.55,-.13) {ohřev u dna nádoby};
+\node[above] at (3.55,2.07) {proudění kapaliny};
+\end{tikzpicture}
+\end{center}
+\textbf{Příklady:} cirkulace vody v hrnci; stoupající vzduch nad radiátorem; proudění vzduchu v místnosti. \textbf{Konvekce neprobíhá ve vakuu}, protože vyžaduje látkové prostředí.
+
+\subsection{Záření (radiace)}
+Každé těleso s teplotou vyšší než $0\unit K$ vyzařuje elektromagnetické záření. K přenosu \textbf{není potřeba látkové prostředí}: energie ze Slunce dopadá na Zemi i přes vakuum.
+
+\textbf{Příklady:} sluneční záření; teplo vnímané u rozpálených kamen; infračervená kamera. Tmavý a matný povrch zpravidla více pohlcuje dopadající záření než lesklý světlý povrch (při porovnatelné vlnové délce a materiálu).
+
+\begin{theorybox}
+Pro ideální černé těleso platí \textbf{Stefanův--Boltzmannův zákon}:
+\[
+P=\sigma A T^4.
+\]
+U reálného šedého povrchu používáme $P=\varepsilon\sigma A T^4$, kde $0\leq\varepsilon\leq1$ je emisivita. Teplota musí být v \textbf{kelvinech}. Pro čistý výsledný radiační tok s okolím o teplotě $T_{\mathrm{okolí}}$ přibližně platí $P_{\mathrm{net}}=\varepsilon\sigma A(T^4-T_{\mathrm{okolí}}^4)$.
+\end{theorybox}
+\textbf{Pozor:} Záření, vedení a proudění mohou probíhat \emph{současně} (např. radiátor předává energii vzduchu prouděním a okolním tělesům zářením).
+
+\begin{solvedbox}
+\textbf{Řešený příklad 2: Zateplení stěny}\\
+Izolace má vodivost $\lambda=0{,}04\unit{W\,m^{-1}K^{-1}}$, plochu $A=1\unit{m^2}$, tloušťku $d=0{,}10\unit m$ a rozdíl teplot mezi povrchy $\Delta T=20\unit K$. Urči výkon přenášený vedením. Předpokládej ustálené vedení a zanedbej povrchové odpory.
+\begin{align*}
+P&=\lambda A\frac{\Delta T}{d}\\
+ &=0{,}04\frac{\mathrm W}{\mathrm{m\,K}}\cdot1\unit{m^2}\cdot
+   \frac{20\unit K}{0{,}10\unit m}\\
+ &=\boxed{8\unit W}.
+\end{align*}
+Při \emph{dvojnásobné} tloušťce izolace a stejných povrchových teplotách by byl výsledek $4\unit W$.
+\end{solvedbox}
+
+\section{Teplotní roztažnost}
+Při zahřívání se rozměry většiny pevných látek zvětšují. Zahřátý materiál se v průměru roztahuje, protože se mění rovnovážné vzdálenosti částic.
+
+\begin{theorybox}
+Pro malou změnu teploty a přibližně konstantní koeficient délkové roztažnosti $\alpha$:
+\[
+\boxed{\Delta l=\alpha\, l_0\,\Delta T},\qquad
+\boxed{l=l_0(1+\alpha\Delta T)}.
+\]
+$\alpha$ má jednotku $\mathrm{K^{-1}}$; $l_0$ je původní délka. Pokud $\Delta T<0$, jde o \textbf{smrštění}.
+\end{theorybox}
+Příklady: dilatační spáry mostů a kolejí, změna délky kovových trubek, bimetalický pásek termostatu.
+
+U izotropních pevných látek pro malé teplotní změny přibližně platí plošná roztažnost $\Delta S\approx 2\alpha S_0\Delta T$ a objemová $\Delta V\approx 3\alpha V_0\Delta T$.
+U kapalin se zpravidla sleduje roztažnost objemová. \textbf{Voda mezi $0$ a $4\,^\circ$C} představuje důležitou výjimku: při ohřevu směrem ke $4\,^\circ$C její hustota roste.
+
+\begin{solvedbox}
+\textbf{Řešený příklad 3: Ocelová tyč}\\
+Ocelová tyč má délku $l_0=2{,}0\unit m$. Při ohřevu o $50\unit K$ urči prodloužení, jestliže $\alpha=12\cdot10^{-6}\unit{K^{-1}}$.
+\begin{align*}
+\Delta l&=\alpha l_0\Delta T\\
+ &=12\cdot10^{-6}\unit{K^{-1}}\cdot2{,}0\unit m\cdot50\unit K\\
+ &=0{,}0012\unit m=\boxed{1{,}2\unit{mm}}.
+\end{align*}
+Nová délka je $l=\boxed{2{,}0012\unit m}$.
+\end{solvedbox}
+
+\section{Procvičení bez nápovědy}
+\textit{Nejdřív zkus určit mechanismus nebo vztah, teprve potom počítej.}
+\begin{enumerate}
+\item Kovovou lžíci necháme v horké polévce. Jaký přenos energie je dominantní uvnitř kovové rukojeti?
+\item Proč se nad zapnutým radiátorem často zvedá teplejší vzduch? Popiš, proč jde o proudění.
+\item Jak se ze Slunce přenese energie na Zemi? Proč to nemůže být vedení ani proudění ve vakuu?
+\item Vypočti teplo potřebné k ohřevu $0{,}5\unit{kg}$ vody z $15\,^\circ$C na $35\,^\circ$C. Uvažuj $c=4200\unit{J\,kg^{-1}\,K^{-1}}$.
+\item Ustáleným vedením prochází vrstvou při nezměněných podmínkách výkon $20\unit W$. Jaký bude při zdvojnásobení tloušťky?
+\item Tyč o délce $1{,}5\unit m$ má $\alpha=20\cdot10^{-6}\unit{K^{-1}}$. O kolik se prodlouží při ohřevu o $40\unit K$?
+\item Povrch tělesa má dvakrát vyšší absolutní teplotu než dříve. Kolikrát větší je jeho \emph{celkový vyzařovaný výkon}, pokud se nemění emisivita a plocha?
+\item Vysvětli, proč není přesné tvrzení „těleso obsahuje teplo“.
+\end{enumerate}
+
+\ifshowanswers
+\section{Výsledky a odůvodnění}
+\begin{enumerate}
+\item \textbf{Vedení.} Energie postupuje materiálem bez proudění kovu jako celku.
+\item \textbf{Přirozená konvekce.} Zahřátý vzduch má při přibližně stejném tlaku menší hustotu a působením vztlaku stoupá; chladnější jej nahrazuje.
+\item \textbf{Elektromagnetickým zářením.} Vakuum neobsahuje látkové prostředí potřebné pro vedení nebo proudění.
+\item $\Delta T=20\unit K$;
+\[
+Q=0{,}5\cdot4200\cdot20=\boxed{42\,000\unit J=42\unit{kJ}}.
+\]
+\item \textbf{$10\unit W$.} V jednoduchém modelu je $P$ nepřímo úměrný tloušťce $d$.
+\item
+\[
+\Delta l=20\cdot10^{-6}\cdot1{,}5\cdot40
+ =0{,}0012\unit m=\boxed{1{,}2\unit{mm}}.
+\]
+\item \textbf{$2^4=16$krát.} Ve Stefanově--Boltzmannově zákoně je $T^4$, nikoli $T^2$. Nelze ale bez dalšího tvrdit, že stejně roste \emph{čistý} tok energie do okolí.
+\item \textbf{Teplo} označuje energii \emph{přenášenou} mezi soustavami kvůli rozdílu teplot; energetický stav soustavy popisuje mimo jiné její \textbf{vnitřní energie} $U$.
+\end{enumerate}
+\fi
+
+\begin{theorybox}
+\textbf{Shrnutí v jedné minutě}\\
+\textbf{Vedení:} energie přes sousední částice. \quad
+\textbf{Proudění:} s pohybem kapaliny nebo plynu.\\
+\textbf{Záření:} elektromagnetické vlny, funguje i ve vakuu.\\
+\textbf{Výpočty:} $Q=mc\Delta T$, $P=\lambda A\Delta T/d$ (ustálené vedení),
+$\Delta l=\alpha l_0\Delta T$.\\
+\textbf{Kontrola:} teplotní rozdíl je v K nebo $^\circ$C stejný, ale ve vzorci pro záření používej absolutní teplotu v \emph{kelvinech}.
+\end{theorybox}
+\textbf{Další krok:} interaktivní laboratoř a test \href{https://vojtechsteidl.eu/interactive-notes/thermal-energy/}{\texttt{vojtechsteidl.eu/interactive-notes/thermal-energy/}}.
+\end{document}
