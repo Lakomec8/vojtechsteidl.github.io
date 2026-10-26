@@ -89,6 +89,7 @@ function sortableDate(value) {
 
 function normalizeProfileChronology(profile) {
   if (Array.isArray(profile.materials)) {
+    const materialKeys = new Set();
     profile.materials = profile.materials
       .map((material, index) => ({ material, index }))
       .sort((first, second) => {
@@ -96,6 +97,13 @@ function normalizeProfileChronology(profile) {
           sortableDate(first.material?.date),
         );
         return byDate || first.index - second.index;
+      })
+      .filter(({ material }) => {
+        const key = material?.r2Key || material?.url;
+        if (!key) return true;
+        if (materialKeys.has(String(key))) return false;
+        materialKeys.add(String(key));
+        return true;
       })
       .map(({ material }) => material);
 
@@ -202,9 +210,14 @@ for (const operation of patch.prepend || []) {
   if (!Array.isArray(target)) {
     throw new TypeError(`Prepend target is not a list: ${operation.path}`);
   }
-  if (!target.some((item) => JSON.stringify(item) === JSON.stringify(operation.value))) {
-    target.unshift(operation.value);
-  }
+  const resourceKey = operation.path === "/materials"
+    ? (operation.value?.r2Key || operation.value?.url)
+    : null;
+  const index = target.findIndex((item) => resourceKey
+    ? (item?.r2Key || item?.url) === resourceKey
+    : JSON.stringify(item) === JSON.stringify(operation.value));
+  if (index === -1) target.unshift(operation.value);
+  else if (resourceKey) target[index] = { ...target[index], ...operation.value };
 }
 
 normalizeProfileChronology(profile);
