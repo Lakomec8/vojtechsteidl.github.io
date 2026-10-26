@@ -307,6 +307,71 @@ CSS = r'''<style id="blue-spacious-homepage-v2">
 @media(max-width:1100px){.blue-hero-grid{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}.blue-hero-intro{padding-right:1.3rem}.blue-hero-bio{padding-left:1.35rem;gap:.9rem;grid-template-columns:minmax(0,1fr) minmax(116px,33%)}.blue-hero-bio h2{font-size:1.4rem}.blue-hero-bio-body>p:not(.blue-hero-bio-eyebrow){font-size:.79rem}.blue-hero-portrait img{max-height:275px}}
 @media(max-width:760px){.blue-home-hero{padding:5.5rem 0 2.65rem}.blue-hero-grid{grid-template-columns:1fr;gap:1.6rem}.blue-hero-intro{padding-right:0}.blue-home-hero h1{font-size:clamp(2.2rem,7.5vw,3.2rem);max-width:600px}.blue-hero-bio{padding:1.45rem 0 0;border:0;border-top:1px solid rgba(255,255,255,.22);gap:1.2rem;grid-template-columns:minmax(0,1fr) minmax(140px,28%)}.blue-hero-bio h2{font-size:clamp(1.45rem,4.2vw,1.9rem)}.blue-hero-bio-body>p:not(.blue-hero-bio-eyebrow){font-size:.85rem}.blue-hero-portrait img{max-height:240px}}
 @media(max-width:470px){.blue-home-hero{padding:5.2rem 0 2.2rem}.blue-hero-bio{grid-template-columns:minmax(0,1fr) 106px;gap:.75rem}.blue-hero-bio h2{font-size:1.25rem}.blue-hero-bio-body>p:not(.blue-hero-bio-eyebrow){font-size:.77rem;line-height:1.54;margin-top:.6rem}.blue-hero-bio-facts{gap:.35rem;margin-top:.75rem}.blue-hero-bio-facts span{font-size:.63rem}.blue-hero-portrait img{max-height:198px}.blue-hero-bio-mail{margin-top:.7rem}.blue-meta{gap:.65rem}}
+
+/* Home page: realistic three-part study material showcase */
+        .showcase-section { padding-top: 4.9rem; padding-bottom: 5.2rem; }
+        .showcase-heading { max-width: 790px; margin-left: auto; margin-right: auto; }
+        .showcase-heading > p:last-child { max-width: 720px; margin-left: auto; margin-right: auto; }
+        .showcase-grid { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); align-items: stretch; gap: clamp(1rem,2vw,1.4rem); width: min(1180px,100%); margin: 2.2rem auto 0; }
+        .showcase-card { display: flex; flex-direction: column; overflow: hidden; min-width: 0; border: 1px solid #dce6f2; border-radius: 22px; background: #fff; box-shadow: 0 13px 38px rgba(16,42,67,.07); color: #102a43; text-decoration: none; transition: transform .24s ease,border-color .24s ease,box-shadow .24s ease; }
+        .showcase-card:hover { transform: translateY(-5px); border-color: #bbd1ed; box-shadow: 0 22px 45px rgba(16,42,67,.13); color: #102a43; }
+        .showcase-card:focus-visible { outline: 3px solid #2563eb; outline-offset: 4px; }
+        .showcase-card--featured { border-color: #aecfd4; box-shadow: 0 17px 46px rgba(3,111,111,.12); }
+        .showcase-stage { position: relative; display: flex; align-items: center; justify-content: center; height: 278px; overflow: hidden; isolation: isolate; border-bottom: 1px solid #e4edf5; }
+        .showcase-stage--pdf { background: radial-gradient(ellipse at 70% 22%,#dbe9ff 0%,transparent 62%),linear-gradient(155deg,#f3f7fd,#e5eefb); }
+        .showcase-stage--geometry { background: radial-gradient(ellipse at 50% 10%,#e1f8f3,transparent 68%),linear-gradient(150deg,#ecf5fc,#e4eef6); }
+        .showcase-stage--quiz { background: radial-gradient(ellipse at 75% 10%,#dcf7e8,transparent 60%),linear-gradient(150deg,#f0f9f4,#e4f0ee); }
+        .showcase-pdf-stack { position: relative; width: 260px; height: 254px; margin-top: 28px; }
+        .showcase-pdf-stack img { position: absolute; display: block; width: 168px; height: 238px; object-fit: cover; object-position: top; border: 1px solid #dae2ec; border-radius: 5px 5px 0 0; background: #fff; box-shadow: 0 14px 30px rgba(16,42,67,.17); }
+        .showcase-pdf-back { top: 10px; left: 18px; transform: rotate(-11deg); }
+        .showcase-pdf-front { top: 0; right: 14px; transform: rotate(7deg); }
+        .showcase-stage-caption { position: absolute; z-index: 2; bottom: 15px; left: 18px; display: inline-flex; align-items: center; gap: .48rem; padding: 8px 12px; border: 1px solid #dbe7f2; border-radius: 999px; background: rgba(255,255,255,.95); box-shadow: 0 6px 18px rgba(16,42,67,.08); color: #315f91; font-size: .71rem; font-weight: 800; letter-spacing: .01em; }
+        .showcase-stage-caption--teal { color: #08766f; border-color: #c8e8e2; }
+        .showcase-stage-caption--green { color: #187346; border-color: #c8ead3; }
+        .showcase-screen { width: min(91%,344px); overflow: hidden; border: 1px solid #d9e6ef; border-radius: 13px; background: #fff; box-shadow: 0 18px 38px rgba(16,42,67,.17); transform: translateY(-3px) rotate(-2deg); }
+        .showcase-screen-top { display: flex; align-items: center; gap: 5px; height: 31px; padding: 0 11px; border-bottom: 1px solid #e2eaf0; }
+        .showcase-screen-top > span { width: 6px; height: 6px; border-radius: 50%; background: #cbd5e1; }
+        .showcase-screen-top strong { margin-left: 7px; font-size: 10px; color: #193752; }
+        .showcase-screen-top small { margin-left: auto; font-size: 8px; color: #6491a0; font-weight: 700; }
+        .showcase-solid { display: block; width: 100%; height: 203px; }
+        .showcase-screen-footer { display: flex; align-items: center; justify-content: space-between; padding: 6px 11px; border-top: 1px solid #e3eaf2; color: #5c748a; font-size: 9px; font-weight: 700; }
+        .showcase-screen-footer i { color: #008e87; }
+        .showcase-quiz { width: min(82%,274px); padding: 17px 17px 20px; border: 1px solid #dfeae4; border-radius: 15px; background: #fff; box-shadow: 0 18px 40px rgba(23,87,54,.13); transform: rotate(3deg) translateY(-6px); }
+        .showcase-quiz-head { display: flex; justify-content: space-between; align-items: center; gap: 10px; font-size: 10px; font-weight: 900; letter-spacing: .075em; color: #287448; }
+        .showcase-quiz-head small { font-size: 10px; color: #81928b; letter-spacing: 0; }
+        .showcase-quiz-progress { overflow: hidden; height: 5px; margin: 9px 0 12px; border-radius: 99px; background: #e8f1eb; }
+        .showcase-quiz-progress > span { display: block; height: 100%; width: 60%; border-radius: inherit; background: #24a86b; }
+        .showcase-quiz-label { display: block; font-size: 9px; font-weight: 900; letter-spacing: .1em; color: #8b9b91; }
+        .showcase-quiz-question { display: block; margin: 4px 0 3px; color: #193a31; font-size: 13px; }
+        .showcase-quiz-formula { margin-bottom: 10px; color: #183f35; font: 700 21px/1.4 Georgia,serif; letter-spacing: -.02em; text-align: center; }
+        .showcase-quiz-option { display: flex; align-items: center; gap: 9px; min-height: 29px; margin-top: 6px; padding: 5px 9px; border: 1px solid #e4ebe7; border-radius: 8px; color: #64756c; font-size: 11px; font-weight: 700; }
+        .showcase-quiz-option > span { display: grid; place-items: center; width: 18px; height: 18px; border-radius: 5px; background: #eef3ef; color: #61776b; font-size: 10px; }
+        .showcase-quiz-option--correct { border-color: #74d5a6; background: #edfdf4; color: #167546; }
+        .showcase-quiz-option--correct > span { background: #c8f3d9; color: #126c3c; }
+        .showcase-quiz-option--correct i { margin-left: auto; font-size: 14px; }
+        .showcase-copy { display: flex; flex: 1; flex-direction: column; align-items: flex-start; padding: 24px 24px 25px; }
+        .showcase-kicker { display: inline-flex; align-items: center; gap: 7px; color: #60778e; font-size: .69rem; font-weight: 850; letter-spacing: .075em; }
+        .showcase-dot { width: 7px; height: 7px; border-radius: 50%; }
+        .showcase-dot--blue { background: #2563eb; }
+        .showcase-dot--teal { background: #009a91; }
+        .showcase-dot--green { background: #24a86b; }
+        .showcase-copy h3 { margin: 11px 0 10px; font-size: clamp(1.24rem,2vw,1.44rem); letter-spacing: -.035em; line-height: 1.23; color: #102a43; }
+        .showcase-copy p { margin: 0 0 17px; color: #64748b; font-size: .9rem; line-height: 1.68; }
+        .showcase-action { display: inline-flex; align-items: center; gap: 8px; margin-top: auto; color: #1d4ed8; font-size: .87rem; font-weight: 800; }
+        .showcase-card--featured .showcase-action { color: #007970; }
+        .showcase-action i { font-size: .82rem; transition: transform .2s ease; }
+        .showcase-card:hover .showcase-action i { transform: translateX(4px); }
+        @media (max-width: 940px) { .showcase-grid { grid-template-columns: 1fr; width: min(490px,100%); } .showcase-stage { height: 275px; } .showcase-copy { padding: 22px 23px 24px; } }
+        @media (max-width: 480px) { .showcase-section { padding-top: 3.4rem; padding-bottom: 3.4rem; } .showcase-grid { margin-top: 1.6rem; } .showcase-stage { height: 247px; } .showcase-pdf-stack { transform: scale(.89); } .showcase-screen { width: min(91%,318px); } .showcase-solid { height: 176px; } .showcase-quiz { transform: scale(.94) rotate(3deg) translateY(-4px); } }
+        @media (prefers-reduced-motion: reduce) { .showcase-card,.showcase-action i { transition: none; } }
+
+.showcase-section .showcase-heading{display:block;max-width:840px}
+.showcase-section .showcase-heading>div{max-width:840px}
+.showcase-section .showcase-heading p:not(.eyebrow){max-width:660px}
+.showcase-level-links{display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:.65rem 1rem;margin-top:1.6rem;color:#718096;font-size:.84rem}
+.showcase-level-links a{color:#3263a0;font-weight:750;text-decoration:underline;text-underline-offset:3px}
+.showcase-level-links a:hover{color:#164c8d}
+
 </style>'''
 
 HERO = r'''<section class="blue-home-hero">
@@ -363,19 +428,88 @@ ABOUT = r'''<section class="blue-about" id="o-lektorovi" aria-labelledby="aboutT
 
 CAPACITY = r''''''
 
-OFFER = r'''<section class="blue-goals" id="jak-to-funguje">
+OFFER = r'''<section class="blue-goals showcase-section" id="jak-to-funguje" aria-labelledby="showcaseTitle">
   <div class="blue-shell">
-    <div class="blue-section-head">
+    <div class="blue-section-head showcase-heading">
       <div>
-        <p class="eyebrow">Podle cíle</p>
-        <h2>Tři typické důvody, proč studenti přicházejí.</h2>
+        <p class="eyebrow">Nahlédněte do výuky</p>
+        <h2 id="showcaseTitle">Materiály, se kterými se dá opravdu pracovat.</h2>
+        <p>Přehledné PDF, interaktivní model a ověření znalostí. Tři nástroje, které student využije i po hodině.</p>
       </div>
     </div>
-    <div class="blue-goal-grid">
-      <a class="blue-goal-card" href="/priprava-na-prijimacky-z-matematiky/"><div class="blue-goal-icon"><i class="fas fa-school"></i></div><h3>Přijímačky na SŠ</h3><p>CERMAT, slovní úlohy, geometrie a strategie práce s časem.</p><div class="blue-doc-preview"><span class="blue-doc-label">Ukázka · slovní úlohy</span><img src="/assets/previews/zs-slovni-ulohy.webp" alt="Omezená ukázka materiálu pro 9. třídu se slovními úlohami" loading="lazy"></div><span>Prohlédnout přípravu →</span></a>
-      <a class="blue-goal-card" href="/priprava-na-maturitu-z-matematiky/"><div class="blue-goal-icon"><i class="fas fa-graduation-cap"></i></div><h3>SŠ a maturita</h3><p>Průběžná matematika, didaktické testy a systematické uzavírání slabých témat.</p><div class="blue-doc-preview"><span class="blue-doc-label">Ukázka · geometrie</span><img src="/assets/previews/ss-geometrie.webp" alt="Omezená ukázka středoškolského materiálu ke kružnici, výseči a typové úloze" loading="lazy"></div><span>Prohlédnout přípravu →</span></a>
-      <a class="blue-goal-card" href="/doucovani-vs-matematiky/"><div class="blue-goal-icon"><i class="fas fa-square-root-variable"></i></div><h3>VŠ matematika</h3><p>Limity, derivace, integrály a lineární algebra podle konkrétního sylabu.</p><div class="blue-doc-preview"><span class="blue-doc-label">Ukázka · integrály</span><img src="/assets/previews/vs-integraly.webp" alt="Omezená ukázka vysokoškolského materiálu s integračním vzorcem a řešeným příkladem" loading="lazy"></div><span>Prohlédnout VŠ výuku →</span></a>
-    </div>
+    <div class="showcase-grid">
+                <a class="showcase-card" href="/materialy-zdarma/" aria-label="Prohlédnout skutečné PDF materiály z matematiky">
+                    <div class="showcase-stage showcase-stage--pdf">
+                        <div class="showcase-pdf-stack" aria-hidden="true">
+                            <img class="showcase-pdf-back" src="/materialy-zdarma/previews/linearni-rovnice-a-nerovnice-01.jpg" alt="" loading="lazy" decoding="async" width="175" height="248">
+                            <img class="showcase-pdf-front" src="/materialy-zdarma/previews/posloupnosti-1.jpg" alt="" loading="lazy" decoding="async" width="175" height="248">
+                        </div>
+                        <span class="showcase-stage-caption"><i class="far fa-file-pdf" aria-hidden="true"></i> Ukázka skutečných zápisů</span>
+                    </div>
+                    <div class="showcase-copy">
+                        <span class="showcase-kicker"><span class="showcase-dot showcase-dot--blue"></span> 01 / PDF MATERIÁLY</span>
+                        <h3>Přehledný zápis k látce</h3>
+                        <p>Vysvětlení, důležité vztahy a řešené příklady v podobě, ke které se lze kdykoli vrátit.</p>
+                        <span class="showcase-action">Prohlédnout PDF <i class="fas fa-arrow-right" aria-hidden="true"></i></span>
+                    </div>
+                </a>
+                <a class="showcase-card showcase-card--featured" href="/interactive-notes/solid-sections/" aria-label="Otevřít skutečnou interaktivní laboratoř řezů tělesy">
+                    <div class="showcase-stage showcase-stage--geometry">
+                        <div class="showcase-screen" aria-hidden="true">
+                            <div class="showcase-screen-top"><span></span><span></span><span></span><strong>Řezy tělesy</strong><small>3D laboratoř</small></div>
+                            <svg class="showcase-solid" viewBox="0 0 350 225" aria-hidden="true" focusable="false">
+                                <defs><pattern id="showcase-grid-pattern" width="18" height="18" patternUnits="userSpaceOnUse"><path d="M 18 0 L 0 0 0 18" fill="none" stroke="#e7eef7" stroke-width=".9"/></pattern></defs>
+                                <rect width="350" height="225" fill="url(#showcase-grid-pattern)"/>
+                                <path d="M74 170 L159 103 L281 121 M159 5 L159 103" fill="none" stroke="#7c97b2" stroke-width="1.8" stroke-dasharray="6 6"/>
+                                <polygon points="74,72 159,5 281,24 195,91" fill="#ecf5ff" stroke="#8da9cb" stroke-width="1.8"/>
+                                <polygon points="195,91 281,24 281,121 195,188" fill="#c5def8" fill-opacity=".66" stroke="#8da9cb" stroke-width="1.8"/>
+                                <polygon points="74,72 195,91 195,188 74,170" fill="#daeafd" fill-opacity=".48" stroke="#8da9cb" stroke-width="1.8"/>
+                                <path d="M74 170 L195 188 L281 121 M74 72 L74 170 M195 91 L195 188" fill="none" stroke="#52759c" stroke-width="2"/>
+                                <polygon points="74,122 159,54 281,73 195,140" fill="#0bafa5" fill-opacity=".29" stroke="#008d8b" stroke-width="3" stroke-linejoin="round"/>
+                                <path d="M74 122 L195 140 L281 73" fill="none" stroke="#007d7b" stroke-width="3.5" stroke-linecap="round"/>
+                                <g fill="#fff" stroke="#008d8b" stroke-width="2.7"><circle cx="74" cy="122" r="5.7"/><circle cx="195" cy="140" r="5.7"/><circle cx="281" cy="73" r="5.7"/></g>
+                                <g fill="#0a5965" font-size="14" font-weight="800" font-family="system-ui,sans-serif"><text x="52" y="118">P</text><text x="196" y="160">Q</text><text x="292" y="71">R</text></g>
+                                <rect x="16" y="186" width="122" height="26" rx="9" fill="#fff" stroke="#cfe2eb"/><circle cx="29" cy="199" r="5" fill="#0bafa5"/><text x="40" y="203" fill="#375b73" font-size="11" font-weight="700" font-family="system-ui,sans-serif">Rovina řezu</text>
+                            </svg>
+                            <div class="showcase-screen-footer"><span><i class="fas fa-cube" aria-hidden="true"></i> Prostorová konstrukce</span><span>01 / 03 <i class="fas fa-chevron-right" aria-hidden="true"></i></span></div>
+                        </div>
+                        <span class="showcase-stage-caption showcase-stage-caption--teal"><i class="fas fa-arrows-rotate" aria-hidden="true"></i> Otočný 3D model</span>
+                    </div>
+                    <div class="showcase-copy">
+                        <span class="showcase-kicker"><span class="showcase-dot showcase-dot--teal"></span> 02 / INTERAKTIVNÍ ZÁPIS</span>
+                        <h3>Řezy tělesy krok za krokem</h3>
+                        <p>Otočný model, konstrukční kroky a vysvětlení, jak převést řez přes hrany na druhou stranu tělesa.</p>
+                        <span class="showcase-action">Otevřít interaktivní zápis <i class="fas fa-arrow-right" aria-hidden="true"></i></span>
+                    </div>
+                </a>
+                <a class="showcase-card" href="/diagnostika/" aria-label="Prohlédnout ukázky diagnostických testů a ověření znalostí">
+                    <div class="showcase-stage showcase-stage--quiz">
+                        <div class="showcase-quiz" aria-hidden="true">
+                            <div class="showcase-quiz-head"><span><i class="fas fa-circle-check"></i> SELF-CHECK</span><small>03 / 05</small></div>
+                            <div class="showcase-quiz-progress"><span></span></div>
+                            <span class="showcase-quiz-label">UKÁZKOVÁ ÚLOHA</span>
+                            <strong class="showcase-quiz-question">Vyřeš rovnici</strong>
+                            <div class="showcase-quiz-formula">2(x − 3) = 10</div>
+                            <div class="showcase-quiz-option"><span>A</span> x = 5</div>
+                            <div class="showcase-quiz-option showcase-quiz-option--correct"><span>B</span> x = 8 <i class="fas fa-check-circle" aria-hidden="true"></i></div>
+                            <div class="showcase-quiz-option"><span>C</span> x = 13</div>
+                        </div>
+                        <span class="showcase-stage-caption showcase-stage-caption--green"><i class="fas fa-check-circle" aria-hidden="true"></i> Okamžitá zpětná vazba</span>
+                    </div>
+                    <div class="showcase-copy">
+                        <span class="showcase-kicker"><span class="showcase-dot showcase-dot--green"></span> 03 / SELF-CHECK</span>
+                        <h3>Ověření porozumění</h3>
+                        <p>Krátké úlohy s výsledkem pomohou rychle rozpoznat, co už student ovládá a co ještě procvičit.</p>
+                        <span class="showcase-action">Vyzkoušet diagnostiku <i class="fas fa-arrow-right" aria-hidden="true"></i></span>
+                    </div>
+                </a>
+            </div>
+    <nav class="showcase-level-links" aria-label="Příprava podle úrovně">
+      <span>Výuka podle cíle:</span>
+      <a href="/priprava-na-prijimacky-z-matematiky/">Přijímačky</a>
+      <a href="/priprava-na-maturitu-z-matematiky/">Maturita</a>
+      <a href="/doucovani-vs-matematiky/">VŠ matematika</a>
+    </nav>
   </div>
 </section>
 <section class="blue-ecosystem" id="studentska-zona">
@@ -570,7 +704,7 @@ def main() -> None:
     html = replace_section(html, '<section class="hero">', HERO, "hero")
     html = replace_section(html, '<section class="capacity-strip" id="kapacita"', CAPACITY, "capacity")
     # Stručné bio s fotografií je již v pravé části hero; nevkládat pod něj další velkou sekci.
-    html = replace_section(html, '<section class="section" id="studijni-cile">', OFFER, "goals")
+    html = replace_section(html, '<section class="section showcase-section" id="studijni-cile"', OFFER, "goals")
     html = replace_section(html, '<section class="testimonials section" id="reference">', REFERENCE, "testimonials")
     html = replace_section(html, '<section class="pricing section" id="cenik">', PRICING, "pricing")
     html = remove_section(html, '<section class="contact section" id="kontakt">', "duplicate bottom contact form")
