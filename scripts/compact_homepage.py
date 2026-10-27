@@ -723,7 +723,7 @@ def main() -> None:
 
     if "</head>" not in html:
         raise RuntimeError("Homepage has no closing head tag")
-    html = html.replace("</head>", CSS + "\\n</head>", 1)
+    html = html.replace("</head>", CSS + "\n</head>", 1)
 
     required = (
         MARKER,
