@@ -34,7 +34,11 @@ type BusyOccurrence = {
 // Keep enough history to recover lessons after a student is added, renamed or
 // given a corrected Calendar identity. Inserts are idempotent by Google event
 // ID and student/time slot, so re-reading this window cannot double-count.
-const LOOKBACK_MS = 45 * 24 * 60 * 60 * 1000;
+// A newly enabled portal account must recover the current school year's
+// lessons even when its calendar identity was staged months earlier. Google
+// event IDs make the wider replay idempotent, so existing lessons are not
+// counted twice.
+const LOOKBACK_MS = 400 * 24 * 60 * 60 * 1000;
 const LOOKAHEAD_MS = 120 * 24 * 60 * 60 * 1000;
 const GOOGLE_UID_SUFFIX = "@google.com";
 
@@ -277,10 +281,15 @@ async function activeStudents(env: Env): Promise<TutoringStudent[]> {
   // email addresses must not be guessed or used to join private schedules.
   const [result, aliases, seriesMappings] = await Promise.all([
     env.DB.prepare(`
-      SELECT id, display_name
-        FROM tutoring_students
-       WHERE active = 1
-       ORDER BY id
+      SELECT DISTINCT tutoring.id, tutoring.display_name
+        FROM tutoring_students AS tutoring
+        LEFT JOIN student_tutoring_links AS link
+          ON link.tutoring_student_id = tutoring.id
+        LEFT JOIN students AS portal
+          ON portal.id = link.student_id
+       WHERE tutoring.active = 1
+          OR portal.enabled = 1
+       ORDER BY tutoring.id
     `).all<TutoringStudent>(),
     env.DB.prepare(`
       SELECT alias, tutoring_student_id

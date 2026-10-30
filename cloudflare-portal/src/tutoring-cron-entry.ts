@@ -39,7 +39,7 @@ function isoDateInPrague(value: string): string {
 
 async function participantsForEvent(env: Env, eventId: string): Promise<TutoringStudent[]> {
   const result = await env.DB.prepare(`
-    SELECT s.id, s.display_name, s.hourly_rate
+    SELECT DISTINCT s.id, s.display_name, s.hourly_rate
       FROM tutoring_students AS s
       JOIN (
         SELECT student_id
@@ -51,7 +51,12 @@ async function participantsForEvent(env: Env, eventId: string): Promise<Tutoring
          WHERE google_event_id = ?1
       ) AS participants
         ON participants.student_id = s.id
+     LEFT JOIN student_tutoring_links AS link
+       ON link.tutoring_student_id = s.id
+     LEFT JOIN students AS portal
+       ON portal.id = link.student_id
      WHERE s.active = 1
+        OR portal.enabled = 1
   `).bind(eventId).all<TutoringStudent>();
   return result.results || [];
 }
