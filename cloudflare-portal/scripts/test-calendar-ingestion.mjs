@@ -15,7 +15,23 @@ db.exec(`CREATE TABLE tutoring_calendar_series_students (
   PRIMARY KEY (series_id, tutoring_student_id),
   FOREIGN KEY (tutoring_student_id) REFERENCES tutoring_students(id) ON DELETE CASCADE
 );`);
-db.exec(`INSERT INTO tutoring_students (id, display_name, hourly_rate) VALUES ('alice','Alice',500),('bob','Bob',500)`);
+db.exec(`CREATE TABLE students (
+  id TEXT PRIMARY KEY,
+  email TEXT NOT NULL UNIQUE,
+  display_name TEXT NOT NULL,
+  material_path TEXT NOT NULL,
+  enabled INTEGER NOT NULL DEFAULT 1
+);`);
+db.exec(`CREATE TABLE student_tutoring_links (
+  student_id TEXT PRIMARY KEY,
+  tutoring_student_id TEXT NOT NULL
+);`);
+db.exec(`INSERT INTO tutoring_students (id, display_name, hourly_rate, active) VALUES
+  ('alice','Alice',500,1),('bob','Bob',500,1),('carol','Carol',500,0)`);
+db.exec(`INSERT INTO students (id,email,display_name,material_path,enabled)
+  VALUES ('carol-portal','carol@example.test','Carol','carol',1)`);
+db.exec(`INSERT INTO student_tutoring_links (student_id,tutoring_student_id)
+  VALUES ('carol-portal','carol')`);
 let writes = 0;
 const DB = {
   prepare(sql) {
@@ -28,7 +44,7 @@ const DB = {
   },
   async batch(statements) { return Promise.all(statements.map((s) => s.run())); },
 };
-const date = new Date(Date.now() + 86400000).toISOString().slice(0,10).replaceAll('-','');
+let date = new Date(Date.now() + 86400000).toISOString().slice(0,10).replaceAll('-','');
 let title = 'Alice doučko', hour = '150000', cancelled = false, fail = false;
 const originalFetch = globalThis.fetch;
 globalThis.fetch = async () => fail ? new Response('', { status: 503 }) : new Response(`BEGIN:VCALENDAR\r\nVERSION:2.0\r\nBEGIN:VEVENT\r\nUID:test@google.com\r\nDTSTART:${date}T${hour}Z\r\nDTEND:${date}T170000Z\r\nSUMMARY:${title}\r\n${cancelled ? 'STATUS:CANCELLED\r\n' : ''}END:VEVENT\r\nEND:VCALENDAR\r\n`);
@@ -70,7 +86,17 @@ try {
   title = 'Bobby doučko'; await syncGoogleCalendarToD1(env);
   assert.equal(db.prepare('SELECT status FROM tutoring_calendar_events').get().status, 'planned');
 
+  // Enabling a portal account must be enough to synchronize its explicitly
+  // linked tutoring identity, even if the older tutoring flag stayed off.
+  // The wider recovery window must also backfill lessons older than 45 days.
+  title = 'Carol doučko';
+  date = new Date(Date.now() - 90 * 86400000).toISOString().slice(0,10).replaceAll('-','');
+  await syncGoogleCalendarToD1(env);
+  assert.deepEqual(db.prepare('SELECT student_id FROM tutoring_calendar_event_students').all().map((r)=>r.student_id), ['carol']);
+  assert.match(db.prepare('SELECT starts_at FROM tutoring_calendar_events').get().starts_at, new RegExp(`^${date.slice(0,4)}-${date.slice(4,6)}-${date.slice(6,8)}`));
+
   // Duplicate first names must never cross-assign a lesson.
+  title = 'Bobby doučko';
   db.exec(`INSERT INTO tutoring_students(id,display_name,hourly_rate)
            VALUES ('bob-other','Bobby Novák',500)`);
   await syncGoogleCalendarToD1(env);
@@ -80,6 +106,7 @@ try {
   // Generic titles are paired only by an explicit Google Calendar series ID.
   db.exec(`INSERT INTO tutoring_calendar_series_students(series_id,tutoring_student_id)
            VALUES ('test','alice')`);
+  date = new Date(Date.now() + 86400000).toISOString().slice(0,10).replaceAll('-','');
   title = 'Fyzika doučko';
   await syncGoogleCalendarToD1(env);
   assert.deepEqual(db.prepare('SELECT student_id FROM tutoring_calendar_event_students').all().map((r)=>r.student_id), ['alice']);
