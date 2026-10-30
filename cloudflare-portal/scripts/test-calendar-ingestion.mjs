@@ -96,6 +96,7 @@ try {
   assert.match(db.prepare('SELECT starts_at FROM tutoring_calendar_events').get().starts_at, new RegExp(`^${date.slice(0,4)}-${date.slice(4,6)}-${date.slice(6,8)}`));
 
   // Duplicate first names must never cross-assign a lesson.
+  title = 'Bobby doučko';
   db.exec(`INSERT INTO tutoring_students(id,display_name,hourly_rate)
            VALUES ('bob-other','Bobby Novák',500)`);
   await syncGoogleCalendarToD1(env);
