@@ -2,10 +2,10 @@
   const CONTACT_EMAIL = 'info@vojtechsteidl.eu';
   const TESTS = {
     '/test-prijimacky-9-matematika/': {
-      name: 'Přijímačky 9. třída',
-      goal: 'přijímačky na SŠ',
-      secondaryLabel: 'Skupinová příprava',
-      secondaryHref: '/skupinove-doucovani-matematiky/'
+      name: 'CERMAT 2027 – matematika pro 9. třídu',
+      goal: 'přijímačky na SŠ v roce 2027',
+      secondaryLabel: 'Skupinová příprava CERMAT',
+      secondaryHref: '/skupiny/?goal=cermat&utm_source=diagnostika&utm_medium=result&utm_campaign=cermat_2027#prihlaska'
     },
     '/test-maturita-matematika/': {
       name: 'Maturita z matematiky',

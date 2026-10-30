@@ -3,17 +3,18 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Diagnostický test k přijímačkám z matematiky | 9. třída</title>
-  <meta name="description" content="Krátký diagnostický test z matematiky pro žáky 9. tříd před přijímačkami na SŠ. 15 úloh, 5 oblastí a okamžité vyhodnocení chyb.">
+  <title>CERMAT 2027 matematika: diagnostický test zdarma | 9. třída</title>
+  <meta name="description" content="Bezplatná diagnostika matematiky pro přijímačky CERMAT 2027. 15 úloh, 5 oblastí, konkrétní chyby a okamžité tematické vyhodnocení.">
   <meta name="robots" content="index,follow">
   <link rel="canonical" href="https://vojtechsteidl.eu/test-prijimacky-9-matematika/">
   <link rel="stylesheet" href="../style.css">
   <link rel="stylesheet" href="../assets/diagnostic-test.css">
+  <script src="../assets/lead-attribution.js" defer></script>
 </head>
 <body>
 <header class="site-header"><nav class="nav" aria-label="Hlavní navigace"><a href="../" class="logo">Vojtěch Steidl</a><ul class="nav-links"><li><a href="../doucovani-matematiky/">Matematika</a></li><li><a href="../diagnostika/">Diagnostika</a></li><li><a href="../skupinove-doucovani-matematiky/">Skupinové lekce</a></li><li><a href="../#kontakt" class="nav-contact">Kontakt</a></li></ul></nav></header>
 <main>
-<section class="test-hero"><div class="test-wrap"><div class="crumbs"><a href="../">Domů</a> / <a href="../diagnostika/">Diagnostika</a> / Přijímačky 9. třída</div><h1>Za 15 úloh zjisti, kde u přijímaček z matematiky ztrácíš body</h1><p>Rychlá orientační diagnostika pro 9. třídu. Po dokončení uvidíš výsledek podle témat a u každé chyby také správnou odpověď.</p><div class="hero-meta"><span class="hero-pill">15 úloh</span><span class="hero-pill">5 oblastí</span><span class="hero-pill">cca 12–15 minut</span><span class="hero-pill">bez kalkulačky</span></div></div></section>
+<section class="test-hero"><div class="test-wrap"><div class="crumbs"><a href="../">Domů</a> / <a href="../cermat-2027/">CERMAT 2027</a> / Diagnostika</div><h1>Za 15 úloh zjisti, kde u CERMATu 2027 ztrácíš body</h1><p>Bezplatná orientační diagnostika pro 9. třídu. Po dokončení uvidíš výsledek podle témat a u každé chyby také správnou odpověď.</p><div class="hero-meta"><span class="hero-pill">15 úloh</span><span class="hero-pill">5 oblastí</span><span class="hero-pill">cca 12–15 minut</span><span class="hero-pill">bez registrace</span></div></div></section>
 <section class="intro"><div class="test-wrap"><div class="intro-card"><div><strong>Jak test vyplnit</strong><p>Počítej bez nápovědy a bez kalkulačky. Když nevíš, zvol „Nevím / přeskočit“. Tento test je krátká diagnostika, ne kopie oficiální JPZ.</p></div><div class="privacy-note">Nic se neodesílá na server.<br>Výsledek se počítá jen v prohlížeči.</div></div></div></section>
 <div class="progress-shell"><div class="test-wrap"><div class="progress-row"><div class="progress-track"><div class="progress-fill" id="progressFill"></div></div><div class="progress-label" id="progressLabel">0 / 15</div></div></div></div>
 <form class="quiz" id="diagnosticForm"><div class="test-wrap">
@@ -46,7 +47,7 @@
 </div></form>
 <section class="results" id="results"><div class="test-wrap"><div class="result-hero"><div class="score-line"><div class="score-circle"><div><strong id="scoreValue">0/15</strong><span id="scorePercent">0 %</span></div></div><div class="result-copy"><h2 id="resultTitle">Výsledek</h2><p id="resultText"></p></div></div><div class="breakdown" id="breakdown"></div><div class="diagnosis"><div class="diagnosis-card"><h3>Nejslabší oblast</h3><p id="weakText"></p></div><div class="diagnosis-card"><h3>Nejsilnější oblast</h3><p id="strongText"></p></div></div><div class="next-step"><h3>Co bych dělal dál</h3><p id="nextText"></p><div class="result-actions"><a class="result-btn" href="../#kontakt">Probrat výsledek zdarma</a><a class="result-btn secondary" href="../diagnostika/">Další diagnostiky</a><button class="reset-btn" type="button" id="resetButton">Vyplnit znovu</button></div></div><p class="disclaimer">Tento test je orientační diagnostika. Není oficiálním testem CERMAT a skóre nelze převádět na body z jednotné přijímací zkoušky.</p></div></div></section>
 <div class="back-link"><a href="../diagnostika/">← Zpět na všechny diagnostiky</a></div>
-</main><footer>© 2026 Vojtěch Steidl · Diagnostika přijímačky 9. třída</footer>
+</main><footer>© 2026 Vojtěch Steidl · Diagnostika CERMAT 2027 · Nejde o oficiální web ani test CERMATu.</footer>
 <script src="../assets/diagnostic-feedback.js"></script>
 <script>window.DIAGNOSTIC_CONFIG={labels:{numbers:'Čísla a početní operace',algebra:'Algebra a rovnice',word:'Poměry, procenta a slovní úlohy',geometry:'Geometrie',data:'Data a logické uvažování'},bands:[{min:.8,title:'Velmi dobrý základ',text:'Základní typy úloh zvládáš stabilně. Další krok je práce s delšími úlohami a časovou strategií.'},{min:.6,title:'Dobrý základ, ale jsou tam mezery',text:'Část bodů máš relativně jistou, několik témat ale potřebuje cíleně dopracovat.'},{min:.4,title:'Výkon je zatím nerovnoměrný',text:'Některé základní postupy fungují, jiné tě budou v ostrém testu stát příliš mnoho času a bodů.'},{min:0,title:'Začni od jistých bodů',text:'Nejdřív stabilizuj základní početní postupy, rovnice a standardní geometrii. Teprve potom přidávej těžší slovní úlohy.'}],nextStep:({firstWeak,totalCorrect})=>totalCorrect>=12?`Zkus celý starší přijímací test na čas. Při rozboru si hlídej hlavně oblast „${firstWeak}“.`: `Začni oblastí „${firstWeak}“ a dej si 8–12 nových úloh stejného typu. Cílem je vytvořit si co nejvíc jistých bodů.`};</script>
 <script src="../assets/diagnostic-engine.js"></script>

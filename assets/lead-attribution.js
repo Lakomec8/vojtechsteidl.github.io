@@ -4,12 +4,14 @@
   // this tab. Never store form contents, test results or full referrer URLs.
   const KEY = 'vs-lead-context-v1';
   const GOALS = {
+    '/cermat-2027/': 'prijimacky',
     '/priprava-na-prijimacky-z-matematiky/': 'prijimacky',
     '/test-prijimacky-9-matematika/': 'prijimacky',
     '/priprava-na-maturitu-z-matematiky/': 'maturita',
     '/test-maturita-matematika/': 'maturita',
     '/doucovani-vs-matematiky/': 'vs-matematika',
-    '/test-vs-matematika-1-rocnik/': 'vs-matematika'
+    '/test-vs-matematika-1-rocnik/': 'vs-matematika',
+    '/doporuceni/': 'doporuceni'
   };
   const SOURCES = {
     'google.com': 'google', 'google.cz': 'google',
@@ -19,10 +21,10 @@
   };
   const tag = value => (value || '').replace(/[^a-zA-Z0-9._-]/g, '').slice(0, 80);
   const path = location.pathname.replace(/index\.html$/, '').replace(/\/?$/, '/');
+  const params = new URLSearchParams(location.search);
   let context = null;
   try { context = JSON.parse(sessionStorage.getItem(KEY)); } catch (_) {}
   if (!context || context.version !== 1) {
-    const params = new URLSearchParams(location.search);
     let source = tag(params.get('utm_source'));
     let medium = tag(params.get('utm_medium'));
     if (!source && document.referrer) {
@@ -37,6 +39,14 @@
     }
     context = { version: 1, landing_page: path, acquisition_source: source || 'direct-or-unknown',
       acquisition_medium: medium || 'unknown', campaign: tag(params.get('utm_campaign')), offer: '' };
+  }
+  // An explicit campaign link starts a new attribution context even in an
+  // already open tab. It remains coarse and never includes free-form values.
+  if (tag(params.get('utm_source'))) {
+    context.landing_page = path;
+    context.acquisition_source = tag(params.get('utm_source'));
+    context.acquisition_medium = tag(params.get('utm_medium')) || 'unknown';
+    context.campaign = tag(params.get('utm_campaign'));
   }
   if (GOALS[path]) context.offer = GOALS[path];
   try { sessionStorage.setItem(KEY, JSON.stringify(context)); } catch (_) {}
