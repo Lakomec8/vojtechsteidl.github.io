@@ -1,0 +1,338 @@
+[
+  {
+    "id": 1,
+    "category": "Úhly a trojúhelníky",
+    "q": "Vedlejší úhel k úhlu 47°. Kolik stupňů má?",
+    "a": 133,
+    "explanation": "180 − 47 = 133°.",
+    "hint": "Vedlejší úhly dávají dohromady 180°."
+  },
+  {
+    "id": 2,
+    "category": "Úhly a trojúhelníky",
+    "q": "Dvě přímky se protínají. Úhel vrcholový k úhlu 68° měří kolik stupňů?",
+    "a": 68,
+    "explanation": "Vrcholové úhly jsou stejně velké.",
+    "hint": "Vrcholové úhly jsou shodné."
+  },
+  {
+    "id": 3,
+    "category": "Úhly a trojúhelníky",
+    "q": "Trojúhelník má úhly 38° a 71°. Kolik stupňů má třetí úhel?",
+    "a": 71,
+    "explanation": "180 − 38 − 71 = 71°.",
+    "hint": "Součet vnitřních úhlů trojúhelníku je 180°."
+  },
+  {
+    "id": 4,
+    "category": "Úhly a trojúhelníky",
+    "q": "Vrcholový úhel rovnoramenného trojúhelníku má 46°. Kolik stupňů měří každý úhel při základně?",
+    "a": 67,
+    "explanation": "(180 − 46)/2 = 67°.",
+    "hint": "Úhly při základně jsou stejné."
+  },
+  {
+    "id": 5,
+    "category": "Úhly a trojúhelníky",
+    "q": "Čtyřúhelník má tři vnitřní úhly 82°, 95° a 107°. Jak velký je čtvrtý?",
+    "a": 76,
+    "explanation": "360 − 82 − 95 − 107 = 76°.",
+    "hint": "Čtyřúhelník: 360°."
+  },
+  {
+    "id": 6,
+    "category": "Úhly a trojúhelníky",
+    "q": "Přímý úhel je rozdělen na dva. Jeden má 125°. Druhý má kolik stupňů?",
+    "a": 55,
+    "explanation": "180 − 125 = 55°.",
+    "hint": "Přímý úhel má 180°."
+  },
+  {
+    "id": 7,
+    "category": "Obvody a obsahy",
+    "q": "Obdélník má rozměry 12 cm a 7 cm. Urči obsah v cm².",
+    "a": 84,
+    "explanation": "S = 12 × 7 = 84 cm².",
+    "hint": "Obsah obdélníku je a × b."
+  },
+  {
+    "id": 8,
+    "category": "Obvody a obsahy",
+    "q": "Obdélník má strany 9 cm a 5 cm. Urči obvod v cm.",
+    "a": 28,
+    "explanation": "o = 2(9 + 5) = 28 cm.",
+    "hint": "Obvod = dvakrát součet sousedních stran."
+  },
+  {
+    "id": 9,
+    "category": "Obvody a obsahy",
+    "q": "Trojúhelník má základnu 14 cm a příslušnou výšku 9 cm. Urči obsah v cm².",
+    "a": 63,
+    "explanation": "S = 14 × 9 / 2 = 63 cm².",
+    "hint": "Obsah trojúhelníku dělíme dvěma."
+  },
+  {
+    "id": 10,
+    "category": "Obvody a obsahy",
+    "q": "Rovnoběžník má stranu a = 11 cm a výšku na tuto stranu 5 cm. Urči obsah v cm².",
+    "a": 55,
+    "explanation": "S = 11 × 5 = 55 cm².",
+    "hint": "Důležitá je výška kolmá na danou stranu."
+  },
+  {
+    "id": 11,
+    "category": "Obvody a obsahy",
+    "q": "Lichoběžník má základny 9 cm a 15 cm, výšku 6 cm. Urči obsah v cm².",
+    "a": 72,
+    "explanation": "S = (9 + 15) × 6 / 2 = 72 cm².",
+    "hint": "Průměr základen × výška."
+  },
+  {
+    "id": 12,
+    "category": "Obvody a obsahy",
+    "q": "Čtverec má obvod 36 cm. Urči jeho obsah v cm².",
+    "a": 81,
+    "explanation": "a = 36/4 = 9 cm; S = 9² = 81 cm².",
+    "hint": "Nejdříve spočítej délku strany."
+  },
+  {
+    "id": 13,
+    "category": "Pythagorova věta",
+    "q": "Pravoúhlý trojúhelník má odvěsny 6 cm a 8 cm. Urči přeponu v cm.",
+    "a": 10,
+    "explanation": "c = √(6² + 8²) = √100 = 10 cm.",
+    "hint": "Přepona je nejdelší strana."
+  },
+  {
+    "id": 14,
+    "category": "Pythagorova věta",
+    "q": "Přepona má 13 cm a jedna odvěsna 5 cm. Urči druhou odvěsnu v cm.",
+    "a": 12,
+    "explanation": "b = √(13² − 5²) = 12 cm.",
+    "hint": "U odvěsny se čtverce odečítají."
+  },
+  {
+    "id": 15,
+    "category": "Pythagorova věta",
+    "q": "Obdélník má rozměry 9 cm a 12 cm. Urči jeho úhlopříčku v cm.",
+    "a": 15,
+    "explanation": "u = √(9² + 12²) = 15 cm.",
+    "hint": "Úhlopříčka rozdělí obdélník na pravoúhlé trojúhelníky."
+  },
+  {
+    "id": 16,
+    "category": "Pythagorova věta",
+    "q": "Pravoúhlý trojúhelník má odvěsny 20 cm a 21 cm. Urči přeponu v cm.",
+    "a": 29,
+    "explanation": "c = √(400 + 441) = √841 = 29 cm.",
+    "hint": "Dosadíš do c² = a² + b²."
+  },
+  {
+    "id": 17,
+    "category": "Pythagorova věta",
+    "q": "Přepona pravoúhlého trojúhelníku má 25 cm, odvěsna 7 cm. Jak dlouhá je druhá odvěsna v cm?",
+    "a": 24,
+    "explanation": "b = √(625 − 49) = √576 = 24 cm.",
+    "hint": "Vypočti rozdíl čtverců."
+  },
+  {
+    "id": 18,
+    "category": "Pythagorova věta",
+    "q": "Žebřík délky 13 m stojí 5 m od stěny. Do jaké výšky v metrech dosáhne?",
+    "a": 12,
+    "explanation": "h = √(13² − 5²) = 12 m.",
+    "hint": "Žebřík je přepona."
+  },
+  {
+    "id": 19,
+    "category": "Kruh a kružnice",
+    "q": "Kružnice má poloměr 5 cm. Jaký je koeficient před π v jejím obvodu (o = ?π cm)?",
+    "a": 10,
+    "explanation": "o = 2πr = 10π cm.",
+    "hint": "Počítáš koeficient před π."
+  },
+  {
+    "id": 20,
+    "category": "Kruh a kružnice",
+    "q": "Kruh má poloměr 4 cm. Jaký je koeficient před π v jeho obsahu (S = ?π cm²)?",
+    "a": 16,
+    "explanation": "S = πr² = 16π cm².",
+    "hint": "Poloměr umocni na druhou."
+  },
+  {
+    "id": 21,
+    "category": "Kruh a kružnice",
+    "q": "Průměr kruhu je 18 cm. Urči poloměr v cm.",
+    "a": 9,
+    "explanation": "r = d/2 = 9 cm.",
+    "hint": "Průměr je dvojnásobek poloměru."
+  },
+  {
+    "id": 22,
+    "category": "Kruh a kružnice",
+    "q": "Kruh má obsah 49π cm². Urči jeho poloměr v cm.",
+    "a": 7,
+    "explanation": "r² = 49, tedy r = 7 cm.",
+    "hint": "S = πr²."
+  },
+  {
+    "id": 23,
+    "category": "Kruh a kružnice",
+    "q": "Obvod kružnice je 24π cm. Urči poloměr v cm.",
+    "a": 12,
+    "explanation": "2πr = 24π, takže r = 12 cm.",
+    "hint": "Vyděl 2π."
+  },
+  {
+    "id": 24,
+    "category": "Kruh a kružnice",
+    "q": "Kruh má průměr 14 cm. Jaký je koeficient před π v jeho obsahu (S = ?π cm²)?",
+    "a": 49,
+    "explanation": "r = 7 cm a S = 49π cm².",
+    "hint": "Nejdřív přepočítej průměr na poloměr."
+  },
+  {
+    "id": 25,
+    "category": "Podobnost a měřítko",
+    "q": "Na plánu 1 : 500 měří úsek 6 cm. Urči skutečnou vzdálenost v metrech.",
+    "a": 30,
+    "explanation": "6 × 500 = 3000 cm = 30 m.",
+    "hint": "Pozor na převod cm na m."
+  },
+  {
+    "id": 26,
+    "category": "Podobnost a měřítko",
+    "q": "Na mapě 1 : 25 000 je úsek 4 cm. Kolik kilometrů měří ve skutečnosti?",
+    "a": 1,
+    "explanation": "4 × 25 000 = 100 000 cm = 1 km.",
+    "hint": "100 000 cm = 1 km."
+  },
+  {
+    "id": 27,
+    "category": "Podobnost a měřítko",
+    "q": "Dvě podobné figury mají poměr stran 4 : 10. Kratší figura má stranu 8 cm. Urči odpovídající stranu větší figury v cm.",
+    "a": 20,
+    "explanation": "k = 10/4 = 2,5; 8 × 2,5 = 20 cm.",
+    "hint": "Odpovídající délky se násobí poměrem podobnosti."
+  },
+  {
+    "id": 28,
+    "category": "Podobnost a měřítko",
+    "q": "Při podobnosti s koeficientem k = 3 má menší obrazec obsah 12 cm². Urči obsah většího v cm².",
+    "a": 108,
+    "explanation": "Obsah se mění k²: 12 × 3² = 108 cm².",
+    "hint": "Plocha roste s druhou mocninou měřítka."
+  },
+  {
+    "id": 29,
+    "category": "Podobnost a měřítko",
+    "q": "Podobný útvar je zvětšen v poměru 3 : 2. Původní obvod je 24 cm. Jaký je nový obvod v cm?",
+    "a": 36,
+    "explanation": "24 × 3/2 = 36 cm.",
+    "hint": "Obvody se mění stejně jako délky."
+  },
+  {
+    "id": 30,
+    "category": "Podobnost a měřítko",
+    "q": "Trojúhelníky jsou podobné. Kratší strana prvního má 3 cm, druhého 9 cm. Delší odpovídající strana prvního má 5 cm. Urči druhou v cm.",
+    "a": 15,
+    "explanation": "Poměr je 9/3 = 3; 5 × 3 = 15 cm.",
+    "hint": "Použij shodný poměr odpovídajících stran."
+  },
+  {
+    "id": 31,
+    "category": "Tělesa a sítě",
+    "q": "Krychle má hranu 4 cm. Urči objem v cm³.",
+    "a": 64,
+    "explanation": "V = 4³ = 64 cm³.",
+    "hint": "Objem krychle je a³."
+  },
+  {
+    "id": 32,
+    "category": "Tělesa a sítě",
+    "q": "Krychle má hranu 6 cm. Urči povrch v cm².",
+    "a": 216,
+    "explanation": "S = 6 × 6² = 216 cm².",
+    "hint": "Krychle má šest shodných stěn."
+  },
+  {
+    "id": 33,
+    "category": "Tělesa a sítě",
+    "q": "Kolmý hranol má obsah podstavy 24 cm² a výšku 7 cm. Urči objem v cm³.",
+    "a": 168,
+    "explanation": "V = Sp × v = 24 × 7 = 168 cm³.",
+    "hint": "Objem hranolu = podstava × výška."
+  },
+  {
+    "id": 34,
+    "category": "Tělesa a sítě",
+    "q": "Kvádr má rozměry 3, 4 a 5 cm. Urči objem v cm³.",
+    "a": 60,
+    "explanation": "V = 3 × 4 × 5 = 60 cm³.",
+    "hint": "Vynásob délky tří hran."
+  },
+  {
+    "id": 35,
+    "category": "Tělesa a sítě",
+    "q": "Kvádr má hrany 3, 4 a 5 cm. Urči povrch v cm².",
+    "a": 94,
+    "explanation": "S = 2(12 + 20 + 15) = 94 cm².",
+    "hint": "S = 2(ab + bc + ac)."
+  },
+  {
+    "id": 36,
+    "category": "Tělesa a sítě",
+    "q": "Kolik hran má kvádr?",
+    "a": 12,
+    "explanation": "Kvádr má 12 hran, 8 vrcholů a 6 stěn.",
+    "hint": "Spočítej 4 nahoře, 4 dole a 4 svisle."
+  },
+  {
+    "id": 37,
+    "category": "Konstrukce a úsudek",
+    "q": "Může vzniknout trojúhelník se stranami 4 cm, 5 cm a 10 cm? Odpověz 1 = ano, 0 = ne.",
+    "a": 0,
+    "explanation": "4 + 5 = 9 < 10, trojúhelníková nerovnost neplatí.",
+    "hint": "Součet dvou kratších stran musí být větší než nejdelší."
+  },
+  {
+    "id": 38,
+    "category": "Konstrukce a úsudek",
+    "q": "Kolik os souměrnosti má obdélník, který není čtvercem?",
+    "a": 2,
+    "explanation": "Má vodorovnou a svislou osu procházející středy protilehlých stran.",
+    "hint": "Nepleť si osy a úhlopříčky."
+  },
+  {
+    "id": 39,
+    "category": "Konstrukce a úsudek",
+    "q": "Kolik os souměrnosti má čtverec?",
+    "a": 4,
+    "explanation": "Dvě osy středem stran, dvě úhlopříčky.",
+    "hint": "Čtverec má čtyři osy souměrnosti."
+  },
+  {
+    "id": 40,
+    "category": "Konstrukce a úsudek",
+    "q": "Nejvýše v kolika bodech se mohou protínat dvě různé kružnice?",
+    "a": 2,
+    "explanation": "Dvě různé kružnice mají nejvýše dva společné body.",
+    "hint": "Možnosti jsou 0, 1 nebo 2."
+  },
+  {
+    "id": 41,
+    "category": "Konstrukce a úsudek",
+    "q": "Kolik vrcholů má trojboký hranol?",
+    "a": 6,
+    "explanation": "Na každé ze dvou trojúhelníkových podstav jsou tři vrcholy.",
+    "hint": "Dvě podstavy, každá se třemi vrcholy."
+  },
+  {
+    "id": 42,
+    "category": "Konstrukce a úsudek",
+    "q": "Kolik stupňů má jeden vnitřní úhel rovnostranného trojúhelníku?",
+    "a": 60,
+    "explanation": "180/3 = 60°.",
+    "hint": "Všechny tři úhly jsou stejné."
+  }
+]
