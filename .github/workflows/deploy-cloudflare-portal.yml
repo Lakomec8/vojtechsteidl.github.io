@@ -130,6 +130,25 @@ jobs:
                );
           " | jq -e '.[0].results[0].assigned_count == 2'
 
+      - name: Verify CERMAT geometry PDF notes for Adam and Kryštof
+        working-directory: cloudflare-portal
+        shell: bash
+        run: |
+          set -euo pipefail
+          npx wrangler d1 execute DB --remote --json --command "
+            SELECT COUNT(*) AS assigned_count
+              FROM students s
+              JOIN student_profiles p ON p.student_id = s.id
+             WHERE s.id IN ('adam', 'krystof')
+               AND s.enabled = 1
+               AND (
+                 SELECT COUNT(*)
+                   FROM json_each(p.payload_json, '$.materials') m
+                  WHERE json_extract(m.value, '$.libraryKey') = 'library/matematika/Geometrie_CERMAT_4lete_2027_noty.pdf'
+                    AND json_extract(m.value, '$.url') = '/student-portal/Library/matematika/Geometrie_CERMAT_4lete_2027_noty.pdf'
+               ) = 1;
+          " | jq -e '.[0].results[0].assigned_count == 2'
+
       - name: Audit active portal accounts and Access policy
         working-directory: cloudflare-portal
         env:
