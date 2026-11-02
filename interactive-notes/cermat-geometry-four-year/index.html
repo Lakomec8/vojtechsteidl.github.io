@@ -23,33 +23,186 @@
 <div class="example"><strong>6. Měřítko.</strong> Na plánu 1 : 2 000 jsou 3 cm. Kolik je to metrů?<details><summary>Ukázat postup</summary><div class="steps">3 · 2 000 = 6 000 cm = <b>60 m</b>. Vždy sjednoť jednotky.</div></details></div>
 </section>
 <section class="panel" id="konstrukce"><span class="section-tag">05 / Konstrukce a prostor</span><h2>Co udělat, než vezmeš kružítko.</h2><div class="two"><div class="mini"><b>Trojúhelník SSS</b><p>Nejdřív zkontroluj trojúhelníkovou nerovnost. Narýsuj základnu, potom kružnice se středy v krajních bodech.</p></div><div class="mini"><b>Osa úsečky</b><p>Body osy leží stejně daleko od obou konců. Průsečíky dvojic oblouků určí osu.</p></div><div class="mini"><b>Osa úhlu</b><p>Rozděluje úhel na dva shodné úhly. Bod na ose má stejné vzdálenosti od ramen.</p></div><div class="mini"><b>Osy a středová souměrnost</b><p>Osově souměrné body mají spojnice kolmé k ose, středová souměrnost otočí útvar o 180°.</p></div><div class="mini"><b>Sítě těles</b><p>Kvádr má 6 stěn, 12 hran a 8 vrcholů. U sítě se sousední stěny musí dát bez překrytí složit.</p></div><div class="mini"><b>Válec a jehlan</b><p>Válec poznáš podle dvou kruhových podstav a pláště; jehlan má jednu mnohoúhelníkovou podstavu a trojúhelníkové boční stěny.</p></div></div><ol class="steps-list"><li>Nakresli náčrt; označ známé a hledané délky, úhly nebo body.</li><li>Rozhodni, které podmínky určují hledané body a kde mohou být průsečíky.</li><li>Rýsuj přesně a zvaž všechna možná řešení (případně žádné).</li><li>Konstrukci ve záznamovém archu vyznač podle zadání, včetně požadovaného obtáhnutí.</li></ol></section>
-<section class="panel" id="trenink"><span class="section-tag">06 / Ověř znalosti</span><h2>42 autorských úloh ve stylu CERMAT.</h2><p>Obsahují sedm oblastí od úhlů až po tělesa a konstrukční úsudek. Lokální self-check umožňuje zadávat číselné odpovědi; verzi ve studentské zóně lektor přiřazuje zvlášť a výsledky se ukládají.</p><a class="action" href="./self-check.html">Spustit self-check</a><a class="action secondary" href="/student-portal/">Studentská zóna</a><a class="action secondary" href="/student-portal/Library/matematika/Geometrie_CERMAT_4lete_2027_noty.pdf">PDF noty (pro přiřazené studenty)</a></section>
+<section class="panel" id="trenink"><span class="section-tag">06 / Ověř znalosti</span><h2>42 autorských úloh ve stylu CERMAT.</h2><p>Obsahují sedm oblastí od úhlů až po tělesa a konstrukční úsudek. Lokální self-check umožňuje zadávat číselné odpovědi; verzi ve studentské zóně lektor přiřazuje zvlášť a výsledky se ukládají.</p><a class="action" href="./self-check.html">Spustit self-check</a><a class="action secondary" href="/student-portal/">Studentská zóna</a><a class="action secondary" href="Geometrie_CERMAT_4lete_2027_noty.pdf">PDF noty (pro přiřazené studenty)</a></section>
 <section class="panel sources"><strong>Zdroj rozsahu:</strong> CERMAT, Specifikace požadavků pro JPZ 2026/2027, matematika, část C1 (čtyřleté obory). <a href="https://prijimacky.cermat.gov.cz/menu/specifikace-pozadavku-k-jpz.html" target="_blank" rel="noopener">Aktuální oficiální specifikace</a>. Jde o nezávisle vytvořený materiál, nikoli oficiální test CERMAT.</section>
 </main></div><footer class="foot">Studijní materiály matematiky · Čtyřleté obory · 2026/2027</footer>
+
 <script>
 (function(){
-var active='angles',values={alpha:47,beta:63,shape:'triangle',base:12,height:7,top:6,a:6,b:8,r:5,k:1.5,depth:5,width:6,tall:4};
+var active='angles';
+var values={alpha:47,beta:63,shape:'triangle',base:12,height:7,top:6,a:6,b:8,r:5,k:1.5,depth:5,width:6,tall:4};
 var topics={
-angles:['Úhly v trojúhelníku','Součet vnitřních úhlů je vždy 180°. Vedlejší úhly mají součet 180°.',[['alpha','Úhel α (°)',20,130,1],['beta','Úhel β (°)',20,130,1]]],
-areas:['Obsahy rovinných útvarů','U trojúhelníku nebo lichoběžníku se v obsahu objeví dělení dvěma.',[['shape','Typ útvaru',['triangle','rectangle','trapezoid']],['base','Základna a (cm)',3,18,1],['height','Výška v (cm)',2,12,1],['top','Druhá základna c (cm)',2,16,1]]],
-pyth:['Pythagorova věta','Odvěsny jsou kolmé; přepona leží proti pravému úhlu.',[['a','Odvěsna a (cm)',2,15,1],['b','Odvěsna b (cm)',2,15,1]]],
-circle:['Kruh a kružnice','Průměr d je dvojnásobek poloměru r. Rozlišuj délku a obsah.',[['r','Poloměr r (cm)',1,12,1]]],
-similar:['Podobnost trojúhelníků','Délky se mění k-krát, obsahy k²-krát.',[['k','Poměr podobnosti k',.5,3,.1]]],
-solid:['Kvádr','Objem má jednotky cm³, povrch cm². Krychle je zvláštní případ kvádru.',[['width','Délka a (cm)',2,12,1],['depth','Šířka b (cm)',2,12,1],['tall','Výška c (cm)',2,12,1]]]
+angles:['Úhly v trojúhelníku','Souřadnice vrcholu se dopočítají z velikostí úhlů, takže se trojúhelník opravdu mění.',[['alpha','Úhel α (°)',20,130,1],['beta','Úhel β (°)',20,130,1]]],
+areas:['Obsahy rovinných útvarů','Mění se přímo tvar obrazce: základna, výška i druhá základna lichoběžníku.',[['shape','Typ útvaru',['triangle','rectangle','trapezoid']],['base','Základna a (cm)',3,18,1],['height','Výška v (cm)',2,12,1],['top','Druhá základna c (cm)',2,16,1]]],
+pyth:['Pythagorova věta','Jak měníš odvěsny, mění se i pravoúhlý trojúhelník a délka přepony.',[['a','Odvěsna a (cm)',2,15,1],['b','Odvěsna b (cm)',2,15,1]]],
+circle:['Kruh a kružnice','Kruh se skutečně zvětšuje a zmenšuje podle poloměru.',[['r','Poloměr r (cm)',1,12,1]]],
+similar:['Podobnost trojúhelníků','Větší trojúhelník je přesný obraz menšího v poměru k.',[['k','Poměr podobnosti k',0.5,3,0.1]]],
+solid:['Kvádr','Pseudo-3D kvádr mění hrany a, b, c podle jezdců.',[['width','Délka a (cm)',2,12,1],['depth','Šířka b (cm)',2,12,1],['tall','Výška c (cm)',2,12,1]]]
 };
 function fix(x){return Number(x.toFixed(2)).toLocaleString('cs-CZ')}
-function seg(x1,y1,x2,y2,color,w){return '<line x1="'+x1+'" y1="'+y1+'" x2="'+x2+'" y2="'+y2+'" stroke="'+(color||'#2c668a')+'" stroke-width="'+(w||3)+'" stroke-linecap="round"/>'}
+function line(x1,y1,x2,y2,color,w,dash){return '<line x1="'+x1+'" y1="'+y1+'" x2="'+x2+'" y2="'+y2+'" stroke="'+(color||'#2c668a')+'" stroke-width="'+(w||3)+'" stroke-linecap="round"'+(dash?' stroke-dasharray="'+dash+'"':'')+'/>'}
+function text(x,y,t,size,color,anchor,weight){return '<text x="'+x+'" y="'+y+'" font-size="'+(size||14)+'" fill="'+(color||'#153248')+'"'+(anchor?' text-anchor="'+anchor+'"':'')+(weight?' font-weight="'+weight+'"':'')+'>'+t+'</text>'}
+function poly(points,fill,stroke,w){return '<polygon points="'+points.map(function(p){return p[0]+','+p[1]}).join(' ')+'" fill="'+fill+'" stroke="'+(stroke||'#087f79')+'" stroke-width="'+(w||3)+'" stroke-linejoin="round"/>'}
+function circle(cx,cy,r,fill,stroke,w){return '<circle cx="'+cx+'" cy="'+cy+'" r="'+r+'" fill="'+fill+'" stroke="'+(stroke||'#087f79')+'" stroke-width="'+(w||3)+'"/>'}
+function clamp(v,min,max){return Math.max(min,Math.min(max,v))}
+function intersectFromAngles(A,B,alpha,beta){
+  var ar=alpha*Math.PI/180, br=beta*Math.PI/180;
+  var m1=Math.tan(ar), m2=-Math.tan(br);
+  var x=(B[1]-A[1]+m1*A[0]-m2*B[0])/(m1-m2);
+  var y=A[1]+m1*(x-A[0]);
+  return [x,y];
+}
+function makeControl(row){
+  var key=row[0], label=document.createElement('label');
+  var strong=document.createElement('strong');
+  strong.style.float='right';
+  strong.style.fontSize='12px';
+  strong.style.color='#60778a';
+  strong.textContent=(active==='areas'&&key==='shape')?({triangle:'Trojúhelník',rectangle:'Obdélník',trapezoid:'Lichoběžník'})[values[key]]:fix(values[key]);
+  label.innerHTML=row[1];
+  label.appendChild(strong);
+  var input;
+  if(Array.isArray(row[2])){
+    input=document.createElement('select');
+    row[2].forEach(function(v){var o=document.createElement('option');o.value=v;o.textContent={triangle:'Trojúhelník',rectangle:'Obdélník',trapezoid:'Lichoběžník'}[v]||v;input.appendChild(o)});
+  }else{
+    input=document.createElement('input');
+    input.type='range'; input.min=row[2]; input.max=row[3]; input.step=row[4];
+  }
+  input.value=values[key];
+  input.addEventListener('input',function(){
+    values[key]=input.type==='range'?Number(input.value):input.value;
+    if(active==='angles' && values.alpha+values.beta>165){
+      if(key==='alpha') values.beta=165-values.alpha; else values.alpha=165-values.beta;
+      values.alpha=Math.max(20,values.alpha); values.beta=Math.max(20,values.beta);
+    }
+    labRender();
+  });
+  return [label,input];
+}
+function renderAngles(v){
+  var A=[55,228], B=[305,228], C=intersectFromAngles(A,B,v.alpha,v.beta);
+  C[1]=clamp(C[1],38,210);
+  var gamma=180-v.alpha-v.beta;
+  var svg='';
+  svg+=poly([A,B,C],'#c5e7e2');
+  svg+=line(A[0],A[1],B[0],B[1],'#153248',1.6,'6 5');
+  svg+='<path d="M '+(A[0]+30)+' '+A[1]+' A 30 30 0 0 0 '+(A[0]+30*Math.cos(v.alpha*Math.PI/180))+' '+(A[1]-30*Math.sin(v.alpha*Math.PI/180))+'" fill="none" stroke="#b45d2a" stroke-width="3"/>';
+  var start=180-v.beta, end=180;
+  svg+='<path d="M '+(B[0]-30)+' '+B[1]+' A 30 30 0 0 1 '+(B[0]+30*Math.cos(start*Math.PI/180))+' '+(B[1]-30*Math.sin(start*Math.PI/180))+'" fill="none" stroke="#b45d2a" stroke-width="3"/>';
+  svg+=text(A[0]+42,A[1]-20,'α',16,'#a65829');
+  svg+=text(B[0]-42,B[1]-20,'β',16,'#a65829');
+  svg+=text(C[0],C[1]+26,'γ',16,'#153248','middle');
+  svg+=text((A[0]+B[0])/2,A[1]+22,'základna',13,'#60778a','middle');
+  var result='α = '+v.alpha+'°, β = '+v.beta+'°<br><strong>γ = 180 − α − β = '+gamma+'°</strong><br>Vrchol trojúhelníku se dopočítá z obou zadaných úhlů, proto se obrazec skutečně mění.';
+  return [svg,result];
+}
+function renderAreas(v){
+  var wScale=230/18, hScale=160/12, left=65, bottom=228;
+  var bw=v.base*wScale, hh=v.height*hScale, svg='', result='';
+  if(v.shape==='rectangle'){
+    var rect=[[left,bottom-hh],[left+bw,bottom-hh],[left+bw,bottom],[left,bottom]];
+    svg+=poly(rect,'#c5e7e2');
+    svg+=line(left,bottom+12,left+bw,bottom+12,'#60778a',2);
+    svg+=line(left-14,bottom,left-14,bottom-hh,'#b45d2a',2);
+    svg+=text(left+bw/2,bottom+32,'a = '+v.base+' cm',14,'#153248','middle');
+    svg+=text(left-18,bottom-hh/2,'v = '+v.height+' cm',14,'#b45d2a','end');
+    result='S = a · v = <strong>'+fix(v.base*v.height)+' cm²</strong><br>o = 2(a + v) = <strong>'+fix(2*(v.base+v.height))+' cm</strong>';
+  }else if(v.shape==='triangle'){
+    var tri=[[left,bottom],[left+bw,bottom],[left+bw*0.55,bottom-hh]];
+    svg+=poly(tri,'#c5e7e2');
+    svg+=line(tri[2][0],bottom,tri[2][0],tri[2][1],'#b45d2a',2,'5 4');
+    svg+=line(left,bottom+12,left+bw,bottom+12,'#60778a',2);
+    svg+=text(left+bw/2,bottom+32,'a = '+v.base+' cm',14,'#153248','middle');
+    svg+=text(tri[2][0]+10,bottom-hh/2,'v = '+v.height+' cm',14,'#b45d2a');
+    result='S = a · v / 2 = <strong>'+fix(v.base*v.height/2)+' cm²</strong><br>Mění se základna i poloha vrcholu, takže vidíš skutečný dopad na tvar.';
+  }else{
+    var tw=v.top*wScale, topLeft=left+(bw-tw)/2;
+    var trap=[[left,bottom],[left+bw,bottom],[topLeft+tw,bottom-hh],[topLeft,bottom-hh]];
+    svg+=poly(trap,'#c5e7e2');
+    svg+=line(left,bottom+12,left+bw,bottom+12,'#60778a',2);
+    svg+=line(topLeft,bottom-hh-12,topLeft+tw,bottom-hh-12,'#60778a',2);
+    svg+=line(left-14,bottom,left-14,bottom-hh,'#b45d2a',2);
+    svg+=text(left+bw/2,bottom+32,'a = '+v.base+' cm',14,'#153248','middle');
+    svg+=text(topLeft+tw/2,bottom-hh-18,'c = '+v.top+' cm',14,'#153248','middle');
+    svg+=text(left-18,bottom-hh/2,'v = '+v.height+' cm',14,'#b45d2a','end');
+    result='S = (a + c) · v / 2 = <strong>'+fix((v.base+v.top)*v.height/2)+' cm²</strong><br>Posouváním měníš obě základny i výšku.';
+  }
+  return [svg,result];
+}
+function renderPyth(v){
+  var scale=Math.min(230/v.a,170/v.b), left=65, bottom=228;
+  var A=[left,bottom], B=[left+v.a*scale,bottom], C=[left,bottom-v.b*scale], c=Math.hypot(v.a,v.b);
+  var svg=poly([A,B,C],'#c5e7e2');
+  svg+='<rect x="'+A[0]+'" y="'+(A[1]-18)+'" width="18" height="18" fill="none" stroke="#b45d2a" stroke-width="2"/>';
+  svg+=text((A[0]+B[0])/2,bottom+28,'a = '+v.a+' cm',14,'#153248','middle');
+  svg+=text(left-10,(A[1]+C[1])/2,'b = '+v.b+' cm',14,'#153248','end');
+  svg+=text((B[0]+C[0])/2+8,(B[1]+C[1])/2-8,'c ≈ '+fix(c)+' cm',14,'#b45d2a');
+  var result='c² = '+v.a+'² + '+v.b+'² = '+(v.a*v.a+v.b*v.b)+'<br><strong>c = √'+(v.a*v.a+v.b*v.b)+' ≈ '+fix(c)+' cm</strong>';
+  return [svg,result];
+}
+function renderCircle(v){
+  var rr=20+v.r*8; rr=Math.min(rr,92);
+  var svg=circle(180,140,rr,'#c5e7e2');
+  svg+=line(180,140,180+rr,140,'#b45d2a',3);
+  svg+='<circle cx="180" cy="140" r="4" fill="#153248"/>';
+  svg+=text(180+rr/2,128,'r = '+v.r+' cm',14,'#b45d2a','middle');
+  svg+=text(180,248,'d = '+(2*v.r)+' cm',14,'#60778a','middle');
+  var result='d = 2r = '+(2*v.r)+' cm<br><strong>o = '+(2*v.r)+'π cm</strong><br><strong>S = '+(v.r*v.r)+'π cm²</strong>';
+  return [svg,result];
+}
+function renderSimilar(v){
+  var small=[[45,228],[135,228],[78,160]], factor=v.k;
+  var anchor=[195,228];
+  var big=small.map(function(p){return [anchor[0]+(p[0]-45)*factor, anchor[1]+(p[1]-228)*factor]});
+  var svg=poly(small,'#d4eaf2','#2c668a',3)+poly(big,'#c5e7e2','#087f79',3);
+  svg+=text(90,246,'4 cm',14,'#2c668a','middle');
+  svg+=text((big[0][0]+big[1][0])/2,246,fix(4*factor)+' cm',14,'#087f79','middle');
+  svg+=text(78,150,'S = 6',14,'#2c668a','middle');
+  svg+=text(big[2][0],big[2][1]-10,'S = '+fix(6*factor*factor),14,'#087f79','middle');
+  var result='k = '+fix(v.k)+'<br>Odpovídající strana: <strong>'+fix(4*v.k)+' cm</strong><br>Obsah (původně 6 cm²): <strong>'+fix(6*v.k*v.k)+' cm²</strong>';
+  return [svg,result];
+}
+function projectBox(v){
+  var sx=13, sy=9, ox=95, oy=235;
+  var dx=v.width*sx, dz=v.tall*sy, depth=Math.min(78,22+v.depth*5);
+  var vx=depth, vy=-depth*0.62;
+  var A=[ox,oy], B=[ox+dx,oy], C=[ox+dx,oy-dz], D=[ox,oy-dz];
+  var A2=[A[0]+vx,A[1]+vy], B2=[B[0]+vx,B[1]+vy], C2=[C[0]+vx,C[1]+vy], D2=[D[0]+vx,D[1]+vy];
+  var svg='';
+  svg+=poly([D,C,C2,D2],'#b6d9d6','#087f79',2);
+  svg+=poly([C,B,B2,C2],'#7ab8b0','#087f79',2);
+  svg+=poly([A,B,C,D],'#d4ebe8','#087f79',3);
+  svg+=line(A[0],A[1],A2[0],A2[1],'#087f79',2);
+  svg+=line(B[0],B[1],B2[0],B2[1],'#087f79',2);
+  svg+=line(D[0],D[1],D2[0],D2[1],'#087f79',2);
+  svg+=text((A[0]+B[0])/2,255,'a = '+v.width+' cm',14,'#153248','middle');
+  svg+=text(A[0]-12,(A[1]+D[1])/2,'c = '+v.tall+' cm',14,'#153248','end');
+  svg+=text((B[0]+B2[0])/2+10,(B[1]+B2[1])/2-4,'b = '+v.depth+' cm',14,'#153248');
+  return svg;
+}
+function renderSolid(v){
+  var svg=projectBox(v);
+  var result='V = a · b · c = <strong>'+fix(v.width*v.depth*v.tall)+' cm³</strong><br>S = 2(ab + bc + ac) = <strong>'+fix(2*(v.width*v.depth+v.depth*v.tall+v.width*v.tall))+' cm²</strong>';
+  return [svg,result];
+}
 function labRender(){
-var conf=topics[active],title=document.getElementById('labTitle'),sub=document.getElementById('labText'),control=document.getElementById('labControls');
-title.textContent=conf[0];sub.textContent=conf[1];control.innerHTML='';
-conf[2].forEach(function(row){var key=row[0],label=document.createElement('label');label.textContent=row[1]+': ';var out=document.createElement('strong');out.textContent=active==='areas'&&key==='shape'?values[key]:fix(values[key]);label.appendChild(out);control.appendChild(label);var inp=document.createElement('input');if(Array.isArray(row[2])){inp=document.createElement('select');row[2].forEach(function(k){var opt=document.createElement('option');opt.value=k;opt.textContent={triangle:'Trojúhelník',rectangle:'Obdélník',trapezoid:'Lichoběžník'}[k];inp.appendChild(opt)})}else{inp.type='range';inp.min=row[2];inp.max=row[3];inp.step=row[4]}inp.value=values[key];inp.addEventListener('input',function(){values[key]=inp.type==='range'?Number(inp.value):inp.value;if(active==='angles'&&values.alpha+values.beta>=170){var other=key==='alpha'?'beta':'alpha';values[other]=Math.max(10,169-values[key])}labRender()});control.appendChild(inp)});
-var v=values,svg='',result='',head='<svg viewBox="0 0 360 280" role="img" aria-label="'+conf[0]+'" xmlns="http://www.w3.org/2000/svg"><rect width="360" height="280" fill="#f8fafc"/>';
-if(active==='angles'){svg='<polygon points="45,225 315,225 175,35" fill="#c5e7e2" stroke="#087f79" stroke-width="3"/><path d="M70 225 A25 25 0 0 0 61 204" fill="none" stroke="#b45d2a" stroke-width="3"/><text x="67" y="196" font-size="15" fill="#a65829">α</text><text x="290" y="197" font-size="15" fill="#a65829">β</text><text x="173" y="79" text-anchor="middle" font-size="15" fill="#153248">γ</text>';result='α = '+v.alpha+'°, β = '+v.beta+'°<br><strong>γ = 180 − α − β = '+(180-v.alpha-v.beta)+'°</strong>'}
-if(active==='areas'){var pts=v.shape==='rectangle'?'65,60 296,60 296,218 65,218':v.shape==='trapezoid'?'117,64 250,64 300,218 53,218':'70,218 306,218 186,53';svg='<polygon points="'+pts+'" fill="#c5e7e2" stroke="#087f79" stroke-width="3"/>'+seg(186,53,186,218,'#b45d2a',2)+'<text x="187" y="245" text-anchor="middle" font-size="16">a = '+v.base+'</text><text x="191" y="137" font-size="14" fill="#b45d2a">v = '+v.height+'</text>';if(v.shape==='rectangle')result='S = a · v = <strong>'+fix(v.base*v.height)+' cm²</strong><br>o = 2(a + v) = '+fix(2*(v.base+v.height))+' cm';if(v.shape==='triangle')result='S = a · v / 2 = <strong>'+fix(v.base*v.height/2)+' cm²</strong>';if(v.shape==='trapezoid')result='S = (a + c) · v / 2 = <strong>'+fix((v.base+v.top)*v.height/2)+' cm²</strong>'}
-if(active==='pyth'){svg='<polygon points="65,226 300,226 65,48" fill="#c5e7e2" stroke="#087f79" stroke-width="3"/><rect x="65" y="208" width="18" height="18" fill="none" stroke="#b45d2a" stroke-width="2"/><text x="160" y="249" font-size="16">a = '+v.a+'</text><text x="10" y="135" font-size="16">b = '+v.b+'</text><text x="191" y="116" font-size="16">c = ?</text>';result='c² = '+v.a+'² + '+v.b+'² = '+(v.a*v.a+v.b*v.b)+'<br><strong>c = √'+(v.a*v.a+v.b*v.b)+' ≈ '+fix(Math.hypot(v.a,v.b))+' cm</strong>'}
-if(active==='circle'){svg='<circle cx="180" cy="137" r="94" fill="#c5e7e2" stroke="#087f79" stroke-width="3"/>'+seg(180,137,274,137,'#b45d2a',3)+'<circle cx="180" cy="137" r="4" fill="#153248"/><text x="214" y="125" font-size="15">r = '+v.r+'</text>';result='d = 2r = '+2*v.r+' cm<br><strong>o = '+(2*v.r)+'π cm</strong><br><strong>S = '+v.r*v.r+'π cm²</strong>'}
-if(active==='similar'){svg='<polygon points="24,224 139,224 24,132" fill="#d4eaf2" stroke="#2c668a" stroke-width="3"/><polygon points="185,224 330,224 185,108" fill="#c5e7e2" stroke="#087f79" stroke-width="3"/><text x="63" y="244" font-size="14">4 cm</text><text x="231" y="244" font-size="14">4k cm</text><text x="60" y="125" font-size="14">S = 6</text><text x="220" y="100" font-size="14">S = 6k²</text>';result='k = '+fix(v.k)+'<br>Odpovídající strana: <strong>'+fix(4*v.k)+' cm</strong><br>Obsah (původně 6 cm²): <strong>'+fix(6*v.k*v.k)+' cm²</strong>'}
-if(active==='solid'){svg='<polygon points="91,82 225,82 278,48 144,48" fill="#b5d9d7" stroke="#087f79" stroke-width="2"/><polygon points="225,82 278,48 278,205 225,237" fill="#7ab8b0" stroke="#087f79" stroke-width="2"/><polygon points="91,82 225,82 225,237 91,237" fill="#d4ebe8" stroke="#087f79" stroke-width="3"/><text x="149" y="257" font-size="15">a='+v.width+'</text><text x="27" y="156" font-size="15">c='+v.tall+'</text><text x="270" y="28" font-size="15">b='+v.depth+'</text>';result='V = a · b · c = <strong>'+fix(v.width*v.depth*v.tall)+' cm³</strong><br>S = 2(ab + bc + ac) = <strong>'+fix(2*(v.width*v.depth+v.depth*v.tall+v.width*v.tall))+' cm²</strong>'}
-document.getElementById('plot').innerHTML=head+svg+'</svg>';document.getElementById('labResult').innerHTML=result}
-document.querySelectorAll('[data-lab]').forEach(function(b){b.addEventListener('click',function(){active=b.dataset.lab;document.querySelectorAll('[data-lab]').forEach(function(item){item.setAttribute('aria-selected',String(item===b))});labRender()})});labRender()})();
+  var conf=topics[active], title=document.getElementById('labTitle'), sub=document.getElementById('labText'), control=document.getElementById('labControls');
+  title.textContent=conf[0]; sub.textContent=conf[1]; control.innerHTML='';
+  conf[2].forEach(function(row){var pair=makeControl(row); control.appendChild(pair[0]); control.appendChild(pair[1]);});
+  var renderer={angles:renderAngles,areas:renderAreas,pyth:renderPyth,circle:renderCircle,similar:renderSimilar,solid:renderSolid}[active];
+  var data=renderer(values);
+  var svg='<svg viewBox="0 0 360 280" role="img" aria-label="'+conf[0]+'" xmlns="http://www.w3.org/2000/svg"><rect width="360" height="280" fill="#f8fafc" rx="18"/>'+data[0]+'</svg>';
+  document.getElementById('plot').innerHTML=svg;
+  document.getElementById('labResult').innerHTML=data[1];
+}
+document.querySelectorAll('[data-lab]').forEach(function(b){
+  b.addEventListener('click',function(){
+    active=b.dataset.lab;
+    document.querySelectorAll('[data-lab]').forEach(function(item){item.setAttribute('aria-selected',String(item===b))});
+    labRender();
+  });
+});
+labRender();
+})();
 </script></body></html>

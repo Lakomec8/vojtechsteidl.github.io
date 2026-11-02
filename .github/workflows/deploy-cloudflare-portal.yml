@@ -112,6 +112,24 @@ jobs:
         working-directory: cloudflare-portal
         run: npm run db:migrate:remote
 
+      - name: Verify geometry interactive lesson for Adam and Kryštof
+        working-directory: cloudflare-portal
+        shell: bash
+        run: |
+          set -euo pipefail
+          npx wrangler d1 execute DB --remote --json --command "
+            SELECT COUNT(*) AS assigned_count
+              FROM students AS s
+              JOIN student_profiles AS p ON p.student_id = s.id
+             WHERE s.id IN ('adam','krystof')
+               AND s.enabled = 1
+               AND EXISTS (
+                 SELECT 1 FROM json_each(p.payload_json, '$.materials') AS m
+                  WHERE json_extract(m.value, '$.interactiveId') = 'cermat-geometry-four-year-2027'
+                    AND instr(coalesce(json_extract(m.value, '$.url'), ''), '/interactive-notes/cermat-geometry-four-year/') > 0
+               );
+          " | jq -e '.[0].results[0].assigned_count == 2'
+
       - name: Audit active portal accounts and Access policy
         working-directory: cloudflare-portal
         env:
