@@ -11,6 +11,12 @@ const MAX_UPLOAD_BYTES = 25 * 1024 * 1024;
 // Master katalog: stránky zůstávají jednou v repozitáři, student dostává pouze odkaz.
 const INTERACTIVE = [
   {
+    "id": "arithmetic-sequence",
+    "title": "Aritmetická posloupnost: interaktivní zápis a trénink",
+    "meta": "SŠ / maturita · diference, n-tý člen, součty, grafy, slovní úlohy a průběžné procvičení; navazující self-check",
+    "url": "/interactive-notes/arithmetic-sequence/"
+  },
+  {
     "id": "function-domains",
     "title": "Definiční obor funkce: kde smíš počítat?",
     "meta": "SŠ / úvod VŠ · zlomky, odmocniny, kvadratické nerovnice, průnik podmínek, logaritmy a 18 úloh",

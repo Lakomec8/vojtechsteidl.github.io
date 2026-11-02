@@ -1,0 +1,280 @@
+% ARITMETICKA POSLOUPNOST — NOTY / OVERLEAF
+% Compile with pdfLaTeX. Change \showanswerstrue to \showanswersfalse for student copy.
+\documentclass[11pt,a4paper]{article}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[czech]{babel}
+\usepackage{lmodern}
+\usepackage{amsmath,amssymb,mathtools}
+\usepackage[a4paper,margin=22mm,top=24mm,bottom=23mm]{geometry}
+\usepackage{microtype}
+\usepackage{needspace}
+\usepackage{enumitem,booktabs,multicol,array}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,positioning,calc}
+\usepackage{xcolor}
+\usepackage{fancyhdr,lastpage}
+\usepackage{titlesec}
+\usepackage[most]{tcolorbox}
+\usepackage{hyperref}
+\definecolor{navy}{HTML}{18344C}
+\definecolor{blue}{HTML}{2E617C}
+\definecolor{teal}{HTML}{237B78}
+\definecolor{muted}{HTML}{586675}
+\definecolor{rulec}{HTML}{DCE4E8}
+\definecolor{soft}{HTML}{F4F7F8}
+\hypersetup{colorlinks=true,linkcolor=blue,urlcolor=blue,pdfauthor={Studijni materialy},pdftitle={Aritmeticka posloupnost - noty}}
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\sffamily\footnotesize\color{muted} MATEMATIKA \quad / \quad POSLOUPNOSTI}
+\fancyhead[R]{\sffamily\footnotesize\color{muted} ARITMETICKÁ POSLOUPNOST}
+\fancyfoot[L]{\sffamily\footnotesize\color{muted} Studijní noty \; | \; SŠ / maturita}
+\fancyfoot[R]{\sffamily\footnotesize\color{muted} \thepage/\pageref{LastPage}}
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\headrule}{\hbox to\headwidth{\color{rulec}\leaders\hrule height \headrulewidth\hfill}}
+\setlength{\headheight}{16pt}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{5pt}
+\setlist[itemize]{leftmargin=*,itemsep=3pt,topsep=4pt}
+\setlist[enumerate]{leftmargin=*,itemsep=5pt,topsep=4pt}
+\titleformat{\section}{\Large\sffamily\bfseries\color{navy}}{\thesection.}{.6em}{}
+\titleformat{\subsection}{\large\sffamily\bfseries\color{blue}}{\thesubsection}{.6em}{}
+\titlespacing*{\section}{0pt}{15pt}{6pt}
+\titlespacing*{\subsection}{0pt}{12pt}{4pt}
+\newtcolorbox{keybox}[1][]{enhanced,breakable,colback=soft,colframe=rulec,boxrule=.55pt,arc=1mm,left=3mm,right=3mm,top=2mm,bottom=2mm,#1}
+\newcommand{\ex}[1]{\par\vspace{6pt}\noindent{\sffamily\bfseries\color{navy}#1}\par}
+\newcommand{\ans}[1]{\par{\color{teal}\sffamily\footnotesize\textbf{Výsledek:} #1}}
+\newif\ifshowanswers
+\showanswerstrue
+\begin{document}
+
+{\sffamily\small\bfseries\color{teal} STUDIJNÍ MATERIÁL \hspace{1em} \textbullet\hspace{1em} PŘEHLED + PROCVIČOVÁNÍ}
+\vspace{3mm}
+
+{\sffamily\fontsize{27}{31}\selectfont\bfseries\color{navy} Aritmetická posloupnost}\par
+\vspace{2mm}
+{\large\color{muted} Od základní definice k součtům a úlohám pro maturitu}\par
+\vspace{5mm}
+\begin{keybox}
+\textbf{Co se naučíš:} rozpoznat aritmetickou posloupnost; určit diferenci a obecný člen; dopočítat posloupnost ze dvou členů; vypočítat součet; řešit úlohy s neznámým počtem členů a využít vlastnost tří sousedních členů.
+\end{keybox}
+
+\section{Základní myšlenka}
+Posloupnost $(a_n)$ je \textbf{aritmetická}, jestliže je rozdíl sousedních členů konstantní. Tento rozdíl nazýváme \textbf{diference} $d$:
+\begin{equation}\boxed{a_{n+1}-a_n=d\quad\text{neboli}\quad a_{n+1}=a_n+d.}\end{equation}
+Například $2,5,8,11,14,\ldots$ má diferenci $d=3$. Posloupnost $15,11,7,3,\ldots$ má $d=-4$.
+
+\begin{center}
+\begin{tikzpicture}[>=Latex, every node/.style={font=\sffamily}]
+\foreach \x/\a in {0/2,2/5,4/8,6/11,8/14}{\node[draw=rulec,fill=soft,rounded corners=2pt,minimum width=1.15cm,minimum height=.8cm] (n\x) at (\x,0) {\Large\a};}
+\foreach \x in {0,2,4,6}{\draw[->,teal,thick] (\x+.59,0) -- (\x+1.41,0); \node[teal,above] at (\x+1,0.06) {\small $+3$};}
+\end{tikzpicture}
+\end{center}
+\textbf{Monotónnost:} $d>0$ rostoucí; $d<0$ klesající; $d=0$ konstantní. Pro $d\neq0$ jsou všechny členy různé.
+
+\section{Obecný člen}
+Z prvního členu $a_1$ k členu $a_n$ uděláme přesně $n-1$ kroků. Proto:
+\begin{keybox}
+\begin{equation*}\boxed{a_n=a_1+(n-1)d}\qquad\boxed{a_n=a_k+(n-k)d.}\end{equation*}
+Druhý vzorec je užitečný, když známe například $a_7$, ale neznáme $a_1$.
+\end{keybox}
+\ex{Příklad 1 \quad Určení vzdáleného členu}
+Je dáno $a_1=7$, $d=4$. Urči $a_{20}$.
+\[a_{20}=7+(20-1)\cdot4=\boxed{83}.\]
+\ex{Příklad 2 \quad Určení prvního členu}
+Je dáno $a_5=18$, $d=4$. Proto $18=a_1+4\cdot4$ a $\boxed{a_1=2}$.
+\ex{Příklad 3 \quad Členy nemusí začínat jedničkou}
+Je dáno $a_9=28$ a $d=-3$. Potom
+\[a_{15}=a_9+(15-9)d=28+6(-3)=\boxed{10}.\]
+
+\section{Graf a správná interpretace}
+Vzorec $a_n=a_1+(n-1)d$ je lineární předpis v indexu $n$. Všechny body $(n,a_n)$ leží na přímce, ale \textbf{samotná posloupnost je tvořena izolovanými body} s indexy $n=1,2,3,\ldots$; není to spojitá funkce na $\mathbb R$.
+\begin{center}
+\begin{tikzpicture}[x=.85cm,y=.45cm,>=Latex]
+\draw[->,line width=.8pt] (.2,0)--(8.3,0) node[right] {$n$};
+\draw[->,line width=.8pt] (.5,-1)--(.5,11.7) node[above] {$a_n$};
+\foreach \x in {1,...,7}{\draw[rulec] (\x,.15)--(\x,-.15) node[below,black,font=\scriptsize] {\x};}
+\foreach \y in {2,4,6,8,10}{\draw[rulec] (.65,\y)--(7.6,\y); \node[left,font=\scriptsize] at (.45,\y) {\y};}
+\draw[blue,dashed,thick] (1,2)--(7,11);
+\foreach \x in {1,...,7}{\fill[teal] (\x,{.5+1.5*\x}) circle (2.7pt);}
+\node[font=\small\sffamily,align=left,navy] at (5,2.1) {$a_1=2$\\$d=1{,}5$};
+\end{tikzpicture}
+\end{center}
+\textbf{Důležité:} pomocná čárkovaná přímka naznačuje trend; mezi sousedními indexy žádné další členy posloupnosti nemáme.
+
+\section{Dva známé členy: soustava rovnic}
+Pokud znáš $a_k$ a $a_m$, rozdíl je $(m-k)d$. Tedy:
+\begin{keybox}
+\[\boxed{d=\frac{a_m-a_k}{m-k}},\quad m\neq k.\]
+Nejprve dopočítáš $d$, poté $a_1=a_k-(k-1)d$.
+\end{keybox}
+\ex{Příklad 4 \quad Dva členy, dvě neznámé}
+V aritmetické posloupnosti je $a_4=11$ a $a_{10}=35$. Urči $d,a_1,a_{20}$.
+\begin{align*}
+a_1+3d&=11,\\a_1+9d&=35.
+\end{align*}
+Odečteme rovnice: $6d=24\Rightarrow d=4$. Následně $a_1=11-12=-1$ a
+\[a_{20}=-1+19\cdot4=\boxed{75}.\]
+\textbf{Kontrola:} $a_4=-1+3\cdot4=11$ a $a_{10}=-1+9\cdot4=35$.
+
+\section{Tři sousední členy a jejich průměr}
+Střední člen je vždy průměrem sousedů:
+\[\boxed{2a_n=a_{n-1}+a_{n+1}}.\]
+Tři po sobě jdoucí členy je výhodné zapsat $x-d,\ x,\ x+d$.
+\Needspace{125pt}
+\ex{Příklad 5 \quad Slovní zadání}
+Součet tří po sobě jdoucích členů je $36$ a jejich součin je $960$. Urči je.
+\[3x=36\Rightarrow x=12,\qquad (12-d)\,12\,(12+d)=960.\]
+\[12(144-d^2)=960\Rightarrow d^2=64\Rightarrow d=\pm8.\]
+Řešení: $\boxed{4,12,20}$ nebo v opačném pořadí.
+
+\section{Součet prvních $n$ členů}
+Nechť $S_n=a_1+a_2+\cdots+a_n$. Sečteme členy od začátku i od konce:
+\begin{align*}
+S_n&=a_1+a_2+\cdots+a_{n-1}+a_n,\\
+S_n&=a_n+a_{n-1}+\cdots+a_2+a_1.
+\end{align*}
+Každá z $n$ dvojic má součet $a_1+a_n$. Dostáváme
+\begin{keybox}
+\[\boxed{S_n=\frac{n(a_1+a_n)}2}=\boxed{\frac n2\bigl(2a_1+(n-1)d\bigr)}.\]
+Při neznámém posledním členu dosadíme $a_n=a_1+(n-1)d$.
+\end{keybox}
+\ex{Příklad 6 \quad Součet známého počtu členů}
+Vypočti $S_{30}$ pro $3,7,11,15,\ldots$.
+\[a_{30}=3+29\cdot4=119,\qquad S_{30}=\frac{30(3+119)}2=\boxed{1830}.\]
+\ex{Příklad 7 \quad Klesající posloupnost}
+Urči součet prvních osmi členů, kde $a_1=10$ a $d=-2$.
+\[a_8=10-7\cdot2=-4,\qquad S_8=\frac{8(10-4)}2=\boxed{24}.\]
+\textbf{Pozor:} i součet s některými zápornými členy může být kladný.
+
+\section{Neznámý počet členů}
+\ex{Příklad 8 \quad Který člen má předepsanou hodnotu?}
+Ve $5,9,13,\ldots$ najdi index členu $101$.
+\[101=5+(n-1)\cdot4\Rightarrow 96=4(n-1)\Rightarrow\boxed{n=25}.\]
+\ex{Příklad 9 \quad Urči $n$ ze součtu}
+Je dáno $a_1=5$, $d=3$ a $S_n=670$. Urči $n$.
+\[670=\frac n2\bigl(10+3(n-1)\bigr)\Rightarrow 3n^2+7n-1340=0.\]
+\[D=7^2+4\cdot3\cdot1340=16129=127^2.\]
+\[n=\frac{-7\pm127}{6}\Rightarrow\boxed{n=20};\quad n=-\tfrac{67}{3}\notin\mathbb N.\]
+\textbf{Zkouška:} $a_{20}=62$, takže $S_{20}=20(5+62)/2=670$.
+
+\section{Praktická slovní úloha}
+\ex{Příklad 10 \quad Pravidelné zvyšování úspor}
+První týden si odložíš 100 Kč; každý další týden o 20 Kč více. Kolik odložíš ve 12. týdnu a kolik za prvních 12 týdnů celkem?
+\[a_{12}=100+11\cdot20=\boxed{320\ \mathrm{K\check c}},\qquad S_{12}=\frac{12(100+320)}2=\boxed{2520\ \mathrm{K\check c}}.\]
+Důležité rozlišení: \emph{ve 12. týdnu} znamená $a_{12}$; \emph{za 12 týdnů celkem} znamená $S_{12}$.
+
+\section{Strategie řešení a typické chyby}
+\begin{enumerate}
+\item \textbf{Urči, co hledáš:} člen $a_n$, diferenci $d$, počet členů $n$ nebo součet $S_n$.
+\item \textbf{Zapiš známé údaje a indexy.} Často $a_k=a_1+(k-1)d$.
+\item \textbf{Dva členy?} Nejprve najdi $d=(a_m-a_k)/(m-k)$.
+\item \textbf{Součet?} Zjisti $a_n$ nebo dosaď do vzorce s $d$.
+\item \textbf{Index?} Výsledek musí být kladné celé číslo.
+\end{enumerate}
+\begin{tabular}{@{}p{.28\textwidth}p{.64\textwidth}@{}}
+\toprule
+\textbf{Častá chyba}&\textbf{Jak jí předejít}\\\midrule
+$a_n=a_1+nd$&Od $a_1$ do $a_n$ je pouze $n-1$ kroků.\\
+Záporné $d$ se ignoruje&Nejprve spočítej $d=a_{n+1}-a_n$ včetně znaménka.\\
+$a_n$ se zamění za $S_n$&Člen je jediná hodnota, součet je kumulativní.\\
+Sestaví se geometrický vzorec&V aritmetické posloupnosti je konstantní \emph{rozdíl}, ne podíl.\\
+Neověří se $n\in\mathbb N$&Ne každá rovnice dává platný index posloupnosti.\\\bottomrule
+\end{tabular}
+
+\section{Cvičení -- úroveň I: jistota v základech}
+\begin{enumerate}[label=\textbf{I.\arabic*}]
+\item Urči diferenci posloupnosti $8,13,18,23,\ldots$
+\item Vypočti $a_{15}$, je-li $a_1=6$, $d=4$.
+\item Vypočti $a_9$, je-li $a_1=14$, $d=-2$.
+\item Urči $a_1$, je-li $a_7=25$, $d=4$.
+\item Urči $a_{11}$ pro $-3,1,5,9,\ldots$
+\item Je posloupnost $16,12,8,4,\ldots$ rostoucí, nebo klesající? Urči $d$.
+\item Urči prostřední číslo tak, aby $14,x,38$ byly tři po sobě jdoucí členy.
+\item Vypočti $S_{10}$ pro $a_1=2$, $d=3$.
+\item Vypočti $S_8$ pro $a_1=10$, $d=-2$.
+\item Kolik členů má posloupnost $7,12,17,\ldots,102$?
+\item Napiš předpis $a_n$, je-li $a_1=9$ a $d=-3$.
+\item Urči $a_{20}$, je-li $a_{13}=42$ a $d=2$.
+\end{enumerate}
+
+\section{Cvičení -- úroveň II: soustavy a slovní úlohy}
+\begin{enumerate}[label=\textbf{II.\arabic*}]
+\item Je dáno $a_4=11$, $a_{10}=35$. Urči $d$, $a_1$.
+\item Je dáno $a_3=16$, $a_8=1$. Urči $a_{12}$.
+\item Je dáno $a_5=-3$, $a_{12}=25$. Urči $a_1$.
+\item Je dáno $a_6=9$, $a_{14}=41$. Urči $a_{20}$.
+\item Vypočti $S_{20}$ pro $5,9,13,\ldots$
+\item Urči $S_{21}$, je-li $a_1=3$ a $a_{21}=63$.
+\item První řada sálu má 12 sedadel. Každá další o 3 více. Kolik sedadel je v 15. řadě?
+\item Kolik sedadel je celkem v prvních 15 řadách z předchozí úlohy?
+\item První týden odložíš 100 Kč a týdně přidáváš o 20 Kč více. Kolik uspoříš za 10 týdnů?
+\item Součet tří sousedních členů je 45. Urči prostřední člen.
+\item Je dáno $a_{11}=40$, $a_{21}=10$. Urči $a_1$.
+\item Pro které $n$ je $a_n=83$, když $a_1=7$, $d=4$?
+\end{enumerate}
+
+\section{Cvičení -- úroveň III: kombinované a náročnější}
+\begin{enumerate}[label=\textbf{III.\arabic*}]
+\item Je dáno $a_1=5$, $d=3$. Najdi $n\in\mathbb N$, pokud $S_n=670$.
+\item Je dáno $a_1=4$, $d=2$. Pro které $n\in\mathbb N$ je $S_n=180$?
+\item Je dáno $a_1=7$, $d=-2$. Jaký je index prvního záporného členu?
+\item Je dáno $a_5=18$, $a_{12}=46$. Urči $a_{20}$ a $S_{20}$.
+\item Tři sousední členy mají součet 36 a součin 960. Urči je.
+\item Urči $n$, pokud $1+4+7+\cdots+(3n-2)=145$.
+\item Čtyři sousední členy tvoří rostoucí aritmetickou posloupnost, jejich součet je 40 a rozdíl posledního a prvního je 18. Urči všechny čtyři členy.
+\item Dokaž matematickou indukcí, že $1+2+\cdots+n=n(n+1)/2$.
+\end{enumerate}
+
+\ifshowanswers
+\clearpage
+\section{Výsledky cvičení}
+Výsledky jsou uvedeny stručně. U úloh s rovnicí nebo soustavou doporučujeme vždy doplnit mezikroky.
+\subsection*{Úroveň I}
+\begin{multicols}{2}
+\begin{enumerate}[label=\textbf{I.\arabic*},itemsep=3pt]
+\item $d=5$
+\item $a_{15}=62$
+\item $a_9=-2$
+\item $a_1=1$
+\item $a_{11}=37$
+\item klesající, $d=-4$
+\item $x=26$
+\item $S_{10}=155$
+\item $S_8=24$
+\item $n=20$
+\item $a_n=12-3n$
+\item $a_{20}=56$
+\end{enumerate}
+\end{multicols}
+\subsection*{Úroveň II}
+\begin{multicols}{2}
+\begin{enumerate}[label=\textbf{II.\arabic*},itemsep=3pt]
+\item $d=4$, $a_1=-1$
+\item $a_{12}=-11$
+\item $a_1=-19$
+\item $a_{20}=65$
+\item $S_{20}=860$
+\item $S_{21}=693$
+\item $a_{15}=54$
+\item $S_{15}=495$
+\item $S_{10}=1900$ Kč
+\item $x=15$
+\item $a_1=70$
+\item $n=20$
+\end{enumerate}
+\end{multicols}
+\subsection*{Úroveň III}
+\begin{enumerate}[label=\textbf{III.\arabic*}]
+\item $3n^2+7n-1340=0\Rightarrow n=20$.
+\item $S_n=n(n+3)\Rightarrow n=12$.
+\item $7-2(n-1)<0\Rightarrow n\ge5$; první je $a_5=-1$.
+\item $d=4$, $a_1=2$, $a_{20}=78$, $S_{20}=800$.
+\item $4,12,20$ nebo $20,12,4$.
+\item $S_n=n(3n-1)/2=145$, tj. $3n^2-n-290=0$; $n=10$.
+\item $1,7,13,19$ (diference $6$).
+\item Základ $n=1$: $1=1$. Indukční krok: $\frac{n(n+1)}2+(n+1)=\frac{(n+1)(n+2)}2$.
+\end{enumerate}
+\fi
+
+\end{document}
