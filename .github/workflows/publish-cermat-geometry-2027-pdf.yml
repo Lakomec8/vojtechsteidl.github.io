@@ -1,0 +1,54 @@
+name: Publish CERMAT geometry 2027 PDF to shared library
+on:
+  push:
+    branches: [main]
+    paths:
+      - "docs/overleaf/cermat-geometrie-4lete/main.tex"
+      - ".github/workflows/publish-cermat-geometry-2027-pdf.yml"
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: publish-cermat-geometrie-2027-library
+  cancel-in-progress: false
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Compile Overleaf notes
+        uses: xu-cheng/latex-action@v4
+        with:
+          working_directory: docs/overleaf/cermat-geometrie-4lete
+          root_file: main.tex
+          compiler: latexmk
+          args: -pdf -file-line-error -halt-on-error -interaction=nonstopmode
+      - name: Verify PDF
+        run: |
+          test -s docs/overleaf/cermat-geometrie-4lete/main.pdf
+          file docs/overleaf/cermat-geometrie-4lete/main.pdf | grep -q 'PDF document'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Install portal Wrangler
+        working-directory: cloudflare-portal
+        run: npm install --no-audit --no-fund
+      - name: Upload PDF to private R2 master library (no student assignments)
+        working-directory: cloudflare-portal
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -n "$CLOUDFLARE_API_TOKEN"
+          test -n "$CLOUDFLARE_ACCOUNT_ID"
+          npx wrangler r2 object put "vojtechsteidl-student-materials/library/matematika/Geometrie_CERMAT_4lete_2027_noty.pdf" --remote --content-type "application/pdf" --file "../docs/overleaf/cermat-geometrie-4lete/main.pdf"
+          npx wrangler r2 object get "vojtechsteidl-student-materials/library/matematika/Geometrie_CERMAT_4lete_2027_noty.pdf" --remote --file "/tmp/geometry-2027-verified.pdf"
+          cmp "../docs/overleaf/cermat-geometrie-4lete/main.pdf" "/tmp/geometry-2027-verified.pdf"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: cermat-geometrie-4lete-2027-noty
+          path: docs/overleaf/cermat-geometrie-4lete/main.pdf
+          retention-days: 7

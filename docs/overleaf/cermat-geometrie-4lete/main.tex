@@ -1,0 +1,341 @@
+% ARITMETICKA POSLOUPNOST — NOTY / OVERLEAF
+% Compile with pdfLaTeX. Change \showanswerstrue to \showanswersfalse for student copy.
+\documentclass[11pt,a4paper]{article}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[czech]{babel}
+\usepackage{lmodern}
+\usepackage{amsmath,amssymb,mathtools}
+\usepackage[a4paper,margin=22mm,top=24mm,bottom=23mm]{geometry}
+\usepackage{microtype}
+\usepackage{needspace}
+\usepackage{enumitem,booktabs,multicol,array}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,positioning,calc}
+\usepackage{xcolor}
+\usepackage{fancyhdr,lastpage}
+\usepackage{titlesec}
+\usepackage[most]{tcolorbox}
+\usepackage{hyperref}
+\definecolor{navy}{HTML}{18344C}
+\definecolor{blue}{HTML}{2E617C}
+\definecolor{teal}{HTML}{237B78}
+\definecolor{muted}{HTML}{586675}
+\definecolor{rulec}{HTML}{DCE4E8}
+\definecolor{soft}{HTML}{F4F7F8}
+\hypersetup{colorlinks=true,linkcolor=blue,urlcolor=blue,pdfauthor={Studijni materialy},pdftitle={Geometrie CERMAT - 4lete obory}}
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\sffamily\footnotesize\color{muted} MATEMATIKA \quad / \quad PŘIJÍMAČKY}
+\fancyhead[R]{\sffamily\footnotesize\color{muted} GEOMETRIE CERMAT 2027}
+\fancyfoot[L]{\sffamily\footnotesize\color{muted} Studijní noty \; | \; 9. třída / čtyřleté obory}
+\fancyfoot[R]{\sffamily\footnotesize\color{muted} \thepage/\pageref{LastPage}}
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\headrule}{\hbox to\headwidth{\color{rulec}\leaders\hrule height \headrulewidth\hfill}}
+\setlength{\headheight}{16pt}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{5pt}
+\setlist[itemize]{leftmargin=*,itemsep=3pt,topsep=4pt}
+\setlist[enumerate]{leftmargin=*,itemsep=5pt,topsep=4pt}
+\titleformat{\section}{\Large\sffamily\bfseries\color{navy}}{\thesection.}{.6em}{}
+\titleformat{\subsection}{\large\sffamily\bfseries\color{blue}}{\thesubsection}{.6em}{}
+\titlespacing*{\section}{0pt}{15pt}{6pt}
+\titlespacing*{\subsection}{0pt}{12pt}{4pt}
+\newtcolorbox{keybox}[1][]{enhanced,breakable,colback=soft,colframe=rulec,boxrule=.55pt,arc=1mm,left=3mm,right=3mm,top=2mm,bottom=2mm,#1}
+\newcommand{\ex}[1]{\par\vspace{6pt}\noindent{\sffamily\bfseries\color{navy}#1}\par}
+\newcommand{\ans}[1]{\par{\color{teal}\sffamily\footnotesize\textbf{Výsledek:} #1}}
+\newif\ifshowanswers
+\showanswerstrue
+
+\begin{document}
+{\sffamily\small\bfseries\color{teal} STUDIJNÍ NOTY / JPZ 2027 / ČTYŘLETÉ OBORY}
+\vspace{3mm}
+
+{\sffamily\fontsize{28}{32}\selectfont\bfseries\color{navy} Geometrie pro CERMAT}\par
+\vspace{2mm}
+{\large\color{muted} Čtyřleté obory SŠ \quad|\quad 9. ročník ZŠ}\par
+\vspace{5mm}
+\begin{keybox}
+\textbf{Cíl:} rozlišit úhel, délku, obvod, obsah a objem; sestrojit správný náčrt; rozhodnout, jaký vztah použít; zvládnout výpočty bez kalkulačky. Obsah respektuje \textbf{specifikaci CERMAT pro školní rok 2026/2027}, část C1.
+\end{keybox}
+\begin{keybox}
+\textbf{Změny od starších zadání:} V požadavcích pro 2027 nejsou konstrukce tečny ke kružnici v jejím bodě, kružnice opsané ani Thaletova kružnice při konstrukci pravoúhlého trojúhelníku. Odpadl výpočet povrchu a objemu válce; práce se sítí válce a aplikační úlohy s válcem však zůstávají. Nevyžadují se aplikační slovní úlohy s koulí.
+\end{keybox}
+\section{Úhly a trojúhelníky}
+Vedlejší úhly mají součet \(180^\circ\); vrcholové úhly jsou shodné. Při rovnoběžkách protnutých příčkou jsou shodné souhlasné a střídavé úhly.
+\begin{keybox}
+\[\boxed{\alpha+\beta+\gamma=180^\circ}\qquad
+\boxed{\alpha+\beta+\gamma+\delta=360^\circ}\]
+U rovnoramenného trojúhelníku jsou úhly při základně shodné. Trojúhelník se stranami \(a,b,c\) existuje jen tehdy, když součet dvou stran je větší než třetí.
+\end{keybox}
+\begin{center}
+\begin{tikzpicture}[scale=.77]
+\coordinate (A) at (0,0);\coordinate (B) at (6,0);\coordinate (C) at (2.2,3.2);
+\draw[teal,very thick] (A)--(B)--(C)--cycle;
+\node[below left] at (A) {$A$};\node[below right] at (B) {$B$};\node[above] at (C) {$C$};
+\node[blue] at (.8,.3) {$\alpha$};\node[blue] at (5.1,.3) {$\beta$};\node[blue] at (2.3,2.6) {$\gamma$};
+\end{tikzpicture}
+\end{center}
+\ex{Příklad 1 \quad Rovnoramenný trojúhelník}
+Vrcholový úhel má \(44^\circ\). Oba úhly při základně jsou \((180^\circ-44^\circ)/2=\boxed{68^\circ}\).
+\ex{Příklad 2 \quad Úhly při průsečíku}
+Jeden ze čtyř úhlů mezi dvěma přímkami má \(47^\circ\). Vrcholový úhel má také \(47^\circ\). Vedlejší mají \(\boxed{133^\circ}\).
+\section{Obvod, obsah a složené obrazce}
+\begin{keybox}
+\begin{align*}
+\text{Čtverec:}\quad &o=4a,& S&=a^2\\
+\text{Obdélník:}\quad &o=2(a+b),& S&=ab\\
+\text{Trojúhelník:}\quad &S&=\frac{av_a}{2}\\
+\text{Rovnoběžník:}\quad &S&=av_a\\
+\text{Lichoběžník:}\quad &S&=\frac{(a+c)v}{2}.
+\end{align*}
+\end{keybox}
+Výška je kolmá vzdálenost. U složených obrazců lze sčítat nebo odečítat obsahy. Obvod je součet délek právě těch úseček, které tvoří hranici výsledného obrazce.
+\ex{Příklad 3 \quad Výřez v obdélníku}
+Z obdélníku \(12\times8\ \mathrm{cm}\) odstraníme obdélník \(4\times3\ \mathrm{cm}\):
+\[S=12\cdot8-4\cdot3=\boxed{84\ \mathrm{cm}^2}.\]
+\ex{Příklad 4 \quad Lichoběžník}
+Základny 9 cm a 15 cm, výška 6 cm:
+\[S=\frac{(9+15)\cdot6}{2}=\boxed{72\ \mathrm{cm}^2}.\]
+\textbf{Pozor na jednotky:} \(1\ \mathrm{m}=100\ \mathrm{cm}\), ale \(1\ \mathrm{m}^2=10\,000\ \mathrm{cm}^2\).
+\section{Pythagorova věta}
+Pouze v \textbf{pravoúhlém trojúhelníku}: \(a,b\) jsou odvěsny, \(c\) je přepona.
+\begin{keybox}
+\[\boxed{c^2=a^2+b^2}\qquad\boxed{a^2=c^2-b^2}.\]
+\end{keybox}
+\begin{center}
+\begin{tikzpicture}[scale=.75]
+\fill[teal!10] (0,0)--(5,0)--(0,3.5)--cycle;
+\draw[teal,very thick] (0,0)--(5,0)--(0,3.5)--cycle;
+\draw[blue] (0,.4)--(.4,.4)--(.4,0);
+\node[below] at (2.5,0) {$a$};\node[left] at (0,1.75) {$b$};\node[above right] at (2.55,1.75) {$c$};
+\end{tikzpicture}
+\end{center}
+\ex{Příklad 5 \quad Přepona}
+Při odvěsnách 6 a 8 cm je \(c=\sqrt{6^2+8^2}=\boxed{10\ \mathrm{cm}}\).
+\ex{Příklad 6 \quad Žebřík}
+Žebřík dlouhý 13 m stojí 5 m od stěny. Výška je
+\[h=\sqrt{13^2-5^2}=\sqrt{144}=\boxed{12\ \mathrm{m}}.\]
+\textbf{Přenos do prostoru:} stejně spočítáš stěnovou úhlopříčku kvádru (strany jedné stěny tvoří odvěsny).
+\section{Kruh a kružnice}
+Kružnice je hranice, kruh zahrnuje plochu. Průměr \(d=2r\).
+\begin{keybox}
+\[\boxed{o=2\pi r=\pi d}\qquad\boxed{S=\pi r^2}.\]
+\end{keybox}
+\begin{center}
+\begin{tikzpicture}[scale=.76]
+\fill[teal!10] (0,0) circle (2);
+\draw[teal,very thick] (0,0) circle (2);
+\draw[blue,thick] (0,0)--(2,0);
+\fill[navy] (0,0) circle (.05);
+\node[above] at (1,0) {$r$};
+\end{tikzpicture}
+\end{center}
+\ex{Příklad 7 \quad Zadaný průměr}
+Pro \(d=10\ \mathrm{cm}\) je \(r=5\ \mathrm{cm}\):
+\[\boxed{o=10\pi\ \mathrm{cm}},\qquad \boxed{S=25\pi\ \mathrm{cm}^2}.\]
+\ex{Příklad 8 \quad Obrácená úloha}
+\(S=49\pi\ \mathrm{cm}^2\Rightarrow r^2=49\Rightarrow\boxed{r=7\ \mathrm{cm}}\).
+Přímka má s kružnicí 0, 1 nebo 2 společné body (vnější, tečna, sečna); dvojice různých kružnic také nejvýše dva.
+\section{Podobnost a měřítko}
+Podobné útvary mají stejné odpovídající úhly a délky ve stálém poměru \(k\). Použij věty \(uu\), \(sus\), \(sss\).
+\begin{keybox}
+\[\boxed{\text{délky a obvody}\ \times k},\qquad \boxed{\text{obsahy}\ \times k^2}.\]
+Měřítko \(1:M\): \(1\ \mathrm{cm}\) na mapě je \(M\ \mathrm{cm}\) ve skutečnosti.
+\end{keybox}
+\ex{Příklad 9 \quad Změna obsahu}
+Strana se zvětší z 6 cm na 9 cm. Pak \(k=1{,}5\), a tedy původní obsah \(20\ \mathrm{cm}^2\) se zvětší na
+\[S'=20\cdot(1{,}5)^2=\boxed{45\ \mathrm{cm}^2}.\]
+\ex{Příklad 10 \quad Měřítko}
+Na plánu \(1:2000\) měří úsek 3 cm:
+\[3\cdot2000=6000\ \mathrm{cm}=\boxed{60\ \mathrm{m}}.\]
+\section{Tělesa a prostorová představivost}
+\begin{keybox}
+\[
+\boxed{V_{\text{krychle}}=a^3,\ S_{\text{krychle}}=6a^2}
+\]
+\[
+\boxed{V_{\text{kvádr}}=abc,\ S_{\text{kvádr}}=2(ab+bc+ac)}
+\]
+\[
+\boxed{V_{\text{hranolu}}=S_pv,\ S_{\text{hranolu}}=2S_p+S_{\text{pláště}}}.
+\]
+\end{keybox}
+\begin{center}
+\begin{tikzpicture}[scale=.7]
+\draw[teal,very thick] (0,0)--(5,0)--(6,1.5)--(6,5)--(5,3.5)--(0,3.5)--cycle (5,0)--(5,3.5) (0,3.5)--(1,5)--(6,5);
+\draw[gray,dashed] (0,0)--(1,1.5)--(6,1.5) (1,1.5)--(1,5);
+\node[below] at (2.5,0) {$a$};\node[right] at (5.5,.7) {$b$};\node[left] at (0,1.7) {$c$};
+\end{tikzpicture}
+\end{center}
+\ex{Příklad 11 \quad Kvádr}
+Pro hrany 3, 4 a 5 cm je
+\[V=3\cdot4\cdot5=\boxed{60\ \mathrm{cm}^3},\qquad
+S=2(12+20+15)=\boxed{94\ \mathrm{cm}^2}.\]
+\ex{Příklad 12 \quad Kolmý hranol}
+Při obsahu podstavy \(24\ \mathrm{cm}^2\) a výšce 7 cm: \(V=24\cdot7=\boxed{168\ \mathrm{cm}^3}\).
+Kvádr má 6 stěn, 8 vrcholů a 12 hran. Trojboký hranol má 5 stěn. Válec má dvě kruhové podstavy a rozvinutý obdélníkový plášť; jehlan má jednu podstavu a trojúhelníkové boční stěny.
+\section{Konstrukce, souměrnosti a kontrola}
+\textbf{SSS:} ověř, že nejdelší strana je menší než součet zbylých. Narýsuj základnu, s pomocí kružítka dva oblouky odpovídajících délek a určete všechny průsečíky. U podobných úloh používej též \(sus\) a \(usu\).
+\begin{keybox}
+\textbf{Osa úsečky:} body na ose mají stejnou vzdálenost od obou konců úsečky. \textbf{Osa úhlu:} rozdělí úhel na dva stejné. \textbf{Osová souměrnost:} spojnice bodu a obrazu je kolmá k ose. \textbf{Středová souměrnost:} střed půlí úsečku mezi bodem a jeho obrazem.
+\end{keybox}
+\ex{Příklad 13 \quad Nelze sestrojit}
+Strany 4, 5, 10 cm: protože \(4+5<10\), trojúhelník \textbf{neexistuje}.
+\ex{Příklad 14 \quad Osa úsečky}
+Narýsuj dva oblouky se stejným poloměrem větším než polovina délky úsečky, se středy v obou koncových bodech. Spoj průsečíky oblouků; vzniklá přímka je osa.
+\begin{keybox}
+\textbf{Postup u konstrukční úlohy CERMAT:} (1) náčrt; (2) dané a hledané body; (3) konstrukce všech řešení; (4) označení vrcholů a kontrola; (5) dodržení pokynu k obtáhnutí propisovací tužkou v záznamovém archu.
+\end{keybox}
+\section{Jak na test bez kalkulačky}
+\begin{enumerate}
+\item Nejdřív zjisti, zda se hledá úhel, délka, obvod, obsah nebo objem.
+\item Udělej náčrt, včetně pravého úhlu, výšky nebo poloměru.
+\item U kruhu nepopleť průměr a poloměr; u podobnosti nezapomeň na \(k^2\).
+\item Při převodech obsahových a objemových jednotek násobíš druhou, resp. třetí mocninou převodního poměru.
+\item Ověř, zda výsledek dává smysl a odpovídá zadání.
+\end{enumerate}
+\clearpage
+\section{Pracovní list: 42 autorských úloh}
+Přibližně 55 minut. Nejde o oficiální zadání CERMAT. U kruhu můžeš ponechat přesný výsledek s \(\pi\).
+
+\subsection*{Úhly a trojúhelníky}
+\begin{enumerate}[label=\arabic*.,start=1,leftmargin=*,itemsep=6pt]
+\item Vedlejší úhel k úhlu 47$^\circ$. Kolik stupňů má?\par\vspace{2mm}
+\item Dvě přímky se protínají. Úhel vrcholový k úhlu 68$^\circ$ měří kolik stupňů?\par\vspace{2mm}
+\item Trojúhelník má úhly 38$^\circ$ a 71$^\circ$. Kolik stupňů má třetí úhel?\par\vspace{2mm}
+\item Vrcholový úhel rovnoramenného trojúhelníku má 46$^\circ$. Kolik stupňů měří každý úhel při základně?\par\vspace{2mm}
+\item Čtyřúhelník má tři vnitřní úhly 82$^\circ$, 95$^\circ$ a 107$^\circ$. Jak velký je čtvrtý?\par\vspace{2mm}
+\item Přímý úhel je rozdělen na dva. Jeden má 125$^\circ$. Druhý má kolik stupňů?\par\vspace{2mm}
+\end{enumerate}
+
+\subsection*{Obvody a obsahy}
+\begin{enumerate}[label=\arabic*.,start=7,leftmargin=*,itemsep=6pt]
+\item Obdélník má rozměry 12 cm a 7 cm. Urči obsah v cm$^2$.\par\vspace{2mm}
+\item Obdélník má strany 9 cm a 5 cm. Urči obvod v cm.\par\vspace{2mm}
+\item Trojúhelník má základnu 14 cm a příslušnou výšku 9 cm. Urči obsah v cm$^2$.\par\vspace{2mm}
+\item Rovnoběžník má stranu a = 11 cm a výšku na tuto stranu 5 cm. Urči obsah v cm$^2$.\par\vspace{2mm}
+\item Lichoběžník má základny 9 cm a 15 cm, výšku 6 cm. Urči obsah v cm$^2$.\par\vspace{2mm}
+\item Čtverec má obvod 36 cm. Urči jeho obsah v cm$^2$.\par\vspace{2mm}
+\end{enumerate}
+
+\subsection*{Pythagorova věta}
+\begin{enumerate}[label=\arabic*.,start=13,leftmargin=*,itemsep=6pt]
+\item Pravoúhlý trojúhelník má odvěsny 6 cm a 8 cm. Urči přeponu v cm.\par\vspace{2mm}
+\item Přepona má 13 cm a jedna odvěsna 5 cm. Urči druhou odvěsnu v cm.\par\vspace{2mm}
+\item Obdélník má rozměry 9 cm a 12 cm. Urči jeho úhlopříčku v cm.\par\vspace{2mm}
+\item Pravoúhlý trojúhelník má odvěsny 20 cm a 21 cm. Urči přeponu v cm.\par\vspace{2mm}
+\item Přepona pravoúhlého trojúhelníku má 25 cm, odvěsna 7 cm. Jak dlouhá je druhá odvěsna v cm?\par\vspace{2mm}
+\item Žebřík délky 13 m stojí 5 m od stěny. Do jaké výšky v metrech dosáhne?\par\vspace{2mm}
+\end{enumerate}
+
+\subsection*{Kruh a kružnice}
+\begin{enumerate}[label=\arabic*.,start=19,leftmargin=*,itemsep=6pt]
+\item Kružnice má poloměr 5 cm. Jaký je koeficient před $\pi$ v jejím obvodu (o = ?$\pi$ cm)?\par\vspace{2mm}
+\item Kruh má poloměr 4 cm. Jaký je koeficient před $\pi$ v jeho obsahu (S = ?$\pi$ cm$^2$)?\par\vspace{2mm}
+\item Průměr kruhu je 18 cm. Urči poloměr v cm.\par\vspace{2mm}
+\item Kruh má obsah 49$\pi$ cm$^2$. Urči jeho poloměr v cm.\par\vspace{2mm}
+\item Obvod kružnice je 24$\pi$ cm. Urči poloměr v cm.\par\vspace{2mm}
+\item Kruh má průměr 14 cm. Jaký je koeficient před $\pi$ v jeho obsahu (S = ?$\pi$ cm$^2$)?\par\vspace{2mm}
+\end{enumerate}
+
+\subsection*{Podobnost a měřítko}
+\begin{enumerate}[label=\arabic*.,start=25,leftmargin=*,itemsep=6pt]
+\item Na plánu 1 : 500 měří úsek 6 cm. Urči skutečnou vzdálenost v metrech.\par\vspace{2mm}
+\item Na mapě 1 : 25 000 je úsek 4 cm. Kolik kilometrů měří ve skutečnosti?\par\vspace{2mm}
+\item Dvě podobné figury mají poměr stran 4 : 10. Kratší figura má stranu 8 cm. Urči odpovídající stranu větší figury v cm.\par\vspace{2mm}
+\item Při podobnosti s koeficientem k = 3 má menší obrazec obsah 12 cm$^2$. Urči obsah většího v cm$^2$.\par\vspace{2mm}
+\item Podobný útvar je zvětšen v poměru 3 : 2. Původní obvod je 24 cm. Jaký je nový obvod v cm?\par\vspace{2mm}
+\item Trojúhelníky jsou podobné. Kratší strana prvního má 3 cm, druhého 9 cm. Delší odpovídající strana prvního má 5 cm. Urči druhou v cm.\par\vspace{2mm}
+\end{enumerate}
+
+\subsection*{Tělesa a sítě}
+\begin{enumerate}[label=\arabic*.,start=31,leftmargin=*,itemsep=6pt]
+\item Krychle má hranu 4 cm. Urči objem v cm$^3$.\par\vspace{2mm}
+\item Krychle má hranu 6 cm. Urči povrch v cm$^2$.\par\vspace{2mm}
+\item Kolmý hranol má obsah podstavy 24 cm$^2$ a výšku 7 cm. Urči objem v cm$^3$.\par\vspace{2mm}
+\item Kvádr má rozměry 3, 4 a 5 cm. Urči objem v cm$^3$.\par\vspace{2mm}
+\item Kvádr má hrany 3, 4 a 5 cm. Urči povrch v cm$^2$.\par\vspace{2mm}
+\item Kolik hran má kvádr?\par\vspace{2mm}
+\end{enumerate}
+
+\subsection*{Konstrukce a úsudek}
+\begin{enumerate}[label=\arabic*.,start=37,leftmargin=*,itemsep=6pt]
+\item Může vzniknout trojúhelník se stranami 4 cm, 5 cm a 10 cm? Odpověz 1 = ano, 0 = ne.\par\vspace{2mm}
+\item Kolik os souměrnosti má obdélník, který není čtvercem?\par\vspace{2mm}
+\item Kolik os souměrnosti má čtverec?\par\vspace{2mm}
+\item Nejvýše v kolika bodech se mohou protínat dvě různé kružnice?\par\vspace{2mm}
+\item Kolik vrcholů má trojboký hranol?\par\vspace{2mm}
+\item Kolik stupňů má jeden vnitřní úhel rovnostranného trojúhelníku?\par\vspace{2mm}
+\end{enumerate}
+\ifshowanswers
+\clearpage
+\section*{Výsledky a stručná vysvětlení}
+\subsection*{Úhly a trojúhelníky}
+\begin{enumerate}[label=\arabic*.,start=1,leftmargin=*,itemsep=3pt]
+\item \textbf{133}. 180 $-$ 47 = 133$^\circ$.
+\item \textbf{68}. Vrcholové úhly jsou stejně velké.
+\item \textbf{71}. 180 $-$ 38 $-$ 71 = 71$^\circ$.
+\item \textbf{67}. (180 $-$ 46)/2 = 67$^\circ$.
+\item \textbf{76}. 360 $-$ 82 $-$ 95 $-$ 107 = 76$^\circ$.
+\item \textbf{55}. 180 $-$ 125 = 55$^\circ$.
+\end{enumerate}
+\subsection*{Obvody a obsahy}
+\begin{enumerate}[label=\arabic*.,start=7,leftmargin=*,itemsep=3pt]
+\item \textbf{84}. S = 12 $\cdot$ 7 = 84 cm$^2$.
+\item \textbf{28}. o = 2(9 + 5) = 28 cm.
+\item \textbf{63}. S = 14 $\cdot$ 9 / 2 = 63 cm$^2$.
+\item \textbf{55}. S = 11 $\cdot$ 5 = 55 cm$^2$.
+\item \textbf{72}. S = (9 + 15) $\cdot$ 6 / 2 = 72 cm$^2$.
+\item \textbf{81}. a = 36/4 = 9 cm; S = 9$^2$ = 81 cm$^2$.
+\end{enumerate}
+\subsection*{Pythagorova věta}
+\begin{enumerate}[label=\arabic*.,start=13,leftmargin=*,itemsep=3pt]
+\item \textbf{10}. c = √(6$^2$ + 8$^2$) = √100 = 10 cm.
+\item \textbf{12}. b = √(13$^2$ $-$ 5$^2$) = 12 cm.
+\item \textbf{15}. u = √(9$^2$ + 12$^2$) = 15 cm.
+\item \textbf{29}. c = √(400 + 441) = √841 = 29 cm.
+\item \textbf{24}. b = √(625 $-$ 49) = √576 = 24 cm.
+\item \textbf{12}. h = √(13$^2$ $-$ 5$^2$) = 12 m.
+\end{enumerate}
+\subsection*{Kruh a kružnice}
+\begin{enumerate}[label=\arabic*.,start=19,leftmargin=*,itemsep=3pt]
+\item \textbf{10}. o = 2$\pi$r = 10$\pi$ cm.
+\item \textbf{16}. S = $\pi$r$^2$ = 16$\pi$ cm$^2$.
+\item \textbf{9}. r = d/2 = 9 cm.
+\item \textbf{7}. r$^2$ = 49, tedy r = 7 cm.
+\item \textbf{12}. 2$\pi$r = 24$\pi$, takže r = 12 cm.
+\item \textbf{49}. r = 7 cm a S = 49$\pi$ cm$^2$.
+\end{enumerate}
+\subsection*{Podobnost a měřítko}
+\begin{enumerate}[label=\arabic*.,start=25,leftmargin=*,itemsep=3pt]
+\item \textbf{30}. 6 $\cdot$ 500 = 3000 cm = 30 m.
+\item \textbf{1}. 4 $\cdot$ 25 000 = 100 000 cm = 1 km.
+\item \textbf{20}. k = 10/4 = 2,5; 8 $\cdot$ 2,5 = 20 cm.
+\item \textbf{108}. Obsah se mění k$^2$: 12 $\cdot$ 3$^2$ = 108 cm$^2$.
+\item \textbf{36}. 24 $\cdot$ 3/2 = 36 cm.
+\item \textbf{15}. Poměr je 9/3 = 3; 5 $\cdot$ 3 = 15 cm.
+\end{enumerate}
+\subsection*{Tělesa a sítě}
+\begin{enumerate}[label=\arabic*.,start=31,leftmargin=*,itemsep=3pt]
+\item \textbf{64}. V = 4$^3$ = 64 cm$^3$.
+\item \textbf{216}. S = 6 $\cdot$ 6$^2$ = 216 cm$^2$.
+\item \textbf{168}. V = Sp $\cdot$ v = 24 $\cdot$ 7 = 168 cm$^3$.
+\item \textbf{60}. V = 3 $\cdot$ 4 $\cdot$ 5 = 60 cm$^3$.
+\item \textbf{94}. S = 2(12 + 20 + 15) = 94 cm$^2$.
+\item \textbf{12}. Kvádr má 12 hran, 8 vrcholů a 6 stěn.
+\end{enumerate}
+\subsection*{Konstrukce a úsudek}
+\begin{enumerate}[label=\arabic*.,start=37,leftmargin=*,itemsep=3pt]
+\item \textbf{0}. 4 + 5 = 9 < 10, trojúhelníková nerovnost neplatí.
+\item \textbf{2}. Má vodorovnou a svislou osu procházející středy protilehlých stran.
+\item \textbf{4}. Dvě osy středem stran, dvě úhlopříčky.
+\item \textbf{2}. Dvě různé kružnice mají nejvýše dva společné body.
+\item \textbf{6}. Na každé ze dvou trojúhelníkových podstav jsou tři vrcholy.
+\item \textbf{60}. 180/3 = 60$^\circ$.
+\end{enumerate}
+
+\fi
+\hrule\vspace{3mm}
+{\sffamily\footnotesize\color{muted} \textbf{Zdroj rozsahu:} CERMAT, Specifikace požadavků pro JPZ 2026/2027, část C1. \url{https://prijimacky.cermat.gov.cz/menu/specifikace-pozadavku-k-jpz.html}. Studijní noty jsou autorské a nejsou oficiálním testem CERMAT.}
+\end{document}
