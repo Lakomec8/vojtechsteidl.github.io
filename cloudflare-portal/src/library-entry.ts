@@ -11,6 +11,13 @@ const MAX_UPLOAD_BYTES = 25 * 1024 * 1024;
 // Master katalog: stránky zůstávají jednou v repozitáři, student dostává pouze odkaz.
 const INTERACTIVE = [
   {
+    "id": "line-equations-param-general",
+    "title": "Přímka: parametrická a obecná rovnice",
+    "meta": "SŠ / maturita · směrový a normálový vektor, živý graf, převody, přímka ze dvou bodů a self-check (24 úloh)",
+    "url": "/interactive-notes/line-equations/"
+  },
+
+  {
     "id": "cermat-geometry-four-year-2027",
     "title": "Geometrie CERMAT: čtyřleté obory (2027)",
     "meta": "ZŠ 9. třída · úhly, obsahy, Pythagoras, kružnice, podobnost, konstrukce, tělesa · 6 interaktivních modelů",
