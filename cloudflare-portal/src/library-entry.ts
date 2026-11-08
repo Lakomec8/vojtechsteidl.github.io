@@ -11,6 +11,42 @@ const MAX_UPLOAD_BYTES = 25 * 1024 * 1024;
 // Master katalog: stránky zůstávají jednou v repozitáři, student dostává pouze odkaz.
 const INTERACTIVE = [
   {
+    "id": "parametric-inequalities-interactive-notes",
+    "title": "Parametrické nerovnice — interaktivní zápis",
+    "meta": "SŠ / VŠ · racionální, absolutní, kvadratické a součinové nerovnice; živé grafy, číselné osy a volba parametrů",
+    "url": "/interactive-notes/parametric-inequalities/"
+  },
+  {
+    "id": "parametric-inequalities-self-check",
+    "title": "Parametrické nerovnice — self-check",
+    "meta": "SŠ / VŠ · náhodné varianty, tři obtížnosti, okamžité vyhodnocení, vysvětlení a kontrola krajních případů",
+    "url": "/interactive-notes/parametric-inequalities/self-check.html"
+  },
+  {
+    "id": "limits-derivatives-interactive-notes",
+    "title": "Limity a derivace — interaktivní zápis",
+    "meta": "SŠ / začátek VŠ · 8 kapitol, 20 krokovaných příkladů, živé grafy limit a přibližování sečny k tečně",
+    "url": "/interactive-notes/limits-derivatives/"
+  },
+  {
+    "id": "limits-derivatives-self-check",
+    "title": "Limity a derivace — self-check",
+    "meta": "SŠ / začátek VŠ · 30 úloh / 60 bodů, tři úrovně, nápovědy, vysvětlení a export výsledků",
+    "url": "/interactive-notes/limits-derivatives/self-check.html"
+  },
+  {
+    "id": "acceleration-first-year-interactive-notes",
+    "title": "Zrychlení — interaktivní zápis (1. ročník SŠ)",
+    "meta": "Fyzika · 8 kapitol, 14 řešených příkladů, grafy v(t), simulátor brzdění a pomůcka pro výběr vzorce",
+    "url": "/interactive-notes/acceleration/"
+  },
+  {
+    "id": "acceleration-first-year-self-check",
+    "title": "Zrychlení — self-check (1. ročník SŠ)",
+    "meta": "Fyzika · 36 úloh / 72 bodů, náhodné varianty, tři obtížnosti, nápovědy, vysvětlení a export výsledků",
+    "url": "/interactive-notes/acceleration/self-check.html"
+  },
+  {
     "id": "line-equations-param-general",
     "title": "Přímka: parametrická a obecná rovnice",
     "meta": "SŠ / maturita · směrový a normálový vektor, živý graf, převody, přímka ze dvou bodů a self-check (24 úloh)",
