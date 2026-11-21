@@ -23,7 +23,8 @@ required = (
     "Online doučování matematiky pro ZŠ, SŠ a VŠ",
     'rel="canonical" href="https://vojtechsteidl.eu/online-doucovani-matematiky/"',
     "../diagnostika/",
-    "450 Kč",
+    "550 Kč",
+    "pro nové studenty",
 )
 for token in required:
     if token not in landing:
