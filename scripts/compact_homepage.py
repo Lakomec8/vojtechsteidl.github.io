@@ -583,7 +583,7 @@ OFFER = r'''<section class="blue-goals showcase-section" id="jak-to-funguje" ari
             <p class="booking-step-heading"><span>01</span> Typ lekce</p>
             <div class="booking-type-grid" role="radiogroup" aria-label="Typ rezervace">
               <label class="booking-type"><input type="radio" name="booking_type" value="diagnostic_30" checked><span><strong>30 minut zdarma</strong><small>Úvodní online diagnostika / zkušební konzultace</small></span></label>
-              <label class="booking-type"><input type="radio" name="booking_type" value="lesson_60"><span><strong>60 minut · 450 Kč</strong><small>Standardní placená online lekce</small></span></label>
+              <label class="booking-type"><input type="radio" name="booking_type" value="lesson_60"><span><strong>60 minut · od 550 Kč</strong><small>Noví studenti: ZŠ/SŠ 550 Kč · VŠ 650 Kč</small></span></label>
             </div>
             <p id="bookingTypeSummary" class="calendar-week-summary"></p>
             <div class="booking-form-fields">
@@ -636,14 +636,15 @@ PRICING = r'''<section class="blue-pricing" id="cenik">
     <div class="blue-section-head">
       <div>
         <p class="eyebrow">Jednoduše a transparentně</p>
-        <h2>Ceník bez složitostí.</h2>
+        <h2>Ceník pro nové studenty.</h2>
+        <p>Platí pouze pro nové studenty od 1. 12. 2026. Stávajícím studentům zůstávají jejich dosavadní individuálně sjednané ceny beze změny.</p>
       </div>
     </div>
     <div class="blue-price-grid">
       <article class="blue-price-card"><small>První krok</small><strong>Zdarma</strong><p>30 minut úvodní konzultace nebo diagnostiky.</p><a href="#kapacita">Rezervovat termín →</a></article>
-      <article class="blue-price-card featured"><small>Individuální lekce</small><strong>450 Kč</strong><p>60 minut, jednorázově nebo pravidelně podle aktuální potřeby. Zrušení nejpozději 24 hodin předem zdarma.</p><a href="#rezervace-terminu">Vybrat individuální lekci →</a></article>
-      <article class="blue-price-card"><small>Malá skupina</small><strong>300 Kč / osoba</strong><p>60 minut pro studenty s podobnou úrovní a stejným cílem.</p><a href="/skupiny/">Otevírané online skupiny →</a></article>
-      <article class="blue-price-card urgent"><small>Expresní doučování</small><strong>600 Kč</strong><p>60 minut při urgentní přípravě, o víkendech nebo po 20:00. Termín dle dostupné kapacity po individuální domluvě.</p><a href="mailto:info@vojtechsteidl.eu?subject=Expresn%C3%AD%20dou%C4%8Dov%C3%A1n%C3%AD">Poptat expresní termín →</a></article>
+      <article class="blue-price-card featured"><small>Individuální lekce ZŠ / SŠ</small><strong>550 Kč</strong><p>60 minut · základní a střední škola, CERMAT a maturita. <b>VŠ matematika a fyzika: 650 Kč za 60 minut.</b> Zrušení nejpozději 24 hodin předem zdarma.</p><a href="#rezervace-terminu">Vybrat individuální lekci →</a></article>
+      <article class="blue-price-card"><small>Malá skupina</small><strong>350 Kč / osoba</strong><p>60 minut pro studenty s podobnou úrovní a stejným cílem.</p><a href="/skupiny/">Otevírané online skupiny →</a></article>
+      <article class="blue-price-card urgent"><small>Expresní doučování</small><strong>600 Kč</strong><p>60 minut při urgentní přípravě ZŠ/SŠ, o víkendech nebo po 20:00. U VŠ témat cenu potvrdím individuálně. Termín dle dostupné kapacity po domluvě.</p><a href="mailto:info@vojtechsteidl.eu?subject=Expresn%C3%AD%20dou%C4%8Dov%C3%A1n%C3%AD">Poptat expresní termín →</a></article>
     </div>
   </div>
 </section>'''

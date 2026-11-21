@@ -138,7 +138,7 @@ def patch_public_entrypoint() -> None:
     html = replace_required(
         html,
         '<meta name="description" content="Individuální doučování matematiky a fyziky v Jihlavě i online. Součástí výuky jsou vlastní materiály a osobní studentská zóna.">',
-        '<meta name="description" content="Online doučování matematiky a fyziky pro ZŠ, SŠ a VŠ. Přijímačky, maturita i zkoušky. 450 Kč / 60 min, diagnostika a úvodní konzultace zdarma.">',
+        '<meta name="description" content="Online doučování matematiky a fyziky pro ZŠ, SŠ a VŠ. Přijímačky, maturita i zkoušky. od 550 Kč / 60 min pouze pro nové studenty od 1. 12. 2026, diagnostika a úvodní konzultace zdarma.">',
         "homepage service meta description",
     )
     html = replace_required(
@@ -185,10 +185,10 @@ def patch_public_entrypoint() -> None:
             <div class="school-promo">
                 <div>
                     <p class="eyebrow">Nově · malé skupiny 2–4 studentů</p>
-                    <h2>Skupinové lekce matematiky za 300 Kč na osobu</h2>
+                    <h2>Skupinové lekce matematiky za 350 Kč na osobu</h2>
                     <p>Pro studenty se stejným cílem sestavuji malé skupiny pro přijímačky na SŠ, maturitu a průběžnou středoškolskou matematiku. Nejdřív sbírám zájemce podle úrovně a časových možností; teprve potom navrhnu společný termín.</p>
                     <div class="school-promo-actions"><a class="school-promo-button" href="/skupiny/">Zjistit více a přidat se mezi zájemce <i class="fas fa-arrow-right"></i></a></div>
-                    <p class="school-promo-note">300 Kč / osoba / 60 minut · online po celé ČR · vyplnění zájmu je nezávazné</p>
+                    <p class="school-promo-note">350 Kč / osoba / 60 minut · pouze pro nové studenty od 1. 12. 2026 · online po celé ČR · vyplnění zájmu je nezávazné</p>
                 </div>
                 <div class="school-promo-points">
                     <div class="school-promo-point"><i class="fas fa-school"></i><span><strong>Přijímačky na SŠ</strong> — typové úlohy, strategie a práce s testem.</span></div>

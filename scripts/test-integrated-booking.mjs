@@ -88,6 +88,8 @@ assert.equal(nodes.bookingStartAt.disabled,false);
 types[0].checked=false;types[1].checked=true;
 types[1].events.change();
 assert.match(nodes.bookingStartAt.innerHTML,/2026-10-27T16:00:00Z/, "Switching duration updates offered slots");
+assert.match(nodes.bookingTypeSummary.textContent,/550 Kč \(ZŠ\/SŠ\) \/ 650 Kč \(VŠ\)/, "Public booking summary uses the new-student price tiers");
+assert.doesNotMatch(nodes.bookingTypeSummary.textContent,/450 Kč/, "Do not render obsolete backend price in public booking summary");
 nodes.bookingStartAt.value="2026-10-27T16:00:00Z";
 await nodes.slotBookingForm.events.submit({preventDefault(){}});
 assert.equal(postBody.bookingType,"lesson_60");
