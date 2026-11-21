@@ -100,7 +100,9 @@
     timeSelect.disabled = options.length === 0;
     if (typeSummary) {
       const configuration = currentData.bookingTypes?.[type];
-      typeSummary.textContent = configuration ? `${configuration.duration} minut · ${configuration.price} · online` : "";
+      typeSummary.textContent = configuration ? (type === "lesson_60"
+        ? `${configuration.duration} minut · 550 Kč (ZŠ/SŠ) / 650 Kč (VŠ) · pouze noví studenti · online`
+        : `${configuration.duration} minut · ${configuration.price} · online`) : "";
     }
   }
 
