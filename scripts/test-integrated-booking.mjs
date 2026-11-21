@@ -19,6 +19,14 @@ assert.doesNotMatch(html, /class="booking-panel booking-inline"/, "The click-onl
 assert.ok(html.indexOf('id="weeklyCalendar"') < html.indexOf('id="rezervace-terminu"'), "The timetable must precede the form");
 assert.match(html, /Rezervace termínu/);
 assert.match(html, /Doučování, které má mezi hodinami pokračování/);
+const priceSection = html.split('<section class="blue-pricing" id="cenik">')[1]?.split('</section>')[0] || "";
+assert.equal((priceSection.match(/<article class="blue-price-card(?: [^"]+)?">/g) || []).length, 5, "Show five distinct public price cards");
+for (const amount of ["550 Kč", "650 Kč", "350 Kč / osoba", "800 Kč"]) {
+  assert.ok(priceSection.includes("<strong>" + amount + "</strong>"), "Pricing card is missing " + amount);
+}
+assert.doesNotMatch(priceSection, /<strong>600 Kč<\/strong>/, "Express lessons must cost 800 Kč");
+assert.match(priceSection, /pouze pro nové studenty od 1\. 12\. 2026/, "New pricing must explicitly apply only to new students");
+
 
 class Elem {
   constructor() {
