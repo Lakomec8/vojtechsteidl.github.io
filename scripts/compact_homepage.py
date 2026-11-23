@@ -645,7 +645,7 @@ PRICING = r'''<section class="blue-pricing" id="cenik">
       <article class="blue-price-card featured"><small>Individuální ZŠ / SŠ</small><strong>550 Kč</strong><p>60 minut · ZŠ, SŠ, příprava na přijímačky CERMAT a maturitu. Zrušení nejpozději 24 hodin předem zdarma.</p><a href="#rezervace-terminu">Rezervovat lekci →</a></article>
       <article class="blue-price-card"><small>Vysokoškolská matematika a fyzika</small><strong>650 Kč</strong><p>60 minut · VŠ předměty, zápočty a zkoušky podle konkrétního sylabu.</p><a href="#rezervace-terminu">Rezervovat VŠ lekci →</a></article>
       <article class="blue-price-card"><small>Malá skupina</small><strong>350 Kč / osoba</strong><p>60 minut · pro 2–4 studenty s podobnou úrovní a společným cílem.</p><a href="/skupiny/">Otevírané online skupiny →</a></article>
-      <article class="blue-price-card urgent"><small>Expresní doučování</small><strong>800 Kč</strong><p>60 minut · urgentní příprava, večerní termíny po 20:00 nebo víkendy. Termín dle kapacity a individuální domluvy.</p><a href="mailto:info@vojtechsteidl.eu?subject=Expresn%C3%AD%20dou%C4%8Dov%C3%A1n%C3%AD">Poptat expresní termín →</a></article>
+      <article class="blue-price-card urgent"><small>Expresní doučování</small><strong>800 Kč</strong><p>60 minut · urgentní příprava, večerní termíny od 19:00 nebo víkendy. Termín dle kapacity a individuální domluvy.</p><a href="mailto:info@vojtechsteidl.eu?subject=Expresn%C3%AD%20dou%C4%8Dov%C3%A1n%C3%AD">Poptat expresní termín →</a></article>
     </div>
   </div>
 </section>'''
