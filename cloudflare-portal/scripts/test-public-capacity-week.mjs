@@ -1,15 +1,16 @@
-import { nextWeekWindow, slotIsAvailable, busyMinutesOnDay, isCalendarSyncFresh, localDateTimeToUtc, availabilityForType, bookingLocks } from "../src/public-capacity.ts";
+import { currentWeekWindow, slotIsAvailable, busyMinutesOnDay, isCalendarSyncFresh, localDateTimeToUtc, availabilityForType, bookingLocks } from "../src/public-capacity.ts";
 import { calendarTitleContainsStudent, publicCategoryForCalendarTitle } from "../src/calendar-ingestion.ts";
 import { readFileSync } from "node:fs";
 
 const cases = [
-  ["2026-10-16T12:00:00Z", "2026-10-19", "2026-10-23"],
-  ["2026-10-19T08:00:00Z", "2026-10-26", "2026-10-30"],
-  ["2026-10-25T23:30:00Z", "2026-11-02", "2026-11-06"],
+  ["2026-10-16T12:00:00Z", "2026-10-12", "2026-10-18"],
+  ["2026-10-19T08:00:00Z", "2026-10-19", "2026-10-25"],
+  ["2026-10-25T23:30:00Z", "2026-10-26", "2026-11-01"],
+  ["2026-11-23T08:00:00Z", "2026-11-23", "2026-11-29"],
 ];
 
 for (const [now, expectedStart, expectedEnd] of cases) {
-  const week = nextWeekWindow(new Date(now));
+  const week = currentWeekWindow(new Date(now));
   if (week.startDate !== expectedStart || week.endDate !== expectedEnd) {
     throw new Error(JSON.stringify({ now, week, expectedStart, expectedEnd }));
   }
@@ -50,17 +51,19 @@ if (localDateTimeToUtc("2026-11-02", "17:30").toISOString() !== "2026-11-02T16:3
 const sampleWeek = { startDate: "2026-10-19", endDate: "2026-10-23", endExclusive: "2026-10-26" };
 const sampleFree = [{ id: "thu-flex", weekday: 4, start_time: "15:00", end_time: "17:00", capacity: 1, sort_order: 1, display_mode: "flexible" }];
 const sampleBusy = [{ starts_at: "2026-10-22T13:30:00.000Z", ends_at: "2026-10-22T14:30:00.000Z" }];
-const diagnostics = availabilityForType(sampleWeek, sampleFree, sampleBusy, 30);
+const diagnostics = availabilityForType(sampleWeek, sampleFree, sampleBusy, 30, new Date("2026-10-22T12:00:00Z"));
 if (diagnostics.some((slot) => slot.time === "15:30–16:00" || slot.time === "16:00–16:30")) {
   throw new Error("Busy time leaked into 30-minute availability");
 }
+const expired = availabilityForType(sampleWeek, sampleFree, [], 30, new Date("2026-10-22T17:00:00Z"));
+if (expired.length !== 0) throw new Error("Past slots exposed as bookable");
 const locks30 = bookingLocks(new Date("2026-10-22T13:00:00.000Z"), 30);
 const locks60 = bookingLocks(new Date("2026-10-22T13:15:00.000Z"), 60);
 if (!locks30.some((lock) => locks60.includes(lock))) throw new Error("Overlapping booking locks do not collide");
 const classifications = [
-  ["Kája - doučko", { label: "Matematika", capacity: 4 }],
-  ["Fyzika Doučko", { label: "Fyzika", capacity: 4 }],
-  ["Doučko - syn Veronika.", { label: "Matematika", capacity: 4 }],
+  ["Kája - doučko", { label: "Matematika", capacity: 1 }],
+  ["Fyzika Doučko", { label: "Fyzika", capacity: 1 }],
+  ["Doučko - syn Veronika.", { label: "Matematika", capacity: 1 }],
   ["Zkušební hodina", { label: "Úvodní konzultace", capacity: 1 }],
   ["Eliška doučování", null],
   ["Soukromá událost", null],

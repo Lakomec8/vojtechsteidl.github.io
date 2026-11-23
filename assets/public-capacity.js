@@ -3,12 +3,12 @@
   if (!calendarEl) return;
   const API_BASE = window.__CAPACITY_API_BASE || "https://capacity.vojtechsteidl.eu";
   const PRAGUE_TIME_ZONE = "Europe/Prague";
-  const dayOrder = ["Pondělí", "Úterý", "Středa", "Čtvrtek", "Pátek"];
-  const dayAbbreviations = { Pondělí: "PO", Úterý: "ÚT", Středa: "ST", Čtvrtek: "ČT", Pátek: "PÁ" };
+  const dayOrder = ["Pondělí", "Úterý", "Středa", "Čtvrtek", "Pátek", "Sobota", "Neděle"];
+  const dayAbbreviations = { Pondělí: "PO", Úterý: "ÚT", Středa: "ST", Čtvrtek: "ČT", Pátek: "PÁ", Sobota: "SO", Neděle: "NE" };
   const lessonCountLabel = (n) => n === 1 ? "lekce" : n >= 2 && n <= 4 ? "lekce" : "lekcí";
   const refreshIntervalMs = 15 * 60 * 1000;
-  const timelineStart = 13 * 60;
-  const timelineEnd = 20 * 60 + 30;
+  const timelineStart = 8 * 60;
+  const timelineEnd = 22 * 60;
   const timelineMinutes = timelineEnd - timelineStart;
   const weekLabel = document.getElementById("calendarWeekLabel");
   const weekSummary = document.getElementById("calendarWeekSummary");
@@ -113,7 +113,7 @@
       return new Intl.DateTimeFormat("cs-CZ", { timeZone: PRAGUE_TIME_ZONE, day: "numeric", month: "numeric", ...(includeYear ? { year: "numeric" } : {}) })
         .format(new Date(Date.UTC(year, month - 1, day, 12)));
     };
-    weekLabel.textContent = `Následující týden · ${format(week.startDate, false)}–${format(week.endDate, true)}`;
+    weekLabel.textContent = `Aktuální týden · ${format(week.startDate, false)}–${format(week.endDate, true)}`;
   }
 
   function renderSummary(data) {

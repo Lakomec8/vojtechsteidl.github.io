@@ -63,7 +63,7 @@ export function publicCategoryForCalendarTitle(title: string): { label: string; 
   if (!normalized.split(" ").some((part) => part === "doucko" || part === "doucovani")) return null;
   return {
     label: normalized.split(" ").includes("fyzika") ? "Fyzika" : "Matematika",
-    capacity: 4,
+    capacity: 1,
   };
 }
 

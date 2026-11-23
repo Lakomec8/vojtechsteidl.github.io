@@ -106,7 +106,7 @@ CSS = r'''<style id="blue-spacious-homepage-v2">
 .blue-capacity-standalone .capacity-legend{color:#64748b}
 .blue-capacity-standalone .capacity-legend span{color:#64748b}
 .blue-capacity-standalone .weekly-calendar-wrap{overflow-x:auto;padding:.15rem 0 .75rem}
-.blue-capacity-standalone .weekly-calendar{display:grid;grid-template-columns:repeat(5,minmax(190px,1fr));gap:.75rem;min-width:1020px}
+.blue-capacity-standalone .weekly-calendar{display:grid;grid-template-columns:repeat(7,minmax(190px,1fr));gap:.75rem;min-width:1420px}
 .blue-capacity-standalone .calendar-day{padding:.85rem;border:1px solid #285f98;border-radius:18px;background:linear-gradient(160deg,#102f50 0%,#174d82 58%,#2563a6 135%);box-shadow:0 14px 30px rgba(15,42,67,.13)}
 .blue-capacity-standalone .calendar-day-head{display:flex;justify-content:space-between;gap:.7rem;align-items:flex-start;margin-bottom:1rem;padding-bottom:.82rem;border-bottom:1px solid rgba(255,255,255,.18)}
 .blue-capacity-standalone .calendar-day-title{display:grid;gap:.08rem}
@@ -117,7 +117,7 @@ CSS = r'''<style id="blue-spacious-homepage-v2">
 .blue-capacity-standalone .calendar-week-summary{margin:.28rem 0 0;color:#102a43;font-size:.9rem;font-weight:800}
 .blue-capacity-standalone .calendar-live-status[data-state="live"]{color:#15803d}
 .blue-capacity-standalone .calendar-live-status[data-state="fallback"]{color:#b45309}
-.blue-capacity-standalone .calendar-time-track{position:relative;height:540px;margin-left:2.3rem;border-radius:12px;background:repeating-linear-gradient(to bottom,rgba(255,255,255,.12) 0,rgba(255,255,255,.12) 1px,transparent 1px,transparent 12.5%)}
+.blue-capacity-standalone .calendar-time-track{position:relative;height:760px;margin-left:2.3rem;border-radius:12px;background:repeating-linear-gradient(to bottom,rgba(255,255,255,.12) 0,rgba(255,255,255,.12) 1px,transparent 1px,transparent 12.5%)}
 .blue-capacity-standalone .calendar-hour{position:absolute;left:-2.3rem;width:1.9rem;transform:translateY(-50%);color:#b9d6f0;font-size:.58rem;text-align:right}
 .blue-capacity-standalone .calendar-event{position:absolute;right:.2rem;left:.15rem;z-index:2;overflow:hidden;min-height:36px;padding:.42rem .48rem;border:1px solid #d6e6f5;border-radius:9px;background:#f8fbff;box-shadow:0 6px 14px rgba(5,24,43,.16)}
 .blue-capacity-standalone .calendar-event.join{border-left:4px solid #3b82f6}
@@ -151,8 +151,8 @@ CSS = r'''<style id="blue-spacious-homepage-v2">
   .blue-ecosystem-frame{padding:0;border-radius:0}
   .blue-capacity-standalone{padding:4rem 0}
   .blue-capacity-standalone .weekly-calendar-wrap{margin-right:-1rem;padding:0 1rem .55rem 0}
-  .blue-capacity-standalone .weekly-calendar{grid-template-columns:repeat(5,190px);gap:.65rem;min-width:max-content}
-  .blue-capacity-standalone .calendar-time-track{height:480px}
+  .blue-capacity-standalone .weekly-calendar{grid-template-columns:repeat(7,190px);gap:.65rem;min-width:max-content}
+  .blue-capacity-standalone .calendar-time-track{height:720px}
   .booking-type-grid,.booking-form-fields{grid-template-columns:1fr}
   .booking-form-fields .full{grid-column:1}
 }
@@ -206,12 +206,12 @@ CSS = r'''<style id="blue-spacious-homepage-v2">
 .blue-capacity-standalone .calendar-booking-meta .calendar-week-label{margin:0;color:#153b63}
 .blue-capacity-standalone .calendar-booking-meta .calendar-week-summary{margin:0;font-size:.75rem;color:#66809b;font-weight:650}
 .calendar-legend-free{background:#1aa46b!important}
-.blue-capacity-standalone .weekly-calendar{grid-template-columns:repeat(5,minmax(175px,1fr));min-width:930px;gap:.65rem}
+.blue-capacity-standalone .weekly-calendar{grid-template-columns:repeat(7,minmax(175px,1fr));min-width:1300px;gap:.65rem}
 .blue-capacity-standalone .calendar-day{padding:.75rem;border:1px solid #d8e6f1;background:#edf5fd;border-radius:15px;box-shadow:0 9px 20px rgba(15,42,67,.055)}
 .blue-capacity-standalone .calendar-day-head{margin-bottom:.6rem;padding-bottom:.6rem;border-color:#d4e4f2}
 .blue-capacity-standalone .calendar-day-abbr{color:#163f67;font-size:1rem}
 .blue-capacity-standalone .calendar-day-name,.blue-capacity-standalone .calendar-day-count{color:#5b7894}
-.blue-capacity-standalone .calendar-time-track{height:430px;margin-left:2.1rem;background:repeating-linear-gradient(to bottom,#d7e6f2 0,#d7e6f2 1px,transparent 1px,transparent 13.3333%)}
+.blue-capacity-standalone .calendar-time-track{height:760px;margin-left:2.1rem;background:repeating-linear-gradient(to bottom,#d7e6f2 0,#d7e6f2 1px,transparent 1px,transparent 7.142857%)}
 .blue-capacity-standalone .calendar-hour{left:-2.1rem;width:1.9rem;color:#738ca6}
 .blue-capacity-standalone .calendar-event{padding:.24rem .4rem;min-height:0;border-radius:7px;box-shadow:0 3px 8px rgba(15,42,67,.06)}
 .blue-capacity-standalone .calendar-event.join{background:#fff;border-color:#cddfec;border-left:3px solid #4e87bf}
@@ -245,7 +245,7 @@ CSS = r'''<style id="blue-spacious-homepage-v2">
 .booking-inline .form-status:empty{display:none}
 .booking-inline.is-complete .booking-form-fields{display:none}
 @media(max-width:980px){.blue-capacity-standalone .capacity-compact-heading{align-items:flex-start;flex-direction:column}.blue-capacity-standalone .capacity-compact-heading .booking-security{white-space:normal}}
-@media(max-width:760px){.blue-capacity-standalone{padding:3rem 0}.calendar-booking-meta{text-align:left}.blue-capacity-standalone .weekly-calendar{grid-template-columns:repeat(5,175px);min-width:max-content}.blue-capacity-standalone .calendar-time-track{height:430px}.booking-inline .booking-form-fields{grid-template-columns:repeat(2,minmax(0,1fr))}.booking-inline .booking-terms,.booking-inline .booking-submit{grid-column:1/-1}.booking-inline .booking-submit{width:100%}.booking-panel.booking-inline{padding:1rem}}
+@media(max-width:760px){.blue-capacity-standalone{padding:3rem 0}.calendar-booking-meta{text-align:left}.blue-capacity-standalone .weekly-calendar{grid-template-columns:repeat(7,175px);min-width:max-content}.blue-capacity-standalone .calendar-time-track{height:760px}.booking-inline .booking-form-fields{grid-template-columns:repeat(2,minmax(0,1fr))}.booking-inline .booking-terms,.booking-inline .booking-submit{grid-column:1/-1}.booking-inline .booking-submit{width:100%}.booking-panel.booking-inline{padding:1rem}}
 @media(max-width:480px){.booking-inline .booking-form-fields{grid-template-columns:1fr}.booking-inline .booking-form-fields .booking-time-field{grid-column:1}.booking-chip span{font-size:.73rem;padding:.55rem .65rem}}
 
 /* 2026-10: compact intro and tutor bio; eliminate redundant full-width sections */
@@ -557,7 +557,7 @@ OFFER = r'''<section class="blue-goals showcase-section" id="jak-to-funguje" ari
             <h2>Týdenní kalendář</h2>
             <p class="capacity-explainer">Kalendář ukazuje obsazenou výuku. Volné termíny k rezervaci vyberete v jediném formuláři přímo pod ním.</p>
             <a class="booking-jump" href="#rezervace-terminu"><i class="fas fa-calendar-check" aria-hidden="true"></i> Vybrat dostupný termín <span aria-hidden="true">↓</span></a>
-            <p class="calendar-week-label" id="calendarWeekLabel">Následující týden</p>
+            <p class="calendar-week-label" id="calendarWeekLabel">Aktuální týden</p>
             <p class="calendar-week-summary" id="calendarWeekSummary">Načítám aktuální možnosti…</p>
           </div>
         </div>

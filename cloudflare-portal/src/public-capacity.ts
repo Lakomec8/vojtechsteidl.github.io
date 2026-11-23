@@ -81,17 +81,16 @@ function pragueDate(value: Date | string): { year: number; month: number; day: n
   return year && month && day && weekday ? { year, month, day, weekday } : null;
 }
 
-export function nextWeekWindow(now = new Date()): WeekWindow {
+export function currentWeekWindow(now = new Date()): WeekWindow {
   const today = pragueDate(now);
   if (!today) throw new Error("invalid-current-date");
   const todayMarker = Date.UTC(today.year, today.month - 1, today.day, 12);
-  const daysUntilNextMonday = 8 - today.weekday;
-  const nextMonday = new Date(todayMarker + daysUntilNextMonday * 86_400_000);
-  const nextFriday = new Date(nextMonday.getTime() + 4 * 86_400_000);
-  const followingMonday = new Date(nextMonday.getTime() + 7 * 86_400_000);
+  const monday = new Date(todayMarker - (today.weekday - 1) * 86_400_000);
+  const sunday = new Date(monday.getTime() + 6 * 86_400_000);
+  const followingMonday = new Date(monday.getTime() + 7 * 86_400_000);
   return {
-    startDate: dateKey(nextMonday.getUTCFullYear(), nextMonday.getUTCMonth() + 1, nextMonday.getUTCDate()),
-    endDate: dateKey(nextFriday.getUTCFullYear(), nextFriday.getUTCMonth() + 1, nextFriday.getUTCDate()),
+    startDate: dateKey(monday.getUTCFullYear(), monday.getUTCMonth() + 1, monday.getUTCDate()),
+    endDate: dateKey(sunday.getUTCFullYear(), sunday.getUTCMonth() + 1, sunday.getUTCDate()),
     endExclusive: dateKey(followingMonday.getUTCFullYear(), followingMonday.getUTCMonth() + 1, followingMonday.getUTCDate()),
   };
 }
@@ -173,7 +172,7 @@ async function mappedEvents(env: Env): Promise<EventRow[]> {
         ON b.calendar_event_id = m.series_id
         OR b.calendar_event_id LIKE m.series_id || '_%'
      WHERE m.enabled = 1
-       AND datetime(b.starts_at) >= datetime('now')
+       AND datetime(b.ends_at) > datetime('now', '-8 days')
        AND datetime(b.starts_at) < datetime('now', '+21 days')
      ORDER BY m.sort_order, datetime(b.starts_at)
   `).all<EventRow>();
@@ -190,13 +189,13 @@ async function freeSlots(env: Env): Promise<FreeSlotRow[]> {
   return result.results || [];
 }
 
-async function allUpcomingRanges(env: Env): Promise<Array<{ starts_at: string; ends_at: string }>> {
+async function allUpcomingRanges(env: Env): Promise<Array<{ calendar_event_id: string; starts_at: string; ends_at: string }>> {
   const result = await env.DB.prepare(`
-    SELECT starts_at, ends_at
+    SELECT calendar_event_id, starts_at, ends_at
       FROM public_calendar_busy
-     WHERE datetime(ends_at) > datetime('now')
+     WHERE datetime(ends_at) > datetime('now', '-8 days')
        AND datetime(starts_at) < datetime('now', '+21 days')
-  `).all<{ starts_at: string; ends_at: string }>();
+  `).all<{ calendar_event_id: string; starts_at: string; ends_at: string }>();
   return result.results || [];
 }
 
@@ -205,7 +204,7 @@ async function activeBookings(env: Env): Promise<BookingRow[]> {
     SELECT id, booking_type, starts_at, ends_at
       FROM public_bookings
      WHERE status = 'confirmed'
-       AND datetime(ends_at) > datetime('now')
+       AND datetime(ends_at) > datetime('now', '-8 days')
        AND datetime(starts_at) < datetime('now', '+21 days')
      ORDER BY datetime(starts_at)
   `).all<BookingRow>();
@@ -263,6 +262,7 @@ export function availabilityForType(
   slots: FreeSlotRow[],
   occupiedRanges: Array<{ starts_at: string; ends_at: string }>,
   duration: number,
+  now = new Date(),
 ): Availability[] {
   return slots.flatMap((slot) => {
     const date = weekdayDate(week, slot.weekday);
@@ -276,6 +276,7 @@ export function availabilityForType(
       const end = start + duration;
       if (!slotIsAvailable(timeString(start), timeString(end), occupied)) continue;
       const startAt = localDateTimeToUtc(date, timeString(start));
+      if (startAt.getTime() < now.getTime() + 15 * 60_000) continue;
       const endAt = new Date(startAt.getTime() + duration * 60_000);
       results.push({
         startAt: startAt.toISOString(),
@@ -352,7 +353,7 @@ export async function handlePublicCapacityRequest(request: Request, env: Env): P
   if (request.method !== "GET" || url.pathname !== PUBLIC_CAPACITY_PATH) return null;
 
   try {
-    const week = nextWeekWindow();
+    const week = currentWeekWindow();
     const [events, free, allUpcoming, bookings, syncedAt] = await Promise.all([
       mappedEvents(env),
       freeSlots(env),
@@ -367,7 +368,7 @@ export async function handlePublicCapacityRequest(request: Request, env: Env): P
     const occupied = events.filter((event) => isInWeek(event.starts_at, week)).flatMap((event) => {
       const start = pragueParts(event.starts_at);
       const end = pragueParts(event.ends_at);
-      if (!start || !end || start.weekday > 5) return [];
+      if (!start || !end || start.weekday > 7) return [];
       const people = Math.max(1, Number(event.people || 0));
       return [{
         id: `series-${event.google_event_id}`,
@@ -381,10 +382,37 @@ export async function handlePublicCapacityRequest(request: Request, env: Env): P
       }];
     });
 
-    const reserved = bookings.filter((booking) => isInWeek(booking.starts_at, week)).flatMap((booking) => {
+    const keyForRange = (range: { starts_at: string; ends_at: string }) =>
+      `${new Date(range.starts_at).getTime()}-${new Date(range.ends_at).getTime()}`;
+    const mappedIds = new Set(events.map((event) => event.google_event_id));
+    const mappedTimes = new Set(events.map(keyForRange));
+    const bookedTimes = new Set(bookings.map(keyForRange));
+    // Calendar entries not explicitly mapped for display must still appear as private busy blocks.
+    const otherBusy = allUpcoming
+      .filter((event) => isInWeek(event.starts_at, week)
+        && !mappedIds.has(event.calendar_event_id)
+        && !mappedTimes.has(keyForRange(event))
+        && !bookedTimes.has(keyForRange(event)))
+      .flatMap((event) => {
+        const start = pragueParts(event.starts_at);
+        const end = pragueParts(event.ends_at);
+        if (!start || !end || start.weekday > 7) return [];
+        return [{
+          id: `busy-${event.calendar_event_id}`,
+          day: DAY_NAMES[start.weekday],
+          weekday: start.weekday,
+          time: `${start.time}–${end.time}`,
+          title: "Obsazeno",
+          people: 1,
+          capacity: 1,
+          kind: "full",
+        }];
+      });
+    const reserved = bookings.filter((booking) => isInWeek(booking.starts_at, week)
+      && !mappedTimes.has(keyForRange(booking))).flatMap((booking) => {
       const start = pragueParts(booking.starts_at);
       const end = pragueParts(booking.ends_at);
-      if (!start || !end || start.weekday > 5) return [];
+      if (!start || !end || start.weekday > 7) return [];
       return [{
         id: `booking-${booking.id}`,
         day: DAY_NAMES[start.weekday],
@@ -397,7 +425,7 @@ export async function handlePublicCapacityRequest(request: Request, env: Env): P
       }];
     });
 
-    const slots = [...occupied, ...reserved].sort((a,b) =>
+    const slots = [...occupied, ...otherBusy, ...reserved].sort((a,b) =>
       a.weekday - b.weekday || a.time.localeCompare(b.time, "cs")
     );
     const occupiedRanges = [...allUpcoming, ...bookings.map((booking) => ({
@@ -467,7 +495,7 @@ export async function handlePublicBookingRequest(request: Request, env: Env, ctx
 
     const syncedAt = await calendarSyncedAt(env);
     if (!isCalendarSyncFresh(syncedAt)) return publicJson({ error: "calendar_not_synced" }, 503, request);
-    const week = nextWeekWindow();
+    const week = currentWeekWindow();
     const [free, busy, bookings] = await Promise.all([freeSlots(env), allUpcomingRanges(env), activeBookings(env)]);
     const occupiedRanges = [...busy, ...bookings.map((booking) => ({ starts_at: booking.starts_at, ends_at: booking.ends_at }))];
     const allowed = availabilityForType(week, free, occupiedRanges, configuration.duration)

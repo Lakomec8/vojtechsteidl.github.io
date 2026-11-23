@@ -97,12 +97,12 @@ jobs:
           grep -q 'Dostupnost termínů ověřuji' .public-site/index.html
           ! grep -q 'data-slot-id="mon-1745"' .public-site/index.html
           grep -q 'calendar-time-track' .public-site/index.html
-          grep -q 'grid-template-columns:repeat(5,minmax(175px,1fr))' .public-site/index.html
+          grep -q 'grid-template-columns:repeat(7,minmax(175px,1fr))' .public-site/index.html
           grep -q 'name="booking_type" value="diagnostic_30"' .public-site/index.html
           grep -q 'name="booking_type" value="lesson_60"' .public-site/index.html
           grep -q 'id="bookingStartAt"' .public-site/index.html
           grep -q 'src="/assets/public-capacity.js"' .public-site/index.html
-          grep -q 'id="calendarWeekLabel">Následující týden' .public-site/index.html
+          grep -q 'id="calendarWeekLabel">Aktuální týden' .public-site/index.html
           grep -q 'id="calendarWeekSummary">Načítám aktuální možnosti' .public-site/index.html
           grep -q 'id="calendarLiveStatus">Ověřuji aktuálnost' .public-site/index.html
           grep -q 'window.setInterval(refreshCapacity, refreshIntervalMs)' .public-site/assets/public-capacity.js
