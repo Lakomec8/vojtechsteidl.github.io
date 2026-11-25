@@ -11,6 +11,12 @@ const MAX_UPLOAD_BYTES = 25 * 1024 * 1024;
 // Master katalog: stránky zůstávají jednou v repozitáři, student dostává pouze odkaz.
 const INTERACTIVE = [
   {
+    "id": "systems-linear-equations",
+    "title": "Soustavy lineárních rovnic — interaktivní zápis",
+    "meta": "ZŠ / SŠ · živý graf přímek, dosazovací a sčítací metoda, 3 neznámé, slovní úloha a 10 úloh s kontrolou",
+    "url": "/interactive-notes/systems-linear-equations/"
+  },
+  {
     "id": "parametric-inequalities-interactive-notes",
     "title": "Parametrické nerovnice — interaktivní zápis",
     "meta": "SŠ / VŠ · racionální, absolutní, kvadratické a součinové nerovnice; živé grafy, číselné osy a volba parametrů",
