@@ -21,7 +21,7 @@
     const isEliska = studentId === "eliska";
     const isNatalie = studentId === "natalie";
     const isThreeHundred = isGroupStudent || isEliska;
-    const isFiveFifty = ["sofie", "marketa", "marek1"].includes(studentId);
+    const isFiveFifty = ["sofie", "marketa"].includes(studentId);
     const amount = isThreeHundred ? 300 : isNatalie ? 400 : isFiveFifty ? 550 : 450;
     const qr = isThreeHundred
       ? "/assets/payment-300.svg?v=20260902-1"
